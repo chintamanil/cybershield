@@ -1,0 +1,293 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cybershield"
+version = "2.1.0"
+description = "Advanced multi-agent AI cybersecurity platform with async architecture"
+readme = "README.md"
+license = {file = "LICENSE"}
+authors = [
+    {name = "CyberShield Team", email = "info@cybershield.dev"}
+]
+maintainers = [
+    {name = "CyberShield Team", email = "info@cybershield.dev"}
+]
+keywords = [
+    "cybersecurity",
+    "ai",
+    "threat-intelligence",
+    "security-analysis",
+    "multi-agent",
+    "async",
+    "fastapi",
+    "streamlit",
+    "pii-detection",
+    "ioc-extraction",
+    "react-workflow"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: System Administrators",
+    "Topic :: Security",
+    "Topic :: Internet :: WWW/HTTP :: HTTP Servers",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Framework :: FastAPI",
+    "Framework :: AsyncIO",
+    "Operating System :: OS Independent",
+    "Environment :: Web Environment",
+    "Topic :: Software Development :: Libraries :: Python Modules"
+]
+requires-python = ">=3.11"
+dependencies = [
+    # Web Framework
+    "fastapi>=0.104.0",
+    "uvicorn>=0.24.0",
+
+    # Data Processing
+    "pandas>=2.0.0",
+    "numpy>=1.24.0,<2.0.0",
+
+    # Vector Database
+    "pymilvus>=2.5.0",
+
+    # AI/ML Libraries
+    "sentence-transformers>=3.0.0",
+    "langchain>=0.1.0",
+    "langchain-community>=0.0.10",
+    "langchain-openai>=0.1.0",
+    "langgraph>=0.2.0",
+
+    # Database & Cache
+    "redis[hiredis]>=5.0.0",
+    "psycopg2-binary>=2.9.0",
+    "asyncpg>=0.29.0",
+
+    # HTTP Requests
+    "requests>=2.31.0",
+    "aiohttp>=3.9.0",
+    "httpx>=0.25.0",
+    "aiofiles>=23.0.0",
+
+    # Environment Management
+    "python-dotenv>=1.0.0",
+
+    # Type Checking & Validation
+    "pydantic>=2.0.0",
+
+    # Logging
+    "structlog>=23.0.0",
+
+    # Computer Vision & NLP
+    "opencv-python>=4.8.0,<4.9.0",
+    "pytesseract>=0.3.10",
+    "spacy>=3.7.0",
+    "Pillow>=10.0.0",
+    "transformers>=4.35.0"
+]
+
+[project.optional-dependencies]
+# Development dependencies
+dev = [
+    "pytest>=7.4.0",
+    "pytest-asyncio>=0.21.0",
+    "black>=23.0.0",
+    "isort>=5.12.0",
+    "flake8>=6.0.0",
+    "mypy>=1.5.0",
+    "pre-commit>=3.4.0"
+]
+
+# Frontend dependencies (Streamlit)
+frontend = [
+    "streamlit>=1.28.0",
+    "plotly>=5.15.0",
+    "matplotlib>=3.7.0",
+    "seaborn>=0.12.0",
+    "streamlit-option-menu>=0.3.6",
+    "streamlit-aggrid>=0.3.4",
+    "streamlit-elements>=0.1.0"
+]
+
+# Testing with all security tools
+testing = [
+    "pytest>=7.4.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.1.0",
+    "pytest-mock>=3.11.0",
+    "responses>=0.23.0"
+]
+
+# Production deployment
+production = [
+    "gunicorn>=21.2.0",
+    "prometheus-client>=0.17.0",
+    "sentry-sdk[fastapi]>=1.32.0"
+]
+
+# All optional dependencies
+all = [
+    "cybershield[dev,frontend,testing,production]"
+]
+
+[project.urls]
+Homepage = "https://github.com/cybershield/cybershield"
+Documentation = "https://cybershield.readthedocs.io"
+Repository = "https://github.com/cybershield/cybershield"
+Issues = "https://github.com/cybershield/cybershield/issues"
+Changelog = "https://github.com/cybershield/cybershield/releases"
+
+[project.scripts]
+cybershield = "server.main:main"
+cybershield-frontend = "frontend.run_streamlit:main"
+
+[project.entry-points."cybershield.agents"]
+pii = "agents.pii_agent:PIIAgent"
+threat = "agents.threat_agent:ThreatAgent"
+log_parser = "agents.log_parser:LogParserAgent"
+vision = "agents.vision_agent:VisionAgent"
+supervisor = "agents.supervisor:SupervisorAgent"
+
+[project.entry-points."cybershield.tools"]
+virustotal = "tools.virustotal:VirusTotalClient"
+shodan = "tools.shodan:ShodanClient"
+abuseipdb = "tools.abuseipdb:AbuseIPDBClient"
+regex_checker = "tools.regex_checker:RegexChecker"
+
+# Tool Configuration
+[tool.setuptools]
+packages = ["agents", "tools", "memory", "workflows", "vectorstore", "data", "server", "tests"]
+
+[tool.setuptools.package-data]
+"*" = ["*.yaml", "*.yml", "*.json", "*.sql", "*.md", "*.txt"]
+
+# Black Configuration
+[tool.black]
+line-length = 88
+target-version = ['py311', 'py312']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
+# isort Configuration
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 88
+known_first_party = ["agents", "tools", "memory", "workflows", "vectorstore", "data", "server"]
+
+# MyPy Configuration
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+
+[[tool.mypy.overrides]]
+module = [
+    "pymilvus.*",
+    "sentence_transformers.*",
+    "langchain.*",
+    "langgraph.*",
+    "spacy.*",
+    "cv2.*",
+    "pytesseract.*"
+]
+ignore_missing_imports = true
+
+# Pytest Configuration
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q --strict-markers --strict-config"
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+markers = [
+    "async_test: marks tests as async",
+    "integration: marks tests as integration tests",
+    "security: marks tests as security-related",
+    "slow: marks tests as slow running"
+]
+asyncio_mode = "auto"
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning"
+]
+
+# Coverage Configuration
+[tool.coverage.run]
+source = ["agents", "tools", "memory", "workflows", "vectorstore", "server"]
+omit = [
+    "*/tests/*",
+    "*/test_*",
+    "*/__pycache__/*",
+    "*/venv/*",
+    "*/env/*"
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:"
+]
+
+# Ruff Configuration (Alternative to flake8)
+[tool.ruff]
+target-version = "py311"
+line-length = 88
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "UP", # pyupgrade
+]
+ignore = [
+    "E501",  # line too long, handled by black
+    "B008",  # do not perform function calls in argument defaults
+    "C901",  # too complex
+]
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401"]
+"tests/*" = ["B011"]
+
+[tool.ruff.isort]
+known-first-party = ["agents", "tools", "memory", "workflows", "vectorstore", "data", "server"]

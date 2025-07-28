@@ -1,0 +1,35 @@
+# CyberShield Streamlit Frontend Requirements
+
+# Core Streamlit
+streamlit>=1.28.0
+
+# HTTP Client
+requests>=2.31.0
+
+# Data Processing
+pandas>=2.0.0
+numpy>=1.24.0
+
+# Visualization
+plotly>=5.15.0
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Image Processing
+Pillow>=10.0.0
+
+# JSON/Data Handling
+pydantic>=2.0.0
+
+# Date/Time Utilities
+python-dateutil>=2.8.0
+
+# Base64 and Encoding
+python-multipart>=0.0.6
+
+# Async Support - not needed for Streamlit
+
+# Optional: Additional UI components
+streamlit-option-menu>=0.3.6
+streamlit-aggrid>=0.3.4
+streamlit-elements>=0.1.0
