@@ -1,12 +1,12 @@
 # SupervisorAgent with Vision AI and LangGraph ReAct workflow
 from typing import Dict, List, Optional, Union
-import logging
 from agents.pii_agent import PIIAgent
 from agents.log_parser import LogParserAgent
 from agents.threat_agent import ThreatAgent
 from agents.vision_agent import VisionAgent
+from utils.logging_config import get_security_logger
 
-logger = logging.getLogger(__name__)
+logger = get_security_logger("supervisor")
 
 class SupervisorAgent:
     """
@@ -14,10 +14,12 @@ class SupervisorAgent:
     and integrates with the LangGraph ReAct workflow for intelligent processing.
     """
 
-    def __init__(self, memory=None, vectorstore=None, use_react_workflow=True):
+    def __init__(self, memory=None, vectorstore=None, use_react_workflow=True,
+                 abuseipdb_client=None, shodan_client=None, virustotal_client=None):
         self.memory = memory
         self.vectorstore = vectorstore
         self.use_react_workflow = use_react_workflow
+        logger.info("Supervisor agent initializing", use_react_workflow=use_react_workflow)
 
         # Initialize individual agents
         self.pii_agent = PIIAgent(memory)
@@ -27,16 +29,26 @@ class SupervisorAgent:
 
         # Initialize ReAct workflow if enabled
         if use_react_workflow:
+            logger.debug(f"Attempting to initialize ReAct workflow with clients: {abuseipdb_client is not None}, {shodan_client is not None}, {virustotal_client is not None}")
             try:
                 from workflows.react_workflow import create_cybershield_workflow
-                self.react_agent = create_cybershield_workflow(memory, vectorstore)
-                logger.info("ReAct workflow initialized successfully")
+                self.react_agent = create_cybershield_workflow(
+                    memory, vectorstore, "gpt-4o",
+                    abuseipdb_client, shodan_client, virustotal_client
+                )
+                logger.info("ReAct workflow initialized", status="success")
             except Exception as e:
-                logger.warning(f"Failed to initialize ReAct workflow: {e}")
+                logger.error("ReAct workflow initialization failed", error=str(e))
+                logger.debug(f"ReAct workflow error details:", exc_info=True)
                 self.react_agent = None
                 self.use_react_workflow = False
         else:
+            logger.info("ReAct workflow disabled", reason="use_react_workflow=False")
             self.react_agent = None
+
+    async def initialize_clients(self):
+        """Initialize all async clients in agents"""
+        await self.threat_agent._get_clients()
 
     async def analyze(self, user_input: Union[str, Dict], image_data: Optional[bytes] = None) -> Dict:
         """
@@ -59,9 +71,11 @@ class SupervisorAgent:
                 text_input = str(user_input)
 
             # Choose processing method
+            logger.debug(f"use_react_workflow: {self.use_react_workflow}, react_agent exists: {self.react_agent is not None}")
             if self.use_react_workflow and self.react_agent:
                 return await self._process_with_react(text_input, image_data)
             else:
+                logger.info("Using sequential processing (ReAct not available)")
                 return await self._process_sequential(text_input, image_data)
 
         except Exception as e:
@@ -76,6 +90,9 @@ class SupervisorAgent:
         """Process input using the ReAct workflow"""
         try:
             logger.info("Processing with ReAct workflow")
+            logger.debug(f"ReAct agent available: {self.react_agent is not None}")
+            logger.debug(f"Text input length: {len(text_input) if text_input else 0}")
+            
             result = await self.react_agent.process(text_input, image_data)
 
             # Add supervisor metadata
@@ -86,6 +103,8 @@ class SupervisorAgent:
 
         except Exception as e:
             logger.error(f"ReAct processing failed: {e}")
+            logger.debug(f"ReAct agent type: {type(self.react_agent)}")
+            logger.debug(f"Exception type: {type(e)}")
             # Fallback to sequential processing
             logger.info("Falling back to sequential processing")
             return await self._process_sequential(text_input, image_data)
@@ -116,6 +135,7 @@ class SupervisorAgent:
             # Step 2: IOC Extraction
             logger.debug("Step 2: IOC Extraction")
             iocs = await self.log_parser.extract_iocs(masked_text)
+            logger.debug(f"IOCs type: {type(iocs)}, value: {iocs}")
             results["ioc_analysis"] = {
                 "extracted_iocs": iocs,
                 "ioc_count": len(iocs)
@@ -124,6 +144,7 @@ class SupervisorAgent:
             # Step 3: Threat Analysis
             logger.debug("Step 3: Threat Analysis")
             threat_report = await self.threat_agent.evaluate(iocs)
+            logger.debug(f"Threat report type: {type(threat_report)}, value: {threat_report}")
             results["threat_analysis"] = threat_report
 
             # Step 4: Vision Analysis (if image provided)

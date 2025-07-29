@@ -5,9 +5,9 @@ Test PII system with PostgreSQL integration
 
 import logging
 from agents.pii_agent import PIIAgent
-
+import os
 # Configure logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO"))
 logger = logging.getLogger(__name__)
 
 def test_pii_with_postgres():

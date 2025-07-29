@@ -4,11 +4,9 @@ import logging
 import hashlib
 import os
 from datetime import datetime, timedelta
-from typing import Dict, Optional, List, Any
+from typing import Dict, Optional
 import redis
 import psycopg2
-from psycopg2.extras import RealDictCursor
-from psycopg2 import sql
 
 logger = logging.getLogger(__name__)
 

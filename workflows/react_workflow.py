@@ -1,13 +1,13 @@
 # ReAct workflow using LangGraph for CyberShield
 from typing import Dict, List, Optional, Any, TypedDict, Annotated
-import logging
+import os
 from langgraph.graph import StateGraph, END
 # from langgraph.prebuilt import ToolExecutor, ToolInvocation  # Not used in current implementation
-from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
-from langchain_core.tools import BaseTool
+from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_openai import ChatOpenAI
+from utils.logging_config import get_security_logger
 
-logger = logging.getLogger(__name__)
+logger = get_security_logger("react_workflow")
 
 # Placeholder: LangGraph DAG execution model for ReAct agent flow
 # Define StateGraph and wire up SupervisorAgent -> PII -> LogParser -> ThreatAgent -> Summary
@@ -31,9 +31,13 @@ class CyberShieldState(TypedDict):
 class CyberShieldReActAgent:
     """ReAct agent using LangGraph for cybersecurity analysis"""
 
-    def __init__(self, memory=None, vectorstore=None, llm_model="gpt-4o"):
+    def __init__(self, memory=None, vectorstore=None, llm_model="gpt-4o",
+                 abuseipdb_client=None, shodan_client=None, virustotal_client=None):
         self.memory = memory
         self.vectorstore = vectorstore
+        self.abuseipdb_client = abuseipdb_client
+        self.shodan_client = shodan_client
+        self.virustotal_client = virustotal_client
 
         # Import agents here to avoid circular imports
         from agents.pii_agent import PIIAgent
@@ -44,6 +48,14 @@ class CyberShieldReActAgent:
         self.pii_agent = PIIAgent(memory)
         self.log_parser = LogParserAgent()
         self.threat_agent = ThreatAgent(memory)
+
+        # Initialize threat agent with client instances if available
+        if abuseipdb_client:
+            self.threat_agent.abuseipdb_client = abuseipdb_client
+        if shodan_client:
+            self.threat_agent.shodan_client = shodan_client
+        if virustotal_client:
+            self.threat_agent.virustotal_client = virustotal_client
         self.vision_agent = VisionAgent(memory)
 
         # Initialize LLM
@@ -78,12 +90,18 @@ class CyberShieldReActAgent:
 
     def _agent_step(self, state: CyberShieldState) -> CyberShieldState:
         """Agent reasoning step - decide what to do next"""
+        iteration = state.get("iteration_count", 0)
+        logger.info(f"Agent reasoning step {iteration}",
+                   scratchpad_length=len(state.get("agent_scratchpad", "")))
         try:
             # Build prompt with current state
             prompt = self._build_agent_prompt(state)
 
             # Get LLM response
             response = self.llm.invoke(prompt)
+
+            # Log the full reasoning chain with proper parsing
+            self._log_agent_reasoning(response.content, iteration)
 
             # Parse response for tool calls or final answer
             parsed_response = self._parse_agent_response(response.content, state)
@@ -115,8 +133,33 @@ class CyberShieldReActAgent:
                 tool_name = tool_call.get("tool")
                 tool_input = tool_call.get("input", {})
 
+                logger.info(f"🔧 Action: {tool_name}",
+                           action_input=tool_input,
+                           iteration=state.get("iteration_count", 0))
+
                 # Execute appropriate tool
                 result = await self._execute_tool(tool_name, tool_input, state)
+
+                # Check if JSON format is requested
+                json_format = os.getenv("REACT_LOG_FORMAT", "").lower() == "json"
+
+                if json_format:
+                    import json
+                    logger.info(json.dumps({
+                        "type": "observation",
+                        "iteration": state.get("iteration_count", 0),
+                        "tool": tool_name,
+                        "result_type": type(result).__name__,
+                        "success": "error" not in result,
+                        "observation": result
+                    }))
+                else:
+                    logger.info(f"👁️ Observation",
+                               tool=tool_name,
+                               result_type=type(result).__name__,
+                               success="error" not in result,
+                               iteration=state.get("iteration_count", 0),
+                               observation=str(result)[:400] + "..." if len(str(result)) > 400 else str(result))
 
                 # Update scratchpad
                 state["agent_scratchpad"] += f"\nAction: {tool_name}\nAction Input: {tool_input}\nObservation: {result}"
@@ -133,6 +176,7 @@ class CyberShieldReActAgent:
 
     async def _execute_tool(self, tool_name: str, tool_input: Dict, state: CyberShieldState) -> Dict:
         """Execute individual tools"""
+        logger.info(f"Executing tool: {tool_name}", tool_input=tool_input, iteration=state.get("iteration_count", 0))
         try:
             if tool_name == "pii_detection_tool":
                 text = tool_input.get("text", state.get("input_text", ""))
@@ -163,28 +207,33 @@ class CyberShieldReActAgent:
                     return {"error": "No image data provided", "status": "error"}
 
             elif tool_name == "regex_pattern_tool":
-                from tools.regex_checker import regex_checker
+                from tools.regex_checker import RegexChecker
                 pattern = tool_input.get("pattern", "")
                 text = tool_input.get("text", state.get("input_text", ""))
-                matches = regex_checker(pattern, text)
+                regex_checker = RegexChecker()
+                matches = regex_checker.check_pattern(text, pattern)
                 return {"matches": matches, "status": "success"}
 
             elif tool_name == "shodan_lookup_tool":
-                from tools.shodan import shodan_lookup
+                if not self.shodan_client:
+                    return {"error": "Shodan client not available", "status": "error"}
                 ip = tool_input.get("ip", "")
-                result = shodan_lookup(ip)
+                result = await self.shodan_client.lookup_ip(ip)
                 return {"shodan_result": result, "status": "success"}
 
             elif tool_name == "virustotal_lookup_tool":
-                from tools.virustotal import virustotal_lookup
-                resource = tool_input.get("resource", "")
-                result = virustotal_lookup(resource)
+                if not self.virustotal_client:
+                    return {"error": "VirusTotal client not available", "status": "error"}
+                # Accept both 'resource' and 'ip' parameters for flexibility
+                resource = tool_input.get("resource", "") or tool_input.get("ip", "")
+                result = await self.virustotal_client.lookup_ip(resource)
                 return {"virustotal_result": result, "status": "success"}
 
             elif tool_name == "abuseipdb_lookup_tool":
-                from tools.abuseipdb import abuseipdb_lookup
+                if not self.abuseipdb_client:
+                    return {"error": "AbuseIPDB client not available", "status": "error"}
                 ip = tool_input.get("ip", "")
-                result = abuseipdb_lookup(ip)
+                result = await self.abuseipdb_client.check_ip(ip)
                 return {"abuseipdb_result": result, "status": "success"}
 
             else:
@@ -195,6 +244,9 @@ class CyberShieldReActAgent:
 
     def _synthesize_step(self, state: CyberShieldState) -> CyberShieldState:
         """Final synthesis and report generation"""
+        logger.info("Synthesizing final report",
+                   iterations=state.get("iteration_count", 0),
+                   tools_used=len(state.get("tool_calls", [])))
         try:
             # Compile comprehensive report
             final_report = {
@@ -225,6 +277,97 @@ class CyberShieldReActAgent:
             logger.error(f"Synthesis step failed: {e}")
             state["final_report"] = {"error": str(e)}
             return state
+
+    def _log_agent_reasoning(self, response_content: str, iteration: int) -> None:
+        """Parse and log agent reasoning in ReAct format"""
+        lines = response_content.strip().split('\n')
+
+        current_thought = ""
+        current_action = ""
+        current_action_input = ""
+
+        # Check if JSON format is requested via environment variable
+        json_format = os.getenv("REACT_LOG_FORMAT", "").lower() == "json"
+
+        for line in lines:
+            line = line.strip()
+            if line.startswith("Thought:"):
+                current_thought = line.replace("Thought:", "").strip()
+                if current_thought:
+                    if json_format:
+                        import json
+                        logger.info(json.dumps({
+                            "type": "thought",
+                            "iteration": iteration,
+                            "content": current_thought
+                        }))
+                    else:
+                        logger.info(f"💭 Thought",
+                                   iteration=iteration,
+                                   thought=current_thought)
+
+            elif line.startswith("Action:"):
+                current_action = line.replace("Action:", "").strip()
+                if current_action:
+                    if json_format:
+                        import json
+                        logger.info(json.dumps({
+                            "type": "action",
+                            "iteration": iteration,
+                            "action": current_action
+                        }))
+                    else:
+                        logger.info(f"🔧 Action",
+                                   iteration=iteration,
+                                   action=current_action)
+
+            elif line.startswith("Action Input:"):
+                current_action_input = line.replace("Action Input:", "").strip()
+                if current_action_input:
+                    if json_format:
+                        import json
+                        try:
+                            parsed_input = json.loads(current_action_input)
+                        except:
+                            parsed_input = current_action_input
+                        logger.info(json.dumps({
+                            "type": "action_input",
+                            "iteration": iteration,
+                            "input": parsed_input
+                        }))
+                    else:
+                        logger.info(f"📥 Action Input",
+                                   iteration=iteration,
+                                   action_input=current_action_input)
+
+            elif line.startswith("Final Answer:"):
+                final_answer = line.replace("Final Answer:", "").strip()
+                if final_answer:
+                    if json_format:
+                        import json
+                        logger.info(json.dumps({
+                            "type": "final_answer",
+                            "iteration": iteration,
+                            "answer": final_answer
+                        }))
+                    else:
+                        logger.info(f"✅ Final Answer",
+                                   iteration=iteration,
+                                   final_answer=final_answer[:300] + "..." if len(final_answer) > 300 else final_answer)
+
+        # If no structured format found, log the raw content
+        if not any(keyword in response_content for keyword in ["Thought:", "Action:", "Final Answer:"]):
+            if json_format:
+                import json
+                logger.info(json.dumps({
+                    "type": "agent_response",
+                    "iteration": iteration,
+                    "response": response_content[:500] + "..." if len(response_content) > 500 else response_content
+                }))
+            else:
+                logger.info(f"🤔 Agent Response",
+                           iteration=iteration,
+                           response=response_content[:500] + "..." if len(response_content) > 500 else response_content)
 
     def _should_continue(self, state: CyberShieldState) -> str:
         """Decide whether to continue or end the workflow"""
@@ -272,12 +415,17 @@ Always prioritize security and privacy. Be thorough in your analysis."""
 
         messages.append(HumanMessage(content=user_message))
 
-        # Add conversation history
-        messages.extend(state.get("messages", []))
+        # Add conversation history (keep only recent messages to avoid token limit)
+        recent_messages = state.get("messages", [])[-2:]  # Keep only last 2 messages
+        messages.extend(recent_messages)
 
-        # Add current scratchpad
+        # Add current scratchpad (truncate if too long)
         if state.get("agent_scratchpad"):
-            messages.append(HumanMessage(content=f"Current progress:\n{state['agent_scratchpad']}"))
+            scratchpad = state['agent_scratchpad']
+            # Truncate scratchpad if it's too long (keep last 2000 chars)
+            if len(scratchpad) > 2000:
+                scratchpad = "...\n" + scratchpad[-2000:]
+            messages.append(HumanMessage(content=f"Current progress:\n{scratchpad}"))
 
         return messages
 
@@ -376,6 +524,9 @@ Always prioritize security and privacy. Be thorough in your analysis."""
 
     async def process(self, input_text: str, input_image: Optional[bytes] = None) -> Dict:
         """Process input through the ReAct workflow"""
+        logger.info("Starting ReAct workflow",
+                   input_length=len(input_text),
+                   has_image=input_image is not None)
         try:
             # Initialize state
             initial_state = CyberShieldState(
@@ -397,13 +548,21 @@ Always prioritize security and privacy. Be thorough in your analysis."""
             # Run workflow
             final_state = await self.workflow.ainvoke(initial_state)
 
-            return final_state.get("final_report", {"error": "No final report generated"})
+            final_report = final_state.get("final_report", {"error": "No final report generated"})
+            logger.info("ReAct workflow completed",
+                       total_iterations=final_state.get("iteration_count", 0),
+                       success="error" not in final_report,
+                       report_keys=list(final_report.keys()) if isinstance(final_report, dict) else [])
+
+            return final_report
 
         except Exception as e:
             logger.error(f"ReAct workflow failed: {e}")
             return {"error": str(e)}
 
 # Factory function for easy instantiation
-def create_cybershield_workflow(memory=None, vectorstore=None, llm_model="gpt-4o"):
+def create_cybershield_workflow(memory=None, vectorstore=None, llm_model="gpt-4o",
+                               abuseipdb_client=None, shodan_client=None, virustotal_client=None):
     """Create a CyberShield ReAct workflow instance"""
-    return CyberShieldReActAgent(memory, vectorstore, llm_model)
+    return CyberShieldReActAgent(memory, vectorstore, llm_model,
+                                abuseipdb_client, shodan_client, virustotal_client)

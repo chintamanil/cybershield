@@ -5,9 +5,8 @@ Interactive Milvus Data Viewer
 
 import sys
 import os
-import json
 import pandas as pd
-from typing import List, Dict, Any
+from typing import List, Dict
 
 # Add the project root to the path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))

@@ -4,12 +4,12 @@ Provides comprehensive pattern matching for cybersecurity IOCs and data validati
 """
 
 import re
-import logging
-from typing import Dict, Any, List, Optional, Tuple
+from typing import Dict, Any, List
 import ipaddress
 from urllib.parse import urlparse
+from utils.logging_config import get_security_logger
 
-logger = logging.getLogger(__name__)
+logger = get_security_logger("regex_checker")
 
 class IOCPatterns:
     """Comprehensive IOC (Indicator of Compromise) patterns"""

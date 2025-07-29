@@ -2,7 +2,7 @@
 import re
 import uuid
 import logging
-from typing import Tuple, Dict, List
+from typing import Tuple, Dict
 from memory.pii_store import PIISecureStore
 
 logger = logging.getLogger(__name__)
@@ -18,7 +18,7 @@ class PIIAgent:
         if not session_id:
             session_id = str(uuid.uuid4())
 
-        if await self.pii_store.start_session(session_id):
+        if self.pii_store.start_session(session_id):
             self.current_session = session_id
             logger.info(f"Started PII session: {session_id}")
             return session_id
@@ -68,7 +68,7 @@ class PIIAgent:
                 masked_text = masked_text.replace(original_value, mask_token)
 
                 # Store mapping securely
-                if await self.pii_store.store_mapping(mask_token, original_value, pii_type):
+                if self.pii_store.store_mapping(mask_token, original_value, pii_type):
                     mapping[mask_token] = {
                         "original": original_value,
                         "type": pii_type,
@@ -96,7 +96,7 @@ class PIIAgent:
             return masked_text
 
         # Get all mappings for session
-        mappings = await self.pii_store.get_session_mappings()
+        mappings = self.pii_store.get_session_mappings()
 
         # Replace mask tokens with original values
         unmasked_text = masked_text
@@ -113,15 +113,15 @@ class PIIAgent:
         if not session_id:
             return None
 
-        return await self.pii_store.get_mapping(mask_token)
+        return self.pii_store.get_mapping(mask_token)
 
     async def end_session(self, session_id: str = None):
         """End current PII session"""
         if session_id or self.current_session:
-            await self.pii_store.end_session()
+            self.pii_store.end_session()
             self.current_session = None
             logger.info(f"Ended PII session: {session_id or self.current_session}")
 
     async def cleanup_expired_sessions(self):
         """Clean up expired PII sessions"""
-        await self.pii_store.cleanup_expired_sessions()
+        self.pii_store.cleanup_expired_sessions()

@@ -6,15 +6,11 @@ A comprehensive UI for the CyberShield AI Security System
 
 import streamlit as st
 import requests
-import json
-import time
 import pandas as pd
 from typing import Dict, Any, Optional
-import base64
 import io
 from PIL import Image
 import plotly.express as px
-import plotly.graph_objects as go
 
 # Configure page
 st.set_page_config(

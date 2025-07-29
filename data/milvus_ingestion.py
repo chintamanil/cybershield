@@ -6,21 +6,19 @@ Converts cybersecurity attack data to vector embeddings and stores in Milvus
 
 import pandas as pd
 import numpy as np
-import logging
-from typing import List, Dict, Any, Optional, Tuple
+from typing import List, Dict, Any
 import json
 import hashlib
-from datetime import datetime
-import re
 import sys
 import os
 
 # Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+# Configure structured logging
+from utils.logging_config import get_security_logger
+
+logger = get_security_logger("milvus_ingestion")
 
 # Try to import optional dependencies
 try:
@@ -60,7 +58,10 @@ class CyberSecurityDataProcessor:
                 device = "cuda" if torch.cuda.is_available() else "cpu"
                 self.embedding_model = SentenceTransformer(model_name, device=device)
                 self.dimension = self.embedding_model.get_sentence_embedding_dimension()
-                logger.info(f"Initialized embedding model: {model_name} (dim: {self.dimension}) on {device}")
+                logger.info("Embedding model initialized", 
+                           model=model_name, 
+                           dimension=self.dimension, 
+                           device=device)
             except Exception as e:
                 logger.warning(f"Failed to initialize embedding model: {e}")
                 logger.info("Will use fallback text processing without embeddings")
@@ -78,7 +79,7 @@ class CyberSecurityDataProcessor:
         Returns:
             Cleaned DataFrame
         """
-        logger.info("Preprocessing cybersecurity data...")
+        logger.info("Starting data preprocessing", data_source="cybersecurity_attacks.csv")
 
         # Create a copy to avoid modifying original
         processed_df = df.copy()
@@ -110,7 +111,9 @@ class CyberSecurityDataProcessor:
         processed_df['network_context'] = self._create_network_context(processed_df)
         processed_df['full_context'] = self._create_full_context(processed_df)
 
-        logger.info(f"Preprocessed {len(processed_df)} records")
+        logger.info("Data preprocessing completed", 
+                   records_processed=len(processed_df),
+                   original_count=len(df))
         return processed_df
 
     def _create_attack_description(self, df: pd.DataFrame) -> pd.Series:

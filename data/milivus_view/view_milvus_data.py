@@ -5,9 +5,7 @@ Script to view and query data from Milvus collection
 
 import sys
 import os
-import json
 import pandas as pd
-from typing import List, Dict, Any
 
 # Add the project root to the path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))

@@ -5,9 +5,6 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional, Dict, Any
-import base64
-import json
-import logging
 import asyncio
 import time
 import os
@@ -28,9 +25,12 @@ from tools.shodan import ShodanClient
 from tools.virustotal import VirusTotalClient
 from tools.regex_checker import RegexChecker
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+# Configure structured logging
+from utils.logging_config import setup_from_env, get_logger
+
+# Setup logging from environment
+setup_from_env()
+logger = get_logger(__name__, component="server")
 
 
 # Global variables for async components
@@ -54,17 +54,26 @@ async def lifespan(app: FastAPI):
         await memory._get_redis()  # Initialize Redis connection
 
         vectorstore = init_milvus()
-        agent = SupervisorAgent(memory, vectorstore, use_react_workflow=True)
 
-        # Initialize async tool clients
+        # Initialize async tool clients first
         abuseipdb_client = AbuseIPDBClient()
         shodan_client = ShodanClient()
         virustotal_client = VirusTotalClient()
         regex_checker = RegexChecker()
 
-        logger.info("CyberShield async components initialized successfully")
+        # Initialize agent with client instances
+        logger.info("Initializing CyberShield components", react_workflow=True)
+        agent = SupervisorAgent(memory, vectorstore, use_react_workflow=True,
+                               abuseipdb_client=abuseipdb_client,
+                               shodan_client=shodan_client,
+                               virustotal_client=virustotal_client)
+        logger.info("SupervisorAgent created", react_agent_enabled=agent.react_agent is not None)
+        await agent.initialize_clients()
+
+        logger.info("CyberShield initialization complete", components=["memory", "vectorstore", "agents", "tools"])
     except Exception as e:
-        logger.error(f"Failed to initialize components: {e}")
+        logger.error("Component initialization failed", error=str(e), fallback_mode=True)
+        logger.debug("Creating fallback SupervisorAgent without ReAct workflow", exc_info=True)
         # Create fallback without external dependencies
         agent = SupervisorAgent(None, None, use_react_workflow=False)
         abuseipdb_client = None
@@ -84,9 +93,9 @@ async def lifespan(app: FastAPI):
             await shodan_client.close()
         if virustotal_client:
             await virustotal_client.close()
-        logger.info("Async components closed successfully")
+        logger.info("CyberShield shutdown complete", status="success")
     except Exception as e:
-        logger.error(f"Error during shutdown: {e}")
+        logger.error("Shutdown error", error=str(e))
 
 # Initialize FastAPI app with async lifespan
 app = FastAPI(
@@ -183,8 +192,11 @@ async def analyze_text(request: AnalysisRequest):
     """
     Analyze text input for security threats, PII, and IOCs
     """
+    start_time = time.time()
+    request_logger = logger.bind(endpoint="analyze", react_workflow=request.use_react_workflow)
+
     try:
-        start_time = time.time()
+        request_logger.info("Analysis request started", text_length=len(request.text))
 
         # Configure agent workflow
         if hasattr(agent, 'use_react_workflow'):
@@ -286,6 +298,13 @@ async def analyze_text(request: AnalysisRequest):
 
         processing_time = time.time() - start_time
 
+        request_logger.info(
+            "Analysis request completed",
+            status="success",
+            processing_time_ms=round(processing_time * 1000, 2),
+            tool_analysis_included=bool(tool_results)
+        )
+
         return AnalysisResponse(
             status="success",
             result=result,
@@ -293,7 +312,12 @@ async def analyze_text(request: AnalysisRequest):
         )
 
     except Exception as e:
-        logger.error(f"Analysis failed: {e}")
+        processing_time = time.time() - start_time
+        request_logger.error(
+            "Analysis request failed",
+            error=str(e),
+            processing_time_ms=round(processing_time * 1000, 2)
+        )
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/analyze-with-image")
@@ -347,7 +371,7 @@ async def batch_analyze(request: BatchAnalysisRequest):
         if hasattr(agent, 'use_react_workflow'):
             agent.use_react_workflow = request.use_react_workflow
 
-        # Perform batch analysis  
+        # Perform batch analysis
         results = await agent.analyze_batch(request.inputs)
 
         processing_time = time.time() - start_time
@@ -558,5 +582,5 @@ if __name__ == "__main__":
         host="0.0.0.0",
         port=8000,
         reload=True,
-        log_level="info"
+        log_level=os.getenv("LOG_LEVEL", "info").lower()
     )

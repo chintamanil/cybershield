@@ -6,8 +6,7 @@ Provides comprehensive malware analysis and threat intelligence
 import os
 import logging
 import asyncio
-import hashlib
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional
 import aiohttp
 import ipaddress
 

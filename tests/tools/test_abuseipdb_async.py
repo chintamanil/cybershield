@@ -6,12 +6,12 @@ import unittest
 import sys
 import os
 import asyncio
-from unittest.mock import AsyncMock, patch, Mock
+from unittest.mock import AsyncMock, patch
 
 # Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
-from tools.abuseipdb import AbuseIPDBClient, check_ip, check_subnet, report_ip, get_blacklist
+from tools.abuseipdb import AbuseIPDBClient, check_ip, check_subnet, get_blacklist
 
 
 class TestAbuseIPDBClientAsync(unittest.IsolatedAsyncioTestCase):

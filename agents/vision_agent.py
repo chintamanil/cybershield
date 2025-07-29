@@ -2,12 +2,12 @@
 import base64
 import io
 import logging
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Dict, List, Union
 from PIL import Image
 import pytesseract
 import cv2
 import numpy as np
-from transformers import pipeline, AutoProcessor, AutoModelForImageClassification
+from transformers import pipeline
 import torch
 
 logger = logging.getLogger(__name__)

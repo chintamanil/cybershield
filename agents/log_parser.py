@@ -1,12 +1,11 @@
 # LogParserAgent extracts IOCs from structured and unstructured logs
 import re
 import json
-import logging
-import asyncio
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any
 from datetime import datetime
+from utils.logging_config import get_security_logger
 
-logger = logging.getLogger(__name__)
+logger = get_security_logger("log_parser")
 
 class LogParserAgent:
     """Enhanced log parser for extracting IOCs from various log formats"""

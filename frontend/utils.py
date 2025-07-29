@@ -8,7 +8,6 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from typing import Dict, Any, List, Optional, Union
-import json
 import time
 from datetime import datetime
 import base64
