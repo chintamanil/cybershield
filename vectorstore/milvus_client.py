@@ -1,6 +1,7 @@
 # Milvus client to store embeddings of logs
 from pymilvus import connections, Collection, utility, FieldSchema, CollectionSchema, DataType
 from utils.logging_config import get_security_logger
+from utils.device_config import create_performance_config
 
 logger = get_security_logger("milvus_client")
 

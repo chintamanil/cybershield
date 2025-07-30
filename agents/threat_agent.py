@@ -1,17 +1,27 @@
 # ThreatAgent calls Shodan, AbuseIPDB, VirusTotal tools with async support
 import asyncio
-import logging
 from typing import Dict, List, Any
 from tools.shodan import ShodanClient
 from tools.abuseipdb import AbuseIPDBClient
 from tools.virustotal import VirusTotalClient
+from utils.logging_config import get_security_logger
+from utils.device_config import create_performance_config
 
-logger = logging.getLogger(__name__)
+logger = get_security_logger("threat_agent")
 
 class ThreatAgent:
     def __init__(self, memory=None, session_id=None):
         self.memory = memory  # Async Redis STM
         self.session_id = session_id
+        
+        # Get performance configuration for M4 optimization
+        self.perf_config = create_performance_config()
+        
+        logger.info("Initializing ThreatAgent with M4 optimization",
+                   device=self.perf_config["device"],
+                   batch_size=self.perf_config["batch_size"],
+                   num_workers=self.perf_config["num_workers"])
+        
         # Initialize tool clients (async context managers)
         self.shodan_client = None
         self.abuseipdb_client = None

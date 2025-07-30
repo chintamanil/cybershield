@@ -14,6 +14,15 @@ class LogParserAgent:
         self.memory = memory  # Optional Redis STM
         self.session_id = session_id  # Optional session binding
         
+        # Get performance configuration for M4 optimization  
+        from utils.device_config import create_performance_config
+        self.perf_config = create_performance_config()
+        
+        logger.info("Initializing LogParserAgent with M4 optimization",
+                   device=self.perf_config["device"],
+                   batch_size=self.perf_config["batch_size"],
+                   num_workers=self.perf_config["num_workers"])
+        
         # Comprehensive IOC patterns
         self.patterns = {
             'ipv4': r'\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b',

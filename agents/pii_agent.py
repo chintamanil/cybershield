@@ -1,17 +1,26 @@
 # PIIAgent detects and masks PII using regex and stores mapping securely
 import re
 import uuid
-import logging
 from typing import Tuple, Dict
 from memory.pii_store import PIISecureStore
+from utils.logging_config import get_security_logger
+from utils.device_config import create_performance_config
 
-logger = logging.getLogger(__name__)
+logger = get_security_logger("pii_agent")
 
 class PIIAgent:
     def __init__(self, memory=None):
         self.memory = memory  # Redis connection for backward compatibility
         self.pii_store = PIISecureStore()  # Secure PII store
         self.current_session = None
+        
+        # Get performance configuration for M4 optimization
+        self.perf_config = create_performance_config()
+        
+        logger.info("Initializing PIIAgent with M4 optimization",
+                   device=self.perf_config["device"],
+                   num_workers=self.perf_config["num_workers"],
+                   memory_optimization=self.perf_config["memory_optimization"])
 
     async def start_session(self, session_id: str = None) -> str:
         """Start a new PII processing session"""

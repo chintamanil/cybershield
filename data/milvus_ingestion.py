@@ -15,8 +15,9 @@ import os
 # Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# Configure structured logging
+# Configure structured logging and device optimization
 from utils.logging_config import get_security_logger
+from utils.device_config import create_performance_config
 
 logger = get_security_logger("milvus_ingestion")
 
@@ -51,17 +52,38 @@ class CyberSecurityDataProcessor:
         self.dimension = 384  # Default for all-MiniLM-L6-v2
         self.collection_name = "cybersecurity_attacks"
 
+        # Get optimal device configuration for Mac M4
+        self.perf_config = create_performance_config()
+        
         # Initialize embedding model if available
         if SENTENCE_TRANSFORMERS_AVAILABLE:
             try:
                 import torch
-                device = "cuda" if torch.cuda.is_available() else "cpu"
+                device = self.perf_config["sentence_transformers_device"]
+                
+                logger.info("Initializing embedding model with optimization", 
+                           model=model_name,
+                           device=device,
+                           batch_size=self.perf_config["batch_size"],
+                           precision=self.perf_config["precision"])
+                
+                # Initialize with optimal settings for Mac M4
                 self.embedding_model = SentenceTransformer(model_name, device=device)
+                
+                # Enable half precision for better performance on Apple Silicon
+                if device == "mps" and hasattr(self.embedding_model, '_modules'):
+                    try:
+                        self.embedding_model.half()
+                        logger.info("Enabled half precision for Apple Silicon MPS")
+                    except:
+                        logger.info("Using full precision (half precision not supported)")
+                
                 self.dimension = self.embedding_model.get_sentence_embedding_dimension()
-                logger.info("Embedding model initialized", 
+                logger.info("Embedding model initialized successfully", 
                            model=model_name, 
                            dimension=self.dimension, 
-                           device=device)
+                           device=device,
+                           optimized_for="Mac_M4")
             except Exception as e:
                 logger.warning(f"Failed to initialize embedding model: {e}")
                 logger.info("Will use fallback text processing without embeddings")
@@ -206,13 +228,13 @@ class CyberSecurityDataProcessor:
 
         return pd.Series(full_contexts)
 
-    def create_embeddings(self, texts: List[str], batch_size: int = 32) -> np.ndarray:
+    def create_embeddings(self, texts: List[str], batch_size: int = None) -> np.ndarray:
         """
-        Create embeddings for text data
+        Create embeddings for text data with optimal batch size for Mac M4
 
         Args:
             texts: List of text strings to embed
-            batch_size: Batch size for processing
+            batch_size: Batch size for processing (auto-optimized if None)
 
         Returns:
             numpy array of embeddings
@@ -221,18 +243,40 @@ class CyberSecurityDataProcessor:
             logger.warning("No embedding model available, using zero vectors")
             return np.zeros((len(texts), self.dimension))
 
-        logger.info(f"Creating embeddings for {len(texts)} texts...")
+        # Use optimized batch size for Mac M4 if not specified
+        if batch_size is None:
+            batch_size = self.perf_config["batch_size"]
+
+        logger.info("Creating embeddings with optimization", 
+                   text_count=len(texts),
+                   batch_size=batch_size,
+                   device=self.perf_config["torch_device"],
+                   precision=self.perf_config["precision"])
 
         # Process in batches to avoid memory issues
         all_embeddings = []
 
         for i in range(0, len(texts), batch_size):
             batch_texts = texts[i:i + batch_size]
-            batch_embeddings = self.embedding_model.encode(batch_texts, show_progress_bar=False)
+            
+            # Use optimized encoding settings for Mac M4
+            batch_embeddings = self.embedding_model.encode(
+                batch_texts, 
+                show_progress_bar=False,
+                convert_to_numpy=True,
+                normalize_embeddings=True,  # Better for similarity search
+                batch_size=min(batch_size, len(batch_texts))  # Ensure we don't exceed batch
+            )
             all_embeddings.append(batch_embeddings)
+            
+            if (i + batch_size) % (batch_size * 10) == 0:  # Log every 10 batches
+                logger.info(f"Processed {i + batch_size}/{len(texts)} texts")
 
         embeddings = np.vstack(all_embeddings)
-        logger.info(f"Created embeddings with shape: {embeddings.shape}")
+        logger.info("Embedding creation completed", 
+                   shape=embeddings.shape,
+                   dtype=embeddings.dtype,
+                   device=self.perf_config["torch_device"])
         return embeddings
 
     def create_milvus_collection(self, force_recreate: bool = False):

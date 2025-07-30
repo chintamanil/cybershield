@@ -6,6 +6,7 @@ from langgraph.graph import StateGraph, END
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_openai import ChatOpenAI
 from utils.logging_config import get_security_logger
+from utils.device_config import create_performance_config
 
 logger = get_security_logger("react_workflow")
 
@@ -39,6 +40,15 @@ class CyberShieldReActAgent:
         self.shodan_client = shodan_client
         self.virustotal_client = virustotal_client
 
+        # Get performance configuration for M4 optimization
+        self.perf_config = create_performance_config()
+        
+        logger.info("Initializing ReAct workflow with M4 optimization",
+                   llm_model=llm_model,
+                   device=self.perf_config["device"],
+                   batch_size=self.perf_config["batch_size"],
+                   memory_optimization=self.perf_config["memory_optimization"])
+
         # Import agents here to avoid circular imports
         from agents.pii_agent import PIIAgent
         from agents.log_parser import LogParserAgent
@@ -65,7 +75,7 @@ class CyberShieldReActAgent:
         self.workflow = self._create_workflow()
 
     def _create_workflow(self) -> StateGraph:
-        """Create the LangGraph workflow for ReAct processing"""
+        """Create the LangGraph workflow for ReAct processing with optimized API calls"""
         workflow = StateGraph(CyberShieldState)
 
         # Add nodes
@@ -73,17 +83,24 @@ class CyberShieldReActAgent:
         workflow.add_node("tools", self._tool_step)
         workflow.add_node("synthesize", self._synthesize_step)
 
-        # Add edges
+        # Add edges - optimized to reduce OpenAI API calls
         workflow.set_entry_point("agent")
         workflow.add_conditional_edges(
             "agent",
             self._should_continue,
             {
-                "continue": "tools",
-                "end": "synthesize"
+                "tools": "tools",      # Go to tools if we have tool calls
+                "synthesize": "synthesize"  # Go directly to synthesis if final answer
             }
         )
-        workflow.add_edge("tools", "agent")
+        workflow.add_conditional_edges(
+            "tools",
+            self._should_continue_after_tools,
+            {
+                "agent": "agent",      # Only go back to agent if more reasoning needed
+                "synthesize": "synthesize"  # Otherwise synthesize directly
+            }
+        )
         workflow.add_edge("synthesize", END)
 
         return workflow.compile()
@@ -370,21 +387,49 @@ class CyberShieldReActAgent:
                            response=response_content[:500] + "..." if len(response_content) > 500 else response_content)
 
     def _should_continue(self, state: CyberShieldState) -> str:
-        """Decide whether to continue or end the workflow"""
-        if state.get("next_action") == "finish":
-            return "end"
+        """Decide whether to use tools or synthesize after agent step"""
+        if state.get("next_action") == "finish" or state.get("final_report"):
+            return "synthesize"  # Go directly to synthesis
+        elif state.get("tool_calls"):
+            return "tools"  # Execute tools
         elif state.get("iteration_count", 0) > 10:  # Prevent infinite loops
-            return "end"
+            return "synthesize"  # Force completion
         else:
-            return "continue"
+            return "tools"  # Default to tools if unclear
+    
+    def _should_continue_after_tools(self, state: CyberShieldState) -> str:
+        """Decide whether to continue reasoning or synthesize after tool execution"""
+        iteration = state.get("iteration_count", 0)
+        scratchpad = state.get("agent_scratchpad", "")
+        
+        # Count successful tool executions
+        successful_observations = scratchpad.count("Observation:") - scratchpad.count('"error"')
+        
+        # If we have multiple successful tool results, go straight to synthesis
+        if successful_observations >= 2 or iteration >= 1:
+            logger.info("Moving to synthesis after tools", 
+                       successful_observations=successful_observations,
+                       iteration=iteration,
+                       reason="sufficient_data")
+            return "synthesize"
+        elif iteration > 5:  # Hard limit to prevent loops
+            logger.info("Forcing synthesis due to iteration limit", iteration=iteration)
+            return "synthesize"
+        else:
+            logger.info("Continuing to agent for more reasoning", iteration=iteration)
+            return "agent"
 
     def _build_agent_prompt(self, state: CyberShieldState) -> List:
-        """Build the prompt for the agent"""
-        system_prompt = """You are CyberShield, an advanced AI security analyst. Your role is to analyze text and images for cybersecurity threats, PII, and other risks.
+        """Build the prompt for the agent with optimized single-pass analysis"""
+        iteration = state.get("iteration_count", 0)
+        
+        if iteration == 0:
+            # First iteration: comprehensive analysis in one pass
+            system_prompt = """You are CyberShield, an advanced AI security analyst. Analyze the input efficiently and comprehensively in a single pass.
 
 Available Tools:
 - pii_detection_tool: Detect and mask PII in text
-- ioc_extraction_tool: Extract indicators of compromise
+- ioc_extraction_tool: Extract indicators of compromise  
 - threat_analysis_tool: Analyze threats using external APIs
 - vision_analysis_tool: Analyze images for security risks
 - regex_pattern_tool: Check regex patterns
@@ -392,16 +437,27 @@ Available Tools:
 - virustotal_lookup_tool: Check resources on VirusTotal
 - abuseipdb_lookup_tool: Check IP reputation on AbuseIPDB
 
-Use the ReAct format:
-Thought: Analyze what needs to be done
-Action: [tool_name]
-Action Input: {"key": "value"}
-Observation: [tool_result]
-... (repeat as needed)
-Thought: I now have enough information to provide a final answer
-Final Answer: [comprehensive security analysis]
+IMPORTANT: For efficiency, plan ALL needed tool calls in your first response. Use this format:
 
-Always prioritize security and privacy. Be thorough in your analysis."""
+Thought: [Analyze what needs to be done - identify all required tools]
+Action: tool_name_1
+Action Input: {"key": "value"}
+Action: tool_name_2  
+Action Input: {"key": "value"}
+Action: tool_name_3
+Action Input: {"key": "value"}
+
+After tools execute, provide your Final Answer based on all results."""
+        else:
+            # Subsequent iterations: focus on synthesis
+            system_prompt = """You are CyberShield. You have tool results. Provide your final security analysis.
+
+Based on the tool results in your scratchpad, provide a comprehensive Final Answer with:
+1. Risk assessment
+2. Key findings  
+3. Recommendations
+
+Format: Final Answer: [your comprehensive analysis]"""
 
         messages = [SystemMessage(content=system_prompt)]
 

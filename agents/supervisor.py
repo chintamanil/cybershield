@@ -5,6 +5,7 @@ from agents.log_parser import LogParserAgent
 from agents.threat_agent import ThreatAgent
 from agents.vision_agent import VisionAgent
 from utils.logging_config import get_security_logger
+from utils.device_config import create_performance_config
 
 logger = get_security_logger("supervisor")
 
@@ -19,7 +20,15 @@ class SupervisorAgent:
         self.memory = memory
         self.vectorstore = vectorstore
         self.use_react_workflow = use_react_workflow
-        logger.info("Supervisor agent initializing", use_react_workflow=use_react_workflow)
+        
+        # Get performance configuration for M4 optimization
+        self.perf_config = create_performance_config()
+        
+        logger.info("Supervisor agent initializing with M4 optimization", 
+                   use_react_workflow=use_react_workflow,
+                   device=self.perf_config["device"],
+                   batch_size=self.perf_config["batch_size"],
+                   memory_optimization=self.perf_config["memory_optimization"])
 
         # Initialize individual agents
         self.pii_agent = PIIAgent(memory)

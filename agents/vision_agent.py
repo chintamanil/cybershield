@@ -9,8 +9,10 @@ import cv2
 import numpy as np
 from transformers import pipeline
 import torch
+from utils.device_config import create_performance_config
+from utils.logging_config import get_security_logger
 
-logger = logging.getLogger(__name__)
+logger = get_security_logger("vision_agent")
 
 class VisionAgent:
     """
@@ -22,17 +24,48 @@ class VisionAgent:
         self.memory = memory
         self.ocr_engine = 'tesseract'
         
-        # Initialize image classification models
+        # Get optimal device configuration for Mac M4
+        self.perf_config = create_performance_config()
+        device = self.perf_config["torch_device"]
+        
+        logger.info("Initializing VisionAgent", 
+                   device=device, 
+                   batch_size=self.perf_config["batch_size"],
+                   precision=self.perf_config["precision"])
+        
+        # Initialize image classification models with optimized settings
         try:
-            # Content safety classifier
+            # Configure device for transformers pipeline
+            if device == "mps":
+                # Use MPS device index for Apple Silicon
+                device_id = 0
+                torch_device = torch.device("mps")
+            elif device == "cuda":
+                device_id = 0
+                torch_device = torch.device("cuda")
+            else:
+                device_id = -1  # CPU
+                torch_device = torch.device("cpu")
+            
+            # Content safety classifier with Apple Silicon optimization
             self.safety_classifier = pipeline(
                 "image-classification",
                 model="google/vit-base-patch16-224",
-                device=0 if torch.cuda.is_available() else -1
+                device=device_id,
+                torch_dtype=torch.float16 if device != "cpu" else torch.float32
             )
+            
+            # Move model to optimal device
+            if hasattr(self.safety_classifier.model, 'to'):
+                self.safety_classifier.model.to(torch_device)
             
             # Initialize OCR confidence threshold
             self.ocr_confidence_threshold = 60
+            
+            logger.info("Vision models initialized successfully", 
+                       model="vit-base-patch16-224",
+                       device=device,
+                       dtype=self.perf_config["precision"])
             
         except Exception as e:
             logger.warning(f"Failed to initialize vision models: {e}")
