@@ -4,7 +4,6 @@ CyberShield System Launcher
 Starts both FastAPI backend and Streamlit frontend
 """
 
-import os
 import sys
 import subprocess
 import time

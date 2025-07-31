@@ -5,8 +5,6 @@ Tests various components to demonstrate the performance improvements.
 """
 
 import time
-import sys
-from typing import List, Dict
 from utils.device_config import optimize_for_cybershield, create_performance_config
 from utils.logging_config import get_security_logger
 

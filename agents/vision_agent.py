@@ -1,7 +1,6 @@
 # VisionAgent handles image processing, OCR, and risk detection
 import base64
 import io
-import logging
 from typing import Dict, List, Union
 from PIL import Image
 import pytesseract

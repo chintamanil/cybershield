@@ -5,8 +5,6 @@ Automatically detects and configures the best available compute device.
 
 import os
 import sys
-from typing import Optional
-import logging
 
 def get_optimal_device() -> str:
     """
@@ -76,7 +74,7 @@ def get_sentence_transformers_device() -> str:
     if device == "mps":
         # Check if we can use MPS with sentence-transformers
         try:
-            import sentence_transformers
+            pass
             # For newer versions, MPS should work fine
             print("📝 sentence-transformers will use MPS acceleration")
             return "mps"

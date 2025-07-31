@@ -65,6 +65,7 @@ htmlcov/
 .Trashes
 ehthumbs.db
 Thumbs.db
+package-lock.json
 
 # Security
 *.pem

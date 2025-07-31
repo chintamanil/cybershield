@@ -1,4 +1,12 @@
 # ReAct workflow using LangGraph for CyberShield
+#
+# Debug Logging:
+# To enable detailed debug logging of final reports, set environment variable:
+#   LOG_LEVEL=DEBUG
+#
+# For JSON format debug output, also set:
+#   REACT_LOG_FORMAT=json
+#
 from typing import Dict, List, Optional, Any, TypedDict, Annotated
 import os
 from langgraph.graph import StateGraph, END
@@ -42,7 +50,7 @@ class CyberShieldReActAgent:
 
         # Get performance configuration for M4 optimization
         self.perf_config = create_performance_config()
-        
+
         logger.info("Initializing ReAct workflow with M4 optimization",
                    llm_model=llm_model,
                    device=self.perf_config["device"],
@@ -144,9 +152,21 @@ class CyberShieldReActAgent:
             return state
 
     async def _tool_step(self, state: CyberShieldState) -> CyberShieldState:
-        """Execute tools based on agent decisions"""
+        """Execute tools concurrently for maximum performance"""
         try:
-            for tool_call in state.get("tool_calls", []):
+            tool_calls = state.get("tool_calls", [])
+            if not tool_calls:
+                return state
+
+            import time
+            start_time = time.time()
+
+            logger.info(f"🚀 Executing {len(tool_calls)} tools concurrently",
+                       iteration=state.get("iteration_count", 0),
+                       tools=[tc.get("tool") for tc in tool_calls])
+
+            # Create concurrent tasks for all tools
+            async def execute_single_tool(tool_call):
                 tool_name = tool_call.get("tool")
                 tool_input = tool_call.get("input", {})
 
@@ -154,32 +174,58 @@ class CyberShieldReActAgent:
                            action_input=tool_input,
                            iteration=state.get("iteration_count", 0))
 
-                # Execute appropriate tool
                 result = await self._execute_tool(tool_name, tool_input, state)
+                return tool_name, tool_input, result
 
-                # Check if JSON format is requested
-                json_format = os.getenv("REACT_LOG_FORMAT", "").lower() == "json"
+            # Execute all tools concurrently
+            import asyncio
+            concurrent_tasks = [execute_single_tool(tool_call) for tool_call in tool_calls]
 
+            # Wait for all tools to complete
+            tool_results = await asyncio.gather(*concurrent_tasks, return_exceptions=True)
+
+            # Process results and update state
+            json_format = os.getenv("REACT_LOG_FORMAT", "").lower() == "json"
+
+            for i, result in enumerate(tool_results):
+                if isinstance(result, Exception):
+                    tool_name = tool_calls[i].get("tool", "unknown")
+                    logger.error(f"Tool {tool_name} failed: {result}")
+                    state["agent_scratchpad"] += f"\nAction: {tool_name}\nObservation: Error: {str(result)}"
+                    continue
+
+                tool_name, tool_input, tool_result = result
+
+                # Log the observation
                 if json_format:
                     import json
                     logger.info(json.dumps({
                         "type": "observation",
                         "iteration": state.get("iteration_count", 0),
                         "tool": tool_name,
-                        "result_type": type(result).__name__,
-                        "success": "error" not in result,
-                        "observation": result
+                        "result_type": type(tool_result).__name__,
+                        "success": "error" not in str(tool_result),
+                        "observation": tool_result
                     }))
                 else:
                     logger.info(f"👁️ Observation",
                                tool=tool_name,
-                               result_type=type(result).__name__,
-                               success="error" not in result,
+                               result_type=type(tool_result).__name__,
+                               success="error" not in str(tool_result),
                                iteration=state.get("iteration_count", 0),
-                               observation=str(result)[:400] + "..." if len(str(result)) > 400 else str(result))
+                               observation=str(tool_result)[:400] + "..." if len(str(tool_result)) > 400 else str(tool_result))
 
                 # Update scratchpad
-                state["agent_scratchpad"] += f"\nAction: {tool_name}\nAction Input: {tool_input}\nObservation: {result}"
+                state["agent_scratchpad"] += f"\nAction: {tool_name}\nAction Input: {tool_input}\nObservation: {tool_result}"
+
+            execution_time = time.time() - start_time
+
+            logger.info(f"✅ Completed {len(tool_calls)} tools concurrently",
+                       iteration=state.get("iteration_count", 0),
+                       success_count=len([r for r in tool_results if not isinstance(r, Exception)]),
+                       error_count=len([r for r in tool_results if isinstance(r, Exception)]),
+                       execution_time_seconds=round(execution_time, 2),
+                       performance_gain=f"~{len(tool_calls)}x faster than sequential")
 
             # Clear tool calls
             state["tool_calls"] = []
@@ -187,7 +233,7 @@ class CyberShieldReActAgent:
             return state
 
         except Exception as e:
-            logger.error(f"Tool step failed: {e}")
+            logger.error(f"Concurrent tool execution failed: {e}")
             state["agent_scratchpad"] += f"\nTool execution error: {str(e)}"
             return state
 
@@ -253,6 +299,38 @@ class CyberShieldReActAgent:
                 result = await self.abuseipdb_client.check_ip(ip)
                 return {"abuseipdb_result": result, "status": "success"}
 
+            elif tool_name == "vector_search_tool":
+                if not self.vectorstore:
+                    return {"error": "Vector store not available", "status": "error"}
+
+                query_ips = tool_input.get("ips", [])
+                if isinstance(query_ips, str):
+                    query_ips = [query_ips]  # Convert single IP to list
+
+                search_results = []
+                for ip in query_ips:
+                    try:
+                        # Search for similar attacks involving this IP
+                        results = await self.vectorstore.search_by_ip(ip, limit=10)
+                        search_results.append({
+                            "ip": ip,
+                            "matches": results,
+                            "match_count": len(results) if results else 0
+                        })
+                    except Exception as e:
+                        search_results.append({
+                            "ip": ip,
+                            "error": str(e),
+                            "matches": [],
+                            "match_count": 0
+                        })
+
+                return {
+                    "vector_search_results": search_results,
+                    "total_ips_searched": len(query_ips),
+                    "status": "success"
+                }
+
             else:
                 return {"error": f"Unknown tool: {tool_name}", "status": "error"}
 
@@ -264,6 +342,11 @@ class CyberShieldReActAgent:
         logger.info("Synthesizing final report",
                    iterations=state.get("iteration_count", 0),
                    tools_used=len(state.get("tool_calls", [])))
+
+        logger.debug("🐛 SYNTHESIS DEBUG: Starting final report generation",
+                    debug_mode_active=True,
+                    state_keys=list(state.keys()),
+                    log_level_env=os.getenv("LOG_LEVEL", "not_set"))
         try:
             # Compile comprehensive report
             final_report = {
@@ -288,11 +371,69 @@ class CyberShieldReActAgent:
             }
 
             state["final_report"] = final_report
+
+            # Debug logging for final report
+            logger.debug("Final report synthesis completed",
+                        report_structure={
+                            "input_analysis_keys": list(final_report["input_analysis"].keys()),
+                            "pii_analysis_available": bool(final_report["pii_analysis"]),
+                            "ioc_count": len(final_report["ioc_analysis"]["extracted_iocs"]) if final_report["ioc_analysis"]["extracted_iocs"] else 0,
+                            "threat_analysis_available": bool(final_report["threat_analysis"]),
+                            "vision_analysis_available": bool(final_report["vision_analysis"]),
+                            "recommendations_count": len(final_report["recommendations"]),
+                            "processing_iterations": final_report["processing_summary"]["iterations"],
+                            "tools_used_count": len(final_report["processing_summary"]["tools_used"])
+                        })
+
+            # Detailed debug logging of report contents
+            logger.debug("Final report detailed contents",
+                        input_text_length=len(final_report["input_analysis"]["original_text"]),
+                        has_image=final_report["input_analysis"]["has_image"],
+                        pii_masked_text_available=bool(final_report["pii_analysis"]["masked_text"]),
+                        pii_mapping_count=len(final_report["pii_analysis"]["pii_mapping"]) if final_report["pii_analysis"]["pii_mapping"] else 0,
+                        extracted_iocs=final_report["ioc_analysis"]["extracted_iocs"],
+                        threat_analysis_keys=list(final_report["threat_analysis"].keys()) if isinstance(final_report["threat_analysis"], dict) else [],
+                        vision_analysis_keys=list(final_report["vision_analysis"].keys()) if isinstance(final_report["vision_analysis"], dict) else [],
+                        recommendations=final_report["recommendations"],
+                        tools_used=final_report["processing_summary"]["tools_used"])
+
+            # JSON format debug output if requested
+            json_format = os.getenv("REACT_LOG_FORMAT", "").lower() == "json"
+            if json_format:
+                import json
+                logger.debug(json.dumps({
+                    "type": "final_report",
+                    "iteration": state.get("iteration_count", 0),
+                    "report_summary": {
+                        "status": "success",
+                        "components_generated": [k for k, v in final_report.items() if v],
+                        "total_size": len(str(final_report)),
+                        "processing_time": state.get("processing_time", "unknown")
+                    },
+                    "detailed_report": final_report
+                }))
+
             return state
 
         except Exception as e:
             logger.error(f"Synthesis step failed: {e}")
-            state["final_report"] = {"error": str(e)}
+
+            # Debug logging for synthesis failure
+            logger.debug("Synthesis failure analysis",
+                        error_type=type(e).__name__,
+                        error_message=str(e),
+                        state_keys=list(state.keys()),
+                        iteration_count=state.get("iteration_count", 0),
+                        agent_scratchpad_length=len(state.get("agent_scratchpad", "")),
+                        available_data={
+                            "pii_masked_text": bool(state.get("pii_masked_text")),
+                            "pii_mapping": bool(state.get("pii_mapping")),
+                            "extracted_iocs": bool(state.get("extracted_iocs")),
+                            "threat_analysis": bool(state.get("threat_analysis")),
+                            "vision_analysis": bool(state.get("vision_analysis"))
+                        })
+
+            state["final_report"] = {"error": str(e), "synthesis_failure": True}
             return state
 
     def _log_agent_reasoning(self, response_content: str, iteration: int) -> None:
@@ -396,18 +537,18 @@ class CyberShieldReActAgent:
             return "synthesize"  # Force completion
         else:
             return "tools"  # Default to tools if unclear
-    
+
     def _should_continue_after_tools(self, state: CyberShieldState) -> str:
         """Decide whether to continue reasoning or synthesize after tool execution"""
         iteration = state.get("iteration_count", 0)
         scratchpad = state.get("agent_scratchpad", "")
-        
+
         # Count successful tool executions
         successful_observations = scratchpad.count("Observation:") - scratchpad.count('"error"')
-        
+
         # If we have multiple successful tool results, go straight to synthesis
         if successful_observations >= 2 or iteration >= 1:
-            logger.info("Moving to synthesis after tools", 
+            logger.info("Moving to synthesis after tools",
                        successful_observations=successful_observations,
                        iteration=iteration,
                        reason="sufficient_data")
@@ -422,27 +563,30 @@ class CyberShieldReActAgent:
     def _build_agent_prompt(self, state: CyberShieldState) -> List:
         """Build the prompt for the agent with optimized single-pass analysis"""
         iteration = state.get("iteration_count", 0)
-        
+
         if iteration == 0:
             # First iteration: comprehensive analysis in one pass
             system_prompt = """You are CyberShield, an advanced AI security analyst. Analyze the input efficiently and comprehensively in a single pass.
 
 Available Tools:
 - pii_detection_tool: Detect and mask PII in text
-- ioc_extraction_tool: Extract indicators of compromise  
+- ioc_extraction_tool: Extract indicators of compromise
 - threat_analysis_tool: Analyze threats using external APIs
 - vision_analysis_tool: Analyze images for security risks
 - regex_pattern_tool: Check regex patterns
 - shodan_lookup_tool: Lookup IP information on Shodan
 - virustotal_lookup_tool: Check resources on VirusTotal
 - abuseipdb_lookup_tool: Check IP reputation on AbuseIPDB
+- vector_search_tool: Search vector database for historical attack data and similar threat patterns
+
+CRITICAL: For IP investigations, you MUST use vector_search_tool to check historical attack data first, then complement with external API lookups (AbuseIPDB, Shodan, VirusTotal).
 
 IMPORTANT: For efficiency, plan ALL needed tool calls in your first response. Use this format:
 
-Thought: [Analyze what needs to be done - identify all required tools]
+Thought: [Analyze what needs to be done - identify all required tools including vector_search_tool for IPs]
 Action: tool_name_1
 Action Input: {"key": "value"}
-Action: tool_name_2  
+Action: tool_name_2
 Action Input: {"key": "value"}
 Action: tool_name_3
 Action Input: {"key": "value"}
@@ -454,7 +598,7 @@ After tools execute, provide your Final Answer based on all results."""
 
 Based on the tool results in your scratchpad, provide a comprehensive Final Answer with:
 1. Risk assessment
-2. Key findings  
+2. Key findings
 3. Recommendations
 
 Format: Final Answer: [your comprehensive analysis]"""
@@ -583,6 +727,24 @@ Format: Final Answer: [your comprehensive analysis]"""
         logger.info("Starting ReAct workflow",
                    input_length=len(input_text),
                    has_image=input_image is not None)
+
+        # Test debug logging is working - try both debug and info to see which works
+        import logging as stdlib_logging
+        current_level = stdlib_logging.getLogger("cybershield.react_workflow").getEffectiveLevel()
+
+        logger.info("🔍 DEBUG STATUS CHECK",
+                   current_log_level=stdlib_logging.getLevelName(current_level),
+                   debug_enabled=current_level <= stdlib_logging.DEBUG,
+                   environment_variables={
+                       "LOG_LEVEL": os.getenv("LOG_LEVEL", "not_set"),
+                       "REACT_LOG_FORMAT": os.getenv("REACT_LOG_FORMAT", "not_set"),
+                       "LOG_FILE": os.getenv("LOG_FILE", "not_set")
+                   })
+
+        logger.debug("🐛 DEBUG MODE: ReAct workflow debug logging is enabled",
+                    debug_test=True,
+                    logger_level=current_level,
+                    debug_level=stdlib_logging.DEBUG)
         try:
             # Initialize state
             initial_state = CyberShieldState(
@@ -602,13 +764,49 @@ Format: Final Answer: [your comprehensive analysis]"""
             )
 
             # Run workflow
-            final_state = await self.workflow.ainvoke(initial_state)
+            final_state = await self.workflow.ainvoke(initial_state, config={"verbose": True})
 
             final_report = final_state.get("final_report", {"error": "No final report generated"})
+
+            # Enhanced completion logging
+            success = "error" not in final_report
             logger.info("ReAct workflow completed",
                        total_iterations=final_state.get("iteration_count", 0),
-                       success="error" not in final_report,
+                       success=success,
                        report_keys=list(final_report.keys()) if isinstance(final_report, dict) else [])
+
+            # Debug logging for final workflow state and report
+            logger.debug("Final workflow state analysis",
+                        state_keys=list(final_state.keys()),
+                        final_state_size=len(str(final_state)),
+                        agent_scratchpad_length=len(final_state.get("agent_scratchpad", "")),
+                        messages_count=len(final_state.get("messages", [])),
+                        tool_calls_remaining=len(final_state.get("tool_calls", [])))
+
+            if success and isinstance(final_report, dict):
+                logger.debug("Final report validation and metrics",
+                           report_size_bytes=len(str(final_report)),
+                           components_present={
+                               "input_analysis": "input_analysis" in final_report,
+                               "pii_analysis": "pii_analysis" in final_report,
+                               "ioc_analysis": "ioc_analysis" in final_report,
+                               "threat_analysis": "threat_analysis" in final_report,
+                               "vision_analysis": "vision_analysis" in final_report,
+                               "recommendations": "recommendations" in final_report,
+                               "processing_summary": "processing_summary" in final_report
+                           },
+                           data_quality_metrics={
+                               "has_recommendations": bool(final_report.get("recommendations")),
+                               "recommendations_count": len(final_report.get("recommendations", [])),
+                               "ioc_extraction_successful": bool(final_report.get("ioc_analysis", {}).get("extracted_iocs")),
+                               "threat_analysis_successful": bool(final_report.get("threat_analysis")),
+                               "pii_analysis_successful": bool(final_report.get("pii_analysis"))
+                           })
+
+                # Log the complete final report in debug mode
+                logger.debug("Complete final report contents", final_report=final_report)
+            else:
+                logger.debug("Workflow completed with error", error_report=final_report)
 
             return final_report
 

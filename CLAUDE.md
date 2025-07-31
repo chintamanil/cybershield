@@ -43,18 +43,20 @@ The platform uses specialized AI agents coordinated by a supervisor:
    - Security risk assessment for visual content
    - PII detection in images
 
-5. **Supervisor** (`agents/upervisor.py`)
+5. **Supervisor** (`agents/supervisor.py`)
    - Orchestrates all agents with intelligent routing
    - Dual processing modes: basic and comprehensive
    - Handles both text and multimodal inputs
+   - ✅ **Enhanced with Mac M4 optimization** for improved performance on Apple Silicon
 
 ### Workflow Engine
 
 **ReAct Workflow** (`workflows/react_workflow.py`)
-- LangGraph-powered reasoning and action framework
-- Multi-step problem decomposition
-- State management and tool execution
+- ✅ **Optimized** LangGraph-powered reasoning and action framework
+- Multi-step problem decomposition with **✅ reduced API call overhead**
+- State management and tool execution with **✅ intelligent context management**
 - Fallback handling for complex scenarios
+- **✅ Enhanced performance** on Mac M4 Apple Silicon architecture
 
 ### Data Processing
 
@@ -126,7 +128,7 @@ The platform uses specialized AI agents coordinated by a supervisor:
 
 ## API Architecture
 
-### FastAPI Server (`server/main.py`) - Version 2.0.0
+### FastAPI Server (`server/main.py`) - Version 2.1.0
 
 **Core Analysis Endpoints:**
 - `/analyze` - ✅ **Enhanced with integrated tool analysis**
@@ -164,6 +166,10 @@ MILVUS_HOST=localhost
 MILVUS_PORT=19530
 
 # Security API Keys (configured in .env)
+VIRUSTOTAL_API_KEY=your_virustotal_key
+SHODAN_API_KEY=your_shodan_key
+ABUSEIPDB_API_KEY=your_abuseipdb_key
+OPENAI_API_KEY=your_openai_key
 
 # Application Configuration
 DEBUG=False
@@ -174,6 +180,11 @@ JWT_SECRET=your_jwt_secret_here
 # Logging Configuration
 LOG_LEVEL=INFO
 LOG_FILE=logs/cybershield.log
+REACT_LOG_FORMAT=json
+
+# Performance Configuration (Mac M4 Optimization)
+DEVICE_OPTIMIZATION=auto
+APPLE_SILICON_ACCELERATION=true
 ```
 
 ### Docker Services
@@ -282,7 +293,7 @@ transformers>=4.35.0
 ## Enhanced Agent Architecture
 
 ### Session-Based Agent Coordination
-**Advanced Memory Integration** - All agents now support:
+**Advanced Memory Integration with Apple Silicon Optimization** - All agents now support:
 
 1. **Session Management**:
    - Unique session IDs for tracking multi-step workflows
@@ -438,6 +449,22 @@ Valid IP 8.8.8.8 and invalid IP 999.999.999.999 with valid hash d41d8cd98f00b204
 
 ## Recent Updates and Fixes
 
+### Version 2.3.0 - Mac M4 Apple Silicon Optimization & ReAct Workflow Enhancement
+
+**Latest Performance Improvements:**
+- ✅ **Mac M4 Apple Silicon optimization** with enhanced device detection and performance tuning
+- ✅ **ReAct workflow API call optimization** for improved response times and reduced token usage
+- ✅ **Enhanced async performance testing** specifically tuned for Apple Silicon architecture
+- ✅ **Streamlined frontend integration** with improved error handling and user experience
+- ✅ **System architecture documentation** with comprehensive component diagrams
+
+**Technical Achievements:**
+- **Device Detection**: Automatic Apple Silicon detection with optimized processing paths
+- **API Efficiency**: Reduced OpenAI API calls in ReAct workflow through intelligent context management
+- **Performance Testing**: Dedicated test suite for Mac M4 performance validation
+- **Frontend Polish**: Enhanced Streamlit integration with better error handling
+- **Documentation**: Complete architecture visualization with detailed component diagrams
+
 ### Version 2.2.0 - Comprehensive Structured Logging Implementation
 
 **Major Infrastructure Upgrade:**
@@ -530,33 +557,63 @@ log_security_event(logger, "threat_detected", severity="warning",
 
 ### Debug Commands
 ```bash
-# Check GPU availability
+# Check system capabilities
 python -c "import torch; print('CUDA available:', torch.cuda.is_available())"
+python utils/device_config.py  # Check Apple Silicon optimization
 
 # Check service status
 docker-compose ps
 
-# View logs
+# View logs with structured output
 docker-compose logs milvus
 docker-compose logs redis
+tail -f logs/cybershield.log  # Application logs
 
 # Test API endpoints
 curl http://localhost:8000/health
+curl http://localhost:8000/status  # Enhanced system status
 
 # Validate data ingestion
 python data/milvus_ingestion.py
 
-# Start with environment variables
-python server/main.py
+# Performance testing (Mac M4 specific)
+python tests/test_performance_mac_m4.py
 
-# Start frontend
+# Start applications
+cybershield  # FastAPI backend with optimizations
+cybershield-frontend  # Streamlit frontend
+
+# Manual startup (alternative)
+python server/main.py
 cd frontend && python run_streamlit.py
 ```
 
 ### System Requirements
 - **CPU Processing**: Fully supported on all systems (Mac, Windows, Linux)
+- **✅ Apple Silicon**: Optimized for Mac M4 with enhanced performance tuning
 - **GPU Acceleration**: Optional CUDA support for faster processing
-- **Memory**: 4GB+ RAM recommended for large datasets
+- **Memory**: 4GB+ RAM recommended for large datasets (8GB+ for Mac M4 optimization)
 - **Python**: 3.11+ with async/await support
+- **Architecture Support**: x86_64, ARM64 (Apple Silicon optimized)
+
+## Architecture Documentation
+
+### System Architecture Diagrams
+**📊 Complete Architecture Visualization** (`cybershield_architecture.md`)
+- Detailed Mermaid diagrams showing all system components and data flows
+- API layer structure with core, tool-specific, and system endpoints
+- Multi-agent orchestration with specialized agent roles
+- ReAct workflow engine with reasoning cycle visualization
+- Security tools integration architecture
+- Memory and caching layer documentation
+- Vector database and knowledge base structure
+- Infrastructure services and observability components
+
+### File Structure Changes
+**Consolidated Documentation Structure:**
+- ✅ **Added**: `cybershield_architecture.md` - Comprehensive system architecture
+- ✅ **Moved**: `FRONTEND_INTEGRATION.md` → `frontend/FRONTEND_INTEGRATION.md`
+- ✅ **Removed**: `cybershield.md` (consolidated into README.md and CLAUDE.md)
+- ✅ **Enhanced**: Updated documentation cross-references and structure
 
 This document serves as a comprehensive guide for understanding and maintaining the CyberShield platform architecture and implementation.

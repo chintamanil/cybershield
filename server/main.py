@@ -1,7 +1,6 @@
 # FastAPI server with Vision AI and ReAct workflow support - Async Version
 from fastapi import FastAPI, File, UploadFile, Request, HTTPException, Form
-from fastapi.responses import HTMLResponse, JSONResponse
-from fastapi.staticfiles import StaticFiles
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional, Dict, Any
@@ -11,13 +10,13 @@ import os
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
-load_dotenv()
+# Load environment variables from .env file (override existing env vars)
+load_dotenv(override=True)
 
 # Import our agents and components
 from agents.supervisor import SupervisorAgent
 from memory.redis_stm import RedisSTM
-from vectorstore.milvus_client import init_milvus
+from vectorstore.milvus_client import CyberShieldVectorStore
 
 # Import the new tool classes
 from tools.abuseipdb import AbuseIPDBClient
@@ -31,6 +30,28 @@ from utils.logging_config import setup_from_env, get_logger
 # Setup logging from environment
 setup_from_env()
 logger = get_logger(__name__, component="server")
+
+# Test debug logging is working
+import logging as stdlib_logging
+current_level = stdlib_logging.getLogger().getEffectiveLevel()
+debug_enabled = current_level <= stdlib_logging.DEBUG
+
+logger.info("Logging configuration initialized",
+           log_level=stdlib_logging.getLevelName(current_level),
+           debug_enabled=debug_enabled,
+           environment_vars={
+               "LOG_LEVEL": os.getenv("LOG_LEVEL", "not_set"),
+               "LOG_FILE": os.getenv("LOG_FILE", "not_set"),
+               "DEBUG": os.getenv("DEBUG", "not_set")
+           })
+
+# Force a reconfigure if DEBUG is set but not working
+if os.getenv("LOG_LEVEL", "").upper() == "DEBUG" and not debug_enabled:
+    logger.warning("DEBUG level requested but not active - reconfiguring logging")
+    setup_from_env()  # Reconfigure logging
+    current_level = stdlib_logging.getLogger().getEffectiveLevel()
+    logger.info("Logging reconfigured", new_level=stdlib_logging.getLevelName(current_level))
+
 
 
 # Global variables for async components
@@ -53,7 +74,9 @@ async def lifespan(app: FastAPI):
         memory = RedisSTM()
         await memory._get_redis()  # Initialize Redis connection
 
-        vectorstore = init_milvus()
+        # Initialize enhanced vector store for threat intelligence
+        vectorstore = CyberShieldVectorStore("cybersecurity_attacks")
+        await vectorstore.connect()
 
         # Initialize async tool clients first
         abuseipdb_client = AbuseIPDBClient()

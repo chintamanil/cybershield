@@ -33,7 +33,7 @@ def configure_logging(
     
     # Configure structlog processors
     processors = [
-        structlog.stdlib.filter_by_level,
+        structlog.stdlib.filter_by_level,  # This respects the stdlib logger level
         structlog.stdlib.add_logger_name,
         structlog.stdlib.add_log_level,
         structlog.stdlib.PositionalArgumentsFormatter(),
@@ -68,6 +68,7 @@ def configure_logging(
     if include_stdlib:
         # Always add console handler for terminal output
         console_handler = logging.StreamHandler(sys.stdout)
+        console_handler.setLevel(level)  # Set handler level explicitly
         console_handler.setFormatter(
             structlog.stdlib.ProcessorFormatter(
                 processor=structlog.dev.ConsoleRenderer(colors=True)
@@ -77,6 +78,10 @@ def configure_logging(
         )
         
         root_logger = logging.getLogger()
+        
+        # Clear existing handlers to avoid conflicts
+        root_logger.handlers.clear()
+        
         root_logger.addHandler(console_handler)
         
         # Add file handler if log_file is specified
@@ -87,6 +92,7 @@ def configure_logging(
             log_path.parent.mkdir(parents=True, exist_ok=True)
             
             file_handler = logging.FileHandler(log_file)
+            file_handler.setLevel(level)  # Set handler level explicitly
             file_handler.setFormatter(
                 structlog.stdlib.ProcessorFormatter(
                     processor=structlog.dev.ConsoleRenderer(colors=False)
@@ -97,6 +103,14 @@ def configure_logging(
             root_logger.addHandler(file_handler)
         
         root_logger.setLevel(level)
+        
+        # Also explicitly set level for our specific loggers  
+        cybershield_logger = logging.getLogger("cybershield")
+        cybershield_logger.setLevel(level)
+        
+        # Set level for react_workflow specifically
+        react_workflow_logger = logging.getLogger("cybershield.react_workflow")
+        react_workflow_logger.setLevel(level)
 
 
 def add_security_context(logger: Any, method_name: str, event_dict: Dict[str, Any]) -> Dict[str, Any]:

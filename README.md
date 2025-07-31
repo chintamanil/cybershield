@@ -2,6 +2,65 @@
 
 CyberShield is a sophisticated AI-powered cybersecurity platform that combines multiple specialized agents to provide comprehensive threat analysis, PII detection, log parsing, and vision-based security assessment.
 
+## Updated Multi-Agent Architecture
+
+```mermaid
+graph TD
+    U1[User Input Text or Log]
+    A1[SupervisorAgent]
+    A2[PIIAgent]
+    A3[ThreatAgent]
+    A4[LogParserAgent]
+    T1[RegexChecker]
+    T2[ShodanTool]
+    T3[VirusTotalTool]
+    T4[AbuseIPDBTool]
+    M1[ShortTermMemory]
+    M2[PIIMapperStore]
+    V1[VectorStore]
+    DB1[QueryLogsDB]
+
+    U1 --> A1
+    A1 --> A2
+    A1 --> A4
+    A1 --> A3
+
+    A2 --> T1
+    A3 --> T2
+    A3 --> T3
+    A3 --> T4
+    A4 --> T1
+
+    T1 --> M1
+    T2 --> M1
+    T3 --> M1
+    T4 --> M1
+
+    A2 --> M2
+    A1 --> V1
+    A1 --> DB1
+
+    style A1 fill:#2c3e50, color:#ffffff
+    style A2 fill:#16a085, color:#ffffff
+    style A3 fill:#e74c3c, color:#ffffff
+    style A4 fill:#f39c12, color:#ffffff
+```
+
+### Agent Flow Diagram
+
+```
+User Input
+   ↓
+SupervisorAgent
+   ├──> PIIAgent (as tool)
+   ├──> LogParserAgent (as tool)
+   ├──> ThreatAgent (as tool)
+   ├──> VectorStore (retrieval)
+   └──> QueryLogsDB (audit log)
+```
+
+
+
 ## 🚀 Quick Start
 
 ### Package Installation (Recommended)
@@ -55,16 +114,22 @@ Access the API at `http://localhost:8000` and frontend at `http://localhost:8501
 ## 🏗 Architecture
 
 ### Multi-Agent System
-- **PII Agent**: Detects and masks sensitive information
+- **PII Agent**: Detects and masks sensitive information with encrypted storage
 - **✅ Threat Agent**: **Fully integrated** with VirusTotal, Shodan, AbuseIPDB for comprehensive threat intelligence
 - **✅ Log Parser**: **Enhanced** with 25+ IOC patterns, Redis STM integration, and session-based caching
 - **Vision Agent**: Image processing with OCR and security assessment
-- **Supervisor**: Orchestrates agents with intelligent routing
+- **Supervisor**: Orchestrates agents with intelligent routing and multi-modal processing
 
 ### Advanced Workflows
-- **ReAct Framework**: LangGraph-powered reasoning and action cycles
-- **Vector Database**: Milvus integration for 40K+ threat intelligence records
-- **Multi-modal Processing**: Text and image security analysis
+- **ReAct Framework**: **✅ Optimized** LangGraph-powered reasoning and action cycles with enhanced API efficiency
+- **Vector Database**: Milvus integration for 40K+ threat intelligence records with sub-second search
+- **Multi-modal Processing**: Text and image security analysis with Apple Silicon optimization
+- **Session Management**: Context preservation across multi-step workflows with Redis STM
+
+### Architecture Documentation
+- **📊 Detailed Architecture Diagram**: Complete system visualization in `cybershield_architecture.md`
+- **🔄 Data Flow Documentation**: End-to-end processing pipeline with component interactions
+- **🚀 Performance Optimizations**: Mac M4 Apple Silicon specific tuning and device detection
 
 ## 📊 Data Processing
 
@@ -121,7 +186,7 @@ Successfully processes **40,000 cybersecurity attack records** including:
   - Comprehensive error handling and fallbacks
   - Real-time IP reputation scoring with parallel lookups
 
-- **LogParserAgent → Enhanced IOC Detection**: 
+- **LogParserAgent → Enhanced IOC Detection**:
   - 25+ comprehensive regex patterns for cybersecurity indicators
   - ✅ **Async Redis STM integration** for session-based IOC caching
   - **Non-blocking cache operations** with async/await patterns
@@ -130,7 +195,7 @@ Successfully processes **40,000 cybersecurity attack records** including:
   - Context-aware parsing with format detection
   - Cross-agent data sharing and incremental pipeline support
 
-- **FastAPI Server → Async Tool Orchestration**: 
+- **FastAPI Server → Async Tool Orchestration**:
   - ✅ **Async analysis pipeline** with concurrent API calls in `/analyze` endpoint
   - **Parallel IOC extraction and threat intelligence lookups**
   - **Concurrent multi-source correlation** (VirusTotal + Shodan + AbuseIPDB)
@@ -140,16 +205,17 @@ Successfully processes **40,000 cybersecurity attack records** including:
 
 ## 🛠 Tech Stack
 
-- **Backend**: FastAPI (Async), Python 3.11+
-- **Frontend**: Streamlit with interactive dashboards
-- **HTTP**: aiohttp, httpx, requests (async clients)
-- **Database**: Redis (async), PostgreSQL (asyncpg)
-- **AI/ML**: LangChain, LangGraph, SentenceTransformers, Transformers
-- **Vector DB**: Milvus for threat intelligence storage
-- **Vision**: OpenCV, Tesseract OCR, PIL, PyTesseract
-- **Security APIs**: VirusTotal, Shodan, AbuseIPDB integration
-- **Development**: Black, MyPy, Pytest, Ruff
-- **Deployment**: Docker, Uvicorn, environment-based configuration
+- **Backend**: FastAPI (Async), Python 3.11+ with **✅ Mac M4 Apple Silicon optimization**
+- **Frontend**: Streamlit with interactive dashboards and enhanced error handling
+- **HTTP**: aiohttp, httpx, requests (async clients) with **✅ optimized API call patterns**
+- **Database**: Redis (async), PostgreSQL (asyncpg) with session-based memory management
+- **AI/ML**: LangChain, **✅ Optimized LangGraph**, SentenceTransformers, Transformers
+- **Vector DB**: Milvus for threat intelligence storage with IVF_FLAT indexing
+- **Vision**: OpenCV, Tesseract OCR, PIL, PyTesseract with Apple Silicon support
+- **Security APIs**: VirusTotal, Shodan, AbuseIPDB integration with concurrent processing
+- **Development**: Black, MyPy, Pytest, Ruff with comprehensive test coverage
+- **Deployment**: Docker, Uvicorn, environment-based configuration with performance monitoring
+- **Architecture**: Detailed system diagrams and component documentation
 
 ## 🔒 Security Features
 
@@ -180,7 +246,7 @@ CyberShield features a comprehensive structured logging system using `structlog`
 ### Configuration
 ```bash
 # Environment Variables
-LOG_LEVEL=INFO                    # Logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)  
+LOG_LEVEL=INFO                    # Logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
 LOG_FILE=logs/cybershield.log     # Optional file output
 REACT_LOG_FORMAT=json             # JSON format for ReAct workflow
 ```
@@ -194,7 +260,7 @@ logger = get_security_logger("threat_agent")
 logger.info("Threat analysis started", ioc_count=5, processing_mode="enhanced")
 
 # Security event logging
-log_security_event(logger, "threat_detected", severity="warning", 
+log_security_event(logger, "threat_detected", severity="warning",
                    ip="203.0.113.1", threat_score=8.5)
 ```
 
@@ -207,7 +273,14 @@ All components include structured logging:
 
 ## 📈 Status
 
-✅ **Completed**
+✅ **Latest Updates**
+- **✅ Mac M4 Apple Silicon optimization with enhanced device detection and performance tuning**
+- **✅ ReAct workflow API call optimization for improved response times and efficiency**
+- **✅ Enhanced async performance testing specifically tuned for Apple Silicon architecture**
+- **✅ Streamlined frontend integration with improved error handling and user experience**
+- **✅ Updated system architecture documentation with comprehensive component diagrams**
+
+✅ **Completed Core Features**
 - **✅ Comprehensive structured logging system with structlog across all components**
 - **✅ ReAct workflow logging with detailed reasoning chains (💭🔧👁️✅)**
 - **✅ Security-focused logging with threat event correlation and performance metrics**
@@ -275,7 +348,7 @@ python tests/milvus/interactive_milvus_viewer.py
 
 # Features available:
 # 1. View attack type statistics
-# 2. Query by severity level  
+# 2. Query by severity level
 # 3. Filter by protocol or IP address
 # 4. Export data to CSV with custom limits
 # 5. Real-time data exploration

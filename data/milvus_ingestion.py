@@ -58,7 +58,6 @@ class CyberSecurityDataProcessor:
         # Initialize embedding model if available
         if SENTENCE_TRANSFORMERS_AVAILABLE:
             try:
-                import torch
                 device = self.perf_config["sentence_transformers_device"]
                 
                 logger.info("Initializing embedding model with optimization", 
