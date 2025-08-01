@@ -3,6 +3,7 @@
 Basic test to verify CyberShield components work without external dependencies
 """
 
+
 def test_imports():
     """Test that all required modules can be imported"""
     try:
@@ -11,6 +12,7 @@ def test_imports():
     except ImportError as e:
         print(f"❌ Import failed: {e}")
         return False
+
 
 def test_basic_supervisor():
     """Test basic supervisor functionality without external services"""
@@ -29,6 +31,7 @@ def test_basic_supervisor():
         print(f"❌ Basic supervisor test failed: {e}")
         return False
 
+
 def test_supervisor():
     """Test supervisor functionality"""
     try:
@@ -44,6 +47,7 @@ def test_supervisor():
     except Exception as e:
         print(f"❌ supervisor test failed: {e}")
         return False
+
 
 def test_fastapi_basic():
     """Test basic FastAPI functionality"""
@@ -68,16 +72,12 @@ def test_fastapi_basic():
         print(f"❌ FastAPI test failed: {e}")
         return False
 
+
 if __name__ == "__main__":
     print("🧪 Running CyberShield Basic Tests...")
     print("=" * 50)
 
-    tests = [
-        test_imports,
-        test_basic_supervisor,
-        test_supervisor,
-        test_fastapi_basic
-    ]
+    tests = [test_imports, test_basic_supervisor, test_supervisor, test_fastapi_basic]
 
     passed = 0
     total = len(tests)

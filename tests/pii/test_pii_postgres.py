@@ -6,9 +6,11 @@ Test PII system with PostgreSQL integration
 import logging
 from agents.pii_agent import PIIAgent
 import os
+
 # Configure logging
 logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO"))
 logger = logging.getLogger(__name__)
+
 
 def test_pii_with_postgres():
     """Test PII system with PostgreSQL backend"""
@@ -50,6 +52,7 @@ def test_pii_with_postgres():
     print(f"\n✅ Test completed successfully!")
     print(f"📊 Session ID: {session_id}")
     print("=" * 60)
+
 
 if __name__ == "__main__":
     test_pii_with_postgres()

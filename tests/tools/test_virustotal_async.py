@@ -9,7 +9,9 @@ import asyncio
 from unittest.mock import AsyncMock, patch
 
 # Add parent directory to path for imports
-sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+sys.path.append(
+    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+)
 
 from tools.virustotal import VirusTotalClient, lookup_ip, lookup_domain, lookup_hash
 
@@ -38,7 +40,7 @@ class TestVirusTotalClientAsync(unittest.IsolatedAsyncioTestCase):
             client = VirusTotalClient()
             self.assertIsNone(client.api_key)
 
-    @patch.dict(os.environ, {'VIRUSTOTAL_API_KEY': 'env_key'})
+    @patch.dict(os.environ, {"VIRUSTOTAL_API_KEY": "env_key"})
     def test_client_initialization_from_env(self):
         """Test client initialization from environment variable"""
         client = VirusTotalClient()
@@ -59,9 +61,17 @@ class TestVirusTotalClientAsync(unittest.IsolatedAsyncioTestCase):
     def test_hash_validation(self):
         """Test hash validation"""
         # Valid hashes
-        self.assertTrue(self.client._is_valid_hash("5d41402abc4b2a76b9719d911017c592"))  # MD5
-        self.assertTrue(self.client._is_valid_hash("356a192b7913b04c54574d18c28d46e6395428ab"))  # SHA1
-        self.assertTrue(self.client._is_valid_hash("e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"))  # SHA256
+        self.assertTrue(
+            self.client._is_valid_hash("5d41402abc4b2a76b9719d911017c592")
+        )  # MD5
+        self.assertTrue(
+            self.client._is_valid_hash("356a192b7913b04c54574d18c28d46e6395428ab")
+        )  # SHA1
+        self.assertTrue(
+            self.client._is_valid_hash(
+                "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            )
+        )  # SHA256
 
         # Invalid hashes
         self.assertFalse(self.client._is_valid_hash("invalid_hash"))
@@ -90,26 +100,28 @@ class TestVirusTotalClientAsync(unittest.IsolatedAsyncioTestCase):
         # Mock aiohttp response
         mock_response = AsyncMock()
         mock_response.status = 200
-        mock_response.json = AsyncMock(return_value={
-            "data": {
-                "attributes": {
-                    "country": "US",
-                    "as_owner": "Google LLC",
-                    "reputation": 0,
-                    "last_analysis_stats": {
-                        "malicious": 0,
-                        "suspicious": 0,
-                        "harmless": 80
-                    },
-                    "network": "8.8.8.0/24",
-                    "regional_internet_registry": "ARIN"
+        mock_response.json = AsyncMock(
+            return_value={
+                "data": {
+                    "attributes": {
+                        "country": "US",
+                        "as_owner": "Google LLC",
+                        "reputation": 0,
+                        "last_analysis_stats": {
+                            "malicious": 0,
+                            "suspicious": 0,
+                            "harmless": 80,
+                        },
+                        "network": "8.8.8.0/24",
+                        "regional_internet_registry": "ARIN",
+                    }
                 }
             }
-        })
+        )
 
-        with patch('aiohttp.ClientSession.request') as mock_request:
+        with patch("aiohttp.ClientSession.request") as mock_request:
             mock_request.return_value.__aenter__.return_value = mock_response
-            
+
             result = await self.client.lookup_ip("8.8.8.8")
 
             self.assertEqual(result["ip_address"], "8.8.8.8")
@@ -122,26 +134,28 @@ class TestVirusTotalClientAsync(unittest.IsolatedAsyncioTestCase):
         """Test successful async domain lookup"""
         mock_response = AsyncMock()
         mock_response.status = 200
-        mock_response.json = AsyncMock(return_value={
-            "data": {
-                "attributes": {
-                    "categories": {"security": "Safe"},
-                    "reputation": 100,
-                    "last_analysis_stats": {
-                        "malicious": 0,
-                        "suspicious": 0,
-                        "harmless": 75
-                    },
-                    "creation_date": 1234567890,
-                    "last_modification_date": 1234567890,
-                    "last_dns_records": []
+        mock_response.json = AsyncMock(
+            return_value={
+                "data": {
+                    "attributes": {
+                        "categories": {"security": "Safe"},
+                        "reputation": 100,
+                        "last_analysis_stats": {
+                            "malicious": 0,
+                            "suspicious": 0,
+                            "harmless": 75,
+                        },
+                        "creation_date": 1234567890,
+                        "last_modification_date": 1234567890,
+                        "last_dns_records": [],
+                    }
                 }
             }
-        })
+        )
 
-        with patch('aiohttp.ClientSession.request') as mock_request:
+        with patch("aiohttp.ClientSession.request") as mock_request:
             mock_request.return_value.__aenter__.return_value = mock_response
-            
+
             result = await self.client.lookup_domain("google.com")
 
             self.assertEqual(result["domain"], "google.com")
@@ -154,31 +168,31 @@ class TestVirusTotalClientAsync(unittest.IsolatedAsyncioTestCase):
         rate_limit_response = AsyncMock()
         rate_limit_response.status = 429
         rate_limit_response.headers = {"Retry-After": "1"}
-        
+
         success_response = AsyncMock()
         success_response.status = 200
-        success_response.json = AsyncMock(return_value={
-            "data": {
-                "attributes": {
-                    "country": "US",
-                    "last_analysis_stats": {}
-                }
+        success_response.json = AsyncMock(
+            return_value={
+                "data": {"attributes": {"country": "US", "last_analysis_stats": {}}}
             }
-        })
+        )
 
-        with patch('aiohttp.ClientSession.request') as mock_request:
-            mock_request.return_value.__aenter__.side_effect = [rate_limit_response, success_response]
-            
-            with patch('asyncio.sleep') as mock_sleep:
+        with patch("aiohttp.ClientSession.request") as mock_request:
+            mock_request.return_value.__aenter__.side_effect = [
+                rate_limit_response,
+                success_response,
+            ]
+
+            with patch("asyncio.sleep") as mock_sleep:
                 result = await self.client.lookup_ip("8.8.8.8")
                 mock_sleep.assert_called_once_with(1)
                 self.assertEqual(result["ip_address"], "8.8.8.8")
 
     async def test_request_exception_handling(self):
         """Test async request exception handling"""
-        with patch('aiohttp.ClientSession.request') as mock_request:
+        with patch("aiohttp.ClientSession.request") as mock_request:
             mock_request.side_effect = Exception("Network error")
-            
+
             result = await self.client.lookup_ip("8.8.8.8")
             self.assertIn("error", result)
             self.assertIn("Network error", result["error"])
@@ -187,19 +201,21 @@ class TestVirusTotalClientAsync(unittest.IsolatedAsyncioTestCase):
         """Test async search functionality"""
         mock_response = AsyncMock()
         mock_response.status = 200
-        mock_response.json = AsyncMock(return_value={
-            "data": [
-                {
-                    "id": "8.8.8.8",
-                    "type": "ip_address",
-                    "attributes": {"country": "US"}
-                }
-            ]
-        })
+        mock_response.json = AsyncMock(
+            return_value={
+                "data": [
+                    {
+                        "id": "8.8.8.8",
+                        "type": "ip_address",
+                        "attributes": {"country": "US"},
+                    }
+                ]
+            }
+        )
 
-        with patch('aiohttp.ClientSession.request') as mock_request:
+        with patch("aiohttp.ClientSession.request") as mock_request:
             mock_request.return_value.__aenter__.return_value = mock_response
-            
+
             result = await self.client.search("8.8.8.8")
 
             self.assertEqual(result["query"], "8.8.8.8")
@@ -220,18 +236,15 @@ class TestAsyncConvenienceFunctions(unittest.IsolatedAsyncioTestCase):
         """Test async lookup_ip convenience function"""
         mock_response = AsyncMock()
         mock_response.status = 200
-        mock_response.json = AsyncMock(return_value={
-            "data": {
-                "attributes": {
-                    "country": "US",
-                    "last_analysis_stats": {}
-                }
+        mock_response.json = AsyncMock(
+            return_value={
+                "data": {"attributes": {"country": "US", "last_analysis_stats": {}}}
             }
-        })
+        )
 
-        with patch('aiohttp.ClientSession.request') as mock_request:
+        with patch("aiohttp.ClientSession.request") as mock_request:
             mock_request.return_value.__aenter__.return_value = mock_response
-            
+
             result = await lookup_ip("8.8.8.8")
             self.assertEqual(result["ip_address"], "8.8.8.8")
 
@@ -239,18 +252,15 @@ class TestAsyncConvenienceFunctions(unittest.IsolatedAsyncioTestCase):
         """Test async lookup_domain convenience function"""
         mock_response = AsyncMock()
         mock_response.status = 200
-        mock_response.json = AsyncMock(return_value={
-            "data": {
-                "attributes": {
-                    "reputation": 100,
-                    "last_analysis_stats": {}
-                }
+        mock_response.json = AsyncMock(
+            return_value={
+                "data": {"attributes": {"reputation": 100, "last_analysis_stats": {}}}
             }
-        })
+        )
 
-        with patch('aiohttp.ClientSession.request') as mock_request:
+        with patch("aiohttp.ClientSession.request") as mock_request:
             mock_request.return_value.__aenter__.return_value = mock_response
-            
+
             result = await lookup_domain("google.com")
             self.assertEqual(result["domain"], "google.com")
 
@@ -259,17 +269,13 @@ class TestAsyncConvenienceFunctions(unittest.IsolatedAsyncioTestCase):
         test_hash = "5d41402abc4b2a76b9719d911017c592"
         mock_response = AsyncMock()
         mock_response.status = 200
-        mock_response.json = AsyncMock(return_value={
-            "data": {
-                "attributes": {
-                    "last_analysis_stats": {}
-                }
-            }
-        })
+        mock_response.json = AsyncMock(
+            return_value={"data": {"attributes": {"last_analysis_stats": {}}}}
+        )
 
-        with patch('aiohttp.ClientSession.request') as mock_request:
+        with patch("aiohttp.ClientSession.request") as mock_request:
             mock_request.return_value.__aenter__.return_value = mock_response
-            
+
             result = await lookup_hash(test_hash)
             self.assertEqual(result["hash"], test_hash)
 
@@ -301,9 +307,9 @@ class TestAsyncErrorHandling(unittest.IsolatedAsyncioTestCase):
         mock_response.status = 404
         mock_response.raise_for_status.side_effect = Exception("Not found")
 
-        with patch('aiohttp.ClientSession.request') as mock_request:
+        with patch("aiohttp.ClientSession.request") as mock_request:
             mock_request.return_value.__aenter__.return_value = mock_response
-            
+
             result = await self.client.lookup_ip("8.8.8.8")
             self.assertIn("error", result)
 
@@ -316,8 +322,7 @@ class TestVirusTotalRealAPI(unittest.IsolatedAsyncioTestCase):
         """Set up real API tests"""
         self.api_key = os.getenv("VIRUSTOTAL_API_KEY")
         self.skip_if_no_key = unittest.skipIf(
-            not self.api_key, 
-            "VIRUSTOTAL_API_KEY environment variable not set"
+            not self.api_key, "VIRUSTOTAL_API_KEY environment variable not set"
         )
 
     @unittest.skipIf(not os.getenv("VIRUSTOTAL_API_KEY"), "Real API key not provided")
@@ -325,7 +330,7 @@ class TestVirusTotalRealAPI(unittest.IsolatedAsyncioTestCase):
         """Test real API IP lookup (only runs with API key)"""
         async with VirusTotalClient(api_key=self.api_key) as client:
             result = await client.lookup_ip("8.8.8.8")
-            
+
             # Basic checks for real API response
             self.assertNotIn("error", result)
             self.assertEqual(result["ip_address"], "8.8.8.8")
@@ -336,7 +341,7 @@ class TestVirusTotalRealAPI(unittest.IsolatedAsyncioTestCase):
         """Test real API domain lookup (only runs with API key)"""
         async with VirusTotalClient(api_key=self.api_key) as client:
             result = await client.lookup_domain("google.com")
-            
+
             # Basic checks for real API response
             self.assertNotIn("error", result)
             self.assertEqual(result["domain"], "google.com")
@@ -349,17 +354,17 @@ class TestVirusTotalRealAPI(unittest.IsolatedAsyncioTestCase):
             tasks = [
                 client.lookup_ip("8.8.8.8"),
                 client.lookup_ip("1.1.1.1"),
-                client.lookup_domain("google.com")
+                client.lookup_domain("google.com"),
             ]
-            
+
             results = await asyncio.gather(*tasks, return_exceptions=True)
-            
+
             # All should succeed
             for result in results:
                 self.assertNotIsInstance(result, Exception)
                 self.assertNotIn("error", result)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Run async tests
     unittest.main(verbosity=2)

@@ -18,7 +18,7 @@ sys.path.append(str(Path(__file__).parent.parent))
 # Configure logging
 logging.basicConfig(
     level=os.getenv("LOG_LEVEL", "INFO"),
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
 logger = logging.getLogger(__name__)
 
@@ -26,9 +26,9 @@ logger = logging.getLogger(__name__)
 def check_api_keys():
     """Check which API keys are available for integration testing"""
     api_keys = {
-        'VIRUSTOTAL_API_KEY': os.getenv('VIRUSTOTAL_API_KEY'),
-        'SHODAN_API_KEY': os.getenv('SHODAN_API_KEY'),
-        'ABUSEIPDB_API_KEY': os.getenv('ABUSEIPDB_API_KEY')
+        "VIRUSTOTAL_API_KEY": os.getenv("VIRUSTOTAL_API_KEY"),
+        "SHODAN_API_KEY": os.getenv("SHODAN_API_KEY"),
+        "ABUSEIPDB_API_KEY": os.getenv("ABUSEIPDB_API_KEY"),
     }
 
     available = {k: v for k, v in api_keys.items() if v}
@@ -56,10 +56,15 @@ def run_mock_tests():
         from tests.tools.test_virustotal_async import (
             TestVirusTotalClientAsync,
             TestAsyncConvenienceFunctions as VTAsyncConvenienceFunctions,
-            TestAsyncErrorHandling
+            TestAsyncErrorHandling,
         )
-        test_suite.addTests(test_loader.loadTestsFromTestCase(TestVirusTotalClientAsync))
-        test_suite.addTests(test_loader.loadTestsFromTestCase(VTAsyncConvenienceFunctions))
+
+        test_suite.addTests(
+            test_loader.loadTestsFromTestCase(TestVirusTotalClientAsync)
+        )
+        test_suite.addTests(
+            test_loader.loadTestsFromTestCase(VTAsyncConvenienceFunctions)
+        )
         test_suite.addTests(test_loader.loadTestsFromTestCase(TestAsyncErrorHandling))
         logger.info("  ✅ Added VirusTotal async tests")
     except ImportError as e:
@@ -68,10 +73,13 @@ def run_mock_tests():
     try:
         from tests.tools.test_shodan_async import (
             TestShodanClientAsync,
-            TestAsyncConvenienceFunctions as ShodanAsyncConvenienceFunctions
+            TestAsyncConvenienceFunctions as ShodanAsyncConvenienceFunctions,
         )
+
         test_suite.addTests(test_loader.loadTestsFromTestCase(TestShodanClientAsync))
-        test_suite.addTests(test_loader.loadTestsFromTestCase(ShodanAsyncConvenienceFunctions))
+        test_suite.addTests(
+            test_loader.loadTestsFromTestCase(ShodanAsyncConvenienceFunctions)
+        )
         logger.info("  ✅ Added Shodan async tests")
     except ImportError as e:
         logger.error(f"  ❌ Failed to import Shodan async tests: {e}")
@@ -79,10 +87,13 @@ def run_mock_tests():
     try:
         from tests.tools.test_abuseipdb_async import (
             TestAbuseIPDBClientAsync,
-            TestAsyncConvenienceFunctions as AbuseIPDBAsyncConvenienceFunctions
+            TestAsyncConvenienceFunctions as AbuseIPDBAsyncConvenienceFunctions,
         )
+
         test_suite.addTests(test_loader.loadTestsFromTestCase(TestAbuseIPDBClientAsync))
-        test_suite.addTests(test_loader.loadTestsFromTestCase(AbuseIPDBAsyncConvenienceFunctions))
+        test_suite.addTests(
+            test_loader.loadTestsFromTestCase(AbuseIPDBAsyncConvenienceFunctions)
+        )
         logger.info("  ✅ Added AbuseIPDB async tests")
     except ImportError as e:
         logger.error(f"  ❌ Failed to import AbuseIPDB async tests: {e}")
@@ -106,25 +117,30 @@ def run_integration_tests(available_keys):
     test_suite = unittest.TestSuite()
 
     # Add integration test classes based on available keys
-    if 'VIRUSTOTAL_API_KEY' in available_keys:
+    if "VIRUSTOTAL_API_KEY" in available_keys:
         try:
             from tests.tools.test_virustotal_async import TestVirusTotalRealAPI
-            test_suite.addTests(test_loader.loadTestsFromTestCase(TestVirusTotalRealAPI))
+
+            test_suite.addTests(
+                test_loader.loadTestsFromTestCase(TestVirusTotalRealAPI)
+            )
             logger.info("  ✅ Added VirusTotal integration tests")
         except ImportError as e:
             logger.error(f"  ❌ Failed to import VirusTotal integration tests: {e}")
 
-    if 'SHODAN_API_KEY' in available_keys:
+    if "SHODAN_API_KEY" in available_keys:
         try:
             from tests.tools.test_shodan_async import TestShodanRealAPI
+
             test_suite.addTests(test_loader.loadTestsFromTestCase(TestShodanRealAPI))
             logger.info("  ✅ Added Shodan integration tests")
         except ImportError as e:
             logger.error(f"  ❌ Failed to import Shodan integration tests: {e}")
 
-    if 'ABUSEIPDB_API_KEY' in available_keys:
+    if "ABUSEIPDB_API_KEY" in available_keys:
         try:
             from tests.tools.test_abuseipdb_async import TestAbuseIPDBRealAPI
+
             test_suite.addTests(test_loader.loadTestsFromTestCase(TestAbuseIPDBRealAPI))
             logger.info("  ✅ Added AbuseIPDB integration tests")
         except ImportError as e:
@@ -150,25 +166,31 @@ async def run_manual_concurrent_test():
     tasks = []
 
     # Only test with available API keys
-    if 'VIRUSTOTAL_API_KEY' in available_keys:
+    if "VIRUSTOTAL_API_KEY" in available_keys:
         from tools.virustotal import VirusTotalClient
+
         async def test_vt():
             async with VirusTotalClient() as client:
                 return await client.lookup_ip("8.8.8.8")
+
         tasks.append(("VirusTotal", test_vt()))
 
-    if 'SHODAN_API_KEY' in available_keys:
+    if "SHODAN_API_KEY" in available_keys:
         from tools.shodan import ShodanClient
+
         async def test_shodan():
             async with ShodanClient() as client:
                 return await client.lookup_ip("8.8.8.8")
+
         tasks.append(("Shodan", test_shodan()))
 
-    if 'ABUSEIPDB_API_KEY' in available_keys:
+    if "ABUSEIPDB_API_KEY" in available_keys:
         from tools.abuseipdb import AbuseIPDBClient
+
         async def test_abuseipdb():
             async with AbuseIPDBClient() as client:
                 return await client.check_ip("8.8.8.8")
+
         tasks.append(("AbuseIPDB", test_abuseipdb()))
 
     if not tasks:
@@ -177,6 +199,7 @@ async def run_manual_concurrent_test():
 
     # Run concurrent lookups
     import time
+
     start_time = time.time()
 
     logger.info(f"Starting concurrent lookups for {len(tasks)} services...")
@@ -208,13 +231,9 @@ def main():
         "--mode",
         choices=["mock", "integration", "concurrent", "all"],
         default="mock",
-        help="Test mode to run"
+        help="Test mode to run",
     )
-    parser.add_argument(
-        "--verbose", "-v",
-        action="store_true",
-        help="Verbose output"
-    )
+    parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
 
     args = parser.parse_args()
 
@@ -230,32 +249,34 @@ def main():
     success = True
 
     if args.mode in ["mock", "all"]:
-        logger.info("\n" + "="*60)
+        logger.info("\n" + "=" * 60)
         logger.info("📝 MOCK TESTS")
-        logger.info("="*60)
+        logger.info("=" * 60)
         success &= run_mock_tests()
 
     if args.mode in ["integration", "all"] and available_keys:
-        logger.info("\n" + "="*60)
+        logger.info("\n" + "=" * 60)
         logger.info("🌐 INTEGRATION TESTS")
-        logger.info("="*60)
+        logger.info("=" * 60)
         success &= run_integration_tests(available_keys)
 
     if args.mode in ["concurrent", "all"] and available_keys:
-        logger.info("\n" + "="*60)
+        logger.info("\n" + "=" * 60)
         logger.info("🚀 CONCURRENT PERFORMANCE TEST")
-        logger.info("="*60)
+        logger.info("=" * 60)
         success &= asyncio.run(run_manual_concurrent_test())
 
     # Summary
-    logger.info("\n" + "="*60)
+    logger.info("\n" + "=" * 60)
     logger.info("📊 TEST SUMMARY")
-    logger.info("="*60)
+    logger.info("=" * 60)
 
     if success:
         logger.info("🎉 All tests passed!")
         if missing_keys:
-            logger.info(f"💡 To run integration tests, set these environment variables:")
+            logger.info(
+                f"💡 To run integration tests, set these environment variables:"
+            )
             for key in missing_keys:
                 logger.info(f"   export {key}=your_api_key_here")
     else:

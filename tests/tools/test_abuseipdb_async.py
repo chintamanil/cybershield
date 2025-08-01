@@ -9,7 +9,9 @@ import asyncio
 from unittest.mock import AsyncMock, patch
 
 # Add parent directory to path for imports
-sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+sys.path.append(
+    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+)
 
 from tools.abuseipdb import AbuseIPDBClient, check_ip, check_subnet, get_blacklist
 
@@ -38,7 +40,7 @@ class TestAbuseIPDBClientAsync(unittest.IsolatedAsyncioTestCase):
             client = AbuseIPDBClient()
             self.assertIsNone(client.api_key)
 
-    @patch.dict(os.environ, {'ABUSEIPDB_API_KEY': 'env_key'})
+    @patch.dict(os.environ, {"ABUSEIPDB_API_KEY": "env_key"})
     def test_client_initialization_from_env(self):
         """Test client initialization from environment variable"""
         client = AbuseIPDBClient()
@@ -72,27 +74,29 @@ class TestAbuseIPDBClientAsync(unittest.IsolatedAsyncioTestCase):
         """Test successful async IP check"""
         mock_response = AsyncMock()
         mock_response.status = 200
-        mock_response.json = AsyncMock(return_value={
-            "data": {
-                "ipAddress": "8.8.8.8",
-                "isPublic": True,
-                "ipVersion": 4,
-                "isWhitelisted": False,
-                "abuseConfidencePercentage": 0,
-                "countryCode": "US",
-                "countryName": "United States",
-                "usageType": "Data Center/Web Hosting/Transit",
-                "isp": "Google LLC",
-                "domain": "google.com",
-                "totalReports": 0,
-                "numDistinctUsers": 0,
-                "lastReportedAt": None
+        mock_response.json = AsyncMock(
+            return_value={
+                "data": {
+                    "ipAddress": "8.8.8.8",
+                    "isPublic": True,
+                    "ipVersion": 4,
+                    "isWhitelisted": False,
+                    "abuseConfidencePercentage": 0,
+                    "countryCode": "US",
+                    "countryName": "United States",
+                    "usageType": "Data Center/Web Hosting/Transit",
+                    "isp": "Google LLC",
+                    "domain": "google.com",
+                    "totalReports": 0,
+                    "numDistinctUsers": 0,
+                    "lastReportedAt": None,
+                }
             }
-        })
+        )
 
-        with patch('aiohttp.ClientSession.request') as mock_request:
+        with patch("aiohttp.ClientSession.request") as mock_request:
             mock_request.return_value.__aenter__.return_value = mock_response
-            
+
             result = await self.client.check_ip("8.8.8.8")
 
             self.assertEqual(result["ip_address"], "8.8.8.8")
@@ -107,36 +111,38 @@ class TestAbuseIPDBClientAsync(unittest.IsolatedAsyncioTestCase):
         """Test successful async IP check with verbose reports"""
         mock_response = AsyncMock()
         mock_response.status = 200
-        mock_response.json = AsyncMock(return_value={
-            "data": {
-                "ipAddress": "1.2.3.4",
-                "isPublic": True,
-                "ipVersion": 4,
-                "isWhitelisted": False,
-                "abuseConfidencePercentage": 75,
-                "countryCode": "US",
-                "countryName": "United States",
-                "usageType": "Data Center/Web Hosting/Transit",
-                "isp": "Example ISP",
-                "domain": "example.com",
-                "totalReports": 10,
-                "numDistinctUsers": 5,
-                "lastReportedAt": "2024-01-01T12:00:00+00:00",
-                "reports": [
-                    {
-                        "reportedAt": "2024-01-01T12:00:00+00:00",
-                        "comment": "Malicious activity detected",
-                        "categories": [14],
-                        "reporterId": 12345,
-                        "reporterCountryCode": "US"
-                    }
-                ]
+        mock_response.json = AsyncMock(
+            return_value={
+                "data": {
+                    "ipAddress": "1.2.3.4",
+                    "isPublic": True,
+                    "ipVersion": 4,
+                    "isWhitelisted": False,
+                    "abuseConfidencePercentage": 75,
+                    "countryCode": "US",
+                    "countryName": "United States",
+                    "usageType": "Data Center/Web Hosting/Transit",
+                    "isp": "Example ISP",
+                    "domain": "example.com",
+                    "totalReports": 10,
+                    "numDistinctUsers": 5,
+                    "lastReportedAt": "2024-01-01T12:00:00+00:00",
+                    "reports": [
+                        {
+                            "reportedAt": "2024-01-01T12:00:00+00:00",
+                            "comment": "Malicious activity detected",
+                            "categories": [14],
+                            "reporterId": 12345,
+                            "reporterCountryCode": "US",
+                        }
+                    ],
+                }
             }
-        })
+        )
 
-        with patch('aiohttp.ClientSession.request') as mock_request:
+        with patch("aiohttp.ClientSession.request") as mock_request:
             mock_request.return_value.__aenter__.return_value = mock_response
-            
+
             result = await self.client.check_ip("1.2.3.4", verbose=True)
 
             self.assertEqual(result["ip_address"], "1.2.3.4")
@@ -149,28 +155,30 @@ class TestAbuseIPDBClientAsync(unittest.IsolatedAsyncioTestCase):
         """Test successful async subnet check"""
         mock_response = AsyncMock()
         mock_response.status = 200
-        mock_response.json = AsyncMock(return_value={
-            "data": {
-                "networkAddress": "192.168.1.0",
-                "netmask": "255.255.255.0",
-                "minAddress": "192.168.1.0",
-                "maxAddress": "192.168.1.255",
-                "numPossibleHosts": 256,
-                "addressSpaceDesc": "Private Use",
-                "reportedAddress": [
-                    {
-                        "ipAddress": "192.168.1.100",
-                        "numReports": 5,
-                        "mostRecentReport": "2024-01-01T12:00:00+00:00",
-                        "abuseConfidencePercentage": 25
-                    }
-                ]
+        mock_response.json = AsyncMock(
+            return_value={
+                "data": {
+                    "networkAddress": "192.168.1.0",
+                    "netmask": "255.255.255.0",
+                    "minAddress": "192.168.1.0",
+                    "maxAddress": "192.168.1.255",
+                    "numPossibleHosts": 256,
+                    "addressSpaceDesc": "Private Use",
+                    "reportedAddress": [
+                        {
+                            "ipAddress": "192.168.1.100",
+                            "numReports": 5,
+                            "mostRecentReport": "2024-01-01T12:00:00+00:00",
+                            "abuseConfidencePercentage": 25,
+                        }
+                    ],
+                }
             }
-        })
+        )
 
-        with patch('aiohttp.ClientSession.request') as mock_request:
+        with patch("aiohttp.ClientSession.request") as mock_request:
             mock_request.return_value.__aenter__.return_value = mock_response
-            
+
             result = await self.client.check_subnet("192.168.1.0/24")
 
             self.assertEqual(result["network"], "192.168.1.0/24")
@@ -182,17 +190,19 @@ class TestAbuseIPDBClientAsync(unittest.IsolatedAsyncioTestCase):
         """Test successful async IP report"""
         mock_response = AsyncMock()
         mock_response.status = 200
-        mock_response.json = AsyncMock(return_value={
-            "data": {
-                "ipAddress": "1.2.3.4",
-                "abuseConfidencePercentage": 100,
-                "reportId": 67890
+        mock_response.json = AsyncMock(
+            return_value={
+                "data": {
+                    "ipAddress": "1.2.3.4",
+                    "abuseConfidencePercentage": 100,
+                    "reportId": 67890,
+                }
             }
-        })
+        )
 
-        with patch('aiohttp.ClientSession.request') as mock_request:
+        with patch("aiohttp.ClientSession.request") as mock_request:
             mock_request.return_value.__aenter__.return_value = mock_response
-            
+
             result = await self.client.report_ip("1.2.3.4", [14], "Test report")
 
             self.assertEqual(result["ip_address"], "1.2.3.4")
@@ -213,32 +223,34 @@ class TestAbuseIPDBClientAsync(unittest.IsolatedAsyncioTestCase):
         """Test successful async blacklist retrieval"""
         mock_response = AsyncMock()
         mock_response.status = 200
-        mock_response.json = AsyncMock(return_value={
-            "data": [
-                {
-                    "ipAddress": "1.2.3.4",
-                    "countryCode": "CN",
-                    "usageType": "Data Center/Web Hosting/Transit",
-                    "isp": "Example ISP",
-                    "domain": "example.com",
-                    "abuseConfidencePercentage": 100,
-                    "lastReportedAt": "2024-01-01T12:00:00+00:00"
-                },
-                {
-                    "ipAddress": "5.6.7.8",
-                    "countryCode": "RU",
-                    "usageType": "Data Center/Web Hosting/Transit",
-                    "isp": "Another ISP",
-                    "domain": "another.com",
-                    "abuseConfidencePercentage": 85,
-                    "lastReportedAt": "2024-01-01T11:00:00+00:00"
-                }
-            ]
-        })
+        mock_response.json = AsyncMock(
+            return_value={
+                "data": [
+                    {
+                        "ipAddress": "1.2.3.4",
+                        "countryCode": "CN",
+                        "usageType": "Data Center/Web Hosting/Transit",
+                        "isp": "Example ISP",
+                        "domain": "example.com",
+                        "abuseConfidencePercentage": 100,
+                        "lastReportedAt": "2024-01-01T12:00:00+00:00",
+                    },
+                    {
+                        "ipAddress": "5.6.7.8",
+                        "countryCode": "RU",
+                        "usageType": "Data Center/Web Hosting/Transit",
+                        "isp": "Another ISP",
+                        "domain": "another.com",
+                        "abuseConfidencePercentage": 85,
+                        "lastReportedAt": "2024-01-01T11:00:00+00:00",
+                    },
+                ]
+            }
+        )
 
-        with patch('aiohttp.ClientSession.request') as mock_request:
+        with patch("aiohttp.ClientSession.request") as mock_request:
             mock_request.return_value.__aenter__.return_value = mock_response
-            
+
             result = await self.client.get_blacklist(confidence_minimum=75, limit=1000)
 
             self.assertEqual(result["confidence_minimum"], 75)
@@ -253,9 +265,9 @@ class TestAbuseIPDBClientAsync(unittest.IsolatedAsyncioTestCase):
         mock_response.status = 200
         mock_response.json = AsyncMock(return_value={})
 
-        with patch('aiohttp.ClientSession.request') as mock_request:
+        with patch("aiohttp.ClientSession.request") as mock_request:
             mock_request.return_value.__aenter__.return_value = mock_response
-            
+
             result = await self.client.clear_address("1.2.3.4")
 
             self.assertEqual(result["ip_address"], "1.2.3.4")
@@ -266,29 +278,31 @@ class TestAbuseIPDBClientAsync(unittest.IsolatedAsyncioTestCase):
         rate_limit_response = AsyncMock()
         rate_limit_response.status = 429
         rate_limit_response.headers = {"Retry-After": "1"}
-        
+
         success_response = AsyncMock()
         success_response.status = 200
-        success_response.json = AsyncMock(return_value={
-            "data": {
-                "ipAddress": "8.8.8.8",
-                "abuseConfidencePercentage": 0
+        success_response.json = AsyncMock(
+            return_value={
+                "data": {"ipAddress": "8.8.8.8", "abuseConfidencePercentage": 0}
             }
-        })
+        )
 
-        with patch('aiohttp.ClientSession.request') as mock_request:
-            mock_request.return_value.__aenter__.side_effect = [rate_limit_response, success_response]
-            
-            with patch('asyncio.sleep') as mock_sleep:
+        with patch("aiohttp.ClientSession.request") as mock_request:
+            mock_request.return_value.__aenter__.side_effect = [
+                rate_limit_response,
+                success_response,
+            ]
+
+            with patch("asyncio.sleep") as mock_sleep:
                 result = await self.client.check_ip("8.8.8.8")
                 mock_sleep.assert_called_once_with(1)
                 self.assertEqual(result["ip_address"], "8.8.8.8")
 
     async def test_request_exception_handling(self):
         """Test async request exception handling"""
-        with patch('aiohttp.ClientSession.request') as mock_request:
+        with patch("aiohttp.ClientSession.request") as mock_request:
             mock_request.side_effect = Exception("Network error")
-            
+
             result = await self.client.check_ip("8.8.8.8")
             self.assertIn("error", result)
             self.assertIn("Network error", result["error"])
@@ -296,7 +310,7 @@ class TestAbuseIPDBClientAsync(unittest.IsolatedAsyncioTestCase):
     def test_get_categories(self):
         """Test get categories functionality (static data)"""
         result = self.client.get_categories()
-        
+
         self.assertIn("categories", result)
         self.assertIn("category_count", result)
         self.assertIsInstance(result["categories"], dict)
@@ -318,16 +332,15 @@ class TestAsyncConvenienceFunctions(unittest.IsolatedAsyncioTestCase):
         """Test async check_ip convenience function"""
         mock_response = AsyncMock()
         mock_response.status = 200
-        mock_response.json = AsyncMock(return_value={
-            "data": {
-                "ipAddress": "8.8.8.8",
-                "abuseConfidencePercentage": 0
+        mock_response.json = AsyncMock(
+            return_value={
+                "data": {"ipAddress": "8.8.8.8", "abuseConfidencePercentage": 0}
             }
-        })
+        )
 
-        with patch('aiohttp.ClientSession.request') as mock_request:
+        with patch("aiohttp.ClientSession.request") as mock_request:
             mock_request.return_value.__aenter__.return_value = mock_response
-            
+
             result = await check_ip("8.8.8.8")
             self.assertEqual(result["ip_address"], "8.8.8.8")
 
@@ -335,16 +348,15 @@ class TestAsyncConvenienceFunctions(unittest.IsolatedAsyncioTestCase):
         """Test async check_subnet convenience function"""
         mock_response = AsyncMock()
         mock_response.status = 200
-        mock_response.json = AsyncMock(return_value={
-            "data": {
-                "networkAddress": "192.168.1.0",
-                "netmask": "255.255.255.0"
+        mock_response.json = AsyncMock(
+            return_value={
+                "data": {"networkAddress": "192.168.1.0", "netmask": "255.255.255.0"}
             }
-        })
+        )
 
-        with patch('aiohttp.ClientSession.request') as mock_request:
+        with patch("aiohttp.ClientSession.request") as mock_request:
             mock_request.return_value.__aenter__.return_value = mock_response
-            
+
             result = await check_subnet("192.168.1.0/24")
             self.assertEqual(result["network"], "192.168.1.0/24")
 
@@ -352,13 +364,11 @@ class TestAsyncConvenienceFunctions(unittest.IsolatedAsyncioTestCase):
         """Test async get_blacklist convenience function"""
         mock_response = AsyncMock()
         mock_response.status = 200
-        mock_response.json = AsyncMock(return_value={
-            "data": []
-        })
+        mock_response.json = AsyncMock(return_value={"data": []})
 
-        with patch('aiohttp.ClientSession.request') as mock_request:
+        with patch("aiohttp.ClientSession.request") as mock_request:
             mock_request.return_value.__aenter__.return_value = mock_response
-            
+
             result = await get_blacklist()
             self.assertIn("blacklisted_ips", result)
 
@@ -377,7 +387,7 @@ class TestAbuseIPDBRealAPI(unittest.IsolatedAsyncioTestCase):
         async with AbuseIPDBClient(api_key=self.api_key) as client:
             # Test with Google DNS (known good IP)
             result = await client.check_ip("8.8.8.8")
-            
+
             # Basic checks for real API response
             self.assertNotIn("error", result)
             self.assertEqual(result["ip_address"], "8.8.8.8")
@@ -389,7 +399,7 @@ class TestAbuseIPDBRealAPI(unittest.IsolatedAsyncioTestCase):
         """Test real API categories retrieval"""
         async with AbuseIPDBClient(api_key=self.api_key) as client:
             result = client.get_categories()
-            
+
             # Categories should be available (static data)
             self.assertIn("categories", result)
             self.assertGreater(result["category_count"], 0)
@@ -399,13 +409,10 @@ class TestAbuseIPDBRealAPI(unittest.IsolatedAsyncioTestCase):
         """Test concurrent real API checks"""
         async with AbuseIPDBClient(api_key=self.api_key) as client:
             # Test concurrent checks (be mindful of rate limits)
-            tasks = [
-                client.check_ip("8.8.8.8"),
-                client.check_ip("1.1.1.1")
-            ]
-            
+            tasks = [client.check_ip("8.8.8.8"), client.check_ip("1.1.1.1")]
+
             results = await asyncio.gather(*tasks, return_exceptions=True)
-            
+
             # Check that we don't have exceptions (rate limiting might occur)
             for result in results:
                 if not isinstance(result, Exception):
@@ -413,5 +420,5 @@ class TestAbuseIPDBRealAPI(unittest.IsolatedAsyncioTestCase):
                     self.assertIn("ip_address", result)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main(verbosity=2)

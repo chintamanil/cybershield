@@ -136,7 +136,7 @@ def display_analysis_results(results: Dict[str, Any]):
         if "processing_summary" in result_data:
             summary = result_data["processing_summary"]
             
-            col1, col2, col3 = st.columns(3)
+            col1, col2, col3, col4 = st.columns(4)
             with col1:
                 st.metric("Workflow Iterations", summary.get("iterations", 0))
             with col2:
@@ -144,11 +144,19 @@ def display_analysis_results(results: Dict[str, Any]):
                 st.metric("Tools Used", len(tools_used) if isinstance(tools_used, list) else 0)
             with col3:
                 processing_method = result_data.get("processing_method", "unknown")
-                st.metric("Processing Method", processing_method.title())
+                method_display = "ReAct + Cache" if "cached" in processing_method else processing_method.title()
+                st.metric("Processing Method", method_display)
+            with col4:
+                cached_ops = summary.get("cached_operations", [])
+                st.metric("Cached Operations", len(cached_ops) if isinstance(cached_ops, list) else 0)
+            
+            # Show caching performance if available
+            if "performance_gain" in summary:
+                st.success(f"⚡ {summary['performance_gain']}")
             
             # Show concurrent execution performance if available
             if "execution_time_seconds" in summary:
-                st.success(f"🚀 Concurrent execution: {summary['execution_time_seconds']}s - {summary.get('performance_gain', 'optimized')}")
+                st.info(f"🚀 Execution time: {summary['execution_time_seconds']}s")
                 
         # Show device optimization status
         if "device_optimization" in result_data:

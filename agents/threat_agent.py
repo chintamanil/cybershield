@@ -9,19 +9,22 @@ from utils.device_config import create_performance_config
 
 logger = get_security_logger("threat_agent")
 
+
 class ThreatAgent:
     def __init__(self, memory=None, session_id=None):
         self.memory = memory  # Async Redis STM
         self.session_id = session_id
-        
+
         # Get performance configuration for M4 optimization
         self.perf_config = create_performance_config()
-        
-        logger.info("Initializing ThreatAgent with M4 optimization",
-                   device=self.perf_config["device"],
-                   batch_size=self.perf_config["batch_size"],
-                   num_workers=self.perf_config["num_workers"])
-        
+
+        logger.info(
+            "Initializing ThreatAgent with M4 optimization",
+            device=self.perf_config["device"],
+            batch_size=self.perf_config["batch_size"],
+            num_workers=self.perf_config["num_workers"],
+        )
+
         # Initialize tool clients (async context managers)
         self.shodan_client = None
         self.abuseipdb_client = None
@@ -49,7 +52,9 @@ class ThreatAgent:
 
     async def evaluate(self, iocs: Dict[str, List[str]]) -> List[Dict[str, Any]]:
         """Evaluate IOCs using multiple threat intelligence sources concurrently"""
-        logger.debug(f"ThreatAgent.evaluate called with iocs type: {type(iocs)}, value: {iocs}")
+        logger.debug(
+            f"ThreatAgent.evaluate called with iocs type: {type(iocs)}, value: {iocs}"
+        )
         await self._get_clients()
         results = []
 
@@ -106,7 +111,9 @@ class ThreatAgent:
                 else:
                     results.append(result)
 
-        logger.debug(f"ThreatAgent.evaluate returning: type={type(results)}, value={results}")
+        logger.debug(
+            f"ThreatAgent.evaluate returning: type={type(results)}, value={results}"
+        )
         return results
 
     async def _evaluate_ip(self, ip: str) -> Dict[str, Any]:
@@ -127,13 +134,17 @@ class ThreatAgent:
         tasks = []
         if self.shodan_client:
             tasks.append(self._safe_lookup("shodan", self.shodan_client.lookup_ip, ip))
-            logger.debug("shodan threat intelligence clients for ip:"+ip)
+            logger.debug("shodan threat intelligence clients for ip:" + ip)
         if self.abuseipdb_client:
-            tasks.append(self._safe_lookup("abuseipdb", self.abuseipdb_client.check_ip, ip))
-            logger.debug("abuseipdb threat intelligence clients for ip:"+ip)
+            tasks.append(
+                self._safe_lookup("abuseipdb", self.abuseipdb_client.check_ip, ip)
+            )
+            logger.debug("abuseipdb threat intelligence clients for ip:" + ip)
         if self.virustotal_client:
-            tasks.append(self._safe_lookup("virustotal", self.virustotal_client.lookup_ip, ip))
-            logger.debug("virustotal threat intelligence clients for ip:"+ip)
+            tasks.append(
+                self._safe_lookup("virustotal", self.virustotal_client.lookup_ip, ip)
+            )
+            logger.debug("virustotal threat intelligence clients for ip:" + ip)
 
         if not tasks:
             return {"error": "No threat intelligence clients available"}
@@ -146,13 +157,9 @@ class ThreatAgent:
             "ioc": ip,
             "ioc_type": "ip",
             "sources": {},
-            "summary": {
-                "risk_score": 0,
-                "is_malicious": False,
-                "confidence": 0
-            }
+            "summary": {"risk_score": 0, "is_malicious": False, "confidence": 0},
         }
-        logger.debug("lookup_results:"+str(lookup_results))
+        logger.debug("lookup_results:" + str(lookup_results))
         for lookup_result in lookup_results:
             if isinstance(lookup_result, dict) and "source" in lookup_result:
                 source = lookup_result["source"]
@@ -161,14 +168,18 @@ class ThreatAgent:
 
                 # Update summary based on source data
                 if source == "abuseipdb" and "abuse_confidence" in data:
-                    result["summary"]["risk_score"] = max(result["summary"]["risk_score"], data["abuse_confidence"])
+                    result["summary"]["risk_score"] = max(
+                        result["summary"]["risk_score"], data["abuse_confidence"]
+                    )
                     if data["abuse_confidence"] > 50:
                         result["summary"]["is_malicious"] = True
 
                 elif source == "virustotal" and "malicious_count" in data:
                     if data["malicious_count"] > 0:
                         result["summary"]["is_malicious"] = True
-                        result["summary"]["risk_score"] = max(result["summary"]["risk_score"], 75)
+                        result["summary"]["risk_score"] = max(
+                            result["summary"]["risk_score"], 75
+                        )
 
         # Cache the result
         if self.memory:
@@ -196,7 +207,7 @@ class ThreatAgent:
             "ioc": domain,
             "ioc_type": "domain",
             "sources": {},
-            "summary": {"risk_score": 0, "is_malicious": False}
+            "summary": {"risk_score": 0, "is_malicious": False},
         }
 
         if self.virustotal_client:
@@ -234,7 +245,7 @@ class ThreatAgent:
             "ioc": hash_value,
             "ioc_type": "hash",
             "sources": {},
-            "summary": {"risk_score": 0, "is_malicious": False}
+            "summary": {"risk_score": 0, "is_malicious": False},
         }
 
         if self.virustotal_client:
@@ -244,7 +255,9 @@ class ThreatAgent:
 
                 if "malicious_count" in vt_result and vt_result["malicious_count"] > 0:
                     result["summary"]["is_malicious"] = True
-                    result["summary"]["risk_score"] = min(100, vt_result["malicious_count"] * 10)
+                    result["summary"]["risk_score"] = min(
+                        100, vt_result["malicious_count"] * 10
+                    )
             except Exception as e:
                 result["sources"]["virustotal"] = {"error": str(e)}
 

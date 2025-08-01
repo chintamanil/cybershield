@@ -8,19 +8,22 @@ from utils.device_config import create_performance_config
 
 logger = get_security_logger("pii_agent")
 
+
 class PIIAgent:
     def __init__(self, memory=None):
         self.memory = memory  # Redis connection for backward compatibility
         self.pii_store = PIISecureStore()  # Secure PII store
         self.current_session = None
-        
+
         # Get performance configuration for M4 optimization
         self.perf_config = create_performance_config()
-        
-        logger.info("Initializing PIIAgent with M4 optimization",
-                   device=self.perf_config["device"],
-                   num_workers=self.perf_config["num_workers"],
-                   memory_optimization=self.perf_config["memory_optimization"])
+
+        logger.info(
+            "Initializing PIIAgent with M4 optimization",
+            device=self.perf_config["device"],
+            num_workers=self.perf_config["num_workers"],
+            memory_optimization=self.perf_config["memory_optimization"],
+        )
 
     async def start_session(self, session_id: str = None) -> str:
         """Start a new PII processing session"""
@@ -54,13 +57,13 @@ class PIIAgent:
 
         # Enhanced PII patterns
         patterns = {
-            'email': r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b',
-            'ipv4': r'\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b',
-            'ipv6': r'\b(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}\b',
-            'phone': r'\b(?:\+?1[-.\s]?)?\(?([0-9]{3})\)?[-.\s]?([0-9]{3})[-.\s]?([0-9]{4})\b',
-            'ssn': r'\b\d{3}-\d{2}-\d{4}\b',
-            'credit_card': r'\b\d{4}[- ]?\d{4}[- ]?\d{4}[- ]?\d{4}\b',
-            'mac_address': r'\b([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})\b'
+            "email": r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b",
+            "ipv4": r"\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b",
+            "ipv6": r"\b(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}\b",
+            "phone": r"\b(?:\+?1[-.\s]?)?\(?([0-9]{3})\)?[-.\s]?([0-9]{3})[-.\s]?([0-9]{4})\b",
+            "ssn": r"\b\d{3}-\d{2}-\d{4}\b",
+            "credit_card": r"\b\d{4}[- ]?\d{4}[- ]?\d{4}[- ]?\d{4}\b",
+            "mac_address": r"\b([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})\b",
         }
 
         masked_text = text
@@ -81,7 +84,7 @@ class PIIAgent:
                     mapping[mask_token] = {
                         "original": original_value,
                         "type": pii_type,
-                        "position": match.span()
+                        "position": match.span(),
                     }
                     mask_counter += 1
                 else:
@@ -92,7 +95,9 @@ class PIIAgent:
             for token, data in mapping.items():
                 await self.memory.set(token, data["original"])
 
-        logger.info(f"Masked {len(mapping)} PII items in session {self.current_session}")
+        logger.info(
+            f"Masked {len(mapping)} PII items in session {self.current_session}"
+        )
         return masked_text, mapping
 
     async def unmask_text(self, masked_text: str, session_id: str = None) -> str:

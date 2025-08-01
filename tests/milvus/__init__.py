@@ -16,12 +16,12 @@ Test modules:
 Usage:
     # Run all Milvus tests
     python tests/milvus/test_runner.py
-    
+
     # Run specific test category
     python tests/milvus/test_runner.py viewer
     python tests/milvus/test_runner.py client
     python tests/milvus/test_runner.py ingestion
-    
+
     # Run individual test files
     python -m unittest tests.milvus.test_milvus_viewer
     python -m unittest tests.milvus.test_milvus_client
@@ -37,10 +37,10 @@ from .test_milvus_client import TestMilvusClient, TestMilvusDataTypes
 from .test_milvus_ingestion import TestMilvusIngestion, TestMilvusIngestionIntegration
 
 __all__ = [
-    'TestMilvusDataViewer',
-    'TestInteractiveMilvusViewer', 
-    'TestMilvusClient',
-    'TestMilvusDataTypes',
-    'TestMilvusIngestion',
-    'TestMilvusIngestionIntegration'
+    "TestMilvusDataViewer",
+    "TestInteractiveMilvusViewer",
+    "TestMilvusClient",
+    "TestMilvusDataTypes",
+    "TestMilvusIngestion",
+    "TestMilvusIngestionIntegration",
 ]

@@ -7,6 +7,7 @@ from typing import Any, Optional, Dict
 
 logger = logging.getLogger(__name__)
 
+
 class RedisSTM:
     def __init__(self, host=None, port=None, db=None, ttl=None):
         """
@@ -18,22 +19,25 @@ class RedisSTM:
             db: Redis database number (defaults to env REDIS_DB or 0)
             ttl: Time to live in seconds (defaults to env REDIS_TTL or 3600)
         """
-        self.host = host or os.getenv('REDIS_HOST', 'localhost')
-        self.port = int(port or os.getenv('REDIS_PORT', 6379))
-        self.db = int(db or os.getenv('REDIS_DB', 0))
-        self.ttl = int(ttl or os.getenv('REDIS_TTL', 3600))
+        self.host = host or os.getenv("REDIS_HOST", "localhost")
+        self.port = int(port or os.getenv("REDIS_PORT", 6379))
+        self.db = int(db or os.getenv("REDIS_DB", 0))
+        self.ttl = int(ttl or os.getenv("REDIS_TTL", 3600))
         self._redis = None
         self._connection_url = f"redis://{self.host}:{self.port}/{self.db}"
-        
+
     async def _get_redis(self) -> aioredis.Redis:
         """Get or create async Redis connection"""
-        if self._redis is None or self._redis.connection_pool.connection_kwargs.get('db') != self.db:
+        if (
+            self._redis is None
+            or self._redis.connection_pool.connection_kwargs.get("db") != self.db
+        ):
             try:
                 self._redis = aioredis.from_url(
                     self._connection_url,
                     decode_responses=True,
                     retry_on_timeout=True,
-                    socket_keepalive=True
+                    socket_keepalive=True,
                 )
                 # Test connection
                 await self._redis.ping()
@@ -43,16 +47,16 @@ class RedisSTM:
                 self._redis = None
                 raise
         return self._redis
-    
+
     async def close(self):
         """Close Redis connection"""
         if self._redis:
             await self._redis.close()
-            
+
     async def __aenter__(self):
         await self._get_redis()
         return self
-        
+
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         await self.close()
 

@@ -9,7 +9,9 @@ import asyncio
 from unittest.mock import AsyncMock, patch
 
 # Add parent directory to path for imports
-sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+sys.path.append(
+    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+)
 
 from tools.shodan import ShodanClient, lookup_ip, search_shodan, get_host_count
 
@@ -38,7 +40,7 @@ class TestShodanClientAsync(unittest.IsolatedAsyncioTestCase):
             client = ShodanClient()
             self.assertIsNone(client.api_key)
 
-    @patch.dict(os.environ, {'SHODAN_API_KEY': 'env_key'})
+    @patch.dict(os.environ, {"SHODAN_API_KEY": "env_key"})
     def test_client_initialization_from_env(self):
         """Test client initialization from environment variable"""
         client = ShodanClient()
@@ -72,40 +74,42 @@ class TestShodanClientAsync(unittest.IsolatedAsyncioTestCase):
         """Test successful async IP lookup"""
         mock_response = AsyncMock()
         mock_response.status = 200
-        mock_response.json = AsyncMock(return_value={
-            "ip_str": "8.8.8.8",
-            "hostnames": ["dns.google"],
-            "country_name": "United States",
-            "country_code": "US",
-            "city": "Mountain View",
-            "region_code": "CA",
-            "postal_code": "94035",
-            "latitude": 37.386,
-            "longitude": -122.0838,
-            "org": "Google LLC",
-            "isp": "Google LLC",
-            "asn": "AS15169",
-            "last_update": "2024-01-01T00:00:00.000000",
-            "os": None,
-            "ports": [53, 443],
-            "data": [
-                {
-                    "port": 53,
-                    "transport": "udp",
-                    "product": "Google DNS",
-                    "version": "1.0",
-                    "_shodan": {"module": "dns-udp"},
-                    "data": "DNS response",
-                    "timestamp": "2024-01-01T00:00:00.000000"
-                }
-            ],
-            "vulns": [],
-            "tags": ["cdn"]
-        })
+        mock_response.json = AsyncMock(
+            return_value={
+                "ip_str": "8.8.8.8",
+                "hostnames": ["dns.google"],
+                "country_name": "United States",
+                "country_code": "US",
+                "city": "Mountain View",
+                "region_code": "CA",
+                "postal_code": "94035",
+                "latitude": 37.386,
+                "longitude": -122.0838,
+                "org": "Google LLC",
+                "isp": "Google LLC",
+                "asn": "AS15169",
+                "last_update": "2024-01-01T00:00:00.000000",
+                "os": None,
+                "ports": [53, 443],
+                "data": [
+                    {
+                        "port": 53,
+                        "transport": "udp",
+                        "product": "Google DNS",
+                        "version": "1.0",
+                        "_shodan": {"module": "dns-udp"},
+                        "data": "DNS response",
+                        "timestamp": "2024-01-01T00:00:00.000000",
+                    }
+                ],
+                "vulns": [],
+                "tags": ["cdn"],
+            }
+        )
 
-        with patch('aiohttp.ClientSession.get') as mock_get:
+        with patch("aiohttp.ClientSession.get") as mock_get:
             mock_get.return_value.__aenter__.return_value = mock_response
-            
+
             result = await self.client.lookup_ip("8.8.8.8")
 
             self.assertEqual(result["ip_address"], "8.8.8.8")
@@ -119,36 +123,38 @@ class TestShodanClientAsync(unittest.IsolatedAsyncioTestCase):
         """Test successful async search"""
         mock_response = AsyncMock()
         mock_response.status = 200
-        mock_response.json = AsyncMock(return_value={
-            "total": 1000,
-            "matches": [
-                {
-                    "ip_str": "1.2.3.4",
-                    "port": 80,
-                    "product": "nginx",
-                    "version": "1.18.0",
-                    "org": "Example Corp",
-                    "location": {
-                        "country_name": "United States",
-                        "city": "New York",
-                        "latitude": 40.7128,
-                        "longitude": -74.0060
-                    },
-                    "data": "HTTP/1.1 200 OK\\r\\nServer: nginx/1.18.0",
-                    "timestamp": "2024-01-01T00:00:00.000000"
-                }
-            ],
-            "facets": {
-                "country": [
-                    {"value": "US", "count": 500},
-                    {"value": "CN", "count": 300}
-                ]
+        mock_response.json = AsyncMock(
+            return_value={
+                "total": 1000,
+                "matches": [
+                    {
+                        "ip_str": "1.2.3.4",
+                        "port": 80,
+                        "product": "nginx",
+                        "version": "1.18.0",
+                        "org": "Example Corp",
+                        "location": {
+                            "country_name": "United States",
+                            "city": "New York",
+                            "latitude": 40.7128,
+                            "longitude": -74.0060,
+                        },
+                        "data": "HTTP/1.1 200 OK\\r\\nServer: nginx/1.18.0",
+                        "timestamp": "2024-01-01T00:00:00.000000",
+                    }
+                ],
+                "facets": {
+                    "country": [
+                        {"value": "US", "count": 500},
+                        {"value": "CN", "count": 300},
+                    ]
+                },
             }
-        })
+        )
 
-        with patch('aiohttp.ClientSession.get') as mock_get:
+        with patch("aiohttp.ClientSession.get") as mock_get:
             mock_get.return_value.__aenter__.return_value = mock_response
-            
+
             result = await self.client.search("nginx", facets=["country"])
 
             self.assertEqual(result["query"], "nginx")
@@ -161,19 +167,21 @@ class TestShodanClientAsync(unittest.IsolatedAsyncioTestCase):
         """Test async host count functionality"""
         mock_response = AsyncMock()
         mock_response.status = 200
-        mock_response.json = AsyncMock(return_value={
-            "total": 5000,
-            "facets": {
-                "country": [
-                    {"value": "US", "count": 2000},
-                    {"value": "CN", "count": 1500}
-                ]
+        mock_response.json = AsyncMock(
+            return_value={
+                "total": 5000,
+                "facets": {
+                    "country": [
+                        {"value": "US", "count": 2000},
+                        {"value": "CN", "count": 1500},
+                    ]
+                },
             }
-        })
+        )
 
-        with patch('aiohttp.ClientSession.get') as mock_get:
+        with patch("aiohttp.ClientSession.get") as mock_get:
             mock_get.return_value.__aenter__.return_value = mock_response
-            
+
             result = await self.client.get_host_count("apache")
 
             self.assertEqual(result["query"], "apache")
@@ -185,27 +193,29 @@ class TestShodanClientAsync(unittest.IsolatedAsyncioTestCase):
         rate_limit_response = AsyncMock()
         rate_limit_response.status = 429
         rate_limit_response.headers = {"Retry-After": "1"}
-        
+
         success_response = AsyncMock()
         success_response.status = 200
-        success_response.json = AsyncMock(return_value={
-            "ip_str": "8.8.8.8",
-            "country_name": "United States"
-        })
+        success_response.json = AsyncMock(
+            return_value={"ip_str": "8.8.8.8", "country_name": "United States"}
+        )
 
-        with patch('aiohttp.ClientSession.get') as mock_get:
-            mock_get.return_value.__aenter__.side_effect = [rate_limit_response, success_response]
-            
-            with patch('asyncio.sleep') as mock_sleep:
+        with patch("aiohttp.ClientSession.get") as mock_get:
+            mock_get.return_value.__aenter__.side_effect = [
+                rate_limit_response,
+                success_response,
+            ]
+
+            with patch("asyncio.sleep") as mock_sleep:
                 result = await self.client.lookup_ip("8.8.8.8")
                 mock_sleep.assert_called_once_with(1)
                 self.assertEqual(result["ip_address"], "8.8.8.8")
 
     async def test_request_exception_handling(self):
         """Test async request exception handling"""
-        with patch('aiohttp.ClientSession.get') as mock_get:
+        with patch("aiohttp.ClientSession.get") as mock_get:
             mock_get.side_effect = Exception("Network error")
-            
+
             result = await self.client.lookup_ip("8.8.8.8")
             self.assertIn("error", result)
             self.assertIn("Network error", result["error"])
@@ -214,15 +224,17 @@ class TestShodanClientAsync(unittest.IsolatedAsyncioTestCase):
         """Test async get protocols functionality"""
         mock_response = AsyncMock()
         mock_response.status = 200
-        mock_response.json = AsyncMock(return_value={
-            "http": {"name": "HTTP", "port": 80},
-            "https": {"name": "HTTPS", "port": 443},
-            "ssh": {"name": "SSH", "port": 22}
-        })
+        mock_response.json = AsyncMock(
+            return_value={
+                "http": {"name": "HTTP", "port": 80},
+                "https": {"name": "HTTPS", "port": 443},
+                "ssh": {"name": "SSH", "port": 22},
+            }
+        )
 
-        with patch('aiohttp.ClientSession.get') as mock_get:
+        with patch("aiohttp.ClientSession.get") as mock_get:
             mock_get.return_value.__aenter__.return_value = mock_response
-            
+
             result = await self.client.get_protocols()
 
             self.assertIn("protocols", result)
@@ -232,16 +244,18 @@ class TestShodanClientAsync(unittest.IsolatedAsyncioTestCase):
         """Test async account info functionality"""
         mock_response = AsyncMock()
         mock_response.status = 200
-        mock_response.json = AsyncMock(return_value={
-            "member": True,
-            "credits": 1000,
-            "display_name": "test_user",
-            "created": "2020-01-01T00:00:00.000000"
-        })
+        mock_response.json = AsyncMock(
+            return_value={
+                "member": True,
+                "credits": 1000,
+                "display_name": "test_user",
+                "created": "2020-01-01T00:00:00.000000",
+            }
+        )
 
-        with patch('aiohttp.ClientSession.get') as mock_get:
+        with patch("aiohttp.ClientSession.get") as mock_get:
             mock_get.return_value.__aenter__.return_value = mock_response
-            
+
             result = await self.client.get_account_info()
 
             self.assertTrue(result["member"])
@@ -261,14 +275,13 @@ class TestAsyncConvenienceFunctions(unittest.IsolatedAsyncioTestCase):
         """Test async lookup_ip convenience function"""
         mock_response = AsyncMock()
         mock_response.status = 200
-        mock_response.json = AsyncMock(return_value={
-            "ip_str": "8.8.8.8",
-            "country_name": "United States"
-        })
+        mock_response.json = AsyncMock(
+            return_value={"ip_str": "8.8.8.8", "country_name": "United States"}
+        )
 
-        with patch('aiohttp.ClientSession.get') as mock_get:
+        with patch("aiohttp.ClientSession.get") as mock_get:
             mock_get.return_value.__aenter__.return_value = mock_response
-            
+
             result = await lookup_ip("8.8.8.8")
             self.assertEqual(result["ip_address"], "8.8.8.8")
 
@@ -276,14 +289,11 @@ class TestAsyncConvenienceFunctions(unittest.IsolatedAsyncioTestCase):
         """Test async search_shodan convenience function"""
         mock_response = AsyncMock()
         mock_response.status = 200
-        mock_response.json = AsyncMock(return_value={
-            "total": 100,
-            "matches": []
-        })
+        mock_response.json = AsyncMock(return_value={"total": 100, "matches": []})
 
-        with patch('aiohttp.ClientSession.get') as mock_get:
+        with patch("aiohttp.ClientSession.get") as mock_get:
             mock_get.return_value.__aenter__.return_value = mock_response
-            
+
             result = await search_shodan("nginx")
             self.assertEqual(result["query"], "nginx")
 
@@ -291,13 +301,11 @@ class TestAsyncConvenienceFunctions(unittest.IsolatedAsyncioTestCase):
         """Test async get_host_count convenience function"""
         mock_response = AsyncMock()
         mock_response.status = 200
-        mock_response.json = AsyncMock(return_value={
-            "total": 5000
-        })
+        mock_response.json = AsyncMock(return_value={"total": 5000})
 
-        with patch('aiohttp.ClientSession.get') as mock_get:
+        with patch("aiohttp.ClientSession.get") as mock_get:
             mock_get.return_value.__aenter__.return_value = mock_response
-            
+
             result = await get_host_count("apache")
             self.assertEqual(result["query"], "apache")
             self.assertEqual(result["total_hosts"], 5000)
@@ -316,7 +324,7 @@ class TestShodanRealAPI(unittest.IsolatedAsyncioTestCase):
         """Test real API IP lookup (only runs with API key)"""
         async with ShodanClient(api_key=self.api_key) as client:
             result = await client.lookup_ip("8.8.8.8")
-            
+
             # Basic checks for real API response
             self.assertNotIn("error", result)
             self.assertEqual(result["ip_address"], "8.8.8.8")
@@ -327,7 +335,7 @@ class TestShodanRealAPI(unittest.IsolatedAsyncioTestCase):
         """Test real API search (only runs with API key)"""
         async with ShodanClient(api_key=self.api_key) as client:
             result = await client.search("nginx", facets=["country"])
-            
+
             # Basic checks for real API response
             self.assertNotIn("error", result)
             self.assertEqual(result["query"], "nginx")
@@ -338,18 +346,15 @@ class TestShodanRealAPI(unittest.IsolatedAsyncioTestCase):
         """Test concurrent real API lookups"""
         async with ShodanClient(api_key=self.api_key) as client:
             # Test concurrent lookups (be careful not to exceed rate limits)
-            tasks = [
-                client.lookup_ip("8.8.8.8"),
-                client.get_host_count("nginx")
-            ]
-            
+            tasks = [client.lookup_ip("8.8.8.8"), client.get_host_count("nginx")]
+
             results = await asyncio.gather(*tasks, return_exceptions=True)
-            
+
             # Check that we don't have exceptions (rate limiting might occur)
             for result in results:
                 if not isinstance(result, Exception):
                     self.assertIsInstance(result, dict)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main(verbosity=2)
