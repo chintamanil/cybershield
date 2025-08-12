@@ -1,0 +1,36 @@
+{
+  "version": "48.0.0",
+  "files": {
+    "7fa1e366ee8a9ded01fc355f704cff92bfd179574e6f9cfee800a3541df1b200": {
+      "displayName": "CyberShieldBootstrapStack/Custom::VpcRestrictDefaultSGCustomResourceProvider Code",
+      "source": {
+        "path": "asset.7fa1e366ee8a9ded01fc355f704cff92bfd179574e6f9cfee800a3541df1b200",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "840656856721-us-east-1-28e82266": {
+          "bucketName": "cdk-hnb659fds-assets-840656856721-us-east-1",
+          "objectKey": "7fa1e366ee8a9ded01fc355f704cff92bfd179574e6f9cfee800a3541df1b200.zip",
+          "region": "us-east-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::840656856721:role/cdk-hnb659fds-file-publishing-role-840656856721-us-east-1"
+        }
+      }
+    },
+    "251332da73e4c4b1d88225418fbc498a42a8996aea90df346f00be56a16db76b": {
+      "displayName": "CyberShieldBootstrapStack Template",
+      "source": {
+        "path": "CyberShieldBootstrapStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "840656856721-us-east-1-6c12b452": {
+          "bucketName": "cdk-hnb659fds-assets-840656856721-us-east-1",
+          "objectKey": "251332da73e4c4b1d88225418fbc498a42a8996aea90df346f00be56a16db76b.json",
+          "region": "us-east-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::840656856721:role/cdk-hnb659fds-file-publishing-role-840656856721-us-east-1"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

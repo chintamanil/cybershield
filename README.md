@@ -130,7 +130,7 @@ final_reports: 1 hour           # Complete analysis
 
 ## 🚀 Quick Start
 
-### Package Installation (Recommended)
+### Local Development Setup
 
 ```bash
 # Clone and setup
@@ -144,14 +144,6 @@ python3 -m venv venv && source venv/bin/activate
 pip install -e ".[all]"  # Full installation with frontend
 # OR pip install -e ".[dev]"  # Development setup
 # OR pip install -e .  # Basic installation
-```
-
-### Manual Installation (Alternative)
-
-```bash
-# Install from requirements.txt
-pip install -r requirements.txt
-pip install -r frontend/requirements.txt
 ```
 
 ### Configuration & Launch
@@ -177,6 +169,49 @@ cybershield-frontend  # Start Streamlit frontend
 ```
 
 Access the API at `http://localhost:8000` and frontend at `http://localhost:8501`
+
+## ☁️ AWS Deployment
+
+CyberShield supports full AWS deployment with production-ready infrastructure:
+
+### Quick AWS Setup
+
+```bash
+# Configure AWS credentials
+aws configure
+
+# Copy and configure AWS environment
+cp .env.aws.template .env.aws
+# Edit .env.aws with your AWS configuration
+
+# Deploy infrastructure
+./scripts/manual_aws_setup.sh      # Create VPC, subnets, security groups
+./scripts/create_rds.sh           # PostgreSQL database
+./scripts/create_redis.sh         # ElastiCache Redis
+./scripts/create_ecs.sh           # ECS cluster and load balancer
+
+# Build and deploy application
+docker build -f Dockerfile.aws -t cybershield .
+# See AWS_DEPLOYMENT_GUIDE.md for complete deployment steps
+```
+
+### AWS Infrastructure Includes
+
+- **VPC with Multi-AZ Setup**: Public/private/database subnets across 2 availability zones
+- **RDS PostgreSQL**: Managed database with encryption and backup
+- **ElastiCache Redis**: Managed Redis cluster for caching
+- **ECS Fargate**: Serverless container deployment
+- **Application Load Balancer**: High availability with health checks
+- **Security Groups**: Properly configured network access controls
+
+### AWS Requirements
+
+- **AWS Account** with appropriate permissions:
+  - EC2, RDS, ElastiCache, ECS, IAM, VPC, CloudFormation
+- **AWS CLI** configured with credentials
+- **Docker** for building container images
+
+For detailed AWS deployment instructions, see [`AWS_DEPLOYMENT_GUIDE.md`](./AWS_DEPLOYMENT_GUIDE.md)
 
 ## 🏗 Architecture
 

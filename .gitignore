@@ -40,6 +40,8 @@ venv.bak/
 .env.local
 .env.production
 .env.development
+.env.aws
+.env.*.local
 
 # Logs
 logs/
@@ -74,6 +76,12 @@ package-lock.json
 *.p12
 api_keys.txt
 secrets.txt
+
+# AWS
+.aws/
+aws-config.json
+infrastructure/cdk.out/
+cdk.context.json
 
 # Docker
 .dockerignore

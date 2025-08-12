@@ -10,8 +10,19 @@ import os
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 
-# Load environment variables from .env file (override existing env vars)
-load_dotenv(override=True)
+# Load environment-specific configuration
+from utils.environment_config import config
+from utils.service_factory import services
+
+# Load appropriate .env file based on environment
+if config.detector.is_local():
+    load_dotenv('.env.local', override=True)
+    load_dotenv('.env', override=False)  # Fallback to default .env
+else:
+    load_dotenv('.env.aws', override=True)
+
+# Ensure .env is always loaded as fallback for development
+load_dotenv('.env', override=False)
 
 # Import our agents and components
 from agents.supervisor import SupervisorAgent
@@ -486,10 +497,14 @@ async def batch_analyze(request: BatchAnalysisRequest):
 @app.get("/status")
 async def get_status():
     """
-    Get system status and agent information
+    Get system status and agent information with environment details
     """
     try:
+        from utils.app_initializer import app_initializer
+        
         agent_status = agent.get_agent_status()
+        environment_info = app_initializer.get_environment_info()
+        health_status = app_initializer.get_health_status()
 
         # Check tool availability
         tools_status = {
@@ -503,27 +518,32 @@ async def get_status():
             content={
                 "status": "online",
                 "version": "2.0.0",
+                "environment": environment_info,
+                "health": health_status,
                 "features": [
                     "Vision AI",
-                    "ReAct Workflow",
+                    "ReAct Workflow", 
                     "Multi-Agent Analysis",
                     "PII Detection",
                     "Threat Intelligence",
                     "IOC Extraction",
                     "Tool Classes",
+                    "Dual Environment Support",
                 ],
                 "agents": agent_status,
                 "tools": tools_status,
                 "endpoints": {
                     "analyze": "POST /analyze",
-                    "analyze_with_image": "POST /analyze-with-image",
+                    "analyze_with_image": "POST /analyze-with-image", 
                     "batch_analyze": "POST /batch-analyze",
                     "status": "GET /status",
+                    "health": "GET /health",
+                    "environment": "GET /environment",
                     "tools": {
                         "abuseipdb_check": "POST /tools/abuseipdb/check",
                         "shodan_lookup": "POST /tools/shodan/lookup",
                         "virustotal_lookup": "POST /tools/virustotal/lookup",
-                        "regex_extract": "POST /tools/regex/extract",
+                        "regex_extract": "POST /tools/regex/extract", 
                         "regex_validate": "POST /tools/regex/validate",
                     },
                 },
@@ -574,7 +594,24 @@ async def upload_image_only(image: UploadFile = File(...)):
 @app.get("/health")
 async def health_check():
     """Simple health check endpoint"""
-    return {"status": "healthy", "version": "2.0.0"}
+    from utils.app_initializer import app_initializer
+    health_status = app_initializer.get_health_status()
+    
+    overall_status = "healthy" if all(health_status.get(service, False) for service in ['redis', 'postgres', 'llm']) else "degraded"
+    
+    return {
+        "status": overall_status, 
+        "version": "2.0.0",
+        "environment": config.detector.environment,
+        "services": health_status
+    }
+
+
+@app.get("/environment")
+async def get_environment():
+    """Get detailed environment configuration"""
+    from utils.app_initializer import app_initializer
+    return app_initializer.get_environment_info()
 
 
 # Tool-specific endpoints using the new classes

@@ -409,9 +409,115 @@ transformers>=4.35.0
 
 ### Development vs Production
 - Development: Local Docker services
-- Production: Managed cloud services (Redis Cloud, Milvus Cloud)
+- Production: AWS managed services (RDS, ElastiCache, ECS)
 - Security: API key management and rotation
 - Monitoring: Application performance and security metrics
+
+## AWS Production Deployment
+
+### Completed AWS Infrastructure (Manual Setup)
+
+**✅ Successfully Deployed Components:**
+
+1. **Networking Infrastructure**
+   - VPC: `vpc-0be0867972938f89f` with multi-AZ setup
+   - Public Subnets: `subnet-0edf74101b0426bfd`, `subnet-0558506eb0d8007e0` 
+   - Private Subnets: `subnet-0ff690c8f92e9e44c`, `subnet-0c8a011694e7946b8`
+   - Database Subnets: `subnet-0ee484fd46aa4046c`, `subnet-00f76b40c76ed1eae`
+   - Internet Gateway, NAT Gateway, Route Tables configured
+
+2. **Security Groups**
+   - ALB Security Group: `sg-022ba581db949e7ca` (HTTP/HTTPS from internet)
+   - ECS Security Group: `sg-04269afeceada14a6` (Port 8000 from ALB)
+   - RDS Security Group: `sg-080ba65d29243ee89` (Port 5432 from ECS)
+   - Redis Security Group: `sg-0273ea3f4e22547e5` (Port 6379 from ECS)
+
+3. **RDS PostgreSQL Database**
+   - Instance: `cybershield-postgres`
+   - Endpoint: `cybershield-postgres.cwo4lje0wol6.us-east-1.rds.amazonaws.com:5432`
+   - Engine: PostgreSQL 15.13 with encryption
+   - Storage: 20GB GP2 with automated backups
+
+4. **ElastiCache Redis Cluster**
+   - Cluster: `cybershield-redis`
+   - Endpoint: `cybershield-redis.i2louo.0001.use1.cache.amazonaws.com:6379`
+   - Engine: Redis 7.1.0 on cache.t3.micro
+   - Multi-AZ subnet group configured
+
+5. **ECS Infrastructure**
+   - Cluster: `cybershield-cluster` (Active)
+   - Application Load Balancer: `cybershield-alb-1386398593.us-east-1.elb.amazonaws.com`
+   - Target Group: `cybershield-tg` with health checks on `/health`
+   - Listener: HTTP port 80 forwarding to target group
+
+6. **ECR Repository**
+   - Repository: `840656856721.dkr.ecr.us-east-1.amazonaws.com/cybershield`
+   - Image scanning enabled
+   - AES256 encryption
+
+### Required AWS Permissions
+
+Successfully configured IAM policies for:
+- **EC2 Full Access**: VPC, subnets, security groups, load balancers
+- **ElastiCache Full Access**: Redis cluster management
+- **ECS Full Access**: Container orchestration and service management
+- **ECR Access**: Container registry operations
+- **RDS Access**: Database management
+
+### Deployment Scripts
+
+**Manual Infrastructure Scripts:**
+- `scripts/manual_aws_setup.sh`: Complete VPC and networking setup
+- `scripts/create_rds.sh`: PostgreSQL database creation
+- `scripts/create_redis.sh`: ElastiCache Redis cluster setup
+- `scripts/create_ecs.sh`: ECS cluster and load balancer configuration
+
+**Environment Configuration:**
+- `.env.aws.template`: Template for AWS environment variables
+- `.env.aws`: Generated configuration with actual resource IDs (excluded from git)
+
+### Current Status
+
+**✅ Infrastructure Complete:**
+- All AWS resources provisioned and configured
+- Networking, databases, caching, and container platform ready
+- Security groups properly configured for least privilege access
+
+**🔄 Next Steps for Application Deployment:**
+1. Build and push Docker image to ECR
+2. Create ECS task definition with environment variables
+3. Deploy ECS service with auto-scaling configuration
+4. Configure health checks and monitoring
+5. Set up CI/CD pipeline for automated deployments
+
+### Cost Optimization
+
+**Current Configuration (Cost-Optimized):**
+- RDS: db.t3.micro (eligible for free tier)
+- ElastiCache: cache.t3.micro (low-cost tier)
+- ECS: Fargate spot instances capability
+- ALB: Application Load Balancer (pay-per-use)
+
+**Estimated Monthly Cost:**
+- RDS PostgreSQL: ~$15-20/month
+- ElastiCache Redis: ~$15-20/month
+- ECS Fargate: ~$20-30/month (1 vCPU, 2GB RAM)
+- ALB + Data Transfer: ~$20-25/month
+- **Total: ~$70-95/month** for production workload
+
+### Security Implementation
+
+**Network Security:**
+- Private database and Redis subnets with no internet access
+- Security groups with principle of least privilege
+- NAT Gateway for private subnet internet access
+- Encrypted storage for RDS and Redis
+
+**Application Security:**
+- Container security with non-root user
+- Secrets management via environment variables
+- Health checks and monitoring endpoints
+- Automated backups and point-in-time recovery
 
 ## Future Enhancements
 

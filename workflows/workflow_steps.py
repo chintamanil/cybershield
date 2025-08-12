@@ -286,7 +286,7 @@ class WorkflowSteps:
             # Search for specific IOCs in historical data
             for ip in iocs.get("ips", [])[:3]:  # Limit to 3 IPs
                 try:
-                    ip_results = await self.vectorstore.search_by_ioc("ip", ip)
+                    ip_results = await self.vectorstore.search_by_ip(ip, limit=5)
                     results.append(
                         {"type": "ip_history", "value": ip, "results": ip_results}
                     )
@@ -294,8 +294,8 @@ class WorkflowSteps:
                     results.append({"type": "ip_history", "value": ip, "error": str(e)})
 
             # Prepare result for caching and return
-            milvus_result = {
-                "tool": "MilvusSearch",
+            vector_result = {
+                "tool": f"VectorSearch({self.vectorstore.__class__.__name__})",
                 "analysis": results,
                 "status": "success",
             }
@@ -304,19 +304,19 @@ class WorkflowSteps:
             if self.memory:
                 try:
                     await self.memory.set(
-                        cache_key, milvus_result, ttl=1800
+                        cache_key, vector_result, ttl=1800
                     )  # 30 minutes
-                    logger.info("Cached Milvus results")
+                    logger.info("Cached vector search results")
                 except Exception as e:
-                    logger.warning(f"Milvus cache storage failed: {e}")
+                    logger.warning(f"Vector search cache storage failed: {e}")
 
-            return {**state, "threat_results": [milvus_result]}
+            return {**state, "threat_results": [vector_result]}
 
         except Exception as e:
-            logger.error(f"Milvus search step failed: {e}")
+            logger.error(f"Vector search step failed: {e}")
             return {
                 **state,
-                "threat_results": [{"tool": "MilvusSearch", "error": str(e)}],
+                "threat_results": [{"tool": "VectorSearch", "error": str(e)}],
             }
 
     async def regex_checker_step(self, state) -> Dict:

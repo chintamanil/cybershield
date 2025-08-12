@@ -54,6 +54,13 @@ class SupervisorAgent:
             try:
                 from workflows.react_workflow import create_cybershield_workflow
 
+                logger.debug("Creating ReAct workflow with parameters", 
+                           memory_available=memory is not None,
+                           vectorstore_available=vectorstore is not None,
+                           abuseipdb_client_available=abuseipdb_client is not None,
+                           shodan_client_available=shodan_client is not None,
+                           virustotal_client_available=virustotal_client is not None)
+
                 self.react_agent = create_cybershield_workflow(
                     memory,
                     vectorstore,
@@ -62,10 +69,17 @@ class SupervisorAgent:
                     shodan_client,
                     virustotal_client,
                 )
-                logger.info("ReAct workflow initialized", status="success")
+                logger.info("ReAct workflow initialized successfully", status="success")
+            except ImportError as e:
+                logger.error("ReAct workflow import failed - missing dependencies", error=str(e))
+                import traceback
+                logger.debug(f"Import error traceback: {traceback.format_exc()}")
+                self.react_agent = None
+                self.use_react_workflow = False
             except Exception as e:
                 logger.error("ReAct workflow initialization failed", error=str(e))
-                logger.debug(f"ReAct workflow error details:", exc_info=True)
+                import traceback
+                logger.debug(f"ReAct workflow error traceback: {traceback.format_exc()}")
                 self.react_agent = None
                 self.use_react_workflow = False
         else:
@@ -196,7 +210,34 @@ class SupervisorAgent:
             logger.debug(
                 f"Threat report type: {type(threat_report)}, value: {threat_report}"
             )
-            results["threat_analysis"] = threat_report
+            
+            # Handle threat report format - convert list to structured dict if needed
+            if isinstance(threat_report, list):
+                # Convert list format to structured format for compatibility
+                structured_report = {
+                    "ioc_reports": threat_report,
+                    "total_iocs": len(threat_report),
+                    "high_risk_count": sum(1 for report in threat_report 
+                                         if isinstance(report, dict) and 
+                                         report.get("summary", {}).get("risk_score", 0) >= 7),
+                    "malicious_count": sum(1 for report in threat_report 
+                                         if isinstance(report, dict) and 
+                                         report.get("summary", {}).get("is_malicious", False)),
+                    "summary": {
+                        "overall_risk": "high" if any(
+                            isinstance(report, dict) and 
+                            report.get("summary", {}).get("risk_score", 0) >= 7 
+                            for report in threat_report
+                        ) else "low",
+                        "total_sources_checked": sum(
+                            len(report.get("sources", {})) for report in threat_report 
+                            if isinstance(report, dict)
+                        )
+                    }
+                }
+                results["threat_analysis"] = structured_report
+            else:
+                results["threat_analysis"] = threat_report
 
             # Step 4: Vision Analysis (if image provided)
             if image_data:

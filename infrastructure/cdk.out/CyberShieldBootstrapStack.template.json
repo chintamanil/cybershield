@@ -1,0 +1,1024 @@
+{
+ "Resources": {
+  "CyberShieldVPC3C77130A": {
+   "Type": "AWS::EC2::VPC",
+   "Properties": {
+    "CidrBlock": "10.0.0.0/16",
+    "EnableDnsHostnames": true,
+    "EnableDnsSupport": true,
+    "InstanceTenancy": "default",
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "CyberShieldBootstrapStack/CyberShieldVPC"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CyberShieldVPC/Resource"
+   }
+  },
+  "CyberShieldVPCPublicSubnet1SubnetE44EBB3C": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1a",
+    "CidrBlock": "10.0.0.0/24",
+    "MapPublicIpOnLaunch": true,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Public"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Public"
+     },
+     {
+      "Key": "Name",
+      "Value": "CyberShieldBootstrapStack/CyberShieldVPC/PublicSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "CyberShieldVPC3C77130A"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CyberShieldVPC/PublicSubnet1/Subnet"
+   }
+  },
+  "CyberShieldVPCPublicSubnet1RouteTable4E9F7E77": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "CyberShieldBootstrapStack/CyberShieldVPC/PublicSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "CyberShieldVPC3C77130A"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CyberShieldVPC/PublicSubnet1/RouteTable"
+   }
+  },
+  "CyberShieldVPCPublicSubnet1RouteTableAssociation47F5E39C": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "CyberShieldVPCPublicSubnet1RouteTable4E9F7E77"
+    },
+    "SubnetId": {
+     "Ref": "CyberShieldVPCPublicSubnet1SubnetE44EBB3C"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CyberShieldVPC/PublicSubnet1/RouteTableAssociation"
+   }
+  },
+  "CyberShieldVPCPublicSubnet1DefaultRoute827F87BD": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "GatewayId": {
+     "Ref": "CyberShieldVPCIGW2DF9335D"
+    },
+    "RouteTableId": {
+     "Ref": "CyberShieldVPCPublicSubnet1RouteTable4E9F7E77"
+    }
+   },
+   "DependsOn": [
+    "CyberShieldVPCVPCGWCE8EA36D"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CyberShieldVPC/PublicSubnet1/DefaultRoute"
+   }
+  },
+  "CyberShieldVPCPublicSubnet1EIP03B3209A": {
+   "Type": "AWS::EC2::EIP",
+   "Properties": {
+    "Domain": "vpc",
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "CyberShieldBootstrapStack/CyberShieldVPC/PublicSubnet1"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CyberShieldVPC/PublicSubnet1/EIP"
+   }
+  },
+  "CyberShieldVPCPublicSubnet1NATGatewayDE437DFD": {
+   "Type": "AWS::EC2::NatGateway",
+   "Properties": {
+    "AllocationId": {
+     "Fn::GetAtt": [
+      "CyberShieldVPCPublicSubnet1EIP03B3209A",
+      "AllocationId"
+     ]
+    },
+    "SubnetId": {
+     "Ref": "CyberShieldVPCPublicSubnet1SubnetE44EBB3C"
+    },
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "CyberShieldBootstrapStack/CyberShieldVPC/PublicSubnet1"
+     }
+    ]
+   },
+   "DependsOn": [
+    "CyberShieldVPCPublicSubnet1DefaultRoute827F87BD",
+    "CyberShieldVPCPublicSubnet1RouteTableAssociation47F5E39C"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CyberShieldVPC/PublicSubnet1/NATGateway"
+   }
+  },
+  "CyberShieldVPCPublicSubnet2Subnet8FC012CF": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1b",
+    "CidrBlock": "10.0.1.0/24",
+    "MapPublicIpOnLaunch": true,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Public"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Public"
+     },
+     {
+      "Key": "Name",
+      "Value": "CyberShieldBootstrapStack/CyberShieldVPC/PublicSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "CyberShieldVPC3C77130A"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CyberShieldVPC/PublicSubnet2/Subnet"
+   }
+  },
+  "CyberShieldVPCPublicSubnet2RouteTable91521A74": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "CyberShieldBootstrapStack/CyberShieldVPC/PublicSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "CyberShieldVPC3C77130A"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CyberShieldVPC/PublicSubnet2/RouteTable"
+   }
+  },
+  "CyberShieldVPCPublicSubnet2RouteTableAssociation1D8A2B86": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "CyberShieldVPCPublicSubnet2RouteTable91521A74"
+    },
+    "SubnetId": {
+     "Ref": "CyberShieldVPCPublicSubnet2Subnet8FC012CF"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CyberShieldVPC/PublicSubnet2/RouteTableAssociation"
+   }
+  },
+  "CyberShieldVPCPublicSubnet2DefaultRoute63B7F0C4": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "GatewayId": {
+     "Ref": "CyberShieldVPCIGW2DF9335D"
+    },
+    "RouteTableId": {
+     "Ref": "CyberShieldVPCPublicSubnet2RouteTable91521A74"
+    }
+   },
+   "DependsOn": [
+    "CyberShieldVPCVPCGWCE8EA36D"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CyberShieldVPC/PublicSubnet2/DefaultRoute"
+   }
+  },
+  "CyberShieldVPCPrivateSubnet1Subnet3C934F7B": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1a",
+    "CidrBlock": "10.0.2.0/24",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Private"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Private"
+     },
+     {
+      "Key": "Name",
+      "Value": "CyberShieldBootstrapStack/CyberShieldVPC/PrivateSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "CyberShieldVPC3C77130A"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CyberShieldVPC/PrivateSubnet1/Subnet"
+   }
+  },
+  "CyberShieldVPCPrivateSubnet1RouteTable03566CAD": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "CyberShieldBootstrapStack/CyberShieldVPC/PrivateSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "CyberShieldVPC3C77130A"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CyberShieldVPC/PrivateSubnet1/RouteTable"
+   }
+  },
+  "CyberShieldVPCPrivateSubnet1RouteTableAssociationB9D17C52": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "CyberShieldVPCPrivateSubnet1RouteTable03566CAD"
+    },
+    "SubnetId": {
+     "Ref": "CyberShieldVPCPrivateSubnet1Subnet3C934F7B"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CyberShieldVPC/PrivateSubnet1/RouteTableAssociation"
+   }
+  },
+  "CyberShieldVPCPrivateSubnet1DefaultRoute2081AA75": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "NatGatewayId": {
+     "Ref": "CyberShieldVPCPublicSubnet1NATGatewayDE437DFD"
+    },
+    "RouteTableId": {
+     "Ref": "CyberShieldVPCPrivateSubnet1RouteTable03566CAD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CyberShieldVPC/PrivateSubnet1/DefaultRoute"
+   }
+  },
+  "CyberShieldVPCPrivateSubnet2Subnet94EC6EEF": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1b",
+    "CidrBlock": "10.0.3.0/24",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Private"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Private"
+     },
+     {
+      "Key": "Name",
+      "Value": "CyberShieldBootstrapStack/CyberShieldVPC/PrivateSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "CyberShieldVPC3C77130A"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CyberShieldVPC/PrivateSubnet2/Subnet"
+   }
+  },
+  "CyberShieldVPCPrivateSubnet2RouteTableE118EE92": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "CyberShieldBootstrapStack/CyberShieldVPC/PrivateSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "CyberShieldVPC3C77130A"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CyberShieldVPC/PrivateSubnet2/RouteTable"
+   }
+  },
+  "CyberShieldVPCPrivateSubnet2RouteTableAssociation22124A7B": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "CyberShieldVPCPrivateSubnet2RouteTableE118EE92"
+    },
+    "SubnetId": {
+     "Ref": "CyberShieldVPCPrivateSubnet2Subnet94EC6EEF"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CyberShieldVPC/PrivateSubnet2/RouteTableAssociation"
+   }
+  },
+  "CyberShieldVPCPrivateSubnet2DefaultRoute3991F10E": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "NatGatewayId": {
+     "Ref": "CyberShieldVPCPublicSubnet1NATGatewayDE437DFD"
+    },
+    "RouteTableId": {
+     "Ref": "CyberShieldVPCPrivateSubnet2RouteTableE118EE92"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CyberShieldVPC/PrivateSubnet2/DefaultRoute"
+   }
+  },
+  "CyberShieldVPCDatabaseSubnet1Subnet6F384A2F": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1a",
+    "CidrBlock": "10.0.4.0/24",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Database"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Isolated"
+     },
+     {
+      "Key": "Name",
+      "Value": "CyberShieldBootstrapStack/CyberShieldVPC/DatabaseSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "CyberShieldVPC3C77130A"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CyberShieldVPC/DatabaseSubnet1/Subnet"
+   }
+  },
+  "CyberShieldVPCDatabaseSubnet1RouteTable8DA5E9B3": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "CyberShieldBootstrapStack/CyberShieldVPC/DatabaseSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "CyberShieldVPC3C77130A"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CyberShieldVPC/DatabaseSubnet1/RouteTable"
+   }
+  },
+  "CyberShieldVPCDatabaseSubnet1RouteTableAssociationB367570C": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "CyberShieldVPCDatabaseSubnet1RouteTable8DA5E9B3"
+    },
+    "SubnetId": {
+     "Ref": "CyberShieldVPCDatabaseSubnet1Subnet6F384A2F"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CyberShieldVPC/DatabaseSubnet1/RouteTableAssociation"
+   }
+  },
+  "CyberShieldVPCDatabaseSubnet2Subnet52DBFE7D": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1b",
+    "CidrBlock": "10.0.5.0/24",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Database"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Isolated"
+     },
+     {
+      "Key": "Name",
+      "Value": "CyberShieldBootstrapStack/CyberShieldVPC/DatabaseSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "CyberShieldVPC3C77130A"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CyberShieldVPC/DatabaseSubnet2/Subnet"
+   }
+  },
+  "CyberShieldVPCDatabaseSubnet2RouteTableB31286ED": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "CyberShieldBootstrapStack/CyberShieldVPC/DatabaseSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "CyberShieldVPC3C77130A"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CyberShieldVPC/DatabaseSubnet2/RouteTable"
+   }
+  },
+  "CyberShieldVPCDatabaseSubnet2RouteTableAssociation50DDACD9": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "CyberShieldVPCDatabaseSubnet2RouteTableB31286ED"
+    },
+    "SubnetId": {
+     "Ref": "CyberShieldVPCDatabaseSubnet2Subnet52DBFE7D"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CyberShieldVPC/DatabaseSubnet2/RouteTableAssociation"
+   }
+  },
+  "CyberShieldVPCIGW2DF9335D": {
+   "Type": "AWS::EC2::InternetGateway",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "CyberShieldBootstrapStack/CyberShieldVPC"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CyberShieldVPC/IGW"
+   }
+  },
+  "CyberShieldVPCVPCGWCE8EA36D": {
+   "Type": "AWS::EC2::VPCGatewayAttachment",
+   "Properties": {
+    "InternetGatewayId": {
+     "Ref": "CyberShieldVPCIGW2DF9335D"
+    },
+    "VpcId": {
+     "Ref": "CyberShieldVPC3C77130A"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CyberShieldVPC/VPCGW"
+   }
+  },
+  "CyberShieldVPCRestrictDefaultSecurityGroupCustomResourceF87359F5": {
+   "Type": "Custom::VpcRestrictDefaultSG",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "CustomVpcRestrictDefaultSGCustomResourceProviderHandlerDC833E5E",
+      "Arn"
+     ]
+    },
+    "DefaultSecurityGroupId": {
+     "Fn::GetAtt": [
+      "CyberShieldVPC3C77130A",
+      "DefaultSecurityGroup"
+     ]
+    },
+    "Account": "840656856721"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CyberShieldVPC/RestrictDefaultSecurityGroupCustomResource/Default"
+   }
+  },
+  "CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Version": "2012-10-17",
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ]
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+     }
+    ],
+    "Policies": [
+     {
+      "PolicyName": "Inline",
+      "PolicyDocument": {
+       "Version": "2012-10-17",
+       "Statement": [
+        {
+         "Effect": "Allow",
+         "Action": [
+          "ec2:AuthorizeSecurityGroupIngress",
+          "ec2:AuthorizeSecurityGroupEgress",
+          "ec2:RevokeSecurityGroupIngress",
+          "ec2:RevokeSecurityGroupEgress"
+         ],
+         "Resource": [
+          {
+           "Fn::Join": [
+            "",
+            [
+             "arn:aws:ec2:us-east-1:840656856721:security-group/",
+             {
+              "Fn::GetAtt": [
+               "CyberShieldVPC3C77130A",
+               "DefaultSecurityGroup"
+              ]
+             }
+            ]
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/Custom::VpcRestrictDefaultSGCustomResourceProvider/Role"
+   }
+  },
+  "CustomVpcRestrictDefaultSGCustomResourceProviderHandlerDC833E5E": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-840656856721-us-east-1",
+     "S3Key": "7fa1e366ee8a9ded01fc355f704cff92bfd179574e6f9cfee800a3541df1b200.zip"
+    },
+    "Timeout": 900,
+    "MemorySize": 128,
+    "Handler": "__entrypoint__.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs22.x",
+    "Description": "Lambda function for removing all inbound/outbound rules from the VPC default security group"
+   },
+   "DependsOn": [
+    "CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/Custom::VpcRestrictDefaultSGCustomResourceProvider/Handler",
+    "aws:asset:path": "asset.7fa1e366ee8a9ded01fc355f704cff92bfd179574e6f9cfee800a3541df1b200",
+    "aws:asset:property": "Code"
+   }
+  },
+  "CyberShieldKey6EFA6965": {
+   "Type": "AWS::KMS::Key",
+   "Properties": {
+    "Description": "CyberShield encryption key",
+    "EnableKeyRotation": true,
+    "KeyPolicy": {
+     "Statement": [
+      {
+       "Action": "kms:*",
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": "arn:aws:iam::840656856721:root"
+       },
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CyberShieldKey/Resource"
+   }
+  },
+  "CyberShieldDataBucket1389ED76": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "BucketEncryption": {
+     "ServerSideEncryptionConfiguration": [
+      {
+       "ServerSideEncryptionByDefault": {
+        "KMSMasterKeyID": {
+         "Fn::GetAtt": [
+          "CyberShieldKey6EFA6965",
+          "Arn"
+         ]
+        },
+        "SSEAlgorithm": "aws:kms"
+       }
+      }
+     ]
+    },
+    "VersioningConfiguration": {
+     "Status": "Enabled"
+    }
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CyberShieldDataBucket/Resource"
+   }
+  },
+  "CyberShieldAPIKeysB6036AB3": {
+   "Type": "AWS::SecretsManager::Secret",
+   "Properties": {
+    "Description": "API keys for external security services",
+    "GenerateSecretString": {
+     "GenerateStringKey": "placeholder",
+     "SecretStringTemplate": "{\"virustotal\":\"REPLACE_ME\", \"shodan\":\"REPLACE_ME\", \"abuseipdb\":\"REPLACE_ME\", \"openai\":\"REPLACE_ME\"}"
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CyberShieldAPIKeys/Resource"
+   }
+  },
+  "CyberShieldRDSCredentials92D6B652": {
+   "Type": "AWS::SecretsManager::Secret",
+   "Properties": {
+    "Description": "RDS database credentials",
+    "GenerateSecretString": {
+     "ExcludeCharacters": " %+~`#$&*()|[]{}:;<>?!'/@\"\\",
+     "GenerateStringKey": "password",
+     "PasswordLength": 32,
+     "SecretStringTemplate": "{\"username\": \"cybershield\"}"
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CyberShieldRDSCredentials/Resource"
+   }
+  },
+  "CyberShieldRDSCredentialsAttachmentA8740272": {
+   "Type": "AWS::SecretsManager::SecretTargetAttachment",
+   "Properties": {
+    "SecretId": {
+     "Ref": "CyberShieldRDSCredentials92D6B652"
+    },
+    "TargetId": {
+     "Ref": "CyberShieldDB3AEE8852"
+    },
+    "TargetType": "AWS::RDS::DBInstance"
+   },
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CyberShieldRDSCredentials/Attachment/Resource"
+   }
+  },
+  "CyberShieldDBSubnetGroup10DDDF44": {
+   "Type": "AWS::RDS::DBSubnetGroup",
+   "Properties": {
+    "DBSubnetGroupDescription": "Subnet group for CyberShieldDB database",
+    "SubnetIds": [
+     {
+      "Ref": "CyberShieldVPCDatabaseSubnet1Subnet6F384A2F"
+     },
+     {
+      "Ref": "CyberShieldVPCDatabaseSubnet2Subnet52DBFE7D"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CyberShieldDB/SubnetGroup/Default"
+   }
+  },
+  "CyberShieldDBSecurityGroupB9613006": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "Security group for CyberShieldDB database",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow all outbound traffic by default",
+      "IpProtocol": "-1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "CyberShieldVPC3C77130A"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CyberShieldDB/SecurityGroup/Resource"
+   }
+  },
+  "CyberShieldDBMonitoringRole26F1CBEF": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "monitoring.rds.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CyberShieldDB/MonitoringRole/Resource"
+   }
+  },
+  "CyberShieldDB3AEE8852": {
+   "Type": "AWS::RDS::DBInstance",
+   "Properties": {
+    "AllocatedStorage": "100",
+    "BackupRetentionPeriod": 7,
+    "CopyTagsToSnapshot": true,
+    "DBInstanceClass": "db.t3.micro",
+    "DBName": "cybershield",
+    "DBSubnetGroupName": {
+     "Ref": "CyberShieldDBSubnetGroup10DDDF44"
+    },
+    "DeletionProtection": false,
+    "EnableCloudwatchLogsExports": [
+     "postgresql"
+    ],
+    "Engine": "postgres",
+    "EngineVersion": "15.4",
+    "KmsKeyId": {
+     "Fn::GetAtt": [
+      "CyberShieldKey6EFA6965",
+      "Arn"
+     ]
+    },
+    "MasterUserPassword": {
+     "Fn::Join": [
+      "",
+      [
+       "{{resolve:secretsmanager:",
+       {
+        "Ref": "CyberShieldRDSCredentials92D6B652"
+       },
+       ":SecretString:password::}}"
+      ]
+     ]
+    },
+    "MasterUsername": {
+     "Fn::Join": [
+      "",
+      [
+       "{{resolve:secretsmanager:",
+       {
+        "Ref": "CyberShieldRDSCredentials92D6B652"
+       },
+       ":SecretString:username::}}"
+      ]
+     ]
+    },
+    "MonitoringInterval": 300,
+    "MonitoringRoleArn": {
+     "Fn::GetAtt": [
+      "CyberShieldDBMonitoringRole26F1CBEF",
+      "Arn"
+     ]
+    },
+    "PubliclyAccessible": false,
+    "StorageEncrypted": true,
+    "StorageType": "gp2",
+    "VPCSecurityGroups": [
+     {
+      "Fn::GetAtt": [
+       "CyberShieldDBSecurityGroupB9613006",
+       "GroupId"
+      ]
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Snapshot",
+   "DeletionPolicy": "Snapshot",
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CyberShieldDB/Resource"
+   }
+  },
+  "RedisSubnetGroup": {
+   "Type": "AWS::ElastiCache::SubnetGroup",
+   "Properties": {
+    "Description": "Subnet group for Redis",
+    "SubnetIds": [
+     {
+      "Ref": "CyberShieldVPCPrivateSubnet1Subnet3C934F7B"
+     },
+     {
+      "Ref": "CyberShieldVPCPrivateSubnet2Subnet94EC6EEF"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/RedisSubnetGroup"
+   }
+  },
+  "RedisSecurityGroupB05951F6": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "Security group for Redis cluster",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "255.255.255.255/32",
+      "Description": "Disallow all traffic",
+      "FromPort": 252,
+      "IpProtocol": "icmp",
+      "ToPort": 86
+     }
+    ],
+    "VpcId": {
+     "Ref": "CyberShieldVPC3C77130A"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/RedisSecurityGroup/Resource"
+   }
+  },
+  "CyberShieldRedis": {
+   "Type": "AWS::ElastiCache::CacheCluster",
+   "Properties": {
+    "CacheNodeType": "cache.t3.micro",
+    "CacheSubnetGroupName": {
+     "Ref": "RedisSubnetGroup"
+    },
+    "Engine": "redis",
+    "NumCacheNodes": 1,
+    "VpcSecurityGroupIds": [
+     {
+      "Fn::GetAtt": [
+       "RedisSecurityGroupB05951F6",
+       "GroupId"
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CyberShieldRedis"
+   }
+  },
+  "CyberShieldLogsCA12733D": {
+   "Type": "AWS::Logs::LogGroup",
+   "Properties": {
+    "KmsKeyId": {
+     "Fn::GetAtt": [
+      "CyberShieldKey6EFA6965",
+      "Arn"
+     ]
+    },
+    "LogGroupName": "/aws/cybershield/application",
+    "RetentionInDays": 30
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CyberShieldLogs/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/3VQ0U7DMAz8Ft69sI0v2Do0TSCoWsQrcjPThbXJFDtMVZR/R12hnUA83fnuYjtequViruY3eOaZ3h9njalULAX1EfDMb5H0UsXXk4bs3b7mGeShaowuQ2VJem1ihQtCL1g1NOmTtmJ22qAYZ8dwT+53eQ9PKFsUOmMHuTefKDQ13lkhb2kMDJt8VysR1IeWrEBJOngj3da7cLrscC0kOLas4gNdGjxQl4DvVFwHfRzGDCwBk/Yk3KLFmryK5aX+7tezAV7Q1yRX48fAbyeB37OKGxSskGlnWdBqguGH47ab9R/hJ5rAYKti4Ybb9piAGmQxGvWBVBwvPr7OeiNrAgv5BI2rWcVHV4/+D08JCmIXvCbIAotrp/Ld/mPl3n2aPfk1MsGKmaQUrI2t+zfPQU5BEuSdHJy9vVOLpVosbj7YmJkPVkxLqhjwC/OJlYR+AgAA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "CyberShieldBootstrapStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "VPCId": {
+   "Description": "VPC ID",
+   "Value": {
+    "Ref": "CyberShieldVPC3C77130A"
+   }
+  },
+  "DatabaseEndpoint": {
+   "Description": "RDS PostgreSQL endpoint",
+   "Value": {
+    "Fn::GetAtt": [
+     "CyberShieldDB3AEE8852",
+     "Endpoint.Address"
+    ]
+   }
+  },
+  "RedisEndpoint": {
+   "Description": "ElastiCache Redis endpoint",
+   "Value": {
+    "Fn::GetAtt": [
+     "CyberShieldRedis",
+     "RedisEndpoint.Address"
+    ]
+   }
+  },
+  "S3Bucket": {
+   "Description": "S3 data bucket name",
+   "Value": {
+    "Ref": "CyberShieldDataBucket1389ED76"
+   }
+  },
+  "APIKeysSecret": {
+   "Description": "API Keys Secret ARN",
+   "Value": {
+    "Ref": "CyberShieldAPIKeysB6036AB3"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

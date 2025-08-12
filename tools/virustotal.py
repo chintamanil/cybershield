@@ -85,7 +85,27 @@ class VirusTotalClient:
                     await asyncio.sleep(retry_after)
                     return await self._make_request(endpoint, method, **kwargs)
 
-                response.raise_for_status()
+                # Handle authentication errors
+                if response.status == 401:
+                    logger.error("VirusTotal API authentication failed - check API key")
+                    return {"error": "Authentication failed - invalid API key"}
+                
+                # Handle forbidden errors
+                if response.status == 403:
+                    logger.error("VirusTotal API access forbidden - check API permissions")
+                    return {"error": "Access forbidden - insufficient API permissions"}
+                
+                # Handle not found errors gracefully
+                if response.status == 404:
+                    logger.debug(f"Resource not found: {url}")
+                    return {"error": "Resource not found", "status": "not_found"}
+
+                # Check for other error statuses before trying to parse JSON
+                if response.status >= 400:
+                    error_text = await response.text()
+                    logger.error(f"VirusTotal API error {response.status}: {error_text}")
+                    return {"error": f"API error {response.status}: {error_text}"}
+
                 return await response.json()
 
         except aiohttp.ClientError as e:
