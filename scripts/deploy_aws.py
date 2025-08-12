@@ -77,7 +77,7 @@ def build_docker_image():
     try:
         subprocess.run([
             'docker', 'build', 
-            '-f', 'Dockerfile.aws',
+            '-f', 'deployment/Dockerfile.aws',
             '-t', 'cybershield:latest',
             '.'
         ], check=True)

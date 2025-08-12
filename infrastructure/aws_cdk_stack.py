@@ -225,7 +225,7 @@ class CyberShieldStack(Stack):
             cpu=1024,
             desired_count=2,
             task_image_options=ecs_patterns.ApplicationLoadBalancedTaskImageOptions(
-                image=ecs.ContainerImage.from_asset(".", file="Dockerfile.aws"),
+                image=ecs.ContainerImage.from_asset(".", file="deployment/Dockerfile.aws"),
                 container_port=8000,
                 environment={
                     "CYBERSHIELD_ENV": "aws",

@@ -12,7 +12,7 @@ import os
 import asyncio
 from langgraph.graph import StateGraph, END
 from langchain_core.messages import HumanMessage, SystemMessage
-from langchain_openai import ChatOpenAI
+from utils.llm_factory import create_llm
 from utils.logging_config import get_security_logger
 from utils.device_config import create_performance_config
 from workflows.workflow_steps import WorkflowSteps
@@ -207,8 +207,8 @@ class CyberShieldReActAgent:
             self.threat_agent.virustotal_client = virustotal_client
         self.vision_agent = VisionAgent(memory)
 
-        # Initialize LLM
-        self.llm = ChatOpenAI(model=llm_model, temperature=0)
+        # Initialize LLM (auto-detects OpenAI vs Bedrock based on environment)
+        self.llm = create_llm(model=llm_model, temperature=0)
 
         # Initialize workflow steps helper
         self.workflow_steps = WorkflowSteps(

@@ -152,6 +152,6 @@ EOF
 echo "✅ Configuration updated in .env.aws"
 echo ""
 echo "🔄 Next Steps:"
-echo "1. Build and push Docker image: docker build -f Dockerfile.aws -t cybershield ."
-echo "2. Deploy application: ./scripts/deploy_app.sh"
+echo "1. Build and push Docker image: docker build -f deployment/Dockerfile.aws -t cybershield ."
+echo "2. Deploy application: python scripts/deploy_aws.py"
 echo "3. Test deployment: curl http://$ALB_DNS/health"

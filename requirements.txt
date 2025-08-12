@@ -50,16 +50,20 @@ python-dotenv>=1.0.0
 # Type Checking & Validation
 pydantic>=2.0.0
 
+# FastAPI File Upload Support
+python-multipart>=0.0.6
+
 # Logging
 structlog>=23.0.0
 
 # Computer Vision & NLP
-opencv-python<4.9.0,>=4.8.0
+opencv-python-headless>=4.8.0
 pytesseract>=0.3.10
 spacy>=3.7.0
 Pillow>=10.0.0
 numpy<2.0.0,>=1.24.0
 transformers>=4.35.0
+torch>=2.0.0
 
 # Security APIs (for tools)
 # Note: These require API keys in .env file

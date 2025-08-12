@@ -177,7 +177,7 @@ class EnvironmentConfig:
         # LLM configuration for AWS Bedrock
         self.llm = LLMConfig(
             provider="bedrock",
-            model_name=os.getenv("BEDROCK_MODEL", "anthropic.claude-3-sonnet-20240229-v1:0"),
+            model_name=os.getenv("BEDROCK_MODEL", "anthropic.claude-3-5-sonnet-20241022-v2:0"),
             region=os.getenv("AWS_REGION", "us-east-1")
         )
     

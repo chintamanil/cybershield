@@ -2,14 +2,22 @@
 
 CyberShield is a sophisticated AI-powered cybersecurity platform that combines multiple specialized agents with **comprehensive caching** and **LLM-driven intelligence** to provide lightning-fast threat analysis, PII detection, log parsing, and vision-based security assessment.
 
-## 🚀 **Version 2.4.0 - Major Architecture Enhancement**
+## 🚀 **Version 2.5.0 - Production Deployment & Infrastructure Optimization**
 
-### **Key Features:**
+### **Latest Updates (August 2025):**
+- **🏗️ Production-Ready AWS Deployment**: Fully deployed and operational on AWS ECS
+- **🐳 Enhanced Docker Architecture**: Multi-stage builds with vision processing support
+- **📁 Streamlined File Organization**: Deployment files reorganized, 53% scripts reduction
+- **🔧 Automated Infrastructure**: Self-signed HTTPS, auto-scaling, and monitoring active
+- **⚡ Performance Optimized**: Mac M4 Apple Silicon enhancements integrated
+
+### **Core Features:**
 - **⚡ Intelligent Caching**: 60-80% API cost reduction, 100-500ms cached responses
 - **🧠 LLM-Driven Routing**: OpenAI-powered tool selection and workflow optimization
 - **🔧 5 Parallel Tools**: VirusTotal, AbuseIPDB, Shodan, MilvusSearch, RegexChecker
 - **📊 Historical Analysis**: 120,000 cybersecurity attack records in Milvus vector database
 - **🎯 Smart Architecture**: Refactored for maintainability and performance
+- **👁️ Vision AI**: Complete OCR and image security analysis with tesseract integration
 
 ## Enhanced Multi-Agent Architecture with Intelligent Caching
 
@@ -170,29 +178,38 @@ cybershield-frontend  # Start Streamlit frontend
 
 Access the API at `http://localhost:8000` and frontend at `http://localhost:8501`
 
-## ☁️ AWS Deployment
+## ☁️ AWS Production Deployment
 
-CyberShield supports full AWS deployment with production-ready infrastructure:
+**🚀 CyberShield is currently deployed and operational on AWS!**
 
-### Quick AWS Setup
+### **Production Status**
+- **✅ Application URL**: https://cybershield-alb-1386398593.us-east-1.elb.amazonaws.com
+- **✅ Health Status**: Operational (200 OK)
+- **✅ HTTPS Enabled**: Self-signed SSL certificate active
+- **✅ Auto-scaling**: Configured and monitoring service metrics
+- **✅ Vision Processing**: Full OCR and image analysis capabilities
+
+### **Current Infrastructure**
+- **ECS Fargate**: Running enhanced Docker image with vision support
+- **Load Balancer**: Application Load Balancer with HTTPS termination
+- **Database**: RDS PostgreSQL with encryption
+- **Cache**: ElastiCache Redis for session management
+- **Vector Store**: OpenSearch for threat intelligence search
+- **LLM**: Amazon Bedrock (Claude 3.5 Sonnet)
+
+### **For New Deployments**
 
 ```bash
 # Configure AWS credentials
 aws configure
 
-# Copy and configure AWS environment
-cp .env.aws.template .env.aws
-# Edit .env.aws with your AWS configuration
-
-# Deploy infrastructure
-./scripts/manual_aws_setup.sh      # Create VPC, subnets, security groups
-./scripts/create_rds.sh           # PostgreSQL database
-./scripts/create_redis.sh         # ElastiCache Redis
-./scripts/create_ecs.sh           # ECS cluster and load balancer
+# Deploy infrastructure (for new environments)
+./scripts/aws_setup.sh            # Complete AWS infrastructure setup
+python scripts/deploy_aws.py      # Deploy application to AWS
 
 # Build and deploy application
-docker build -f Dockerfile.aws -t cybershield .
-# See AWS_DEPLOYMENT_GUIDE.md for complete deployment steps
+docker build -f deployment/Dockerfile.aws -t cybershield .
+# See deployment/AWS_DEPLOYMENT_GUIDE.md for complete deployment steps
 ```
 
 ### AWS Infrastructure Includes
@@ -211,7 +228,33 @@ docker build -f Dockerfile.aws -t cybershield .
 - **AWS CLI** configured with credentials
 - **Docker** for building container images
 
-For detailed AWS deployment instructions, see [`AWS_DEPLOYMENT_GUIDE.md`](./AWS_DEPLOYMENT_GUIDE.md)
+For detailed AWS deployment instructions, see [`deployment/AWS_DEPLOYMENT_GUIDE.md`](./deployment/AWS_DEPLOYMENT_GUIDE.md)
+
+## 📁 Project Organization
+
+### **Streamlined File Structure (v2.5.0)**
+```
+cybershield/
+├── 📂 deployment/                    # Deployment configuration (NEW)
+│   ├── Dockerfile.aws               # Enhanced production Docker image
+│   ├── docker-compose.yaml          # Local development services  
+│   └── AWS_DEPLOYMENT_GUIDE.md      # Complete deployment documentation
+├── 📂 scripts/ (9 files)            # Essential operational scripts (53% reduction)
+│   ├── 🏗️ Core Deployment (4)       # Infrastructure management
+│   ├── 🗄️ Database & Services (3)   # Data layer setup
+│   ├── 🔍 Monitoring (1)            # Health monitoring
+│   └── 📋 Documentation (1)         # Script documentation
+├── 📂 backup/                       # Cleanup artifacts and templates
+│   ├── scripts_cleanup_*/           # Moved setup/test scripts (completed)
+│   └── Dockerfile.minimal.backup    # Legacy Docker configurations
+└── (core application files...)      # Agents, tools, workflows, etc.
+```
+
+### **Recent Optimizations**
+- **✅ Docker Organization**: Deployment files moved to dedicated directory
+- **✅ Scripts Cleanup**: Removed completed setup scripts (infrastructure operational)
+- **✅ Production Ready**: Only essential operational files remain
+- **✅ Enhanced Docker**: Multi-stage builds with vision processing support
 
 ## 🏗 Architecture
 

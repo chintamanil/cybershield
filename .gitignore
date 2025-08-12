@@ -101,6 +101,26 @@ data/temp/
 backups/
 exports/
 
+# Script cleanup backups
+backup/
+scripts_backup_*/
+**/backup/scripts_backup_*/
+
+# Temporary files and certificates
+/tmp/
+tmp/
+temp/
+*.tmp
+*.temp
+
+# SSL certificates (self-signed)
+/tmp/cybershield-ssl/
+**/cybershield-ssl/
+certificate.pem
+private-key.pem
+cert.csr
+cert.conf
+
 # Database
 database/data/
 database/backup/
