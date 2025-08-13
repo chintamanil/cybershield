@@ -8,7 +8,17 @@ from typing import Dict, Any
 # FastAPI Backend Configuration
 FASTAPI_HOST = os.getenv("FASTAPI_HOST", "localhost")
 FASTAPI_PORT = os.getenv("FASTAPI_PORT", "8000")
-FASTAPI_URL = f"http://{FASTAPI_HOST}:{FASTAPI_PORT}"
+FASTAPI_PROTOCOL = os.getenv("FASTAPI_PROTOCOL", "http")
+
+# AWS-specific configuration
+AWS_BACKEND_URL = os.getenv("AWS_BACKEND_URL", "https://cybershield-ai.com")
+USE_AWS_BACKEND = os.getenv("USE_AWS_BACKEND", "true").lower() == "true"
+
+# Determine backend URL based on environment
+if USE_AWS_BACKEND:
+    FASTAPI_URL = AWS_BACKEND_URL
+else:
+    FASTAPI_URL = f"{FASTAPI_PROTOCOL}://{FASTAPI_HOST}:{FASTAPI_PORT}"
 
 # Streamlit Configuration
 STREAMLIT_CONFIG = {

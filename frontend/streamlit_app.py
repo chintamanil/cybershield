@@ -20,8 +20,8 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Configuration
-FASTAPI_URL = "http://localhost:8000"
+# Configuration import
+from config import FASTAPI_URL, USE_AWS_BACKEND, AWS_BACKEND_URL
 
 # Custom CSS
 st.markdown("""
@@ -72,17 +72,24 @@ def make_api_request(endpoint: str, method: str = "GET", data: Dict = None, file
         url = f"{FASTAPI_URL}{endpoint}"
         
         # Debug logging
-        st.write(f"🔗 **API Request**: `{method} {url}`")
+        backend_type = "AWS" if USE_AWS_BACKEND else "Local"
+        st.write(f"🔗 **API Request** ({backend_type}): `{method} {url}`")
         if data and method == "POST":
             st.write(f"📤 **Payload size**: {len(str(data))} characters")
         
+        # Configure request parameters for AWS (SSL verification)
+        request_kwargs = {
+            "timeout": 30,
+            "verify": False if USE_AWS_BACKEND else True  # Skip SSL verification for self-signed certs
+        }
+        
         if method == "GET":
-            response = requests.get(url, timeout=30)
+            response = requests.get(url, **request_kwargs)
         elif method == "POST":
             if files:
-                response = requests.post(url, data=data, files=files, timeout=30)
+                response = requests.post(url, data=data, files=files, **request_kwargs)
             else:
-                response = requests.post(url, json=data, timeout=30)
+                response = requests.post(url, json=data, **request_kwargs)
         else:
             st.error(f"Unsupported HTTP method: {method}")
             return None
@@ -101,7 +108,10 @@ def make_api_request(endpoint: str, method: str = "GET", data: Dict = None, file
             
     except requests.exceptions.ConnectionError:
         elapsed_time = time.time() - start_time
-        st.error(f"❌ Cannot connect to FastAPI backend after {elapsed_time:.2f}s. Please ensure the server is running on http://localhost:8000")
+        if USE_AWS_BACKEND:
+            st.error(f"❌ Cannot connect to AWS backend after {elapsed_time:.2f}s. Please check: {AWS_BACKEND_URL}")
+        else:
+            st.error(f"❌ Cannot connect to local backend after {elapsed_time:.2f}s. Please ensure the server is running on {FASTAPI_URL}")
         return None
     except requests.exceptions.Timeout:
         elapsed_time = time.time() - start_time
@@ -745,6 +755,11 @@ def main():
     # Header
     st.markdown('<div class="main-header">🛡️ CyberShield AI Security System</div>', unsafe_allow_html=True)
     st.markdown("Advanced multi-agent AI system for cybersecurity analysis")
+    
+    # Backend status indicator
+    backend_type = "🌩️ AWS Cloud" if USE_AWS_BACKEND else "💻 Local"
+    backend_url = FASTAPI_URL
+    st.info(f"**Backend**: {backend_type} | **URL**: {backend_url}")
     
     # Sidebar
     with st.sidebar:

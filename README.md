@@ -2,14 +2,33 @@
 
 CyberShield is a sophisticated AI-powered cybersecurity platform that combines multiple specialized agents with **comprehensive caching** and **LLM-driven intelligence** to provide lightning-fast threat analysis, PII detection, log parsing, and vision-based security assessment.
 
-## 🚀 **Version 2.5.0 - Production Deployment & Infrastructure Optimization**
+## 🚀 **Version 3.0.0 - Production Platform with Custom Domain**
+
+### **🌐 LIVE PLATFORM**: https://cybershield-ai.com
 
 ### **Latest Updates (August 2025):**
-- **🏗️ Production-Ready AWS Deployment**: Fully deployed and operational on AWS ECS
-- **🐳 Enhanced Docker Architecture**: Multi-stage builds with vision processing support
-- **📁 Streamlined File Organization**: Deployment files reorganized, 53% scripts reduction
-- **🔧 Automated Infrastructure**: Self-signed HTTPS, auto-scaling, and monitoring active
-- **⚡ Performance Optimized**: Mac M4 Apple Silicon enhancements integrated
+- **✅ Production Domain**: Fully operational at cybershield-ai.com with SSL certificate
+- **🔒 SSL Security**: AWS Certificate Manager with auto-renewal (Namecheap domain)
+- **⚖️ Load Balancer**: Optimized ALB routing for frontend/backend separation
+- **🐳 Multi-Architecture**: ARM64/AMD64 Docker support with ECS Fargate deployment
+- **📁 Clean Architecture**: 57% scripts reduction, 11 essential scripts remaining
+- **⚡ Apple Silicon**: Mac M4 optimized performance enhancements
+
+## 🌐 **Live Platform Access**
+
+**🔗 Production URL**: [https://cybershield-ai.com](https://cybershield-ai.com)
+
+### **Platform Features:**
+- **🔍 Real-time Security Analysis**: Multi-agent threat intelligence analysis
+- **🔒 SSL Secured**: AWS Certificate Manager with auto-renewal
+- **⚡ Sub-second Response**: Intelligent caching for instant results
+- **🌍 Global Accessibility**: Production-grade infrastructure on AWS
+
+### **API Endpoints:**
+- **Frontend**: `https://cybershield-ai.com/` (Streamlit UI)
+- **Backend**: `https://cybershield-ai.com/analyze` (Security analysis)
+- **Health**: `https://cybershield-ai.com/health` (System status)
+- **Tools**: `https://cybershield-ai.com/tools/*` (Individual security tools)
 
 ### **Core Features:**
 - **⚡ Intelligent Caching**: 60-80% API cost reduction, 100-500ms cached responses
@@ -180,22 +199,24 @@ Access the API at `http://localhost:8000` and frontend at `http://localhost:8501
 
 ## ☁️ AWS Production Deployment
 
-**🚀 CyberShield is currently deployed and operational on AWS!**
+**🚀 CyberShield is live at [cybershield-ai.com](https://cybershield-ai.com)!**
 
 ### **Production Status**
-- **✅ Application URL**: https://cybershield-alb-1386398593.us-east-1.elb.amazonaws.com
-- **✅ Health Status**: Operational (200 OK)
-- **✅ HTTPS Enabled**: Self-signed SSL certificate active
-- **✅ Auto-scaling**: Configured and monitoring service metrics
+- **✅ Custom Domain**: https://cybershield-ai.com (SSL secured)
+- **✅ Health Status**: Operational (200 OK responses)
+- **✅ SSL Certificate**: AWS Certificate Manager with auto-renewal
+- **✅ Load Balancer**: Optimized ALB routing for frontend/backend
+- **✅ Multi-Architecture**: ARM64/AMD64 Docker support
 - **✅ Vision Processing**: Full OCR and image analysis capabilities
 
 ### **Current Infrastructure**
-- **ECS Fargate**: Running enhanced Docker image with vision support
-- **Load Balancer**: Application Load Balancer with HTTPS termination
-- **Database**: RDS PostgreSQL with encryption
-- **Cache**: ElastiCache Redis for session management
-- **Vector Store**: OpenSearch for threat intelligence search
-- **LLM**: Amazon Bedrock (Claude 3.5 Sonnet)
+- **Custom Domain**: cybershield-ai.com (Namecheap registrar)
+- **SSL**: AWS Certificate Manager with DNS validation
+- **ECS Fargate**: Multi-architecture Docker deployment (ARM64/AMD64)
+- **Load Balancer**: Application Load Balancer with intelligent routing
+- **Database**: Redis for memory, Milvus for vector search
+- **Container Registry**: ECR with multi-platform images
+- **LLM**: OpenAI GPT models with intelligent caching
 
 ### **For New Deployments**
 
@@ -203,23 +224,40 @@ Access the API at `http://localhost:8000` and frontend at `http://localhost:8501
 # Configure AWS credentials
 aws configure
 
-# Deploy infrastructure (for new environments)
-./scripts/aws_setup.sh            # Complete AWS infrastructure setup
-python scripts/deploy_aws.py      # Deploy application to AWS
+# 1. Deploy core infrastructure
+./scripts/aws_setup.sh              # AWS VPC, security groups, IAM roles
+./scripts/create_ecs.sh              # ECS cluster and services
+python scripts/deploy_aws.py        # Application deployment
 
-# Build and deploy application
-docker build -f deployment/Dockerfile.aws -t cybershield .
-# See deployment/AWS_DEPLOYMENT_GUIDE.md for complete deployment steps
+# 2. Domain setup (optional - for custom domain)
+./scripts/setup_ssl_only.sh         # Request SSL certificate
+./scripts/update_alb_certificate.sh # Install certificate
+./scripts/fix_api_routing.sh        # Configure routing
+
+# 3. Build multi-architecture Docker images
+docker buildx build --platform linux/amd64,linux/arm64 -f deployment/Dockerfile -t cybershield .
 ```
 
-### AWS Infrastructure Includes
+### **Domain Setup Guide**
 
-- **VPC with Multi-AZ Setup**: Public/private/database subnets across 2 availability zones
-- **RDS PostgreSQL**: Managed database with encryption and backup
-- **ElastiCache Redis**: Managed Redis cluster for caching
-- **ECS Fargate**: Serverless container deployment
-- **Application Load Balancer**: High availability with health checks
-- **Security Groups**: Properly configured network access controls
+For custom domain setup (like cybershield-ai.com):
+
+1. **Purchase domain** from registrar (Namecheap, Route 53, etc.)
+2. **Add DNS A records** pointing to your ALB
+3. **Run SSL setup scripts** (provided above)
+4. **Configure ALB routing** for frontend/backend separation
+
+Cost: ~$11-15/year for domain + free AWS Certificate Manager SSL
+
+### **AWS Infrastructure Includes**
+
+- **Custom Domain**: SSL-secured with AWS Certificate Manager
+- **VPC Multi-AZ**: High availability across availability zones  
+- **ECS Fargate**: Serverless container orchestration
+- **Application Load Balancer**: Intelligent routing with health checks
+- **Redis**: In-memory caching and session storage
+- **Milvus**: Vector database for threat intelligence
+- **Security Groups**: Zero-trust network security model
 
 ### AWS Requirements
 

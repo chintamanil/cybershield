@@ -10,22 +10,24 @@ CyberShield is an advanced multi-agent AI cybersecurity platform implementing ph
 - **Phase 4**: ReAct workflow using LangGraph for intelligent reasoning ✅ **DEPLOYED**
 - **Phase 5**: FastAPI frontend interface with comprehensive endpoints ✅ **DEPLOYED**
 
-## 🚀 **Current Production Status (v2.5.0)**
+## 🚀 **Current Production Status (v3.0.0)**
 
-**✅ CyberShield is fully deployed and operational on AWS ECS!**
+**✅ CyberShield is live at https://cybershield-ai.com with custom domain and SSL!**
 
-### **Live Production Environment**
-- **Application URL**: https://cybershield-alb-1386398593.us-east-1.elb.amazonaws.com
-- **Status**: Operational and processing security analysis requests
-- **Infrastructure**: AWS ECS Fargate with auto-scaling, HTTPS, and monitoring
-- **Performance**: Sub-second cached responses, comprehensive threat intelligence
+### **🌐 Live Production Environment**
+- **Production URL**: https://cybershield-ai.com (custom domain with SSL)
+- **Frontend**: https://cybershield-ai.com/ (Streamlit UI)
+- **Backend API**: https://cybershield-ai.com/analyze (Security analysis)
+- **Status**: Fully operational with production SSL certificate
+- **Infrastructure**: AWS ECS Fargate with custom domain, ALB routing, auto-renewal SSL
 
 ### **Recent Achievements (August 2025)**
-- **🏗️ Production Deployment**: Complete AWS ECS infrastructure deployment
-- **🐳 Enhanced Docker**: Multi-stage builds with full vision processing support
-- **📁 Streamlined Organization**: 53% scripts reduction, deployment files reorganized
-- **🔧 Infrastructure Automation**: Self-signed HTTPS, auto-scaling, monitoring operational
-- **⚡ Performance Optimization**: Mac M4 Apple Silicon specific enhancements
+- **🌐 Custom Domain**: cybershield-ai.com purchased and configured ($11.48/year)
+- **🔒 Production SSL**: AWS Certificate Manager with DNS validation and auto-renewal
+- **⚖️ Load Balancer**: Optimized ALB routing for frontend/backend separation
+- **🐳 Multi-Architecture**: ARM64/AMD64 Docker support for ECS Fargate
+- **📁 Clean Architecture**: 57% scripts reduction, 11 essential scripts remaining
+- **⚡ Apple Silicon**: Mac M4 optimized performance enhancements integrated
 
 ## Architecture Components
 
@@ -611,6 +613,29 @@ Valid IP 8.8.8.8 and invalid IP 999.999.999.999 with valid hash d41d8cd98f00b204
 
 ## Recent Updates and Fixes
 
+### Version 3.0.0 - Production Domain Deployment (August 2025)
+
+**🌐 Custom Domain Production Deployment:**
+- ✅ **Domain Purchase**: cybershield-ai.com purchased via Namecheap ($11.48/year)
+- ✅ **SSL Certificate**: AWS Certificate Manager with DNS validation and auto-renewal
+- ✅ **ALB Routing**: Optimized Application Load Balancer routing for frontend/backend separation
+- ✅ **Multi-Architecture**: ARM64/AMD64 Docker support for Apple Silicon and x86_64 systems
+- ✅ **Scripts Cleanup**: 57% reduction in scripts (13 obsolete scripts moved to backup)
+
+**Production Architecture:**
+- **Frontend**: https://cybershield-ai.com/ (Streamlit UI with optimized routing)
+- **Backend**: https://cybershield-ai.com/analyze (Direct API access without /api prefix)
+- **SSL**: Production-grade AWS Certificate Manager with auto-renewal
+- **Load Balancer**: Intelligent priority-based routing (specific endpoints → backend, catch-all → frontend)
+- **DNS**: A records pointing to load balancer IPs for high availability
+
+**Technical Implementation:**
+- **Domain Setup**: Complete automation with `setup_ssl_only.sh`, `update_alb_certificate.sh`, `fix_api_routing.sh`
+- **ALB Configuration**: Priority-based routing rules for clean URL structure
+- **Frontend Configuration**: Environment variable updates for correct backend connections
+- **Container Registry**: Multi-platform Docker images in AWS ECR
+- **Infrastructure**: Production-ready ECS Fargate deployment with custom domain
+
 ### Version 2.4.0 - Refactored Architecture with Comprehensive Caching
 
 **Major Architecture Overhaul:**
@@ -830,6 +855,13 @@ tail -f logs/cybershield.log  # Application logs
 # Test API endpoints
 curl http://localhost:8000/health
 curl http://localhost:8000/status  # Enhanced system status
+
+# Test production endpoints
+curl https://cybershield-ai.com/health
+curl https://cybershield-ai.com/status
+
+# Test production analysis (with SSL)
+curl -X POST https://cybershield-ai.com/analyze -H "Content-Type: application/json" -d '{"text":"test IP 8.8.8.8"}' --insecure
 
 # Validate data ingestion
 python data/milvus_ingestion.py

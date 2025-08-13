@@ -1,24 +1,13 @@
-[global]
-developmentMode = false
-
 [server]
+headless = true
 port = 8501
-enableCORS = true
+address = "0.0.0.0"
+enableCORS = false
 enableXsrfProtection = false
-maxUploadSize = 200
+allowRunOnSave = false
 
 [browser]
 gatherUsageStats = false
 
 [theme]
-primaryColor = "#3498db"
-backgroundColor = "#ffffff"
-secondaryBackgroundColor = "#f0f2f6"
-textColor = "#262730"
-font = "sans serif"
-
-[runner]
-magicEnabled = true
-
-[logger]
-level = "info"
+base = "light"

@@ -11,7 +11,6 @@ This directory contains deployment, configuration, and maintenance scripts for t
 | `aws_setup.sh` | Initial AWS infrastructure setup | ✅ Active |
 | `deploy_aws.py` | Main deployment orchestrator (Python) | ✅ **Current** |
 | `create_ecs.sh` | ECS cluster and service creation | ✅ Active |
-| `create_enhanced_task_definition.sh` | Latest task definition with Bedrock/OpenSearch | ✅ **Current** |
 
 ### 🗄️ **Database & Services Setup**
 
@@ -20,6 +19,14 @@ This directory contains deployment, configuration, and maintenance scripts for t
 | `create_rds.sh` | PostgreSQL database setup | ✅ Active |
 | `create_redis.sh` | Redis cache setup | ✅ Active |
 | `configure_opensearch.sh` | OpenSearch vector store setup | ✅ Active |
+
+### 🌐 **Domain & SSL Management**
+
+| Script | Purpose | Status |
+|--------|---------|--------|
+| `setup_ssl_only.sh` | SSL certificate request for cybershield-ai.com | ✅ **Production** |
+| `update_alb_certificate.sh` | Update ALB with validated SSL certificate | ✅ **Production** |
+| `fix_api_routing.sh` | Configure ALB routing for domain structure | ✅ **Production** |
 
 ### 🔍 **Monitoring**
 
@@ -38,20 +45,16 @@ All configuration is now handled dynamically by scripts. Policy templates have b
 # 1. Initial infrastructure
 ./aws_setup.sh
 
-# 2. Create ECS cluster
+# 2. Create ECS cluster and services
 ./create_ecs.sh
 
-# 3. Deploy with latest configuration
-./create_enhanced_task_definition.sh
+# 3. Main deployment orchestrator
+python deploy_aws.py
 
-# 4. Set up HTTPS
-./setup_self_signed_https.sh
-
-# 5. Configure auto-scaling
-./setup_autoscaling.sh
-
-# 6. Test deployment
-./test_https_setup.sh
+# 4. Domain setup (if using custom domain)
+./setup_ssl_only.sh
+./update_alb_certificate.sh
+./fix_api_routing.sh
 ```
 
 ### **Individual Component Setup**
@@ -63,11 +66,10 @@ All configuration is now handled dynamically by scripts. Policy templates have b
 # Vector store setup
 ./configure_opensearch.sh
 
-# HTTPS setup
-./setup_self_signed_https.sh
-
-# Auto-scaling setup
-./setup_autoscaling.sh
+# Domain & SSL setup (for cybershield-ai.com)
+./setup_ssl_only.sh
+./update_alb_certificate.sh
+./fix_api_routing.sh
 ```
 
 ## 📊 **Script Dependencies**
@@ -79,13 +81,12 @@ aws_setup.sh
 └── configure_opensearch.sh
 
 create_ecs.sh
-└── create_enhanced_task_definition.sh
+└── deploy_aws.py
 
-setup_self_signed_https.sh
-└── test_https_setup.sh
-
-setup_autoscaling_iam.sh
-└── setup_autoscaling.sh
+Domain Setup (cybershield-ai.com):
+setup_ssl_only.sh
+└── update_alb_certificate.sh
+    └── fix_api_routing.sh
 ```
 
 ## 🔧 **Maintenance**
@@ -98,57 +99,33 @@ All IAM policies are now generated dynamically by the respective setup scripts.
 
 ## 🧹 **Cleanup History**
 
-**Latest Cleanup: 2025-08-12 (Fourth Pass)**
-- Moved 6 completed setup/test scripts to backup (setup is complete)
-- Infrastructure is now fully deployed and operational
-- Scripts directory now contains only essential operational files
+**Latest Cleanup: 2025-08-12 (Domain Migration Complete)**
+- **Platform Status**: ✅ **PRODUCTION READY** at https://cybershield-ai.com
+- Moved 13 obsolete frontend/routing scripts to backup after successful domain setup
+- Scripts directory now contains only 11 essential scripts (57% reduction)
+- Domain setup completed: SSL certificate, ALB routing, frontend configuration
 
-**Third Pass: 2025-08-12**
-- Moved 4 unused JSON policy templates to backup
-- Removed static configuration files (policies now generated dynamically)
-- Further streamlined scripts directory
+**Removed (Domain Cleanup - 2025-08-12):**
+- 5 frontend task definition iterations (superseded by working deployment)
+- 3 frontend service scripts (superseded by working service) 
+- 4 failed/obsolete routing scripts (superseded by `fix_api_routing.sh`)
+- 1 health check script (debugging complete)
 
-**Second Pass: 2025-08-12**
-- Removed 2 additional redundant files
-- Backed up removed files to `../backup/scripts_cleanup_20250812_153413/`
-- Streamlined deployment workflow
-
-**Previous Cleanup: 2025-08-12**
-- Removed 9 obsolete/redundant scripts
-- Backed up removed scripts to `../backup/scripts_backup_20250812/`
-- Organized remaining 20 essential scripts
-
-**Recently Removed (2025-08-12 Fourth Pass):**
-- `setup_autoscaling.sh` (moved to backup - autoscaling configured ✅)
-- `setup_autoscaling_iam.sh` (moved to backup - IAM roles created ✅)
-- `setup_self_signed_https.sh` (moved to backup - HTTPS working ✅)
-- `setup_opensearch.py` (moved to backup - development utility)
-- `test_deployment.sh` (moved to backup - deployment validated ✅)
-- `test_https_setup.sh` (moved to backup - HTTPS validated ✅)
-
-**Third Pass (2025-08-12):**
-- `autoscaling_policy.json` (moved to backup - policies generated dynamically)
-- `create_bedrock_policy.json` (moved to backup - policies generated dynamically)
-- `create_opensearch_policy.json` (moved to backup - policies generated dynamically)
-- `create_opensearch_domain.json` (moved to backup - not used by scripts)
-
-**Second Pass (2025-08-12):**
-- `deploy_aws.sh` (redundant with more comprehensive `deploy_aws.py`)
-- `manual_https_setup.md` (superseded by automated `setup_self_signed_https.sh`)
-
-**Previously Removed Scripts:**
-- `create_task_definition.sh` (superseded by enhanced version)
-- `setup_https_alb.sh` (failed implementation)
-- `ssl_permissions_policy.json` (unused due to IAM limits)
-- `create_scaling_plan.sh` (failed due to permissions)
-- `manual_aws_setup.sh` (redundant)
-- `configure_secrets.sh` (not implemented)
-- `deploy_service.sh` (merged into deploy_aws.py)
-- `migrate_vector_data.py` (one-time migration)
-- `setup_environment.py` (unused)
+**Previous Cleanups:**
+- Fourth Pass: Moved completed setup/test scripts (infrastructure deployed)
+- Third Pass: Moved JSON policy templates (dynamic generation implemented)
+- Second Pass: Removed redundant deployment scripts
+- Initial Pass: Removed 9 obsolete scripts
 
 ## 📞 **Support**
 
-- **Current Configuration**: Bedrock LLM + OpenSearch + Self-signed HTTPS + Auto-scaling
-- **Environment**: AWS production with dual local/cloud support
-- **Status**: All scripts tested and functional as of 2025-08-12
+- **Platform URL**: https://cybershield-ai.com (✅ Production)
+- **SSL Certificate**: AWS Certificate Manager (auto-renewal enabled)
+- **Current Configuration**: OpenAI LLM + Redis STM + Milvus Vector Store + Production SSL
+- **Environment**: AWS production with cybershield-ai.com domain
+- **Status**: ✅ **PRODUCTION DEPLOYMENT COMPLETE** as of 2025-08-12
+
+### **Architecture:**
+- **Frontend**: Streamlit UI at https://cybershield-ai.com/
+- **Backend**: FastAPI at https://cybershield-ai.com/analyze
+- **Infrastructure**: AWS ECS Fargate + ALB + Route 53 + ACM
