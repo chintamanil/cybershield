@@ -4,10 +4,8 @@ CyberShield is a sophisticated AI-powered cybersecurity platform that combines m
 
 ## 🚀 **Version 3.0.0 - Production Platform with Custom Domain**
 
-### **🌐 LIVE PLATFORM**: https://cybershield-ai.com
-
 ### **Latest Updates (August 2025):**
-- **✅ Production Domain**: Fully operational at cybershield-ai.com with SSL certificate
+- **✅ Domain**: Fully operational at localhost:8000 with SSL certificate
 - **🔒 SSL Security**: AWS Certificate Manager with auto-renewal (Namecheap domain)
 - **⚖️ Load Balancer**: Optimized ALB routing for frontend/backend separation
 - **🐳 Multi-Architecture**: ARM64/AMD64 Docker support with ECS Fargate deployment
@@ -16,7 +14,6 @@ CyberShield is a sophisticated AI-powered cybersecurity platform that combines m
 
 ## 🌐 **Live Platform Access**
 
-**🔗 Production URL**: [https://cybershield-ai.com](https://cybershield-ai.com)
 
 ### **Platform Features:**
 - **🔍 Real-time Security Analysis**: Multi-agent threat intelligence analysis
@@ -25,10 +22,10 @@ CyberShield is a sophisticated AI-powered cybersecurity platform that combines m
 - **🌍 Global Accessibility**: Production-grade infrastructure on AWS
 
 ### **API Endpoints:**
-- **Frontend**: `https://cybershield-ai.com/` (Streamlit UI)
-- **Backend**: `https://cybershield-ai.com/analyze` (Security analysis)
-- **Health**: `https://cybershield-ai.com/health` (System status)
-- **Tools**: `https://cybershield-ai.com/tools/*` (Individual security tools)
+- **Frontend**: `https://localhost:8000/` (Streamlit UI)
+- **Backend**: `https://localhost:8000/analyze` (Security analysis)
+- **Health**: `https://localhost:8000/health` (System status)
+- **Tools**: `https://localhost:8000/tools/*` (Individual security tools)
 
 ### **Core Features:**
 - **⚡ Intelligent Caching**: 60-80% API cost reduction, 100-500ms cached responses
@@ -199,10 +196,10 @@ Access the API at `http://localhost:8000` and frontend at `http://localhost:8501
 
 ## ☁️ AWS Production Deployment
 
-**🚀 CyberShield is live at [cybershield-ai.com](https://cybershield-ai.com)!**
+**🚀 CyberShield is live at [localhost:8000](https://localhost:8000)!**
 
 ### **Production Status**
-- **✅ Custom Domain**: https://cybershield-ai.com (SSL secured)
+- **✅ Custom Domain**: https://localhost:8000 (SSL secured)
 - **✅ Health Status**: Operational (200 OK responses)
 - **✅ SSL Certificate**: AWS Certificate Manager with auto-renewal
 - **✅ Load Balancer**: Optimized ALB routing for frontend/backend
@@ -210,7 +207,7 @@ Access the API at `http://localhost:8000` and frontend at `http://localhost:8501
 - **✅ Vision Processing**: Full OCR and image analysis capabilities
 
 ### **Current Infrastructure**
-- **Custom Domain**: cybershield-ai.com (Namecheap registrar)
+- **Custom Domain**: localhost:8000 (Namecheap registrar)
 - **SSL**: AWS Certificate Manager with DNS validation
 - **ECS Fargate**: Multi-architecture Docker deployment (ARM64/AMD64)
 - **Load Balancer**: Application Load Balancer with intelligent routing
@@ -240,7 +237,7 @@ docker buildx build --platform linux/amd64,linux/arm64 -f deployment/Dockerfile 
 
 ### **Domain Setup Guide**
 
-For custom domain setup (like cybershield-ai.com):
+For custom domain setup (like localhost:8000):
 
 1. **Purchase domain** from registrar (Namecheap, Route 53, etc.)
 2. **Add DNS A records** pointing to your ALB
@@ -252,7 +249,7 @@ Cost: ~$11-15/year for domain + free AWS Certificate Manager SSL
 ### **AWS Infrastructure Includes**
 
 - **Custom Domain**: SSL-secured with AWS Certificate Manager
-- **VPC Multi-AZ**: High availability across availability zones  
+- **VPC Multi-AZ**: High availability across availability zones
 - **ECS Fargate**: Serverless container orchestration
 - **Application Load Balancer**: Intelligent routing with health checks
 - **Redis**: In-memory caching and session storage
@@ -275,7 +272,7 @@ For detailed AWS deployment instructions, see [`deployment/AWS_DEPLOYMENT_GUIDE.
 cybershield/
 ├── 📂 deployment/                    # Deployment configuration (NEW)
 │   ├── Dockerfile.aws               # Enhanced production Docker image
-│   ├── docker-compose.yaml          # Local development services  
+│   ├── docker-compose.yaml          # Local development services
 │   └── AWS_DEPLOYMENT_GUIDE.md      # Complete deployment documentation
 ├── 📂 scripts/ (9 files)            # Essential operational scripts (53% reduction)
 │   ├── 🏗️ Core Deployment (4)       # Infrastructure management
