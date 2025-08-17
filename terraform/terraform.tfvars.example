@@ -1,0 +1,58 @@
+# Example Terraform variables for CyberShield Root Module
+# Copy this file to terraform.tfvars and customize the values
+
+# Basic Configuration
+project_name = "cybershield"
+environment  = "dev"
+aws_region   = "us-east-1"
+
+# Domain Configuration (optional)
+# domain_name = "dev.cybershield-ai.com"
+
+# Network Configuration
+vpc_cidr = "10.0.0.0/16"
+
+# Database Configuration
+db_instance_class    = "db.t3.micro"
+db_allocated_storage = 20
+db_engine_version    = "15.4"
+db_name              = "cybershield"
+db_username          = "cybershield_admin"
+
+# Redis Configuration
+redis_node_type               = "cache.t3.micro"
+redis_engine_version          = "7.0"
+redis_parameter_group_family  = "redis7"
+
+# OpenSearch Configuration
+enable_opensearch         = false  # Disable for cost savings in dev
+opensearch_instance_type  = "t3.small.search"
+opensearch_instance_count = 1
+opensearch_volume_size    = 20
+
+# Container Configuration
+backend_cpu         = 256
+backend_memory      = 512
+backend_min_capacity = 1
+backend_max_capacity = 3
+
+frontend_cpu         = 256
+frontend_memory      = 512
+frontend_min_capacity = 1
+frontend_max_capacity = 2
+
+# Cost Optimization
+enable_spot_instances      = true   # Use spot instances for dev
+enable_deletion_protection = false  # Allow resource cleanup
+
+# Logging
+cloudwatch_log_retention_days = 7
+
+# Environment Variables
+environment_variables = {
+  DEBUG                      = "True"
+  ENVIRONMENT                = "development"
+  LOG_LEVEL                 = "DEBUG"
+  APPLE_SILICON_ACCELERATION = "true"
+  REACT_LOG_FORMAT           = "console"
+}
