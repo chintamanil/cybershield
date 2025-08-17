@@ -1,0 +1,8 @@
+# Example Terraform variables for Backend Setup
+# Copy this file to terraform.tfvars and customize the values
+
+# AWS Configuration
+aws_region = "us-east-1"
+
+# Note: This setup creates the S3 buckets and DynamoDB tables
+# needed for Terraform remote state management across all environments

@@ -1,0 +1,11 @@
+# Example Terraform variables for Staging Environment
+# Copy this file to terraform.tfvars and customize the values
+
+# AWS Configuration
+aws_region = "us-east-1"
+
+# Domain Configuration
+domain_name = "staging.cybershield-ai.com"
+
+# Note: Additional variables can be customized in main.tf
+# or passed as environment variables with TF_VAR_ prefix
