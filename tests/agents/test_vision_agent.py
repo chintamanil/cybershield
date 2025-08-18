@@ -198,8 +198,17 @@ class TestVisionAgent(unittest.IsolatedAsyncioTestCase):
         
         # Mock cv2 operations
         with patch('agents.vision_agent.cv2') as mock_cv2:
-            mock_cv2.cvtColor.return_value = np.array([[255, 255, 255]])
-            mock_cv2.threshold.return_value = (127, np.array([[255, 255, 255]]))
+            # Mock return values for all cv2 operations
+            processed_image = np.array([[255, 255, 255]])
+            mock_cv2.cvtColor.return_value = processed_image
+            mock_cv2.fastNlMeansDenoising.return_value = processed_image
+            mock_cv2.adaptiveThreshold.return_value = processed_image
+            
+            # Mock constants
+            mock_cv2.COLOR_RGB2BGR = 4
+            mock_cv2.COLOR_BGR2GRAY = 6
+            mock_cv2.ADAPTIVE_THRESH_GAUSSIAN_C = 1
+            mock_cv2.THRESH_BINARY = 0
             
             result = self.agent._preprocess_for_ocr(test_image)
             
