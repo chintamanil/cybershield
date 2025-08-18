@@ -301,7 +301,7 @@ class TestURLAnalysis(unittest.TestCase):
         result = self.checker.analyze_url("not_a_url")
 
         self.assertFalse(result["is_valid"])
-        self.assertIn("error", result)
+        self.assertGreater(result["risk_score"], 0)  # Should have suspicious indicators
 
 
 class TestConvenienceFunctions(unittest.TestCase):

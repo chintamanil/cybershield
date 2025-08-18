@@ -345,9 +345,12 @@ class RegexChecker:
             if query and len(query) > 100:
                 suspicious_indicators.append("Long query string")
 
+            # Determine if URL is valid
+            is_valid = bool(scheme and netloc and scheme in ["http", "https"])
+            
             return {
                 "url": url,
-                "is_valid": True,
+                "is_valid": is_valid,
                 "scheme": scheme,
                 "domain": netloc,
                 "path": path,
