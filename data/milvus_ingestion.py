@@ -382,27 +382,34 @@ class CyberSecurityDataProcessor:
             except Exception as e:
                 logger.warning(f"Error converting series to {dtype}: {e}")
                 return [default] * len(series)
+        
+        def get_column(column_names, dtype=str, default=''):
+            """Get column data with fallback options"""
+            for col in column_names:
+                if col in df.columns:
+                    return safe_convert(df[col], dtype, default)
+            return [default] * len(df)
 
-        # Prepare data dictionary with proper type handling
+        # Prepare data dictionary with proper type handling and flexible column names
         data = {
             "id": [self.generate_record_id(row) for _, row in df.iterrows()],
-            "timestamp": safe_convert(df['timestamp'], str, ''),
-            "source_ip": safe_convert(df['source_ip_address'], str, ''),
-            "dest_ip": safe_convert(df['destination_ip_address'], str, ''),
-            "source_port": safe_convert(df['source_port'], int, 0),
-            "dest_port": safe_convert(df['destination_port'], int, 0),
-            "protocol": safe_convert(df['protocol'], str, ''),
-            "attack_type": safe_convert(df['attack_type'], str, ''),
-            "attack_signature": safe_convert(df['attack_signature'], str, ''),
-            "severity_level": safe_convert(df['severity_level'], str, ''),
-            "action_taken": safe_convert(df['action_taken'], str, ''),
-            "anomaly_score": safe_convert(df['anomaly_scores'], float, 0.0),
-            "malware_indicators": safe_convert(df['malware_indicators'], str, ''),
-            "geo_location": safe_convert(df.get('geo-location_data', pd.Series([''] * len(df))), str, ''),
-            "user_info": safe_convert(df['user_information'], str, ''),
-            "log_source": safe_convert(df['log_source'], str, ''),
-            "full_context": safe_convert(df['full_context'], str, ''),
-            "embedding": embeddings.tolist()
+            "timestamp": get_column(['timestamp'], str, ''),
+            "source_ip": get_column(['source_ip_address', 'source_ip'], str, ''),
+            "dest_ip": get_column(['destination_ip_address', 'dest_ip'], str, ''),
+            "source_port": get_column(['source_port'], int, 0),
+            "dest_port": get_column(['destination_port', 'dest_port'], int, 0),
+            "protocol": get_column(['protocol'], str, ''),
+            "attack_type": get_column(['attack_type'], str, ''),
+            "attack_signature": get_column(['attack_signature'], str, ''),
+            "severity_level": get_column(['severity_level'], str, ''),
+            "action_taken": get_column(['action_taken'], str, ''),
+            "anomaly_score": get_column(['anomaly_scores', 'anomaly_score'], float, 0.0),
+            "malware_indicators": get_column(['malware_indicators'], str, ''),
+            "geo_location": get_column(['geo-location_data', 'geo_location'], str, ''),
+            "user_info": get_column(['user_information', 'user_info'], str, ''),
+            "log_source": get_column(['log_source'], str, ''),
+            "full_context": get_column(['full_context'], str, ''),
+            "embeddings": embeddings.tolist()
         }
 
         # Validate data lengths
