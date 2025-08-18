@@ -48,7 +48,7 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
 
 # Default environment variables for production
 ENV USE_AWS_BACKEND=true \
-    AWS_BACKEND_URL=https://cybershield-alb-1386398593.us-east-1.elb.amazonaws.com \
+    AWS_BACKEND_URL=https://cybershield-ai.com \
     STREAMLIT_SERVER_HEADLESS=true \
     STREAMLIT_SERVER_PORT=8501 \
     STREAMLIT_SERVER_ADDRESS=0.0.0.0

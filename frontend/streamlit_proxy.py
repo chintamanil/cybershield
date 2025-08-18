@@ -9,14 +9,15 @@ import os
 # Configure Streamlit for proxy/ALB setup
 st.set_page_config(
     page_title="CyberShield AI - Frontend",
-    page_icon="🛡️", 
+    page_icon="🛡️",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="expanded",
 )
 
 # Import the main Streamlit app
 import sys
-sys.path.append('/app/frontend')
+
+sys.path.append("/app/frontend")
 
 # Import and run the main application
 try:
@@ -25,7 +26,7 @@ except ImportError as e:
     st.error(f"Failed to import main application: {e}")
     st.info("This is a simple proxy test page for CyberShield")
     st.write("If you can see this, the Streamlit server is working!")
-    
+
     # Show environment info for debugging
     st.subheader("Environment Information")
     st.write(f"USE_AWS_BACKEND: {os.getenv('USE_AWS_BACKEND', 'not set')}")

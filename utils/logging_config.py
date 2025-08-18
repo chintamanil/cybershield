@@ -21,7 +21,7 @@ def configure_logging(
 ) -> None:
     """
     Configure structured logging for the CyberShield platform.
-    
+
     Args:
         log_level: Logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
         log_file: Optional file path for log output
@@ -30,7 +30,7 @@ def configure_logging(
     """
     # Set log level
     level = getattr(logging, log_level.upper(), logging.INFO)
-    
+
     # Configure structlog processors
     processors = [
         structlog.stdlib.filter_by_level,  # This respects the stdlib logger level
@@ -41,20 +41,20 @@ def configure_logging(
         structlog.processors.StackInfoRenderer(),
         structlog.processors.format_exc_info,
     ]
-    
+
     # Add context processors for security events
-    processors.extend([
-        add_security_context,
-        add_request_id,
-    ])
-    
+    processors.extend(
+        [
+            add_security_context,
+            add_request_id,
+        ]
+    )
+
     if json_format:
         processors.append(structlog.processors.JSONRenderer())
     else:
-        processors.append(
-            structlog.dev.ConsoleRenderer(colors=sys.stdout.isatty())
-        )
-    
+        processors.append(structlog.dev.ConsoleRenderer(colors=sys.stdout.isatty()))
+
     # Configure structlog
     structlog.configure(
         processors=processors,
@@ -63,7 +63,7 @@ def configure_logging(
         context_class=dict,
         cache_logger_on_first_use=True,
     )
-    
+
     # Configure stdlib logging if requested
     if include_stdlib:
         # Always add console handler for terminal output
@@ -71,98 +71,107 @@ def configure_logging(
         console_handler.setLevel(level)  # Set handler level explicitly
         console_handler.setFormatter(
             structlog.stdlib.ProcessorFormatter(
-                processor=structlog.dev.ConsoleRenderer(colors=True)
-                if not json_format
-                else structlog.processors.JSONRenderer(),
+                processor=(
+                    structlog.dev.ConsoleRenderer(colors=True)
+                    if not json_format
+                    else structlog.processors.JSONRenderer()
+                ),
             )
         )
-        
+
         root_logger = logging.getLogger()
-        
+
         # Clear existing handlers to avoid conflicts
         root_logger.handlers.clear()
-        
+
         root_logger.addHandler(console_handler)
-        
+
         # Add file handler if log_file is specified
         if log_file:
             # Create directory if it doesn't exist
             import pathlib
+
             log_path = pathlib.Path(log_file)
             log_path.parent.mkdir(parents=True, exist_ok=True)
-            
+
             file_handler = logging.FileHandler(log_file)
             file_handler.setLevel(level)  # Set handler level explicitly
             file_handler.setFormatter(
                 structlog.stdlib.ProcessorFormatter(
-                    processor=structlog.dev.ConsoleRenderer(colors=False)
-                    if not json_format
-                    else structlog.processors.JSONRenderer(),
+                    processor=(
+                        structlog.dev.ConsoleRenderer(colors=False)
+                        if not json_format
+                        else structlog.processors.JSONRenderer()
+                    ),
                 )
             )
             root_logger.addHandler(file_handler)
-        
+
         root_logger.setLevel(level)
-        
-        # Also explicitly set level for our specific loggers  
+
+        # Also explicitly set level for our specific loggers
         cybershield_logger = logging.getLogger("cybershield")
         cybershield_logger.setLevel(level)
-        
+
         # Set level for react_workflow specifically
         react_workflow_logger = logging.getLogger("cybershield.react_workflow")
         react_workflow_logger.setLevel(level)
 
 
-def add_security_context(logger: Any, method_name: str, event_dict: Dict[str, Any]) -> Dict[str, Any]:
+def add_security_context(
+    logger: Any, method_name: str, event_dict: Dict[str, Any]
+) -> Dict[str, Any]:
     """
     Add security-specific context to log events.
-    
+
     Args:
         logger: The logger instance
         method_name: The logging method name
         event_dict: The event dictionary
-        
+
     Returns:
         Enhanced event dictionary with security context
     """
     # Add security classification for certain log levels
     if method_name in ["warning", "error", "critical"]:
         event_dict["security_relevant"] = True
-    
+
     # Add component context if available
     if hasattr(logger, "_context") and "component" in logger._context:
         event_dict["component"] = logger._context["component"]
-    
+
     return event_dict
 
 
-def add_request_id(logger: Any, method_name: str, event_dict: Dict[str, Any]) -> Dict[str, Any]:
+def add_request_id(
+    logger: Any, method_name: str, event_dict: Dict[str, Any]
+) -> Dict[str, Any]:
     """
     Add request ID to log events for tracing.
-    
+
     Args:
         logger: The logger instance
         method_name: The logging method name
         event_dict: The event dictionary
-        
+
     Returns:
         Enhanced event dictionary with request ID
     """
     # Try to get request ID from context
     if hasattr(logger, "_context") and "request_id" in logger._context:
         event_dict["request_id"] = logger._context["request_id"]
-    
+
     return event_dict
 
 
 def get_logger(name: str, **context: Any) -> structlog.BoundLogger:
     """
     Get a structured logger with optional context.
-    
+
     Args:
         name: Logger name (typically __name__)
         **context: Additional context to bind to the logger
-        
+
     Returns:
         Configured structured logger
     """
@@ -175,19 +184,15 @@ def get_logger(name: str, **context: Any) -> structlog.BoundLogger:
 def get_security_logger(component: str, **context: Any) -> structlog.BoundLogger:
     """
     Get a security-focused logger with component context.
-    
+
     Args:
         component: Component name (e.g., 'threat_agent', 'pii_agent')
         **context: Additional context to bind to the logger
-        
+
     Returns:
         Configured structured logger with security context
     """
-    security_context = {
-        "component": component,
-        "category": "security",
-        **context
-    }
+    security_context = {"component": component, "category": "security", **context}
     return get_logger(f"cybershield.{component}", **security_context)
 
 
@@ -195,11 +200,11 @@ def log_security_event(
     logger: structlog.BoundLogger,
     event_type: str,
     severity: str = "info",
-    **details: Any
+    **details: Any,
 ) -> None:
     """
     Log a security event with standardized format.
-    
+
     Args:
         logger: The structured logger to use
         event_type: Type of security event (e.g., 'threat_detected', 'pii_found')
@@ -211,7 +216,7 @@ def log_security_event(
         "Security event",
         event_type=event_type,
         timestamp=datetime.utcnow().isoformat(),
-        **details
+        **details,
     )
 
 
@@ -221,11 +226,11 @@ def log_api_request(
     path: str,
     status_code: int,
     duration_ms: float,
-    **details: Any
+    **details: Any,
 ) -> None:
     """
     Log an API request with standardized format.
-    
+
     Args:
         logger: The structured logger to use
         method: HTTP method
@@ -236,15 +241,45 @@ def log_api_request(
     """
     severity = "error" if status_code >= 400 else "info"
     log_method = getattr(logger, severity)
-    
+
     log_method(
         "API request",
         method=method,
         path=path,
         status_code=status_code,
         duration_ms=duration_ms,
-        **details
+        **details,
     )
+
+
+def log_json_report(
+    logger: structlog.BoundLogger, title: str, data: Any, **details: Any
+) -> None:
+    """
+    Log structured data as pretty-formatted JSON.
+
+    Args:
+        logger: The structured logger to use
+        title: Title for the JSON report
+        data: Data to format as JSON
+        **details: Additional context details
+    """
+    import json
+    from pygments import highlight, lexers, formatters
+
+    # Log the title with context
+    logger.info(title, **details)
+
+    # Print formatted JSON directly to console (bypasses structured logging formatting)
+    try:
+        formatted_json = json.dumps(data, indent=2, default=str, ensure_ascii=False)
+        colored_json = highlight(
+            formatted_json, lexers.JsonLexer(), formatters.TerminalFormatter()
+        )
+        print(f"\n{colored_json}\n")
+    except Exception as e:
+        logger.error("Failed to format JSON report", error=str(e))
+        print(f"\n{data}\n")
 
 
 def log_agent_action(
@@ -252,11 +287,11 @@ def log_agent_action(
     agent_name: str,
     action: str,
     success: bool = True,
-    **details: Any
+    **details: Any,
 ) -> None:
     """
     Log an agent action with standardized format.
-    
+
     Args:
         logger: The structured logger to use
         agent_name: Name of the agent performing the action
@@ -266,13 +301,9 @@ def log_agent_action(
     """
     severity = "info" if success else "warning"
     log_method = getattr(logger, severity)
-    
+
     log_method(
-        "Agent action",
-        agent_name=agent_name,
-        action=action,
-        success=success,
-        **details
+        "Agent action", agent_name=agent_name, action=action, success=success, **details
     )
 
 
@@ -284,9 +315,5 @@ def setup_from_env() -> None:
     log_level = os.getenv("LOG_LEVEL", "INFO")
     log_file = os.getenv("LOG_FILE")
     json_format = os.getenv("LOG_FORMAT", "").lower() == "json"
-    
-    configure_logging(
-        log_level=log_level,
-        log_file=log_file,
-        json_format=json_format
-    )
+
+    configure_logging(log_level=log_level, log_file=log_file, json_format=json_format)

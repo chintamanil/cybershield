@@ -16,13 +16,13 @@ from utils.service_factory import services
 
 # Load appropriate .env file based on environment
 if config.detector.is_local():
-    load_dotenv('.env.local', override=True)
-    load_dotenv('.env', override=False)  # Fallback to default .env
+    load_dotenv(".env.local", override=True)
+    load_dotenv(".env", override=False)  # Fallback to default .env
 else:
-    load_dotenv('.env.aws', override=True)
+    load_dotenv(".env.aws", override=True)
 
 # Ensure .env is always loaded as fallback for development
-load_dotenv('.env', override=False)
+load_dotenv(".env", override=False)
 
 # Import our agents and components
 from agents.supervisor import SupervisorAgent
@@ -395,9 +395,9 @@ async def analyze_text(request: AnalysisRequest):
         processing_time = time.time() - start_time
 
         # Log the final result being sent to frontend
-        request_logger.info("Final result sent to frontend", final_result=result)
+        request_logger.debug("Final result sent to frontend", final_result=result)
 
-        request_logger.info(
+        request_logger.debug(
             "Analysis request completed",
             status="success",
             processing_time_ms=round(processing_time * 1000, 2),
@@ -501,7 +501,7 @@ async def get_status():
     """
     try:
         from utils.app_initializer import app_initializer
-        
+
         agent_status = agent.get_agent_status()
         environment_info = app_initializer.get_environment_info()
         health_status = app_initializer.get_health_status()
@@ -522,7 +522,7 @@ async def get_status():
                 "health": health_status,
                 "features": [
                     "Vision AI",
-                    "ReAct Workflow", 
+                    "ReAct Workflow",
                     "Multi-Agent Analysis",
                     "PII Detection",
                     "Threat Intelligence",
@@ -534,7 +534,7 @@ async def get_status():
                 "tools": tools_status,
                 "endpoints": {
                     "analyze": "POST /analyze",
-                    "analyze_with_image": "POST /analyze-with-image", 
+                    "analyze_with_image": "POST /analyze-with-image",
                     "batch_analyze": "POST /batch-analyze",
                     "status": "GET /status",
                     "health": "GET /health",
@@ -543,7 +543,7 @@ async def get_status():
                         "abuseipdb_check": "POST /tools/abuseipdb/check",
                         "shodan_lookup": "POST /tools/shodan/lookup",
                         "virustotal_lookup": "POST /tools/virustotal/lookup",
-                        "regex_extract": "POST /tools/regex/extract", 
+                        "regex_extract": "POST /tools/regex/extract",
                         "regex_validate": "POST /tools/regex/validate",
                     },
                 },
@@ -595,15 +595,23 @@ async def upload_image_only(image: UploadFile = File(...)):
 async def health_check():
     """Simple health check endpoint"""
     from utils.app_initializer import app_initializer
+
     health_status = app_initializer.get_health_status()
-    
-    overall_status = "healthy" if all(health_status.get(service, False) for service in ['redis', 'postgres', 'llm']) else "degraded"
-    
+
+    overall_status = (
+        "healthy"
+        if all(
+            health_status.get(service, False)
+            for service in ["redis", "postgres", "llm"]
+        )
+        else "degraded"
+    )
+
     return {
-        "status": overall_status, 
+        "status": overall_status,
         "version": "2.0.0",
         "environment": config.detector.environment,
-        "services": health_status
+        "services": health_status,
     }
 
 
@@ -611,6 +619,7 @@ async def health_check():
 async def get_environment():
     """Get detailed environment configuration"""
     from utils.app_initializer import app_initializer
+
     return app_initializer.get_environment_info()
 
 

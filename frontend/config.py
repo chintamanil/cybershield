@@ -12,7 +12,7 @@ FASTAPI_PROTOCOL = os.getenv("FASTAPI_PROTOCOL", "http")
 
 # AWS-specific configuration
 AWS_BACKEND_URL = os.getenv("AWS_BACKEND_URL", "https://cybershield-ai.com")
-USE_AWS_BACKEND = os.getenv("USE_AWS_BACKEND", "true").lower() == "true"
+USE_AWS_BACKEND = os.getenv("USE_AWS_BACKEND", "false").lower() == "true"
 
 # Determine backend URL based on environment
 if USE_AWS_BACKEND:
@@ -25,7 +25,7 @@ STREAMLIT_CONFIG = {
     "page_title": "CyberShield AI",
     "page_icon": "🛡️",
     "layout": "wide",
-    "initial_sidebar_state": "expanded"
+    "initial_sidebar_state": "expanded",
 }
 
 # UI Theme Configuration
@@ -34,7 +34,7 @@ THEME_CONFIG = {
     "background_color": "#ffffff",
     "secondary_background_color": "#f0f2f6",
     "text_color": "#262730",
-    "font": "sans serif"
+    "font": "sans serif",
 }
 
 # Chart Colors
@@ -45,17 +45,11 @@ CHART_COLORS = {
     "danger": "#dc3545",
     "info": "#17a2b8",
     "light": "#f8f9fa",
-    "dark": "#343a40"
+    "dark": "#343a40",
 }
 
 # Risk Level Colors
-RISK_COLORS = {
-    "high": "🔴",
-    "medium": "🟡", 
-    "low": "🟢",
-    "none": "⚪",
-    "unknown": "⚫"
-}
+RISK_COLORS = {"high": "🔴", "medium": "🟡", "low": "🟢", "none": "⚪", "unknown": "⚫"}
 
 # IOC Type Icons
 IOC_ICONS = {
@@ -66,7 +60,7 @@ IOC_ICONS = {
     "hash": "🔒",
     "mac_address": "📱",
     "phone": "📞",
-    "cryptocurrency": "💰"
+    "cryptocurrency": "💰",
 }
 
 # Analysis Type Configuration
@@ -74,28 +68,28 @@ ANALYSIS_TYPES = {
     "pii": {
         "name": "PII Detection",
         "icon": "🔒",
-        "description": "Detect personally identifiable information"
+        "description": "Detect personally identifiable information",
     },
     "ioc": {
-        "name": "IOC Extraction", 
+        "name": "IOC Extraction",
         "icon": "🚨",
-        "description": "Extract indicators of compromise"
+        "description": "Extract indicators of compromise",
     },
     "threat": {
         "name": "Threat Analysis",
         "icon": "⚠️",
-        "description": "Analyze security threats"
+        "description": "Analyze security threats",
     },
     "vision": {
         "name": "Vision Analysis",
         "icon": "📷",
-        "description": "Analyze images for security risks"
+        "description": "Analyze images for security risks",
     },
     "tools": {
         "name": "Tool Analysis",
         "icon": "🔧",
-        "description": "Security tool integration results"
-    }
+        "description": "Security tool integration results",
+    },
 }
 
 # File Upload Configuration
@@ -103,30 +97,20 @@ UPLOAD_CONFIG = {
     "max_file_size": 10 * 1024 * 1024,  # 10MB
     "allowed_image_types": ["png", "jpg", "jpeg", "gif", "bmp"],
     "allowed_text_types": ["txt", "csv", "json", "log"],
-    "chunk_size": 1024 * 1024  # 1MB chunks
+    "chunk_size": 1024 * 1024,  # 1MB chunks
 }
 
 # API Configuration
-API_CONFIG = {
-    "timeout": 30,
-    "max_retries": 3,
-    "retry_delay": 1
-}
+API_CONFIG = {"timeout": 30, "max_retries": 3, "retry_delay": 1}
 
 # Cache Configuration
-CACHE_CONFIG = {
-    "ttl": 300,  # 5 minutes
-    "max_entries": 100
-}
+CACHE_CONFIG = {"ttl": 300, "max_entries": 100}  # 5 minutes
+
 
 def get_config() -> Dict[str, Any]:
     """Get complete configuration dictionary"""
     return {
-        "fastapi": {
-            "host": FASTAPI_HOST,
-            "port": FASTAPI_PORT,
-            "url": FASTAPI_URL
-        },
+        "fastapi": {"host": FASTAPI_HOST, "port": FASTAPI_PORT, "url": FASTAPI_URL},
         "streamlit": STREAMLIT_CONFIG,
         "theme": THEME_CONFIG,
         "charts": CHART_COLORS,
@@ -135,5 +119,5 @@ def get_config() -> Dict[str, Any]:
         "analysis": ANALYSIS_TYPES,
         "upload": UPLOAD_CONFIG,
         "api": API_CONFIG,
-        "cache": CACHE_CONFIG
+        "cache": CACHE_CONFIG,
     }

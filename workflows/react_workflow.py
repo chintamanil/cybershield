@@ -162,7 +162,7 @@ class CyberShieldReActAgent:
         self,
         memory=None,
         vectorstore=None,
-        llm_model="gpt-4o",
+        llm_model=None,  # Use environment configuration
         abuseipdb_client=None,
         shodan_client=None,
         virustotal_client=None,
@@ -435,7 +435,7 @@ Input: {input_text[:800]}...
 
 Available Tools:
 - VirusTotal: Best for IP addresses, domains, and file hashes
-- AbuseIPDB: Specialized for IP reputation and abuse reports  
+- AbuseIPDB: Specialized for IP reputation and abuse reports
 - Shodan: Network reconnaissance and open port analysis for IPs
 - MilvusSearch: Historical attack pattern analysis using 120,000 cybersecurity records
 - RegexChecker: Comprehensive IOC extraction using 25+ cybersecurity patterns
@@ -763,12 +763,15 @@ If no threat intelligence tools are needed, respond with: []"""
                 recommendations_count=len(recommendations),
             )
 
-            # Log the full final report as JSON for debugging
-            import json
+            # Log the full final report as pretty JSON
+            from utils.logging_config import log_json_report
 
-            logger.info(
-                "Final report JSON",
-                final_report=json.dumps(final_report, indent=2, default=str),
+            log_json_report(
+                logger,
+                "Final report generated",
+                final_report,
+                components=list(final_report.keys()),
+                total_size=len(str(final_report)),
             )
 
             return final_report
@@ -1137,7 +1140,7 @@ If no threat intelligence tools are needed, respond with: []"""
 def create_cybershield_workflow(
     memory=None,
     vectorstore=None,
-    llm_model="gpt-4o",
+    llm_model=None,  # Use environment configuration
     abuseipdb_client=None,
     shodan_client=None,
     virustotal_client=None,
