@@ -361,7 +361,7 @@ class TestEdgeCases(unittest.TestCase):
 
     def test_none_input(self):
         """Test None input handling"""
-        with self.assertRaises(AttributeError):
+        with self.assertRaises(TypeError):
             self.checker.extract_all_iocs(None)
 
     def test_duplicate_removal(self):

@@ -238,6 +238,10 @@ class CyberSecurityDataProcessor:
         Returns:
             numpy array of embeddings
         """
+        if not texts:
+            logger.info("Empty text list, returning empty embeddings array")
+            return np.zeros((0, self.dimension))
+        
         if not self.embedding_model:
             logger.warning("No embedding model available, using zero vectors")
             return np.zeros((len(texts), self.dimension))
@@ -367,8 +371,14 @@ class CyberSecurityDataProcessor:
         """
         logger.info("Preparing data for Milvus insertion...")
 
+        # Get context texts for embeddings (handle empty DataFrames)
+        if len(df) == 0 or 'full_context' not in df.columns:
+            context_texts = []
+        else:
+            context_texts = df['full_context'].tolist()
+        
         # Create embeddings
-        embeddings = self.create_embeddings(df['full_context'].tolist())
+        embeddings = self.create_embeddings(context_texts)
 
         # Helper function to safely convert to list with proper handling
         def safe_convert(series, dtype=str, default=''):

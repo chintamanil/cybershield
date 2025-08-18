@@ -73,7 +73,7 @@ class TestRedisSTMAsync(unittest.IsolatedAsyncioTestCase):
         mock_redis.keys = AsyncMock(return_value=["test_key"])
         mock_redis.flushdb = AsyncMock(return_value=True)
 
-        with patch("aioredis.from_url", return_value=mock_redis):
+        with patch("redis.asyncio.from_url", return_value=mock_redis):
             redis_stm = RedisSTM()
 
             # Test set operation
@@ -109,7 +109,7 @@ class TestRedisSTMAsync(unittest.IsolatedAsyncioTestCase):
 
         test_data = {"key1": "value1", "key2": [1, 2, 3], "key3": {"nested": True}}
 
-        with patch("aioredis.from_url", return_value=mock_redis):
+        with patch("redis.asyncio.from_url", return_value=mock_redis):
             redis_stm = RedisSTM()
 
             # Test setting complex data
@@ -138,7 +138,7 @@ class TestRedisSTMAsync(unittest.IsolatedAsyncioTestCase):
 
         mock_redis.get = AsyncMock(side_effect=mock_get)
 
-        with patch("aioredis.from_url", return_value=mock_redis):
+        with patch("redis.asyncio.from_url", return_value=mock_redis):
             redis_stm = RedisSTM()
 
             # Test get_all
@@ -157,7 +157,7 @@ class TestRedisSTMAsync(unittest.IsolatedAsyncioTestCase):
         mock_redis.ping = AsyncMock(return_value=True)
         mock_redis.set = AsyncMock(return_value=True)
 
-        with patch("aioredis.from_url", return_value=mock_redis):
+        with patch("redis.asyncio.from_url", return_value=mock_redis):
             redis_stm = RedisSTM(ttl=1800)  # 30 minutes
 
             # Test set with default TTL
@@ -172,7 +172,7 @@ class TestRedisSTMAsync(unittest.IsolatedAsyncioTestCase):
 
     async def test_connection_error_handling(self):
         """Test connection error handling"""
-        with patch("aioredis.from_url", side_effect=Exception("Connection failed")):
+        with patch("redis.asyncio.from_url", side_effect=Exception("Connection failed")):
             redis_stm = RedisSTM()
 
             # All operations should return safe defaults when connection fails
@@ -190,7 +190,7 @@ class TestRedisSTMAsync(unittest.IsolatedAsyncioTestCase):
         mock_redis.ping = AsyncMock(return_value=True)
         mock_redis.close = AsyncMock()
 
-        with patch("aioredis.from_url", return_value=mock_redis):
+        with patch("redis.asyncio.from_url", return_value=mock_redis):
             async with RedisSTM() as redis_stm:
                 self.assertIsNotNone(redis_stm)
                 # Context manager should handle connection
@@ -205,7 +205,7 @@ class TestRedisSTMAsync(unittest.IsolatedAsyncioTestCase):
         mock_redis.set = AsyncMock(return_value=True)
         mock_redis.get = AsyncMock(side_effect=lambda k: f"value_{k}")
 
-        with patch("aioredis.from_url", return_value=mock_redis):
+        with patch("redis.asyncio.from_url", return_value=mock_redis):
             redis_stm = RedisSTM()
 
             # Create multiple concurrent operations
@@ -237,7 +237,7 @@ class TestRedisSTMAsync(unittest.IsolatedAsyncioTestCase):
             "description": "This is a large test object for Redis storage",
         }
 
-        with patch("aioredis.from_url", return_value=mock_redis):
+        with patch("redis.asyncio.from_url", return_value=mock_redis):
             redis_stm = RedisSTM()
 
             # Should handle large data without issues
@@ -261,7 +261,7 @@ class TestRedisSTMPerformance(unittest.IsolatedAsyncioTestCase):
         mock_redis.ping = AsyncMock(return_value=True)
         mock_redis.set = AsyncMock(return_value=True)
 
-        with patch("aioredis.from_url", return_value=mock_redis):
+        with patch("redis.asyncio.from_url", return_value=mock_redis):
             redis_stm = RedisSTM()
 
             import time

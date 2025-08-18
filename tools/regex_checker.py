@@ -25,7 +25,7 @@ class IOCPatterns:
         r"\b(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}\b"
     )
     URL_PATTERN = r"https?://(?:[-\w.])+(?:[:\d]+)?(?:/(?:[\w/_.])*)?(?:\?(?:[\w&=%.])*)?(?:#(?:[\w.])*)?"
-    SUSPICIOUS_TLD_PATTERN = r"\b\w+\.(?:tk|ml|ga|cf|bit|onion|i2p|biz|cc|pw)\b"
+    SUSPICIOUS_TLD_PATTERN = r"\b[a-zA-Z0-9\-]+\.(?:tk|ml|ga|cf|bit|onion|i2p|biz|cc|pw)\b"
 
     # Hash patterns
     MD5_PATTERN = r"\b[a-fA-F0-9]{32}\b"
@@ -125,6 +125,9 @@ class RegexChecker:
         Returns:
             Dictionary of IOC types and their matches
         """
+        if text is None:
+            raise TypeError("Text input cannot be None")
+        
         logger.info("Extracting all IOCs from text")
 
         results = {}
