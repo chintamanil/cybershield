@@ -543,4 +543,85 @@ class InvestigationState(TypedDict):
 
 ---
 
-**Note**: These enhancements build upon CyberShield's existing strong LangGraph foundation to create more sophisticated, realistic security investigation workflows that mirror how actual security teams operate. The OpenSearch integration will transform CyberShield into a comprehensive security analytics platform with advanced search, correlation, and predictive capabilities.
+## Cost Optimization & Serverless Deployment Tasks
+
+### 💰 Serverless GPU Deployment (Extreme Cost Savings)
+- **Status**: Pending
+- **Priority**: High
+- **Description**: Deploy CyberShield on serverless GPU platforms for 99.99% cost reduction
+- **Current Cost**: $378/month (AWS g4dn.xlarge always-on) or $70/month (ECS always-on)
+- **Serverless Cost**: ~$0.03-5/month for low-usage scenarios
+- **Platforms**:
+  - **RunPod Serverless**: 
+    - NVIDIA T4: $0.40/hour → $0.0001/second
+    - RTX 4090: $0.34/hour → $0.000094/second
+    - Cold starts: 200ms-2s with FlashBoot
+  - **Modal Labs**: Similar pricing, better for complex pipelines
+  - **Replicate**: Easier setup but higher costs
+- **Implementation**:
+  ```yaml
+  # serverless.yml
+  runtime: python3.11
+  gpu: nvidia-t4
+  memory: 16GB
+  auto_scaling:
+    min_instances: 0  # Scale to zero
+    max_instances: 5
+  ```
+- **Use Case Examples**:
+  - 10 requests/day, 30s each: $0.03/month
+  - 100 requests/day, 30s each: $0.30/month
+  - 1000 requests/day, 30s each: $3.00/month
+
+### 🚀 On-Demand Backend Deployment
+- **Status**: Pending
+- **Priority**: High
+- **Description**: Deploy only frontend, trigger backend on-demand when users access the app
+- **Architecture Options**:
+  1. **AWS App Runner with scale-to-zero**: ~$5/month
+  2. **Lambda trigger to start ECS**: ~$1-3/month
+  3. **CloudFront + Lambda@Edge**: Smart routing with backend activation
+- **Implementation Pattern**:
+  ```python
+  # Frontend smart backend activation
+  def ensure_backend_running():
+      if not is_backend_warm():
+          st.info("🚀 Waking up AI engines... (30s)")
+          wake_up_backend()
+      return make_api_call()
+  ```
+- **Benefits**:
+  - 95% cost reduction vs always-on
+  - 30-60s cold start acceptable for low-traffic apps
+  - Auto-shutdown after 5 min idle
+
+### 🎯 Minimum GPU Requirements Analysis
+- **Status**: Completed
+- **Priority**: High
+- **Description**: Document minimum GPU requirements for AWS deployment
+- **Findings**:
+  - **Code is GPU-optimized**: Auto-detects CUDA/MPS/CPU
+  - **Minimum viable GPU**: g4dn.xlarge (NVIDIA T4, 16GB)
+  - **Cost**: ~$378/month (vs $70/month CPU-only)
+  - **Performance gain**: 2-5x faster for AI operations
+  - **Optimization features**:
+    - Automatic batch size adjustment
+    - FP16 precision on GPU
+    - Device-specific memory management
+- **Recommendation**: Use serverless GPU for massive cost savings
+
+### 📝 Resume Summary Documentation
+- **Status**: Completed
+- **Priority**: High
+- **Description**: Professional resume summary for CyberShield project
+- **Key Points**:
+  - Production-grade multimodal multi-agent AI cybersecurity platform
+  - Live deployment at cybershield-ai.com
+  - 5 specialized AI agents orchestrated through LangGraph
+  - 60-80% API cost reduction through intelligent caching
+  - 40,000+ cybersecurity records processed
+  - Technologies: Python, PyTorch, Transformers, LangChain, AWS Bedrock, NumPy, Pandas, FastAPI, AWS ECS, Docker
+
+---
+
+**Note**: These enhancements build upon CyberShield's existing strong LangGraph foundation to create more sophisticated, realistic security investigation workflows that mirror how actual security teams operate. The OpenSearch integration will transform CyberShield into a comprehensive security analytics platform with advanced search, correlation, and predictive capabilities. The serverless deployment options provide extreme cost optimization for low-traffic scenarios while maintaining full functionality.
