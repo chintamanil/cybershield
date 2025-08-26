@@ -30,6 +30,31 @@
     
     <!-- Mermaid.js for diagrams -->
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.0/dist/mermaid.min.js"></script>
+    <script>
+      // Initialize Mermaid before page load
+      mermaid.initialize({ 
+        startOnLoad: true,
+        theme: 'default',
+        themeVariables: {
+          primaryColor: '#0366d6',
+          primaryTextColor: '#24292e',
+          primaryBorderColor: '#e1e4e8',
+          lineColor: '#e1e4e8',
+          secondaryColor: '#f6f8fa',
+          tertiaryColor: '#fff'
+        },
+        flowchart: {
+          useMaxWidth: true,
+          htmlLabels: true
+        },
+        sequence: {
+          useMaxWidth: true
+        },
+        gantt: {
+          useMaxWidth: true
+        }
+      });
+    </script>
     
     <!-- Custom styles -->
     <style>
