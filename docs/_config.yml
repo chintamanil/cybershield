@@ -1,0 +1,71 @@
+# GitHub Pages Configuration for CyberShield
+title: "CyberShield AI Platform"
+description: "Advanced Multi-Agent Cybersecurity AI Platform with Production AWS Deployment"
+url: "https://chintamanil.github.io"
+baseurl: "/cybershield"
+
+# Theme Configuration
+theme: minima
+remote_theme: pages-themes/minimal@v0.2.0
+
+# Navigation
+navigation:
+  - title: "Home"
+    url: "/"
+  - title: "Architecture"
+    url: "/architecture"
+  - title: "AWS Infrastructure" 
+    url: "/aws-infrastructure"
+  - title: "API Documentation"
+    url: "/api-docs"
+  - title: "Deployment Guide"
+    url: "/deployment"
+  - title: "Testing"
+    url: "/testing"
+
+# Plugin Configuration
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+  - jekyll-relative-links
+
+# Markdown Configuration
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
+# Collections
+collections:
+  agents:
+    output: true
+    permalink: /:collection/:name/
+  tools:
+    output: true
+    permalink: /:collection/:name/
+
+# Exclude from build
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - .sass-cache
+  - _site
+  - .git
+
+# SEO and Social
+author:
+  name: "CyberShield Team"
+
+social_links:
+  github: "https://github.com/chintamanil/cybershield"
+
+# Analytics (optional)
+# google_analytics: UA-XXXXXXXX-X
+
+# Footer
+footer_content: "CyberShield AI Platform - Advanced Multi-Agent Cybersecurity Solution"
