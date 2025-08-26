@@ -182,6 +182,22 @@ dev: up install ## Full development setup (services + dependencies)
 prod-check: test lint ## Run production readiness checks
 	@echo "$(GREEN)✅ Production checks completed$(NC)"
 
+# Documentation
+.PHONY: docs-serve
+docs-serve: ## Serve GitHub Pages documentation locally
+	@echo "$(BLUE)📚 Starting local documentation server...$(NC)"
+	@echo "$(YELLOW)📋 Installing Jekyll dependencies...$(NC)"
+	@cd docs && bundle install --quiet
+	@echo "$(BLUE)🌐 Serving documentation at http://localhost:4000$(NC)"
+	@cd docs && bundle exec jekyll serve --livereload --host=0.0.0.0 --port=4000
+
+.PHONY: docs-build
+docs-build: ## Build documentation for production
+	@echo "$(BLUE)🔨 Building documentation...$(NC)"
+	@cd docs && bundle install --quiet
+	@cd docs && bundle exec jekyll build
+	@echo "$(GREEN)✅ Documentation built in docs/_site/$(NC)"
+
 # Quick reference
 .PHONY: endpoints
 endpoints: ## Show service endpoints
@@ -192,3 +208,7 @@ endpoints: ## Show service endpoints
 	@echo "  • $(GREEN)MinIO:$(NC)          localhost:9000"
 	@echo "  • $(GREEN)Pulsar:$(NC)         localhost:6650"
 	@echo "  • $(GREEN)Etcd:$(NC)           localhost:2379"
+	@echo ""
+	@echo "$(CYAN)📚 Documentation:$(NC)"
+	@echo "  • $(GREEN)Local Docs:$(NC)     http://localhost:4000 (run 'make docs-serve')"
+	@echo "  • $(GREEN)Live Docs:$(NC)      https://chintamanil.github.io/cybershield/"
