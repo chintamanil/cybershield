@@ -29,11 +29,11 @@
     <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
     
     <!-- Mermaid.js for diagrams -->
-    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js" type="text/javascript"></script>
     <script>
       // Wait for DOM to load before initializing
       document.addEventListener('DOMContentLoaded', function() {
-        mermaid.initialize({ 
+        var config = {
           startOnLoad: true,
           theme: 'default',
           securityLevel: 'loose',
@@ -59,10 +59,13 @@
           pie: {
             useMaxWidth: true
           }
-        });
+        };
         
-        // Force render any existing diagrams
-        mermaid.contentLoaded();
+        // Initialize Mermaid with config
+        mermaid.initialize(config);
+        
+        // Force render diagrams with the newer API
+        window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'));
       });
     </script>
     
@@ -71,6 +74,18 @@
       .mermaid {
         text-align: center;
         margin: 20px 0;
+      }
+      
+      /* Mermaid diagram styling for better visibility */
+      pre:has(code.language-mermaid) {
+        background-color: #f8f9fa !important;
+        border: 1px solid #e1e4e8;
+        border-radius: 6px;
+        padding: 16px;
+      }
+      
+      .language-mermaid {
+        background: transparent !important;
       }
       
       .highlight-box {
