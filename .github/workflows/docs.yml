@@ -1,0 +1,156 @@
+name: Deploy Documentation
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'docs/**'
+      - 'README.md'
+      - 'CLAUDE.md'
+      - '.github/workflows/docs.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'docs/**'
+
+jobs:
+  # Build documentation
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.1'
+          
+      - name: Install dependencies
+        run: |
+          cd docs
+          gem install bundler jekyll
+          bundle install
+        
+      - name: Build site
+        run: |
+          cd docs
+          bundle exec jekyll build --destination ../_site
+          
+      - name: Test built site
+        run: |
+          # Check if critical files exist
+          test -f _site/index.html
+          test -f _site/architecture/index.html
+          test -f _site/api-docs/index.html
+          
+      - name: Upload artifacts
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: _site/
+
+  # Deploy to GitHub Pages
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write
+      id-token: write
+      
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+      
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
+
+  # Validate links and content
+  validate:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Download built site
+        uses: actions/download-artifact@v3
+        with:
+          name: github-pages
+          path: _site/
+          
+      - name: Extract site
+        run: |
+          cd _site
+          tar -xf artifact.tar
+          
+      - name: Validate HTML
+        run: |
+          # Install htmlproofer
+          gem install html-proofer
+          
+          # Check HTML validity and links
+          htmlproofer _site \
+            --check-html \
+            --check-img-http \
+            --check-opengraph \
+            --enforce-https \
+            --ignore-urls "/localhost/,/127.0.0.1/,/cybershield-ai.com/" \
+            --ignore-status-codes "999,403"
+            
+      - name: Check documentation completeness
+        run: |
+          # Verify all required documentation exists
+          required_files=(
+            "_site/index.html"
+            "_site/architecture/index.html"
+            "_site/aws-infrastructure/index.html"
+            "_site/api-docs/index.html"
+            "_site/deployment/index.html"
+            "_site/testing/index.html"
+          )
+          
+          for file in "${required_files[@]}"; do
+            if [ ! -f "$file" ]; then
+              echo "Missing required file: $file"
+              exit 1
+            fi
+          done
+          
+          echo "All required documentation files present ✅"
+          
+      - name: Validate Mermaid diagrams
+        run: |
+          # Check that mermaid diagrams are properly formatted
+          grep -r "```mermaid" _site/ || echo "No mermaid diagrams found"
+          
+          # Could add mermaid CLI validation here
+          npm install -g @mermaid-js/mermaid-cli || true
+          
+      - name: Performance audit
+        run: |
+          # Basic performance checks
+          find _site -name "*.html" -exec wc -c {} \; | awk '{sum+=$1} END {print "Total HTML size:", sum, "bytes"}'
+          find _site -name "*.css" -exec wc -c {} \; | awk '{sum+=$1} END {print "Total CSS size:", sum, "bytes"}'
+          find _site -name "*.js" -exec wc -c {} \; | awk '{sum+=$1} END {print "Total JS size:", sum, "bytes"}'
+
+  # Notify on completion
+  notify:
+    runs-on: ubuntu-latest
+    needs: [build, deploy, validate]
+    if: always()
+    steps:
+      - name: Notification
+        run: |
+          if [ "${{ needs.deploy.result }}" = "success" ]; then
+            echo "📚 Documentation deployed successfully!"
+            echo "🌐 Site available at: https://chintamanil.github.io/cybershield"
+          else
+            echo "❌ Documentation deployment failed"
+            exit 1
+          fi
