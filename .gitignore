@@ -93,6 +93,18 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Ruby and Jekyll
+.gem/
+.bundle/
+vendor/bundle/
+docs/.bundle/
+docs/vendor/
+docs/.sass-cache/
+docs/_site/
+Gemfile.lock
+.ruby-version
+.rbenv-version
+
 # Application specific
 *.docx
 memory/conversation_*.json
