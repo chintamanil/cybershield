@@ -1,14 +1,14 @@
 ---
 layout: default
 title: "CyberShield AI Platform"
-description: "Advanced Multi-Agent Cybersecurity AI Platform"
+description: "Multimodal Multi-Agent Cybersecurity AI Platform with Vision Processing, LLM-Driven Intelligence, and Real-Time Threat Detection"
 ---
 
 # 🛡️ CyberShield AI Platform
 
-## Advanced Multi-Agent Cybersecurity AI Platform
+## Multimodal Multi-Agent Cybersecurity AI Platform
 
-**CyberShield** is a sophisticated AI-powered cybersecurity platform that combines multiple specialized agents with comprehensive caching and LLM-driven intelligence to provide lightning-fast threat analysis, PII detection, log parsing, and vision-based security assessment.
+**CyberShield** is a cutting-edge multimodal AI cybersecurity platform that orchestrates five specialized agents through a sophisticated supervisor system. The platform processes both text and visual inputs, leveraging LLM-driven intelligence (OpenAI GPT-4), computer vision (OCR with Tesseract), and multiple threat intelligence APIs (VirusTotal, Shodan, AbuseIPDB). With comprehensive Redis caching, vector similarity search on 120K+ historical attacks, and ReAct workflow orchestration via LangGraph, CyberShield delivers sub-second threat analysis, PII detection, advanced log parsing, and vision-based security assessment across diverse data modalities.
 
 ---
 
@@ -29,32 +29,105 @@ description: "Advanced Multi-Agent Cybersecurity AI Platform"
     <h3>🧠 LLM-Driven Intelligence</h3>
     <p>OpenAI-powered routing and tool selection with comprehensive caching</p>
   </div>
-  
+
   <div class="feature-card">
     <h3>⚡ Lightning Performance</h3>
     <p>60-80% API cost reduction, 100-500ms cached responses</p>
   </div>
-  
+
   <div class="feature-card">
     <h3>🔧 Multi-Source Intelligence</h3>
     <p>5 parallel tools: VirusTotal, AbuseIPDB, Shodan, MilvusSearch, RegexChecker</p>
   </div>
-  
+
   <div class="feature-card">
     <h3>📊 Historical Analysis</h3>
     <p>120,000+ cybersecurity attack records in Milvus vector database</p>
   </div>
-  
+
   <div class="feature-card">
     <h3>👁️ Vision AI</h3>
     <p>Complete OCR and image security analysis with tesseract integration</p>
   </div>
-  
+
   <div class="feature-card">
     <h3>🎯 Smart Architecture</h3>
-    <p>Clean, maintainable codebase with Apple Silicon optimization</p>
+    <p>Clean, maintainable codebase with GPU Optimized (AWS/Apple)</p>
   </div>
 </div>
+
+---
+
+## 🏗️ **Architecture Overview**
+
+```mermaid
+graph TD
+    U1[User Input]
+    A1[SupervisorAgent]
+    REACT[ReAct Workflow]
+    LLM[LLM Router]
+    CACHE[Redis Cache]
+
+    TI[ThreatIntel Hub]
+    T1[VirusTotal]
+    T2[AbuseIPDB]
+    T3[Shodan]
+    T4[MilvusSearch]
+    T5[RegexChecker]
+
+    A2[PIIAgent]
+    A4[LogParserAgent]
+    A5[VisionAgent]
+
+    M1[Redis STM]
+    V1[Milvus VectorDB]
+    DB1[PostgreSQL]
+
+    U1 --> A1
+    A1 --> REACT
+    REACT --> LLM
+    LLM --> CACHE
+    CACHE -.->|Cache Hit| U1
+
+    LLM --> TI
+    LLM --> A2
+    LLM --> A4
+    LLM --> A5
+
+    TI -->|Parallel Execution| T1
+    TI -->|Parallel Execution| T2
+    TI -->|Parallel Execution| T3
+    TI -->|Parallel Execution| T4
+    TI -->|Parallel Execution| T5
+
+    T1 --> M1
+    T2 --> M1
+    T3 --> M1
+    T4 --> V1
+    T5 --> M1
+
+    A2 --> M1
+    A2 --> DB1
+    A4 --> M1
+    A5 --> M1
+
+    style A1 fill:#2c3e50, color:#ffffff
+    style REACT fill:#8e44ad, color:#ffffff
+    style LLM fill:#9b59b6, color:#ffffff
+    style CACHE fill:#e67e22, color:#ffffff
+    style TI fill:#34495e, color:#ffffff
+    style T1 fill:#27ae60, color:#ffffff
+    style T2 fill:#27ae60, color:#ffffff
+    style T3 fill:#27ae60, color:#ffffff
+    style T4 fill:#3498db, color:#ffffff
+    style T5 fill:#f39c12, color:#ffffff
+    style A2 fill:#e67e22, color:#ffffff
+    style A4 fill:#f39c12, color:#ffffff
+    style A5 fill:#3498db, color:#ffffff
+
+    %% Darker Arrow Styling
+    linkStyle default stroke:#333,stroke-width:3px
+```
 
 ---
 
@@ -78,47 +151,6 @@ curl https://cybershield-ai.com/status
 - **Frontend**: [https://cybershield-ai.com](https://cybershield-ai.com) (Streamlit UI)
 - **API Docs**: [https://cybershield-ai.com/docs](https://cybershield-ai.com/docs)
 
----
-
-## 🏗️ **Architecture Overview**
-
-```mermaid
-graph TD
-    subgraph "Production Infrastructure"
-        ALB[Application Load Balancer<br/>cybershield-ai.com]
-        ECS[ECS Fargate Cluster]
-        RDS[(RDS PostgreSQL)]
-        REDIS[(ElastiCache Redis)]
-    end
-    
-    subgraph "AI Agent System"
-        SUPER[Supervisor Agent]
-        PII[PII Agent]
-        THREAT[Threat Agent]
-        LOG[Log Parser Agent]
-        VISION[Vision Agent]
-    end
-    
-    subgraph "External APIs"
-        VT[VirusTotal]
-        ABUSE[AbuseIPDB]
-        SHODAN[Shodan]
-    end
-    
-    ALB --> ECS
-    ECS --> SUPER
-    SUPER --> PII
-    SUPER --> THREAT
-    SUPER --> LOG
-    SUPER --> VISION
-    
-    THREAT --> VT
-    THREAT --> ABUSE
-    THREAT --> SHODAN
-    
-    ECS --> RDS
-    ECS --> REDIS
-```
 
 ---
 
@@ -141,22 +173,22 @@ graph TD
     <h3>🏗️ Architecture</h3>
     <p>Detailed system architecture and component diagrams</p>
   </a>
-  
+
   <a href="/aws-infrastructure" class="nav-card">
     <h3>☁️ AWS Infrastructure</h3>
     <p>Complete AWS deployment and infrastructure setup</p>
   </a>
-  
+
   <a href="/api-docs" class="nav-card">
     <h3>📚 API Documentation</h3>
     <p>Comprehensive API reference and examples</p>
   </a>
-  
+
   <a href="/deployment" class="nav-card">
     <h3>🚀 Deployment Guide</h3>
     <p>Step-by-step deployment instructions</p>
   </a>
-  
+
   <a href="/testing" class="nav-card">
     <h3>🧪 Testing</h3>
     <p>Test coverage and validation strategies</p>

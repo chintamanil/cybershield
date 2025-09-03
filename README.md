@@ -11,9 +11,6 @@ CyberShield is a sophisticated AI-powered cybersecurity platform that combines m
 - **📁 Clean Architecture**: 57% scripts reduction, 11 essential scripts remaining
 - **⚡ Apple Silicon**: Mac M4 optimized performance enhancements
 
-## 🌐 **Live Platform Access**
-
-
 ### **Platform Features:**
 - **🔍 Real-time Security Analysis**: Multi-agent threat intelligence analysis
 - **🔒 SSL Secured**: AWS Certificate Manager with auto-renewal
@@ -328,7 +325,7 @@ cybershield/
 ### Advanced Workflows
 - **ReAct Framework**: **✅ Optimized** LangGraph-powered reasoning and action cycles with enhanced API efficiency
 - **Vector Database**: Milvus integration for 40K+ threat intelligence records with sub-second search
-- **Multi-modal Processing**: Text and image security analysis with Apple Silicon optimization
+- **Multi-modal Processing**: Text and image security analysis with GPU Optimized (AWS/Apple)
 - **Session Management**: Context preservation across multi-step workflows with Redis STM
 
 ### Architecture Documentation
@@ -410,7 +407,7 @@ Successfully processes **40,000 cybersecurity attack records** including:
 
 ## 🛠 Tech Stack
 
-- **Backend**: FastAPI (Async), Python 3.11+ with **✅ Mac M4 Apple Silicon optimization**
+- **Backend**: FastAPI (Async), Python 3.11+ with **✅ GPU Optimized (AWS/Apple)**
 - **Frontend**: Streamlit with interactive dashboards and enhanced error handling
 - **HTTP**: aiohttp, httpx, requests (async clients) with **✅ optimized API call patterns**
 - **Database**: Redis (async), PostgreSQL (asyncpg) with session-based memory management
@@ -479,7 +476,7 @@ All components include structured logging:
 ## 📈 Status
 
 ✅ **Latest Updates**
-- **✅ Mac M4 Apple Silicon optimization with enhanced device detection and performance tuning**
+- **✅ GPU Optimized (AWS/Apple) with enhanced device detection and performance tuning**
 - **✅ ReAct workflow API call optimization for improved response times and efficiency**
 - **✅ Enhanced async performance testing specifically tuned for Apple Silicon architecture**
 - **✅ Streamlined frontend integration with improved error handling and user experience**

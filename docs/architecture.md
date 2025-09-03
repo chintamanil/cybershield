@@ -8,7 +8,31 @@ description: "Detailed CyberShield system architecture and component diagrams"
 
 ## Complete CyberShield Architecture Overview
 
-CyberShield implements a sophisticated multi-agent AI architecture with intelligent caching, LLM-driven routing, and comprehensive threat intelligence integration.
+CyberShield implements a sophisticated **multimodal multi-agent AI architecture** that orchestrates five specialized agents through an intelligent supervisor system. The platform seamlessly processes both textual and visual security data using **LLM-driven routing** (OpenAI GPT-4), **computer vision** (Tesseract OCR + OpenCV), and **comprehensive threat intelligence integration** across multiple external APIs.
+
+### 🎯 **Core Architecture Principles**
+
+**Multimodal Processing Pipeline:**
+- **Text Analysis**: Advanced IOC extraction, log parsing, and threat correlation
+- **Vision Processing**: OCR text extraction, image classification, and visual security assessment
+- **Hybrid Intelligence**: Combined text+image analysis for comprehensive security evaluation
+
+**Multi-Agent Orchestration:**
+- **Supervisor Agent**: LLM-powered intelligent routing and workflow coordination
+- **5 Specialized Agents**: PII detection, threat analysis, log parsing, vision processing, and ReAct workflow execution
+- **Dynamic Processing Modes**: Sequential (basic) and ReAct (advanced reasoning) with automatic mode selection
+
+**Intelligence Layer Integration:**
+- **External APIs**: VirusTotal, Shodan, AbuseIPDB for real-time threat intelligence
+- **Vector Database**: 120,000+ historical attack records for similarity-based pattern matching
+- **LLM Reasoning**: GPT-4 powered decision making with context-aware tool selection
+- **Comprehensive Caching**: Redis-based multi-level caching achieving 60-80% API cost reduction
+
+**Performance & Security:**
+- **Sub-second Responses**: 100-500ms cached responses vs 3-10s fresh analysis
+- **Apple Silicon Optimization**: Enhanced performance on Mac M4 architecture
+- **Enterprise Security**: PII protection, encrypted storage, audit trails, and production SSL
+- **Scalable Infrastructure**: AWS ECS Fargate with auto-scaling and load balancing
 
 ---
 
@@ -24,7 +48,7 @@ graph TD
     %% Load Balancer & SSL
     subgraph "Production Infrastructure"
         ALB[Application Load Balancer<br/>cybershield-ai.com<br/>🔒 SSL Certificate]
-        
+
         subgraph "ECS Fargate Cluster"
             CONTAINER[CyberShield Container<br/>Multi-Architecture Docker<br/>ARM64/AMD64]
         end
@@ -81,7 +105,7 @@ graph TD
     subgraph "Memory & Caching"
         RedisSTM[Redis STM<br/>memory/redis_stm.py<br/>Session Management]
         PIIStore[PII Store<br/>memory/pii_store.py<br/>Encrypted Storage]
-        
+
         subgraph "Cache Strategy"
             RoutingCache[Routing Cache<br/>30min TTL]
             ToolCache[Tool Results Cache<br/>1hour TTL]
@@ -96,11 +120,11 @@ graph TD
         RedisCluster[(Redis Cluster<br/>Caching Layer<br/>ElastiCache)]
     end
 
-    %% Security Tools Integration
+    %% Security Tools Integration (Reduced Width)
     subgraph "Threat Intelligence APIs"
-        VirusTotal[VirusTotal<br/>🦠 File/URL/Domain Analysis<br/>v3 API Integration]
-        AbuseIPDB[AbuseIPDB<br/>🚨 IP Reputation<br/>Confidence Scoring]
-        Shodan[Shodan<br/>🔍 Host Intelligence<br/>Port & Service Enum]
+        VirusTotal[VirusTotal<br/>🦠 File Analysis<br/>v3 API]
+        AbuseIPDB[AbuseIPDB<br/>🚨 IP Reputation<br/>Scoring]
+        Shodan[Shodan<br/>🔍 Host Intel<br/>Port Enum]
     end
 
     %% Enhanced Processing Tools
@@ -113,49 +137,49 @@ graph TD
     Client --> ALB
     WebUI --> ALB
     API --> ALB
-    
+
     ALB --> CONTAINER
     CONTAINER --> FastAPI
-    
+
     FastAPI --> AnalyzeEP
     FastAPI --> ImageEP
     FastAPI --> BatchEP
     FastAPI --> UploadEP
-    
+
     AnalyzeEP --> Supervisor
     ImageEP --> Supervisor
     BatchEP --> Supervisor
-    
+
     Supervisor --> PIIAgent
     Supervisor --> ThreatAgent
     Supervisor --> LogAgent
     Supervisor --> VisionAgent
-    
+
     Supervisor --> ReactCore
     ReactCore --> WorkflowSteps
-    
+
     PIIAgent --> PIIStore
     PIIAgent --> RedisSTM
-    
+
     ThreatAgent --> VirusTotal
     ThreatAgent --> AbuseIPDB
     ThreatAgent --> Shodan
-    
+
     LogAgent --> RegexChecker
     LogAgent --> RedisSTM
-    
+
     VisionAgent --> RedisSTM
-    
+
     WorkflowSteps --> VirusTotal
     WorkflowSteps --> AbuseIPDB
     WorkflowSteps --> Shodan
     WorkflowSteps --> MilvusSearch
     WorkflowSteps --> RegexChecker
-    
+
     MilvusSearch --> MilvusDB
     PIIStore --> PostgresDB
     RedisSTM --> RedisCluster
-    
+
     %% Cache Integration
     Supervisor --> RoutingCache
     ThreatAgent --> ToolCache
@@ -168,12 +192,15 @@ graph TD
     classDef dbClass fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
     classDef apiClass fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
     classDef toolClass fill:#fce4ec,stroke:#c2185b,stroke-width:2px
-    
+
     class PIIAgent,ThreatAgent,LogAgent,VisionAgent,Supervisor agentClass
     class RedisSTM,PIIStore,RoutingCache,ToolCache,ReportCache cacheClass
     class MilvusDB,PostgresDB,RedisCluster dbClass
     class FastAPI,AnalyzeEP,ImageEP,BatchEP apiClass
     class VirusTotal,AbuseIPDB,Shodan,RegexChecker,MilvusSearch toolClass
+
+    %% Darker Arrow Styling
+    linkStyle default stroke:#333,stroke-width:3px
 ```
 
 ---
@@ -186,21 +213,21 @@ graph TD
 graph LR
     subgraph "FastAPI Server"
         Main[server/main.py<br/>Async/Await Architecture]
-        
+
         subgraph "Core Endpoints"
             A1[analyze - Main security analysis]
             A2[analyze-with-image - Multimodal processing]
             A3[batch-analyze - Bulk operations]
             A4[upload-image - Image-only analysis]
         end
-        
+
         subgraph "Tool Endpoints"
             T1[tools/abuseipdb/check - IP reputation]
             T2[tools/shodan/lookup - Host intelligence]
             T3[tools/virustotal/lookup - Malware analysis]
             T4[tools/regex/extract - IOC extraction]
         end
-        
+
         subgraph "System Endpoints"
             S1[health - Basic health check]
             S2[status - Comprehensive system status]
@@ -221,25 +248,28 @@ graph LR
 graph TD
     subgraph "Agent Orchestration"
         SUPER[Supervisor Agent<br/>agents/supervisor.py]
-        
+
         subgraph "Sequential Processing"
             SEQ[Sequential Mode<br/>Basic Analysis]
         end
-        
+
         subgraph "ReAct Workflow"
             REACT[ReAct Mode<br/>Advanced LLM Reasoning]
         end
-        
+
         SUPER --> SEQ
         SUPER --> REACT
-        
+
         SEQ --> PII[PII Agent]
         SEQ --> LOG[Log Parser]
         SEQ --> THREAT[Threat Agent]
         SEQ --> VISION[Vision Agent]
-        
+
         REACT --> WORKFLOW[ReAct Workflow Engine]
     end
+
+     %% Darker Arrow Styling
+    linkStyle default stroke:#111,stroke-width:1px
 ```
 
 #### **Agent Specifications:**
@@ -259,10 +289,10 @@ graph LR
     subgraph "ReAct Architecture"
         Input[User Input] --> Router[LLM Router<br/>GPT-4 Decision Making]
         Router --> Cache{Cache Check}
-        
+
         Cache -->|Hit| CachedResult[Return Cached Result<br/>100-500ms]
         Cache -->|Miss| Tools[Tool Selection]
-        
+
         subgraph "5 Parallel Tools"
             T1[VirusTotal API]
             T2[AbuseIPDB API]
@@ -270,22 +300,25 @@ graph LR
             T4[Milvus Vector Search]
             T5[Regex IOC Checker]
         end
-        
+
         Tools --> T1
         Tools --> T2
         Tools --> T3
         Tools --> T4
         Tools --> T5
-        
+
         T1 --> Synthesis[LLM Synthesis<br/>Final Report Generation]
         T2 --> Synthesis
         T3 --> Synthesis
         T4 --> Synthesis
         T5 --> Synthesis
-        
+
         Synthesis --> CacheStore[Store in Cache<br/>1 hour TTL]
         CacheStore --> FinalResult[Return Final Result]
     end
+
+     %% Darker Arrow Styling
+    linkStyle default stroke:#111,stroke-width:1px
 ```
 
 **Performance Optimizations:**
@@ -305,19 +338,22 @@ graph TD
             RC3[Tool Results<br/>1hour TTL]
             RC4[Final Reports<br/>1hour TTL]
         end
-        
+
         subgraph "Session Management"
             SM1[Session IOCs<br/>Redis STM]
             SM2[PII Mappings<br/>Encrypted Store]
             SM3[Agent Context<br/>Cross-agent sharing]
         end
-        
+
         subgraph "Performance Cache"
             PC1[Vector Search Results<br/>30min TTL]
             PC2[Regex Pattern Matches<br/>30min TTL]
             PC3[API Rate Limiting<br/>Dynamic TTL]
         end
     end
+
+     %% Darker Arrow Styling
+    linkStyle default stroke:#111,stroke-width:1px
 ```
 
 **Cache Implementation:**
@@ -341,20 +377,23 @@ graph TD
         V3[Embedding Dimensions: 384]
         V4[Similarity Search < 100ms]
     end
-    
+
     subgraph "Relational Database (PostgreSQL)"
         R1[PII Storage Tables]
         R2[Session Management]
         R3[User Authentication]
         R4[Audit Trails]
     end
-    
+
     subgraph "Cache Layer (Redis)"
         C1[Session Data]
         C2[API Results]
         C3[LLM Responses]
         C4[IOC Mappings]
     end
+
+     %% Darker Arrow Styling
+    linkStyle default stroke:#111,stroke-width:1px
 ```
 
 ---
@@ -370,16 +409,19 @@ graph LR
         D2[MPS Acceleration<br/>Apple Neural Engine]
         D3[Performance Tuning<br/>Batch Size Optimization]
     end
-    
+
     subgraph "Optimized Components"
         O1[Sentence Transformers<br/>MPS Backend]
         O2[Vision Processing<br/>Enhanced throughput]
         O3[Vector Operations<br/>Native acceleration]
     end
-    
+
     D1 --> O1
     D2 --> O2
     D3 --> O3
+
+     %% Darker Arrow Styling
+    linkStyle default stroke:#111,stroke-width:1px
 ```
 
 **Key Optimizations:**
@@ -397,18 +439,21 @@ graph TD
         A3[Tool Async Clients]
         A4[Database Async Connections]
     end
-    
+
     subgraph "Parallel Execution"
         P1[asyncio.gather for Tools]
         P2[Concurrent Agent Processing]
         P3[Batch Request Handling]
         P4[Background Task Management]
     end
-    
+
     A1 --> P1
     A2 --> P2
     A3 --> P3
     A4 --> P4
+
+     %% Darker Arrow Styling
+    linkStyle default stroke:#111,stroke-width:1px
 ```
 
 ---
@@ -425,20 +470,23 @@ graph TD
         PII3[Encrypted Storage<br/>PostgreSQL]
         PII4[Session Isolation<br/>User Context]
     end
-    
+
     subgraph "API Security"
         API1[SSL/TLS Encryption<br/>AWS Certificate Manager]
         API2[Input Validation<br/>Pydantic Models]
         API3[Rate Limiting<br/>Redis-based]
         API4[Error Sanitization<br/>No data leakage]
     end
-    
+
     subgraph "Infrastructure Security"
         INF1[VPC Isolation<br/>Private Subnets]
         INF2[Security Groups<br/>Least Privilege]
         INF3[IAM Roles<br/>Service-specific]
         INF4[Secrets Management<br/>Environment Variables]
     end
+
+     %% Darker Arrow Styling
+    linkStyle default stroke:#111,stroke-width:1px
 ```
 
 ---
@@ -455,18 +503,21 @@ graph LR
         L3[Performance Metrics<br/>Timing & Usage]
         L4[Security Events<br/>Threat Detection]
     end
-    
+
     subgraph "Log Formats"
         F1[Development<br/>Console + Emojis]
         F2[Production<br/>JSON Structured]
         F3[ReAct Workflow<br/>Reasoning Chain]
         F4[API Requests<br/>Request/Response]
     end
-    
+
     L1 --> F1
     L2 --> F2
     L3 --> F3
     L4 --> F4
+
+     %% Darker Arrow Styling
+    linkStyle default stroke:#111,stroke-width:1px
 ```
 
 **Logging Configuration:**
