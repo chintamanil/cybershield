@@ -1,7 +1,7 @@
-# CyberShield TODO - LangGraph Enhancements
+# CyberShield TODO - LangGraph & SGLang Enhancements
 
 ## Overview
-Tasks for expanding CyberShield's LangGraph capabilities to create more sophisticated, stateful, multi-agent security workflows with iterative investigation loops.
+Tasks for expanding CyberShield's LangGraph capabilities with SGLang integration to create more sophisticated, stateful, multi-agent security workflows with structured generation and iterative investigation loops.
 
 ## Agent Pattern Enhancement - Hybrid ReAct+ Design
 
@@ -388,6 +388,226 @@ class InvestigationState(TypedDict):
 - **Sustained Load**: 20 requests/minute continuously  
 - **Burst Capacity**: 100 requests in 1 minute
 - **Recovery Time**: <30s after overload conditions
+
+---
+
+## 🚀 SGLang Integration Tasks (NEW - High Priority)
+
+### 🎯 Phase 1: SGLang Foundation Setup
+- **Status**: Pending
+- **Priority**: High
+- **Description**: Replace OpenAI/Bedrock calls with SGLang for structured generation
+- **Implementation Tasks**:
+  1. **Install SGLang Dependencies**
+     ```bash
+     pip install "sglang[all]"  # Full installation with local model support
+     ```
+  2. **Create SGLang Backend Configuration**
+     ```python
+     # config/sglang_config.py
+     class SGLangConfig:
+         # Option 1: Local model (cost-effective)
+         LOCAL_MODEL = "meta-llama/Llama-2-7b-chat-hf"
+         LOCAL_ENDPOINT = "http://localhost:30000"
+         
+         # Option 2: AWS Bedrock integration
+         BEDROCK_MODEL = "anthropic.claude-instant-v1"
+         
+         # Option 3: OpenAI fallback
+         OPENAI_MODEL = "gpt-3.5-turbo"
+     ```
+
+### 🔄 Phase 2: Convert Core Agents to SGLang
+- **Status**: Pending
+- **Priority**: High
+- **Description**: Migrate agents from unstructured OpenAI calls to SGLang structured generation
+- **Conversion Order**:
+  1. **LogParserAgent** (Highest value - IOC extraction needs structure)
+  2. **ThreatAgent** (Structured threat classification)
+  3. **Supervisor** (Routing decisions)
+  4. **PIIAgent** (Pattern detection)
+  5. **VisionAgent** (Image analysis routing)
+
+#### Example: LogParserAgent SGLang Conversion
+```python
+# agents/log_parser_sglang.py
+import sglang as sgl
+
+@sgl.function
+def structured_ioc_extraction(s, log_text):
+    s += sgl.system("You are a cybersecurity log analysis expert.")
+    s += sgl.user(f"Extract IOCs from this log: {log_text}")
+    
+    # Forced structured extraction
+    s += sgl.assistant("IP Addresses: " + sgl.gen("ips", 
+        regex=r"(\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b,?\s*)*"))
+    
+    s += sgl.assistant("MD5 Hashes: " + sgl.gen("md5", 
+        regex=r"([a-f0-9]{32},?\s*)*"))
+    
+    s += sgl.assistant("SHA256 Hashes: " + sgl.gen("sha256", 
+        regex=r"([a-f0-9]{64},?\s*)*"))
+    
+    s += sgl.assistant("Domains: " + sgl.gen("domains", 
+        regex=r"([a-zA-Z0-9.-]+\.[a-zA-Z]{2,},?\s*)*"))
+    
+    s += sgl.assistant("Threat Level: " + sgl.select("threat_level",
+        choices=["NONE", "LOW", "MEDIUM", "HIGH", "CRITICAL"]))
+    
+    return s
+```
+
+### 🎯 Phase 3: Enhanced ReAct Workflow with SGLang
+- **Status**: Pending
+- **Priority**: High
+- **Description**: Integrate SGLang into ReAct workflow for structured reasoning
+- **Implementation**:
+  ```python
+  # workflows/react_workflow_sglang.py
+  @sgl.function
+  def react_reasoning(s, state, available_tools):
+      s += sgl.system("You are a security analyst using the ReAct framework.")
+      s += sgl.user(f"State: {state}\nTools: {available_tools}")
+      
+      # Structured reasoning loop
+      with s.for_loop(max_iterations=5):
+          s += sgl.assistant("Thought: " + sgl.gen("thought", max_tokens=100))
+          
+          s += sgl.assistant("Action: " + sgl.select("action",
+              choices=available_tools + ["finish"]))
+          
+          if s["action"] == "finish":
+              break
+              
+          s += sgl.assistant("Action Input: " + sgl.gen("input", max_tokens=50))
+          
+          # Execute tool and get observation
+          observation = execute_tool(s["action"], s["input"])
+          s += sgl.user(f"Observation: {observation}")
+      
+      s += sgl.assistant("Final Answer: " + sgl.gen("answer", max_tokens=200))
+      return s
+  ```
+
+### 🚀 Phase 4: Deployment Options for SGLang
+
+#### Option A: Local Model on AWS GPU
+- **Status**: Pending
+- **Priority**: High
+- **Description**: Deploy Llama 2 7B on AWS g4dn instance with SGLang
+- **Cost**: ~$380/month (g4dn.xlarge)
+- **Implementation**:
+  ```yaml
+  # docker-compose-sglang.yaml
+  services:
+    sglang-server:
+      image: cybershield/sglang-llama2:latest
+      deploy:
+        resources:
+          reservations:
+            devices:
+              - driver: nvidia
+                count: 1
+                capabilities: [gpu]
+      command: |
+        python -m sglang.launch_server \
+          --model-path meta-llama/Llama-2-7b-chat-hf \
+          --port 30000 \
+          --device cuda
+  ```
+
+#### Option B: AWS Bedrock Integration
+- **Status**: Pending
+- **Priority**: Medium
+- **Description**: Use SGLang with AWS Bedrock for serverless deployment
+- **Cost**: ~$400/month (10K requests/day)
+- **Benefits**: No infrastructure management, multiple model choices
+
+#### Option C: Hybrid Deployment
+- **Status**: Pending
+- **Priority**: High
+- **Description**: Use local model for routine tasks, Bedrock for complex analysis
+- **Implementation**:
+  ```python
+  class HybridSGLangBackend:
+      def __init__(self):
+          self.local = sgl.RuntimeEndpoint("http://sglang-server:30000")
+          self.bedrock = sgl.Bedrock(model="anthropic.claude-instant-v1")
+          
+      def select_backend(self, complexity):
+          if complexity == "simple":
+              return self.local  # 90% of requests
+          else:
+              return self.bedrock  # 10% of complex requests
+  ```
+
+### 📊 Phase 5: Performance Optimization with SGLang
+
+#### Structured Caching Enhancement
+- **Status**: Pending
+- **Priority**: Medium
+- **Description**: Optimize Redis caching with SGLang's structured outputs
+- **Benefits**:
+  - Predictable cache keys from structured outputs
+  - Better cache hit rates (80%+ vs 60% current)
+  - Reduced token usage through constrained generation
+
+#### Batch Processing Support
+- **Status**: Pending
+- **Priority**: Medium
+- **Description**: Leverage SGLang's batch inference capabilities
+- **Implementation**:
+  ```python
+  # Batch IOC analysis
+  @sgl.function
+  def batch_ioc_analysis(s, ioc_list):
+      results = []
+      with s.batch():
+          for ioc in ioc_list:
+              s += sgl.user(f"Analyze: {ioc}")
+              s += sgl.assistant(sgl.select("type", 
+                  choices=["ip", "domain", "hash", "url"]))
+              s += sgl.assistant(sgl.select("risk",
+                  choices=["safe", "suspicious", "malicious"]))
+              results.append((s["type"], s["risk"]))
+      return results
+  ```
+
+### 🎁 Expected Benefits from SGLang Integration
+
+#### Performance Improvements
+- **Response Time**: 30-50% faster with structured generation
+- **Token Usage**: 40-60% reduction through constrained outputs
+- **Cache Hit Rate**: 80%+ with predictable outputs
+- **Batch Processing**: 5-10x throughput for bulk analysis
+
+#### Cost Reduction
+- **Current**: ~$4,500/month with GPT-4
+- **With SGLang + Local Model**: ~$380/month (GPU instance)
+- **With SGLang + Bedrock**: ~$400-600/month
+- **Savings**: 85-92% cost reduction
+
+#### Reliability Enhancements
+- **Guaranteed Output Format**: No more parsing errors
+- **Consistent Risk Scoring**: Enforced choices
+- **Reduced Hallucinations**: Constrained generation
+- **Better Error Handling**: Structured fallbacks
+
+### 📝 Migration Strategy
+
+1. **Week 1**: Setup SGLang infrastructure
+2. **Week 2**: Convert LogParserAgent (highest value)
+3. **Week 3**: Convert remaining agents
+4. **Week 4**: Deploy hybrid backend
+5. **Week 5**: Optimize and monitor
+
+### 🔍 Success Metrics for SGLang Integration
+
+- **Format Compliance**: 100% valid outputs (vs 85% current)
+- **Response Time**: <2s average (vs 3-5s current)
+- **Cost per Request**: <$0.001 (vs $0.03 current)
+- **Cache Hit Rate**: >80% (vs 60% current)
+- **Error Rate**: <0.5% (vs 2% current)
 
 ---
 

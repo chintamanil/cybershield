@@ -39,12 +39,12 @@ CyberShield is a sophisticated AI-powered cybersecurity platform that combines m
 ```mermaid
 graph TD
     U1[User Input]
+    A1[SupervisorAgent]
+    REACT[ReAct Workflow]
     LLM[LLM Router]
     CACHE[Redis Cache]
 
-    A1[SupervisorAgent]
     TI[ThreatIntel Hub]
-
     T1[VirusTotal]
     T2[AbuseIPDB]
     T3[Shodan]
@@ -60,11 +60,16 @@ graph TD
     DB1[PostgreSQL]
 
     U1 --> A1
-    A1 --> LLM
+    A1 --> REACT
+    REACT --> LLM
     LLM --> CACHE
     CACHE -.->|Cache Hit| U1
 
     LLM --> TI
+    LLM --> A2
+    LLM --> A4
+    LLM --> A5
+
     TI -->|Parallel Execution| T1
     TI -->|Parallel Execution| T2
     TI -->|Parallel Execution| T3
@@ -77,13 +82,13 @@ graph TD
     T4 --> V1
     T5 --> M1
 
-    A1 --> A2
-    A1 --> A4
-    A1 --> A5
-
+    A2 --> M1
     A2 --> DB1
+    A4 --> M1
+    A5 --> M1
 
     style A1 fill:#2c3e50, color:#ffffff
+    style REACT fill:#8e44ad, color:#ffffff
     style LLM fill:#9b59b6, color:#ffffff
     style CACHE fill:#e67e22, color:#ffffff
     style TI fill:#34495e, color:#ffffff
@@ -92,6 +97,9 @@ graph TD
     style T3 fill:#27ae60, color:#ffffff
     style T4 fill:#3498db, color:#ffffff
     style T5 fill:#f39c12, color:#ffffff
+    style A2 fill:#e67e22, color:#ffffff
+    style A4 fill:#f39c12, color:#ffffff
+    style A5 fill:#3498db, color:#ffffff
 ```
 
 ### Intelligent Workflow with Caching
