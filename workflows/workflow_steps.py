@@ -567,6 +567,51 @@ If no special tools are needed, respond with: []"""
         self, tool_name: str, tool_input: Dict[str, Any], state: Dict[str, Any]
     ) -> Dict[str, Any]:
         """Execute a specific tool with given input"""
-        # This is a placeholder for actual tool execution
-        # In practice, this would route to the appropriate tool based on tool_name
-        return {"tool": tool_name, "input": tool_input, "result": "placeholder_result"}
+        try:
+            # Route to the appropriate tool method based on tool_name
+            if tool_name == "virustotal_lookup_tool":
+                result = await self.virustotal_step(state)
+                return result.get("threat_results", [{}])[0]
+            
+            elif tool_name == "abuseipdb_check_tool":
+                result = await self.abuseipdb_step(state)
+                return result.get("threat_results", [{}])[0]
+            
+            elif tool_name == "shodan_lookup_tool":
+                result = await self.shodan_step(state)
+                return result.get("threat_results", [{}])[0]
+            
+            elif tool_name == "ioc_extraction_tool":
+                result = await self.regex_checker_step(state)
+                return result.get("extracted_iocs", {})
+            
+            elif tool_name == "vector_search_tool":
+                result = await self.milvus_search_step(state)
+                return result.get("vector_results", {})
+            
+            elif tool_name == "vision_analysis_tool":
+                # Vision analysis would be handled by vision agent
+                return {
+                    "tool": tool_name, 
+                    "status": "info",
+                    "message": "Vision analysis requires image input"
+                }
+            
+            else:
+                logger.warning(f"Unknown tool name: {tool_name}")
+                return {
+                    "tool": tool_name,
+                    "error": f"Unknown tool: {tool_name}",
+                    "available_tools": [
+                        "virustotal_lookup_tool",
+                        "abuseipdb_check_tool", 
+                        "shodan_lookup_tool",
+                        "ioc_extraction_tool",
+                        "vector_search_tool",
+                        "vision_analysis_tool"
+                    ]
+                }
+                
+        except Exception as e:
+            logger.error(f"Tool execution failed for {tool_name}: {e}")
+            return {"tool": tool_name, "error": str(e), "input": tool_input}

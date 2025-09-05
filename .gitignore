@@ -83,9 +83,22 @@ aws-config.json
 infrastructure/cdk.out/
 cdk.context.json
 
-# Docker
+# Docker & Deployment
 .dockerignore
 docker-compose.override.yml
+docker-compose.prod.yml
+docker-compose.*.yml
+deployment/.env
+deployment/.env.*
+deployment/secrets/
+deployment/certs/
+deployment/keys/
+
+# Deployment specific
+.deployment/
+deployment-*.log
+deploy.log
+deployment/logs/
 
 # Node modules (for frontend)
 node_modules/
@@ -180,3 +193,105 @@ _site/
 # Local Jekyll server
 docs/.bundle
 docs/vendor
+
+# Terraform
+# =========
+# Terraform state files - NEVER commit these
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+terraform.tfstate
+terraform.tfstate.backup
+
+# Terraform variable files with sensitive data
+terraform.tfvars
+*.auto.tfvars
+*.tfvars.json
+secret.tfvars
+secrets.tfvars
+
+# Terraform plan files
+*.tfplan
+*.tfplan.*
+tfplan*
+
+# Terraform lock files
+.terraform.lock.hcl
+
+# Terraform directories
+.terraform/
+.terraform.d/
+terraform.d/
+
+# Terraform crash logs
+crash.log
+crash.*.log
+
+# Terraform override files
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Terraform CLI configuration files
+.terraformrc
+terraform.rc
+
+# Environment-specific terraform files
+terraform/environments/*/*.auto.tfvars
+terraform/environments/*/terraform.tfstate.backup
+terraform/environments/*/.terraform/
+terraform/environments/*/terraform.tfstate*
+terraform/environments/*/terraform.tfvars
+
+# Backend configuration files (may contain sensitive data)
+terraform/backend.tf
+terraform/*/backend.tf
+terraform/**/backend.tf
+backend-config.tf
+**/backend-config.tf
+
+# Terraform module cache
+.terraform-version
+
+# Sensitive Terraform outputs
+terraform-output.json
+tf-output.json
+
+# AWS-specific Terraform files
+terraform.tfstate.d/
+**/terraform.tfstate.d/
+
+# Terraform workspace files
+terraform/.terraform/
+**/terraform/.terraform/
+
+# Archive files from Terraform
+*.zip
+*.tar.gz
+deployment/*.zip
+deployment/*.tar.gz
+
+# Terraform generated files
+terraform/generated/
+terraform/temp/
+
+# Environment-specific Terraform directories
+terraform/environments/*/terraform/
+terraform/environments/*/.terraform.lock.hcl
+
+# Backup and temporary Terraform files
+*.tf.backup
+terraform/main.tf.backup
+terraform/outputs.tf.backup
+terraform/main.tf.simple
+terraform/outputs.tf.simple
+terraform/*.backup
+terraform/**/*.backup
+
+# Terraform debugging
+TF_LOG*
+terraform-debug.log
+
+# calude
+.claude/

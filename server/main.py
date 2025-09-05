@@ -10,19 +10,18 @@ import os
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 
-# Load environment-specific configuration
+# CRITICAL: Load .env files FIRST before any other imports
+# This ensures environment variables are available for all subsequent imports
+load_dotenv(".env.local", override=True)  # Local overrides
+load_dotenv(".env", override=True)        # Main config file (CHANGED: override=True)
+
+# Load environment-specific configuration AFTER env vars are loaded
 from utils.environment_config import config
 from utils.service_factory import services
 
-# Load appropriate .env file based on environment
-if config.detector.is_local():
-    load_dotenv(".env.local", override=True)
-    load_dotenv(".env", override=False)  # Fallback to default .env
-else:
+# Load environment-specific .env files
+if not config.detector.is_local():
     load_dotenv(".env.aws", override=True)
-
-# Ensure .env is always loaded as fallback for development
-load_dotenv(".env", override=False)
 
 # Import our agents and components
 from agents.supervisor import SupervisorAgent
@@ -79,29 +78,90 @@ virustotal_client = None
 regex_checker = None
 
 
+async def initialize_component(name: str, coro):
+    """Initialize a single component with timing and error handling"""
+    start_time = time.time()
+    try:
+        result = await coro
+        duration = time.time() - start_time
+        logger.info(f"{name} initialized", duration_ms=f"{duration*1000:.1f}")
+        return result, None
+    except Exception as e:
+        duration = time.time() - start_time
+        logger.error(f"{name} initialization failed", error=str(e), duration_ms=f"{duration*1000:.1f}")
+        return None, e
+
+async def parallel_initialization():
+    """Initialize all components in parallel for faster startup"""
+    logger.info("Starting parallel component initialization")
+
+    # Create all initialization tasks
+    tasks = {
+        "redis": initialize_component("Redis", RedisSTM()._get_redis()),
+        "vectorstore": initialize_component("VectorStore", CyberShieldVectorStore("cybersecurity_attacks").connect()),
+        "abuseipdb": initialize_component("AbuseIPDB", asyncio.create_task(asyncio.to_thread(AbuseIPDBClient))),
+        "shodan": initialize_component("Shodan", asyncio.create_task(asyncio.to_thread(ShodanClient))),
+        "virustotal": initialize_component("VirusTotal", asyncio.create_task(asyncio.to_thread(VirusTotalClient))),
+        "regex": initialize_component("RegexChecker", asyncio.create_task(asyncio.to_thread(RegexChecker))),
+    }
+
+    # Execute all initialization tasks concurrently
+    results = await asyncio.gather(*tasks.values(), return_exceptions=True)
+
+    # Process results
+    components = {}
+    errors = []
+    for (name, task), result in zip(tasks.items(), results):
+        if isinstance(result, Exception):
+            errors.append(f"{name}: {result}")
+            components[name] = (None, result)
+        else:
+            components[name] = result
+
+    if errors:
+        logger.warning("Some components failed to initialize", errors=errors)
+
+    return components
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Async startup and shutdown for FastAPI app"""
+    """Optimized async startup and shutdown for FastAPI app"""
     # Startup
     global memory, vectorstore, agent, abuseipdb_client, shodan_client, virustotal_client, regex_checker
 
+    startup_start = time.time()
+
     try:
-        # Initialize async components
-        memory = RedisSTM()
-        await memory._get_redis()  # Initialize Redis connection
+        # Initialize all components in parallel
+        components = await parallel_initialization()
 
-        # Initialize enhanced vector store for threat intelligence
-        vectorstore = CyberShieldVectorStore("cybersecurity_attacks")
-        await vectorstore.connect()
+        # Extract initialized components
+        memory_result, memory_error = components.get("redis", (None, None))
+        vectorstore_result, vs_error = components.get("vectorstore", (None, None))
+        abuseipdb_result, ab_error = components.get("abuseipdb", (None, None))
+        shodan_result, sh_error = components.get("shodan", (None, None))
+        virustotal_result, vt_error = components.get("virustotal", (None, None))
+        regex_result, rx_error = components.get("regex", (None, None))
 
-        # Initialize async tool clients first
-        abuseipdb_client = AbuseIPDBClient()
-        shodan_client = ShodanClient()
-        virustotal_client = VirusTotalClient()
-        regex_checker = RegexChecker()
+        # Set up components (prioritize successful ones)
+        if memory_result is None and not memory_error:
+            memory = RedisSTM()
+        else:
+            memory = None if memory_error else memory_result
 
-        # Initialize agent with client instances
-        logger.info("Initializing CyberShield components", react_workflow=True)
+        if vectorstore_result is None and not vs_error:
+            vectorstore = CyberShieldVectorStore("cybersecurity_attacks")
+        else:
+            vectorstore = None if vs_error else vectorstore_result
+
+        # Handle client results properly - they return (result, error) tuples
+        abuseipdb_client = None if ab_error else (abuseipdb_result if isinstance(abuseipdb_result, tuple) and abuseipdb_result[0] else AbuseIPDBClient())
+        shodan_client = None if sh_error else (shodan_result if isinstance(shodan_result, tuple) and shodan_result[0] else ShodanClient())
+        virustotal_client = None if vt_error else (virustotal_result if isinstance(virustotal_result, tuple) and virustotal_result[0] else VirusTotalClient())
+        regex_checker = None if rx_error else (regex_result if isinstance(regex_result, tuple) and regex_result[0] else RegexChecker())
+
+        # Initialize SupervisorAgent with available components
+        logger.info("Initializing SupervisorAgent with available components")
         agent = SupervisorAgent(
             memory,
             vectorstore,
@@ -110,14 +170,24 @@ async def lifespan(app: FastAPI):
             shodan_client=shodan_client,
             virustotal_client=virustotal_client,
         )
-        logger.info(
-            "SupervisorAgent created", react_agent_enabled=agent.react_agent is not None
-        )
-        await agent.initialize_clients()
+
+        # Initialize agent clients if available
+        if hasattr(agent, 'initialize_clients'):
+            try:
+                await agent.initialize_clients()
+                logger.info("SupervisorAgent clients initialized")
+            except Exception as e:
+                logger.warning("Agent client initialization failed", error=str(e))
+
+        startup_duration = time.time() - startup_start
+        successful_components = sum(1 for name, (result, error) in components.items() if not error)
+        total_components = len(components)
 
         logger.info(
-            "CyberShield initialization complete",
-            components=["memory", "vectorstore", "agents", "tools"],
+            "CyberShield startup complete",
+            startup_time_ms=f"{startup_duration*1000:.1f}",
+            components_ready=f"{successful_components}/{total_components}",
+            react_enabled=agent.react_agent is not None if hasattr(agent, 'react_agent') else False
         )
     except Exception as e:
         logger.error(

@@ -10,12 +10,42 @@
 from typing import Dict, List, Optional, Any, TypedDict, Annotated
 import os
 import asyncio
-from langgraph.graph import StateGraph, END
-from langchain_core.messages import HumanMessage, SystemMessage
-from utils.llm_factory import create_llm
 from utils.logging_config import get_security_logger
 from utils.device_config import create_performance_config
-from workflows.workflow_steps import WorkflowSteps
+
+# Lazy imports - loaded only when needed
+_langgraph_imported = False
+_langchain_imported = False
+_workflow_steps = None
+
+def _ensure_langgraph():
+    """Lazy import LangGraph components"""
+    global _langgraph_imported, StateGraph, END
+    if not _langgraph_imported:
+        from langgraph.graph import StateGraph, END
+        _langgraph_imported = True
+    return StateGraph, END
+
+def _ensure_langchain():
+    """Lazy import LangChain components"""
+    global _langchain_imported, HumanMessage, SystemMessage
+    if not _langchain_imported:
+        from langchain_core.messages import HumanMessage, SystemMessage
+        _langchain_imported = True
+    return HumanMessage, SystemMessage
+
+def _get_workflow_steps():
+    """Lazy import workflow steps"""
+    global _workflow_steps
+    if _workflow_steps is None:
+        from workflows.workflow_steps import WorkflowSteps
+        _workflow_steps = WorkflowSteps
+    return _workflow_steps
+
+def _get_llm_factory():
+    """Lazy import LLM factory function"""
+    from utils.llm_factory import create_llm
+    return create_llm
 
 logger = get_security_logger("react_workflow")
 
@@ -207,11 +237,13 @@ class CyberShieldReActAgent:
             self.threat_agent.virustotal_client = virustotal_client
         self.vision_agent = VisionAgent(memory)
 
-        # Initialize LLM (auto-detects OpenAI vs Bedrock based on environment)
+        # Initialize LLM (auto-detects OpenAI vs Bedrock based on environment) - lazy loaded
+        create_llm = _get_llm_factory()
         self.llm = create_llm(model=llm_model, temperature=0)
 
-        # Initialize workflow steps helper
-        self.workflow_steps = WorkflowSteps(
+        # Initialize workflow steps helper - lazy loaded
+        WorkflowStepsClass = _get_workflow_steps()
+        self.workflow_steps = WorkflowStepsClass(
             memory=memory,
             vectorstore=vectorstore,
             llm=self.llm,
@@ -232,8 +264,10 @@ class CyberShieldReActAgent:
         text_hash = hashlib.md5(input_text.encode()).hexdigest()[:16]
         return f"cybershield:{operation}:{text_hash}"
 
-    def _create_workflow(self) -> StateGraph:
+    def _create_workflow(self):
         """Create the hybrid LangGraph workflow using proper fan-out/fan-in pattern"""
+        # Ensure LangGraph components are available
+        StateGraph, END = _ensure_langgraph()
         builder = StateGraph(CyberShieldState)
 
         # Add nodes
@@ -356,6 +390,9 @@ Consider:
 Respond with only one word: ThreatIntel, ToolExecutorNode, or synthesize"""
 
         try:
+            # Ensure message classes are imported
+            HumanMessage, SystemMessage = _ensure_langchain()
+            
             response = await self.llm.ainvoke([HumanMessage(content=routing_prompt)])
             routing_decision = response.content.strip()
 
@@ -451,6 +488,9 @@ Respond with a JSON array of tool names to use:
 If no threat intelligence tools are needed, respond with: []"""
 
         try:
+            # Ensure message classes are imported
+            HumanMessage, SystemMessage = _ensure_langchain()
+            
             response = await self.llm.ainvoke(
                 [HumanMessage(content=tool_selection_prompt)]
             )

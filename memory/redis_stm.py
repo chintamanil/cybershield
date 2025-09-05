@@ -76,16 +76,24 @@ class RedisSTM:
             logger.error(f"Error getting key {key}: {e}")
             return None
 
-    async def set(self, key: str, value: Any, ttl: Optional[int] = None) -> bool:
-        """Set value in Redis with optional TTL asynchronously"""
+    async def set(self, key: str, value: Any, ttl: Optional[int] = None, ex: Optional[int] = None) -> bool:
+        """Set value in Redis with optional TTL asynchronously
+        
+        Args:
+            key: Redis key
+            value: Value to store
+            ttl: Time to live in seconds (legacy parameter, mapped to ex)
+            ex: Expiration in seconds (Redis native parameter)
+        """
         try:
             redis = await self._get_redis()
             # Serialize value to JSON if it's not a string
             if not isinstance(value, str):
                 value = json.dumps(value)
 
-            ttl = ttl or self.ttl
-            await redis.set(key, value, ex=ttl)
+            # Use ex parameter if provided, otherwise use ttl, otherwise use default ttl
+            expiration = ex or ttl or self.ttl
+            await redis.set(key, value, ex=expiration)
             return True
         except Exception as e:
             logger.error(f"Error setting key {key}: {e}")

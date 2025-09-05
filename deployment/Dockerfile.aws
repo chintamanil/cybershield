@@ -1,64 +1,97 @@
-# Multi-stage Dockerfile optimized for AWS ECS deployment
+# Ultra-optimized Dockerfile for AWS ECS fast startup
 FROM python:3.11-slim as builder
+
+# Build arguments for optimization
+ARG TARGETARCH
+ARG BUILDPLATFORM
+ARG AWS_REGION=us-east-1
 
 # Set working directory
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
+# Install build dependencies in single layer
+RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
     g++ \
     libc-dev \
     libffi-dev \
     libssl-dev \
-    && rm -rf /var/lib/apt/lists/*
+    git \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
 
-# Copy requirements and install dependencies
+# Copy and install Python dependencies with optimizations
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir \
+    --disable-pip-version-check \
+    --no-compile \
+    --user \
+    -r requirements.txt
 
-# Production stage
+# Pre-compile Python modules for faster imports
+RUN python -m compileall /root/.local/lib/python3.11/site-packages/ || true
+
+# Production stage with minimal footprint
 FROM python:3.11-slim
 
-# Set working directory
-WORKDIR /app
-
-# Install runtime dependencies including vision processing
-RUN apt-get update && apt-get install -y \
+# Install runtime dependencies optimized for container
+RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     tesseract-ocr \
     tesseract-ocr-eng \
     libglib2.0-0 \
-    libsm6 \
-    libxext6 \
-    libxrender-dev \
     libgomp1 \
-    libglib2.0-dev \
-    && rm -rf /var/lib/apt/lists/*
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean \
+    && rm -rf /tmp/* /var/tmp/*
 
-# Copy Python packages from builder
-COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
-COPY --from=builder /usr/local/bin /usr/local/bin
+# Copy optimized Python packages
+COPY --from=builder /root/.local /root/.local
+ENV PATH=/root/.local/bin:$PATH
+ENV PYTHONPATH=/root/.local/lib/python3.11/site-packages:$PYTHONPATH
 
-# Copy application code
-COPY . .
+# Set Python optimization flags
+ENV PYTHONOPTIMIZE=1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONIOENCODING=utf-8
 
-# Create non-root user for security
-RUN useradd --create-home --shell /bin/bash cybershield && \
-    chown -R cybershield:cybershield /app
+# AWS-specific optimizations
+ENV AWS_DEFAULT_REGION=${AWS_REGION}
+ENV AWS_REGION=${AWS_REGION}
+
+# Pre-create directories and set permissions
+WORKDIR /app
+RUN useradd --create-home --shell /bin/bash cybershield
+
+# Copy application code with optimized layering
+COPY --chown=cybershield:cybershield utils/ ./utils/
+COPY --chown=cybershield:cybershield tools/ ./tools/
+COPY --chown=cybershield:cybershield memory/ ./memory/
+COPY --chown=cybershield:cybershield workflows/ ./workflows/
+COPY --chown=cybershield:cybershield agents/ ./agents/
+COPY --chown=cybershield:cybershield server/ ./server/
+COPY --chown=cybershield:cybershield vectorstore/ ./vectorstore/
+COPY --chown=cybershield:cybershield *.py ./
+
+# Pre-compile application modules
+RUN python -m compileall . || true
+
+# Switch to non-root user
 USER cybershield
 
-# Set environment variables
-ENV PYTHONPATH=/app
-ENV CYBERSHIELD_ENV=aws
-ENV PYTHONUNBUFFERED=1
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+# Health check optimized for ECS
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
     CMD curl -f http://localhost:8000/health || exit 1
 
 # Expose port
 EXPOSE 8000
 
-# Run the application
-CMD ["python", "-m", "uvicorn", "server.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]
+# Optimized startup command with pre-warming
+CMD ["python", "-O", "-m", "uvicorn", "server.main:app", \
+     "--host", "0.0.0.0", "--port", "8000", \
+     "--workers", "1", \
+     "--worker-class", "uvicorn.workers.UvicornWorker", \
+     "--access-log", \
+     "--log-config", "/dev/null"]
