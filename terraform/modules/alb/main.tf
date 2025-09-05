@@ -10,12 +10,12 @@ terraform {
   }
 }
 
-# Data sources
-data "aws_route53_zone" "main" {
-  count        = var.domain_name != null ? 1 : 0
-  name         = var.domain_name
-  private_zone = false
-}
+# Data sources - commented out since hosted zone is created by route53 module
+# data "aws_route53_zone" "main" {
+#   count        = var.domain_name != null ? 1 : 0
+#   name         = var.domain_name
+#   private_zone = false
+# }
 
 # Security Group for Application Load Balancer
 resource "aws_security_group" "alb" {
@@ -90,12 +90,7 @@ resource "aws_acm_certificate" "main" {
   domain_name     = var.domain_name
   validation_method = var.certificate_validation_method
 
-  dynamic "subject_alternative_names" {
-    for_each = var.subject_alternative_names
-    content {
-      domain_name = subject_alternative_names.value
-    }
-  }
+  subject_alternative_names = var.subject_alternative_names
 
   lifecycle {
     create_before_destroy = true
@@ -122,7 +117,7 @@ resource "aws_route53_record" "cert_validation" {
   records         = [each.value.record]
   ttl             = 60
   type            = each.value.type
-  zone_id         = data.aws_route53_zone.main[0].zone_id
+  zone_id         = var.hosted_zone_id
 }
 
 # Certificate validation completion
@@ -132,7 +127,7 @@ resource "aws_acm_certificate_validation" "main" {
   validation_record_fqdns = [for record in aws_route53_record.cert_validation : record.fqdn]
 
   timeouts {
-    create = "5m"
+    create = "15m"
   }
 }
 
@@ -295,7 +290,7 @@ resource "aws_lb_listener" "http_direct" {
 # Route53 A Record (if domain is provided)
 resource "aws_route53_record" "main" {
   count   = var.domain_name != null ? 1 : 0
-  zone_id = data.aws_route53_zone.main[0].zone_id
+  zone_id = var.hosted_zone_id
   name    = var.domain_name
   type    = "A"
 
@@ -309,7 +304,7 @@ resource "aws_route53_record" "main" {
 # Route53 AAAA Record for IPv6 (if enabled)
 resource "aws_route53_record" "ipv6" {
   count   = var.domain_name != null && var.enable_ipv6 ? 1 : 0
-  zone_id = data.aws_route53_zone.main[0].zone_id
+  zone_id = var.hosted_zone_id
   name    = var.domain_name
   type    = "AAAA"
 

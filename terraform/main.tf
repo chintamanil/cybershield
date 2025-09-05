@@ -2,19 +2,6 @@
 # Main entry point for infrastructure deployment
 
 terraform {
-  required_version = ">= 1.5, < 1.13"
-  
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.100"
-    }
-    random = {
-      source  = "hashicorp/random"
-      version = "~> 3.7"
-    }
-  }
-
   # Backend configuration - uncomment and configure for remote state
   # backend "s3" {
   #   bucket         = "cybershield-terraform-state"
@@ -87,9 +74,22 @@ module "iam" {
   
   project_name = var.project_name
   environment  = var.environment
-  aws_region   = var.aws_region
   
-  enable_ecs_exec = var.enable_ecs_exec
+  tags = local.common_tags
+}
+
+# Route53 Module (must come before ALB for hosted zone dependency)
+module "route53" {
+  source = "./modules/route53"
+  
+  project_name = var.project_name
+  environment  = var.environment
+  
+  domain_name        = var.domain_name
+  validation_method  = var.certificate_validation_method
+  create_health_check = var.enable_health_checks
+  
+  # ALB DNS records will be created separately to avoid circular dependency
   
   common_tags = local.common_tags
 }
@@ -103,37 +103,14 @@ module "alb" {
   
   vpc_id                    = module.networking.vpc_id
   public_subnet_ids         = module.networking.public_subnet_ids
-  alb_security_group_id     = module.networking.alb_security_group_id
   
   domain_name               = var.domain_name
-  certificate_arn           = module.route53.certificate_arn
-  
-  enable_deletion_protection = var.enable_deletion_protection
-  enable_access_logs        = var.enable_access_logs
-  log_retention_days        = var.cloudwatch_log_retention_days
+  hosted_zone_id            = module.route53.hosted_zone_id
   
   backend_health_check_path  = var.backend_health_check_path
   frontend_health_check_path = var.frontend_health_check_path
-  
-  common_tags = local.common_tags
 }
 
-# Route53 Module
-module "route53" {
-  source = "./modules/route53"
-  
-  project_name = var.project_name
-  environment  = var.environment
-  
-  domain_name        = var.domain_name
-  validation_method  = var.certificate_validation_method
-  create_health_check = var.enable_health_checks
-  
-  alb_dns_name    = module.alb.alb_dns_name
-  alb_zone_id     = module.alb.alb_zone_id
-  
-  common_tags = local.common_tags
-}
 
 # RDS Module
 module "rds" {
@@ -172,19 +149,23 @@ module "elasticache" {
   project_name = var.project_name
   environment  = var.environment
   
-  vpc_id                    = module.networking.vpc_id
-  cache_subnet_ids          = module.networking.cache_subnet_ids
-  redis_security_group_id   = module.networking.redis_security_group_id
+  vpc_id             = module.networking.vpc_id
+  private_subnet_ids = module.networking.private_subnet_ids
   
-  redis_node_type           = var.redis_node_type
-  redis_engine_version      = var.redis_engine_version
+  redis_node_type              = var.redis_node_type
+  redis_engine_version         = var.redis_engine_version
   redis_parameter_group_family = var.redis_parameter_group_family
   
-  enable_auth_token         = var.enable_auth_token
-  enable_transit_encryption = var.enable_transit_encryption
-  enable_at_rest_encryption = var.enable_at_rest_encryption
+  cache_subnet_ids             = module.networking.cache_subnet_ids
+  redis_security_group_id      = module.networking.redis_security_group_id
+  
+  enable_at_rest_encryption   = var.enable_at_rest_encryption
+  enable_transit_encryption   = var.enable_transit_encryption
+  enable_auth_token           = var.enable_auth_token
   
   common_tags = local.common_tags
+  
+  tags = local.common_tags
 }
 
 # OpenSearch Module (Optional)
@@ -196,59 +177,164 @@ module "opensearch" {
   environment  = var.environment
   
   vpc_id                      = module.networking.vpc_id
-  opensearch_subnet_ids       = module.networking.private_subnet_ids
-  opensearch_security_group_id = module.networking.opensearch_security_group_id
+  vpc_cidr                    = var.vpc_cidr
+  subnet_ids                  = module.networking.private_subnet_ids
   
-  opensearch_instance_type    = var.opensearch_instance_type
-  opensearch_instance_count   = var.opensearch_instance_count
-  opensearch_volume_size      = var.opensearch_volume_size
+  instance_type               = var.opensearch_instance_type
+  instance_count              = var.opensearch_instance_count
+  volume_size                 = var.opensearch_volume_size
   opensearch_version          = var.opensearch_version
   
-  enable_zone_awareness       = var.enable_zone_awareness
-  enable_encryption_at_rest   = var.enable_encryption_at_rest
-  enable_node_to_node_encryption = var.enable_node_to_node_encryption
+  zone_awareness_enabled      = var.enable_zone_awareness
+  encrypt_at_rest             = var.enable_encryption_at_rest
+  node_to_node_encryption     = var.enable_node_to_node_encryption
   
-  common_tags = local.common_tags
+  tags = local.common_tags
 }
 
 # ECS Module
+# ECR Repository for container images
+resource "aws_ecr_repository" "backend" {
+  name                 = "${var.project_name}-${var.environment}-backend"
+  image_tag_mutability = "MUTABLE"
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+
+  encryption_configuration {
+    encryption_type = "AES256"
+  }
+
+
+  tags = merge(local.common_tags, {
+    Name = "${var.project_name}-${var.environment}-backend-repo"
+    Type = "ecr-repository"
+  })
+}
+
+resource "aws_ecr_lifecycle_policy" "backend" {
+  repository = aws_ecr_repository.backend.name
+
+  policy = jsonencode({
+    rules = [
+      {
+        rulePriority = 1
+        description  = "Keep last 10 images"
+        selection = {
+          tagStatus     = "tagged"
+          tagPrefixList = ["v"]
+          countType     = "imageCountMoreThan"
+          countNumber   = 10
+        }
+        action = {
+          type = "expire"
+        }
+      }
+    ]
+  })
+}
+
+# EFS for containerized Milvus (cost-effective vector database)
+resource "aws_efs_file_system" "milvus" {
+  count = var.enable_efs_for_milvus ? 1 : 0
+  
+  creation_token = "${var.project_name}-${var.environment}-milvus-efs"
+  
+  performance_mode = "generalPurpose"  # Cost-optimized
+  throughput_mode  = "provisioned"
+  provisioned_throughput_in_mibps = 10  # Minimal throughput for cost savings
+  
+  lifecycle_policy {
+    transition_to_ia = "AFTER_7_DAYS"  # Move to cheaper storage after 7 days
+  }
+  
+  tags = merge(local.common_tags, {
+    Name = "${var.project_name}-${var.environment}-milvus-storage"
+    Type = "efs-file-system"
+  })
+}
+
+# EFS Mount Targets
+resource "aws_efs_mount_target" "milvus" {
+  count = var.enable_efs_for_milvus ? length(module.networking.private_subnet_ids) : 0
+  
+  file_system_id  = aws_efs_file_system.milvus[0].id
+  subnet_id       = module.networking.private_subnet_ids[count.index]
+  security_groups = [aws_security_group.efs[0].id]
+}
+
+# Security group for EFS
+resource "aws_security_group" "efs" {
+  count = var.enable_efs_for_milvus ? 1 : 0
+  
+  name_prefix = "${var.project_name}-${var.environment}-efs-"
+  vpc_id      = module.networking.vpc_id
+  
+  ingress {
+    from_port   = 2049
+    to_port     = 2049
+    protocol    = "tcp"
+    cidr_blocks = [var.vpc_cidr]
+  }
+  
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  
+  tags = merge(local.common_tags, {
+    Name = "${var.project_name}-${var.environment}-efs-sg"
+    Type = "security-group"
+  })
+}
+
 module "ecs" {
   source = "./modules/ecs"
   
   project_name = var.project_name
   environment  = var.environment
-  aws_region   = var.aws_region
   
-  vpc_id                = module.networking.vpc_id
-  private_subnet_ids    = module.networking.private_subnet_ids
-  ecs_security_group_id = module.networking.ecs_security_group_id
+  vpc_id             = module.networking.vpc_id
+  vpc_cidr           = var.vpc_cidr
+  private_subnet_ids = module.networking.public_subnet_ids  # Use public subnets for direct ECR access
+  
+  alb_security_group_id = module.alb.alb_security_group_id
   
   backend_target_group_arn  = module.alb.backend_target_group_arn
   frontend_target_group_arn = module.alb.frontend_target_group_arn
   
-  ecs_execution_role_arn = module.iam.ecs_execution_role_arn
-  ecs_task_role_arn      = module.iam.ecs_task_role_arn
+  task_execution_role_arn = module.iam.ecs_task_execution_role_arn
+  task_role_arn          = module.iam.ecs_task_role_arn
+  
+  ecr_repository_url = aws_ecr_repository.backend.repository_url
   
   # Container Configuration
-  backend_cpu         = var.backend_cpu
-  backend_memory      = var.backend_memory
-  backend_min_capacity = var.backend_min_capacity
-  backend_max_capacity = var.backend_max_capacity
+  backend_cpu           = var.backend_cpu
+  backend_memory        = var.backend_memory
+  backend_min_capacity  = var.backend_min_capacity
+  backend_max_capacity  = var.backend_max_capacity
   
-  frontend_cpu         = var.frontend_cpu
-  frontend_memory      = var.frontend_memory
+  frontend_cpu          = var.frontend_cpu
+  frontend_memory       = var.frontend_memory
   frontend_min_capacity = var.frontend_min_capacity
   frontend_max_capacity = var.frontend_max_capacity
   
   # Application Configuration
-  environment_variables = var.environment_variables
+  backend_environment_variables  = var.environment_variables
+  frontend_environment_variables = var.environment_variables
   
-  # Feature Flags
-  enable_spot_instances = var.enable_spot_instances
-  enable_logging       = var.enable_logging
-  enable_monitoring    = var.enable_monitoring
+  # Health Check Configuration
+  backend_health_check_path  = var.backend_health_check_path
+  frontend_health_check_path = var.frontend_health_check_path
   
-  common_tags = local.common_tags
+  # EFS for Milvus (optional)
+  enable_efs_for_milvus = var.enable_efs_for_milvus
+  efs_file_system_id    = var.enable_efs_for_milvus ? aws_efs_file_system.milvus[0].id : null
+  
+  tags = local.common_tags
 }
 
 # Bedrock Module for Fine-tuning

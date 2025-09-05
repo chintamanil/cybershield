@@ -517,3 +517,16 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+# EFS Configuration for containerized Milvus
+variable "enable_efs_for_milvus" {
+  description = "Enable EFS for persistent Milvus vector database storage"
+  type        = bool
+  default     = false
+}
+
+variable "efs_file_system_id" {
+  description = "EFS file system ID for Milvus storage"
+  type        = string
+  default     = null
+}

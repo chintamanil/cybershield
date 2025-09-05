@@ -26,6 +26,12 @@ variable "domain_name" {
   default     = null
 }
 
+variable "hosted_zone_id" {
+  description = "Route53 hosted zone ID for the domain"
+  type        = string
+  default     = null
+}
+
 variable "subject_alternative_names" {
   description = "Additional domain names for SSL certificate"
   type        = list(string)

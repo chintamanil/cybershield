@@ -1,58 +1,55 @@
-# Example Terraform variables for CyberShield Root Module
-# Copy this file to terraform.tfvars and customize the values
+# CyberShield Terraform Variables
+# Copy this file to terraform.tfvars and customize values
 
 # Basic Configuration
 project_name = "cybershield"
-environment  = "dev"
+environment  = "dev"  # dev, staging, or prod
 aws_region   = "us-east-1"
 
-# Domain Configuration (optional)
-# domain_name = "dev.cybershield-ai.com"
+# Domain Configuration
+domain_name = "cybershield-ai.com"  # Replace with your domain
 
-# Network Configuration
+# Networking
 vpc_cidr = "10.0.0.0/16"
 
 # Database Configuration
 db_instance_class    = "db.t3.micro"
 db_allocated_storage = 20
-db_engine_version    = "15.4"
-db_name              = "cybershield"
-db_username          = "cybershield_admin"
+db_engine_version    = "15.13"
+db_name             = "cybershield"
+db_username         = "cybershield_admin"
 
-# Redis Configuration
-redis_node_type               = "cache.t3.micro"
-redis_engine_version          = "7.0"
-redis_parameter_group_family  = "redis7"
+# Redis Configuration  
+redis_node_type           = "cache.t3.micro"
+redis_engine_version      = "7.0"
+redis_parameter_group_family = "redis7.x"
 
-# OpenSearch Configuration
-enable_opensearch         = false  # Disable for cost savings in dev
-opensearch_instance_type  = "t3.small.search"
-opensearch_instance_count = 1
-opensearch_volume_size    = 20
+# ECS Configuration
+backend_cpu     = 512
+backend_memory  = 1024
+frontend_cpu    = 256  
+frontend_memory = 512
 
-# Container Configuration
-backend_cpu         = 256
-backend_memory      = 512
-backend_min_capacity = 1
-backend_max_capacity = 3
-
-frontend_cpu         = 256
-frontend_memory      = 512
+backend_min_capacity  = 1
+backend_max_capacity  = 3
 frontend_min_capacity = 1
 frontend_max_capacity = 2
 
-# Cost Optimization
-enable_spot_instances      = true   # Use spot instances for dev
-enable_deletion_protection = false  # Allow resource cleanup
+# Feature Flags
+enable_nat_gateway     = true
+enable_opensearch      = false
+enable_bedrock_finetuning = false
+enable_monitoring      = true
+enable_logging        = true
+enable_backup         = true
 
-# Logging
-cloudwatch_log_retention_days = 7
-
-# Environment Variables
+# Application Configuration
 environment_variables = {
-  DEBUG                      = "True"
-  ENVIRONMENT                = "development"
-  LOG_LEVEL                 = "DEBUG"
-  APPLE_SILICON_ACCELERATION = "true"
-  REACT_LOG_FORMAT           = "console"
+  ENVIRONMENT = "dev"
+  LOG_LEVEL   = "INFO"
+  DEBUG       = "false"
 }
+
+# Health Check Paths
+backend_health_check_path  = "/health"
+frontend_health_check_path = "/health"

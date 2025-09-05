@@ -360,9 +360,9 @@ resource "aws_ecs_service" "backend" {
   }
 
   network_configuration {
-    subnets          = var.private_subnet_ids
+    subnets          = var.private_subnet_ids  # Now using public subnets (passed from main.tf)
     security_groups  = [aws_security_group.ecs_tasks.id]
-    assign_public_ip = false
+    assign_public_ip = true  # Enable public IP for direct ECR access
   }
 
   load_balancer {
@@ -371,15 +371,8 @@ resource "aws_ecs_service" "backend" {
     container_port   = var.backend_container_port
   }
 
-  deployment_configuration {
-    maximum_percent         = var.deployment_maximum_percent
-    minimum_healthy_percent = var.deployment_minimum_healthy_percent
-    
-    deployment_circuit_breaker {
-      enable   = var.enable_deployment_circuit_breaker
-      rollback = var.enable_deployment_rollback
-    }
-  }
+  deployment_maximum_percent        = var.deployment_maximum_percent
+  deployment_minimum_healthy_percent = var.deployment_minimum_healthy_percent
 
   enable_execute_command = var.enable_exec_command
 
@@ -419,9 +412,9 @@ resource "aws_ecs_service" "frontend" {
   }
 
   network_configuration {
-    subnets          = var.private_subnet_ids
+    subnets          = var.private_subnet_ids  # Now using public subnets (passed from main.tf)
     security_groups  = [aws_security_group.ecs_tasks.id]
-    assign_public_ip = false
+    assign_public_ip = true  # Enable public IP for direct ECR access
   }
 
   load_balancer {
@@ -430,15 +423,8 @@ resource "aws_ecs_service" "frontend" {
     container_port   = var.frontend_container_port
   }
 
-  deployment_configuration {
-    maximum_percent         = var.deployment_maximum_percent
-    minimum_healthy_percent = var.deployment_minimum_healthy_percent
-    
-    deployment_circuit_breaker {
-      enable   = var.enable_deployment_circuit_breaker
-      rollback = var.enable_deployment_rollback
-    }
-  }
+  deployment_maximum_percent        = var.deployment_maximum_percent
+  deployment_minimum_healthy_percent = var.deployment_minimum_healthy_percent
 
   enable_execute_command = var.enable_exec_command
 

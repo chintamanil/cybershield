@@ -27,7 +27,7 @@ output "opensearch_dashboard_endpoint" {
 
 output "opensearch_kibana_endpoint" {
   description = "Domain-specific endpoint for Kibana (deprecated, use dashboard_endpoint)"
-  value       = aws_opensearch_domain.main.kibana_endpoint
+  value       = aws_opensearch_domain.main.dashboard_endpoint
 }
 
 output "opensearch_domain_url" {
@@ -56,8 +56,8 @@ output "opensearch_cluster_config" {
     instance_type            = aws_opensearch_domain.main.cluster_config[0].instance_type
     instance_count           = aws_opensearch_domain.main.cluster_config[0].instance_count
     dedicated_master_enabled = aws_opensearch_domain.main.cluster_config[0].dedicated_master_enabled
-    master_instance_type     = aws_opensearch_domain.main.cluster_config[0].master_instance_type
-    master_instance_count    = aws_opensearch_domain.main.cluster_config[0].master_instance_count
+    master_instance_type     = aws_opensearch_domain.main.cluster_config[0].dedicated_master_type
+    master_instance_count    = aws_opensearch_domain.main.cluster_config[0].dedicated_master_count
     zone_awareness_enabled   = aws_opensearch_domain.main.cluster_config[0].zone_awareness_enabled
     warm_enabled             = aws_opensearch_domain.main.cluster_config[0].warm_enabled
   }

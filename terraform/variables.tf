@@ -146,6 +146,13 @@ variable "enable_at_rest_encryption" {
   default     = true
 }
 
+variable "auth_token" {
+  description = "Redis AUTH token (required when transit encryption is enabled)"
+  type        = string
+  default     = null
+  sensitive   = true
+}
+
 # OpenSearch Configuration
 variable "enable_opensearch" {
   description = "Enable OpenSearch domain"
@@ -378,4 +385,11 @@ variable "bedrock_model_artifacts_retention_days" {
     condition     = var.bedrock_model_artifacts_retention_days >= 90
     error_message = "Model artifacts retention must be at least 90 days."
   }
+}
+
+# EFS Configuration for containerized Milvus
+variable "enable_efs_for_milvus" {
+  description = "Enable EFS for persistent Milvus vector database storage"
+  type        = bool
+  default     = false
 }

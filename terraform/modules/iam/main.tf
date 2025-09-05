@@ -219,11 +219,8 @@ resource "aws_iam_role" "ecs_service_role" {
   })
 }
 
-# Attach AWS managed policy for ECS service
-resource "aws_iam_role_policy_attachment" "ecs_service_role_policy" {
-  role       = aws_iam_role.ecs_service_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSServiceRolePolicy"
-}
+# Note: AmazonECSServiceRolePolicy was deprecated. 
+# ECS service-linked roles are now automatically created by AWS
 
 # Application Auto Scaling Role
 resource "aws_iam_role" "ecs_autoscaling_role" {
@@ -248,11 +245,9 @@ resource "aws_iam_role" "ecs_autoscaling_role" {
   })
 }
 
-# Attach AWS managed policy for Application Auto Scaling
-resource "aws_iam_role_policy_attachment" "ecs_autoscaling_role_policy" {
-  role       = aws_iam_role.ecs_autoscaling_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSServiceRolePolicy"
-}
+# Note: ApplicationAutoScalingECSServicePolicy was deprecated
+# Application Auto Scaling now uses service-linked roles automatically
+# Removing this policy attachment as it's no longer needed
 
 # CloudWatch Events Role for scheduled tasks
 resource "aws_iam_role" "cloudwatch_events_role" {

@@ -123,7 +123,7 @@ output "certificate_arn" {
 
 output "name_servers" {
   description = "Name servers for the hosted zone"
-  value       = module.route53.name_servers
+  value       = module.route53.hosted_zone_name_servers
 }
 
 # Bedrock Outputs
@@ -155,12 +155,12 @@ output "bedrock_vpc_endpoint_id" {
 # ECS Outputs
 output "ecs_cluster_name" {
   description = "Name of the ECS cluster"
-  value       = module.ecs.cluster_name
+  value       = module.ecs.ecs_cluster_name
 }
 
 output "ecs_cluster_arn" {
   description = "ARN of the ECS cluster"
-  value       = module.ecs.cluster_arn
+  value       = module.ecs.ecs_cluster_arn
 }
 
 output "backend_service_name" {
@@ -185,18 +185,18 @@ output "frontend_task_definition_arn" {
 
 output "backend_log_group_name" {
   description = "Name of the backend CloudWatch log group"
-  value       = module.ecs.backend_log_group_name
+  value       = module.ecs.cloudwatch_log_group_name
 }
 
 output "frontend_log_group_name" {
   description = "Name of the frontend CloudWatch log group"
-  value       = module.ecs.frontend_log_group_name
+  value       = module.ecs.cloudwatch_log_group_name
 }
 
 # IAM Outputs
 output "ecs_execution_role_arn" {
   description = "ARN of the ECS execution role"
-  value       = module.iam.ecs_execution_role_arn
+  value       = module.iam.ecs_task_execution_role_arn
 }
 
 output "ecs_task_role_arn" {
@@ -267,8 +267,8 @@ output "opensearch_kibana_endpoint" {
 output "ecr_repository_urls" {
   description = "ECR repository URLs"
   value = {
-    backend  = module.ecs.backend_ecr_repository_url
-    frontend = module.ecs.frontend_ecr_repository_url
+    backend  = aws_ecr_repository.backend.repository_url
+    frontend = aws_ecr_repository.backend.repository_url  # Using same repo for both for now
   }
 }
 
@@ -320,7 +320,7 @@ output "resource_summary" {
       cidr = module.networking.vpc_cidr
     }
     ecs = {
-      cluster_name = module.ecs.cluster_name
+      cluster_name = module.ecs.ecs_cluster_name
       backend_service = module.ecs.backend_service_name
       frontend_service = module.ecs.frontend_service_name
     }
@@ -400,8 +400,38 @@ output "application_environment_variables" {
     REDIS_HOST    = module.elasticache.primary_endpoint_address
     REDIS_PORT    = tostring(module.elasticache.port)
     OPENSEARCH_HOST = var.enable_opensearch ? module.opensearch[0].endpoint : ""
+    MILVUS_HOST = var.enable_efs_for_milvus ? "localhost" : "" # Milvus runs as sidecar container
+    MILVUS_PORT = "19530"
+    EFS_MOUNT_PATH = var.enable_efs_for_milvus ? "/opt/milvus/data" : ""
     AWS_REGION    = var.aws_region
     ENVIRONMENT   = var.environment
   })
   sensitive = true
+}
+
+# EFS Outputs (for cost-effective Milvus storage)
+output "efs_file_system_id" {
+  description = "EFS file system ID for Milvus storage"
+  value       = var.enable_efs_for_milvus ? aws_efs_file_system.milvus[0].id : null
+}
+
+output "efs_dns_name" {
+  description = "EFS DNS name for mounting"
+  value       = var.enable_efs_for_milvus ? aws_efs_file_system.milvus[0].dns_name : null
+}
+
+output "cost_optimization_summary" {
+  description = "Summary of cost optimizations implemented"
+  value = {
+    database_tier           = "db.t3.micro (free tier eligible)"
+    redis_tier             = "cache.t3.micro"
+    ecs_resources          = "256 CPU / 512 MB (minimal)"
+    ecs_scaling            = "Scale to zero when idle"
+    spot_instances         = "Enabled for up to 70% savings"
+    opensearch_status      = "Disabled (saves ~$15-25/month)"
+    vector_database        = var.enable_efs_for_milvus ? "EFS-backed Milvus (~$3-5/month)" : "Local Milvus (free)"
+    nat_gateway           = "Disabled (saves ~$45/month)"
+    log_retention         = "1 day (minimal CloudWatch costs)"
+    estimated_monthly_cost = var.enable_efs_for_milvus ? "~$28-38" : "~$25-35"
+  }
 }

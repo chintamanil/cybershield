@@ -1,5 +1,5 @@
 # Production Environment Configuration for CyberShield
-# Optimized for reliability, security, and performance
+# Cost-optimized configuration for low-traffic application
 
 terraform {
   required_version = ">= 1.5, < 1.13"
@@ -15,14 +15,14 @@ terraform {
     }
   }
 
-  # Backend configuration for prod environment
-  backend "s3" {
-    bucket         = "cybershield-terraform-state-prod-nazqkk52"
-    key            = "prod/terraform.tfstate"
-    region         = "us-east-1"
-    encrypt        = true
-    dynamodb_table = "cybershield-terraform-locks-prod"
-  }
+  # Backend configuration for prod environment - temporarily disabled for testing
+  # backend "s3" {
+  #   bucket         = "cybershield-terraform-state-prod-nazqkk52"
+  #   key            = "prod/terraform.tfstate"
+  #   region         = "us-east-1"
+  #   encrypt        = true
+  #   dynamodb_table = "cybershield-terraform-locks-prod"
+  # }
 }
 
 # Configure the AWS Provider
@@ -58,63 +58,64 @@ module "cybershield" {
   # Domain Configuration
   domain_name = var.domain_name
   
-  # Network Configuration
+  # Network Configuration (Ultra Cost-optimized - Public Subnets)
   vpc_cidr = "10.0.0.0/16"  # Production CIDR
+  enable_nat_gateway = false  # Disabled - ECS tasks use public subnets for direct ECR access
   
-  # Database Configuration (Production Ready)
-  db_instance_class    = "db.t3.small"   # Larger instance for prod
-  db_allocated_storage = 100             # More storage for prod
-  db_engine_version    = "15.4"
+  # Database Configuration (Ultra Cost-optimized)
+  db_instance_class    = "db.t3.micro"   # Free tier eligible
+  db_allocated_storage = 20              # Free tier 20GB
+  db_engine_version    = "15.7"
   db_name              = "cybershield"
-  db_username          = "cybershield_admin"
+  db_username          = var.db_username
+  # Disable multi-AZ for cost savings (single AZ only)
+  # Use gp2 storage instead of gp3 for lower cost
   
-  # Redis Configuration (Production Ready)
-  redis_node_type               = "cache.t3.small"   # Larger instance for prod
+  # Redis Configuration (Cost-optimized)
+  redis_node_type               = "cache.t3.micro"   # Smallest instance
   redis_engine_version          = "7.0"
   redis_parameter_group_family  = "redis7"
   
-  # OpenSearch Configuration (Production Ready)
-  enable_opensearch         = true
-  opensearch_instance_type  = "t3.medium.search"    # Larger instance for prod
-  opensearch_instance_count = 2                     # Multi-AZ for reliability
-  opensearch_volume_size    = 50                    # More storage for prod
-  enable_zone_awareness     = true                  # Multi-AZ deployment
+  # Vector Database Configuration (Cost-optimized)
+  enable_opensearch         = false  # Disabled - using containerized Milvus instead
+  enable_efs_for_milvus     = true   # Enable EFS for persistent Milvus storage
+  # Cost: ~$3-5/month for EFS vs ~$15-25/month for OpenSearch
+  # Milvus will run as a sidecar container in ECS with EFS persistence
+  opensearch_instance_type  = "t3.small.search"     # Not used when disabled
+  opensearch_instance_count = 1                     # Not used when disabled
+  opensearch_volume_size    = 10                    # Not used when disabled
+  enable_zone_awareness     = false                 # Not used when disabled
   
-  # Container Configuration (Production Sizing)
-  backend_cpu         = 1024  # Production sizing
-  backend_memory      = 2048  # Production sizing
-  backend_min_capacity = 2    # Always have 2 instances
-  backend_max_capacity = 10   # Scale up to 10 for traffic
+  # Container Configuration (Ultra Cost-optimized)
+  backend_cpu         = 256   # Minimal CPU for low traffic
+  backend_memory      = 512   # Minimal memory
+  backend_min_capacity = 1    # Minimum required by ECS validation
+  backend_max_capacity = 2    # Lower max for cost control
   
-  frontend_cpu         = 512   # Production sizing
-  frontend_memory      = 1024  # Production sizing
-  frontend_min_capacity = 2    # Always have 2 instances
-  frontend_max_capacity = 5    # Scale up to 5 for traffic
+  frontend_cpu         = 256   # Minimal CPU
+  frontend_memory      = 512   # Minimal memory
+  frontend_min_capacity = 1    # Minimum required by ECS validation
+  frontend_max_capacity = 1    # Single instance max
   
-  # Production Security and Reliability
-  enable_spot_instances      = false # No spot instances in production
-  enable_deletion_protection = true  # Protect production resources
+  # Cost Optimization (Maximum Savings)
+  enable_spot_instances      = true  # Enable spot instances for cost savings
+  enable_deletion_protection = false # Allow deletion to save costs
+  enable_monitoring          = false # Disable enhanced RDS monitoring (~$5/month)
+  enable_performance_insights = false # Disable RDS performance insights
+  enable_access_logs         = false # Disable ALB access logs (saves S3 costs)
   
-  # Logging (longer retention for production)
-  cloudwatch_log_retention_days = 30
+  # Logging (ultra cost-optimized retention)
+  cloudwatch_log_retention_days = 1   # Minimal retention (1 day) to save costs
   enable_logging = true
   
-  # Environment Variables
-  environment_variables = {
-    DEBUG                      = "False"
-    ENVIRONMENT                = "production"
-    LOG_LEVEL                 = "INFO"
-    REDIS_HOST                = ""  # Will be populated by module
-    POSTGRES_HOST             = ""  # Will be populated by module
-    OPENSEARCH_HOST           = ""  # Will be populated by module
-    APPLE_SILICON_ACCELERATION = "true"
-    REACT_LOG_FORMAT           = "json"  # JSON format for production
-  }
+  # Environment Variables - Use variables from terraform.tfvars
+  environment_variables = var.environment_variables
   
-  # Security (maximum security)
+  # Security (cost-optimized)
   certificate_validation_method = "DNS"
-  enable_backup               = true    # Full backup strategy
-  backup_retention_days       = 30      # Extended retention
+  enable_backup               = true    # Keep backups but shorter retention
+  backup_retention_days       = 7       # Shorter retention for cost
+  enable_health_checks        = false   # Disable health checks for cost savings
 }
 
 # Data sources

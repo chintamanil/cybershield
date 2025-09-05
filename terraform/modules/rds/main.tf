@@ -57,24 +57,25 @@ resource "aws_db_parameter_group" "main" {
   name   = "${var.project_name}-${var.environment}-postgres15"
   
   # Performance optimization parameters
+  # Note: shared_preload_libraries is a static parameter requiring restart
+  # Commented out to avoid apply_immediately conflicts during deployment
+  
   parameter {
-    name  = "shared_preload_libraries"
-    value = "pg_stat_statements"
+    name         = "log_statement"
+    value        = "all"
+    apply_method = "pending-reboot"  # Static parameter
   }
   
   parameter {
-    name  = "log_statement"
-    value = "all"
+    name         = "log_min_duration_statement"
+    value        = "1000"  # Log queries taking longer than 1 second
+    apply_method = "immediate"       # Dynamic parameter
   }
   
   parameter {
-    name  = "log_min_duration_statement"
-    value = "1000"  # Log queries taking longer than 1 second
-  }
-  
-  parameter {
-    name  = "max_connections"
-    value = "100"
+    name         = "max_connections"
+    value        = "100"
+    apply_method = "pending-reboot"  # Static parameter
   }
   
   tags = merge(var.common_tags, {

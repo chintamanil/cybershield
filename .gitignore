@@ -365,3 +365,7 @@ terraform.d/
 # Environment-specific terraform files
 terraform/environments/*/*.auto.tfvars
 terraform/environments/*/terraform.tfstate.backup
+
+# claude
+.claude/
+

@@ -201,7 +201,7 @@ output "load_balancer_summary" {
     dns_name         = aws_lb.main.dns_name
     zone_id          = aws_lb.main.zone_id
     application_url   = var.domain_name != null ? "https://${var.domain_name}" : "http://${aws_lb.main.dns_name}"
-    scheme           = aws_lb.main.scheme
+    scheme           = aws_lb.main.load_balancer_type
     type             = aws_lb.main.load_balancer_type
     vpc_id           = aws_lb.main.vpc_id
     subnets          = aws_lb.main.subnets

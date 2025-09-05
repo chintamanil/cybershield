@@ -63,8 +63,8 @@ resource "aws_opensearch_domain" "main" {
     instance_type            = var.instance_type
     instance_count           = var.instance_count
     dedicated_master_enabled = var.dedicated_master_enabled
-    master_instance_type     = var.master_instance_type
-    master_instance_count    = var.master_instance_count
+    dedicated_master_type    = var.master_instance_type
+    dedicated_master_count   = var.master_instance_count
     zone_awareness_enabled   = var.zone_awareness_enabled
 
     dynamic "zone_awareness_config" {
@@ -75,13 +75,8 @@ resource "aws_opensearch_domain" "main" {
     }
 
     warm_enabled = var.warm_enabled
-    dynamic "warm_config" {
-      for_each = var.warm_enabled ? [1] : []
-      content {
-        warm_instance_type  = var.warm_instance_type
-        warm_instance_count = var.warm_instance_count
-      }
-    }
+    warm_type    = var.warm_enabled ? var.warm_instance_type : null
+    warm_count   = var.warm_enabled ? var.warm_instance_count : null
 
     cold_storage_options {
       enabled = var.cold_storage_enabled

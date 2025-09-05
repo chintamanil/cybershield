@@ -147,3 +147,79 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "cache_subnet_ids" {
+  description = "List of cache subnet IDs for Redis"
+  type        = list(string)
+}
+
+variable "redis_security_group_id" {
+  description = "Security group ID for Redis access"
+  type        = string
+}
+
+variable "enable_auth_token" {
+  description = "Enable AUTH token for Redis"
+  type        = bool
+  default     = true
+}
+
+variable "enable_transit_encryption" {
+  description = "Enable encryption in transit for Redis"
+  type        = bool
+  default     = true
+}
+
+variable "enable_at_rest_encryption" {
+  description = "Enable encryption at rest for Redis"
+  type        = bool
+  default     = true
+}
+
+variable "num_cache_clusters" {
+  description = "Number of cache clusters (replicas + 1 primary)"
+  type        = number
+  default     = 1
+}
+
+variable "snapshot_retention_limit" {
+  description = "Number of days to retain automatic snapshots"
+  type        = number
+  default     = 5
+}
+
+variable "snapshot_window" {
+  description = "Daily time range for automatic snapshots"
+  type        = string
+  default     = "03:00-05:00"
+}
+
+variable "auto_minor_version_upgrade" {
+  description = "Enable automatic minor version upgrades"
+  type        = bool
+  default     = true
+}
+
+variable "log_retention_days" {
+  description = "CloudWatch log retention in days"
+  type        = number
+  default     = 7
+}
+
+variable "enable_monitoring" {
+  description = "Enable CloudWatch monitoring and alarms"
+  type        = bool
+  default     = true
+}
+
+variable "alarm_sns_topic_arn" {
+  description = "SNS topic ARN for CloudWatch alarms"
+  type        = string
+  default     = ""
+}
+
+variable "common_tags" {
+  description = "Common tags to apply to all resources"
+  type        = map(string)
+  default     = {}
+}

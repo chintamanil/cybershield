@@ -24,31 +24,39 @@ class RedisSTM:
         self.port = int(port or os.getenv("REDIS_PORT", 6379))
         self.db = int(db or os.getenv("REDIS_DB", 0))
         self.ttl = int(ttl or os.getenv("REDIS_TTL", 3600))
+        self.password = os.getenv("REDIS_PASSWORD")
+        self.use_ssl = os.getenv("REDIS_SSL", "false").lower() == "true"
         self._redis = None
-        self._connection_url = f"redis://{self.host}:{self.port}/{self.db}"
+        
+        # Build connection URL with SSL and auth support
+        scheme = "rediss" if self.use_ssl else "redis"
+        auth_part = f":{self.password}@" if self.password else ""
+        self._connection_url = f"{scheme}://{auth_part}{self.host}:{self.port}/{self.db}"
 
     async def _get_redis(self) -> aioredis.Redis:
-        """Get or create async Redis connection with connection pooling"""
+        """Get or create async Redis connection"""
         if (
             self._redis is None
             or self._redis.connection_pool.connection_kwargs.get("db") != self.db
         ):
             try:
+                connection_kwargs = {
+                    'decode_responses': True,
+                    'retry_on_timeout': True,
+                    'socket_keepalive': True,
+                }
+                
+                # Add SSL configuration if enabled
+                if self.use_ssl:
+                    connection_kwargs['ssl_cert_reqs'] = None  # Disable certificate verification for AWS ElastiCache
+                
                 self._redis = aioredis.from_url(
                     self._connection_url,
-                    decode_responses=True,
-                    retry_on_timeout=True,
-                    socket_keepalive=True,
-                    socket_connect_timeout=5,
-                    max_connections=50,  # Connection pool size
-                    health_check_interval=30,  # Health check every 30s
+                    **connection_kwargs
                 )
                 # Test connection
                 await self._redis.ping()
-                logger.info(
-                    f"Connected to Redis at {self.host}:{self.port} "
-                    f"(pool size: 50, health check: 30s)"
-                )
+                logger.info(f"Connected to Redis at {self.host}:{self.port} (SSL: {self.use_ssl})")
             except Exception as e:
                 logger.error(f"Failed to connect to Redis: {e}")
                 self._redis = None
