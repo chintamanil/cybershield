@@ -139,31 +139,44 @@ All parallel results are aggregated into final threat analysis with risk scoring
 
 ### **🔥 Key Differences from LangChain/ReAct Workflows**
 
-| Aspect | **Temporal CyberShield** | **LangChain ReAct** |
-|--------|--------------------------|---------------------|
-| **Execution Model** | Deterministic parallel execution | Sequential LLM-driven agent decisions |
-| **Parallelism** | True parallel (`asyncio.gather`) | Sequential tool selection per reasoning step |
-| **Tool Coordination** | All tools execute simultaneously | Agent chooses tools step-by-step |
+| Aspect | **Temporal CyberShield** | **LangChain ReAct with Supervisor** |
+|--------|--------------------------|-------------------------------------|
+| **Execution Model** | Deterministic parallel execution | LLM supervisor selects agents, then parallel tool execution |
+| **Decision Making** | Rule-based (if/else conditions) | LLM-driven agent selection via supervisor |
+| **Tool Coordination** | All tools execute simultaneously always | Supervisor chooses agents → agents run tools in parallel |
 | **Durability** | Activities retry independently | Entire workflow restarts on failure |
-| **Performance** | ~3-4 seconds (parallel) | ~8-12 seconds (sequential + LLM overhead) |
+| **Performance** | ~3-4 seconds (no LLM calls) | ~5-8 seconds (LLM supervisor + parallel tools) |
 | **Observability** | Native workflow tracking & history | Custom logging and state management |
 
 ### **Performance Characteristics for IP+Domain Query:**
 
 ```bash
-# Temporal (Parallel Execution):
+# Temporal (Deterministic Parallel Execution):
 ┌─ VirusTotal ─┐    ┌─ AbuseIPDB ─┐    ┌─ Shodan ─┐    ┌─ Milvus ─┐
 │   IP + Domain│    │   IP only   │    │  IP only │    │  Vector  │
 │   2-3 seconds│    │  1-2 seconds│    │ 1-2 secs │    │  Search  │
 └──────────────┘    └─────────────┘    └──────────┘    └──────────┘
-Total: ~3-4 seconds (longest activity wins)
+Total: ~3-4 seconds (longest activity wins, no LLM overhead)
 
-# LangChain ReAct (Sequential):
-Agent → Route → VT → Route → AbuseIPDB → Route → Shodan → Route → Synthesis
-Total: ~8-12 seconds (cumulative execution + LLM reasoning overhead)
+# LangChain ReAct (Supervisor + Parallel Tools):
+Supervisor (LLM) → Select ThreatAgent → Run tools in parallel (asyncio.gather)
+     ↓ 1-2 sec          ↓ <1 sec              ↓ 3-4 sec
+   Routing          Agent Selection    ┌─ VT ─┬─ AbuseIPDB ─┬─ Shodan ─┐
+                                       └──────┴─────────────┴──────────┘
+                                            (Parallel execution)
+Total: ~5-8 seconds (LLM routing + agent selection + parallel tool execution)
+
+# LangChain Basic Mode (No ReAct, Sequential):
+Sequential: VT → AbuseIPDB → Shodan → Synthesis
+Total: ~8-12 seconds (sequential API calls, no parallelization)
 ```
 
-**Result**: Temporal eliminates the **reasoning bottleneck** and **sequential coordination overhead**, delivering 2-3x faster execution for cybersecurity analysis.
+**Key Insights**:
+- **Temporal**: Eliminates LLM overhead entirely with deterministic rule-based routing
+- **LangChain ReAct**: Uses supervisor for intelligent agent selection, then runs tools in parallel within selected agents
+- **LangChain Basic**: Falls back to sequential execution without ReAct workflow
+
+**Performance Advantage**: Temporal's ~30-50% faster due to no LLM calls, though both support parallel tool execution.
 
 ### 2. Data Models (`models.py`)
 
