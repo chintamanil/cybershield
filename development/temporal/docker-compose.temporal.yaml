@@ -1,0 +1,285 @@
+# Docker Compose configuration for CyberShield with Temporal
+version: '3.8'
+
+services:
+  # Temporal Services
+  temporal-postgresql:
+    container_name: temporal-postgresql
+    environment:
+      POSTGRES_PASSWORD: temporal
+      POSTGRES_USER: temporal
+      POSTGRES_DB: temporal
+    image: postgres:13
+    networks:
+      - temporal-network
+    ports:
+      - 5433:5432
+    volumes:
+      - temporal_postgresql_data:/var/lib/postgresql/data
+
+  temporal-server:
+    container_name: temporal-server
+    depends_on:
+      - temporal-postgresql
+    environment:
+      - DB=postgres12
+      - DB_PORT=5432
+      - POSTGRES_USER=temporal
+      - POSTGRES_PWD=temporal
+      - POSTGRES_SEEDS=temporal-postgresql
+      # - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
+      - ENABLE_ES=false
+      - TEMPORAL_CLI_ADDRESS=temporal-server:7233
+    image: temporalio/auto-setup:1.24.2
+    platform: linux/amd64
+    networks:
+      - temporal-network
+    ports:
+      - 7233:7233
+    volumes:
+      - ./config/temporal:/etc/temporal/config/dynamicconfig
+    labels:
+      kompose.volume.type: configMap
+
+  temporal-admin-tools:
+    container_name: temporal-admin-tools
+    depends_on:
+      - temporal-server
+    environment:
+      - TEMPORAL_CLI_ADDRESS=temporal-server:7233
+    image: temporalio/admin-tools:1.24.2
+    platform: linux/amd64
+    networks:
+      - temporal-network
+    stdin_open: true
+    tty: true
+
+  temporal-web:
+    container_name: temporal-web
+    depends_on:
+      - temporal-server
+    environment:
+      - TEMPORAL_ADDRESS=temporal-server:7233
+      - TEMPORAL_CORS_ORIGINS=http://localhost:3000
+    image: temporalio/web:1.15.0
+    platform: linux/amd64
+    networks:
+      - temporal-network
+    ports:
+      - 8080:8080
+
+  # Existing CyberShield Services
+  redis:
+    image: redis:7
+    container_name: cybershield-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - cybershield-network
+      - temporal-network
+
+  postgres:
+    image: postgres:15
+    container_name: cybershield-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-cybershield}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/postgres/init_postgres.sql:/docker-entrypoint-initdb.d/init_postgres.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d cybershield"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - cybershield-network
+
+  milvus:
+    image: milvusdb/milvus:v2.3.9
+    container_name: cybershield-milvus
+    command: ["milvus", "run", "standalone"]
+    ports:
+      - "19530:19530"
+      - "9091:9091"
+    environment:
+      - ETCD_ENDPOINTS=etcd:2379
+      - MINIO_ADDRESS=minio:9000
+      - PULSAR_ADDRESS=pulsar://pulsar:6650
+      - MILVUS_LOG_LEVEL=info
+    volumes:
+      - milvus_data:/var/lib/milvus
+    depends_on:
+      - etcd
+      - minio
+      - pulsar
+    networks:
+      - cybershield-network
+
+  etcd:
+    image: quay.io/coreos/etcd:v3.5.5
+    container_name: cybershield-etcd
+    environment:
+      - ETCD_AUTO_COMPACTION_MODE=revision
+      - ETCD_AUTO_COMPACTION_RETENTION=1000
+      - ETCD_QUOTA_BACKEND_BYTES=4294967296
+      - ETCD_SNAPSHOT_COUNT=50000
+    command: etcd -advertise-client-urls=http://127.0.0.1:2379 -listen-client-urls http://0.0.0.0:2379 --data-dir /etcd
+    ports:
+      - "2379:2379"
+    volumes:
+      - etcd_data:/etcd
+    networks:
+      - cybershield-network
+
+  minio:
+    image: minio/minio:RELEASE.2023-03-20T20-16-18Z
+    container_name: cybershield-minio
+    ports:
+      - "9000:9000"
+    environment:
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-minioadmin}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-minioadmin}
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+    networks:
+      - cybershield-network
+
+  pulsar:
+    image: apachepulsar/pulsar:2.10.2
+    container_name: cybershield-pulsar
+    command: bin/pulsar standalone
+    ports:
+      - "6650:6650"
+      - "8081:8080"
+    volumes:
+      - pulsar_data:/pulsar/data
+    networks:
+      - cybershield-network
+
+  # CyberShield Application Services
+  cybershield-worker:
+    build:
+      context: .
+      dockerfile: deployment/Dockerfile.aws
+    container_name: cybershield-temporal-worker
+    environment:
+      # Temporal configuration
+      - TEMPORAL_TARGET_HOST=temporal-server:7233
+      - TEMPORAL_NAMESPACE=default
+      - TEMPORAL_TASK_QUEUE=cybershield-workflows
+
+      # Database connections
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=${POSTGRES_DB:-cybershield}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
+
+      # Milvus configuration
+      - MILVUS_HOST=milvus
+      - MILVUS_PORT=19530
+
+      # API Keys (from .env file)
+      - VIRUSTOTAL_API_KEY=${VIRUSTOTAL_API_KEY:-}
+      - SHODAN_API_KEY=${SHODAN_API_KEY:-}
+      - ABUSEIPDB_API_KEY=${ABUSEIPDB_API_KEY:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+
+      # Application configuration
+      - LOG_LEVEL=INFO
+      - DEBUG=false
+    command: python server/temporal_worker.py --mode single --log-level INFO
+    depends_on:
+      - temporal-server
+      - redis
+      - postgres
+      - milvus
+    networks:
+      - cybershield-network
+      - temporal-network
+    restart: unless-stopped
+
+  cybershield-api:
+    build:
+      context: .
+      dockerfile: deployment/Dockerfile.aws
+    container_name: cybershield-api
+    ports:
+      - "8000:8000"
+    environment:
+      # Temporal configuration
+      - TEMPORAL_TARGET_HOST=temporal-server:7233
+      - TEMPORAL_NAMESPACE=default
+      - TEMPORAL_TASK_QUEUE=cybershield-workflows
+
+      # Database connections
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=${POSTGRES_DB:-cybershield}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
+
+      # Milvus configuration
+      - MILVUS_HOST=milvus
+      - MILVUS_PORT=19530
+
+      # API Keys (from .env file)
+      - VIRUSTOTAL_API_KEY=${VIRUSTOTAL_API_KEY:-}
+      - SHODAN_API_KEY=${SHODAN_API_KEY:-}
+      - ABUSEIPDB_API_KEY=${ABUSEIPDB_API_KEY:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+
+      # Application configuration
+      - LOG_LEVEL=INFO
+      - DEBUG=false
+      - USE_TEMPORAL_WORKFLOW=true
+    command: uvicorn server.main:app --host 0.0.0.0 --port 8000
+    depends_on:
+      - temporal-server
+      - cybershield-worker
+      - redis
+      - postgres
+      - milvus
+    networks:
+      - cybershield-network
+      - temporal-network
+    restart: unless-stopped
+
+volumes:
+  # Temporal volumes
+  temporal_postgresql_data:
+    driver: local
+
+  # CyberShield volumes
+  redis_data:
+    driver: local
+  postgres_data:
+    driver: local
+  milvus_data:
+    driver: local
+  etcd_data:
+    driver: local
+  minio_data:
+    driver: local
+  pulsar_data:
+    driver: local
+
+networks:
+  temporal-network:
+    name: temporal-network
+    driver: bridge
+  cybershield-network:
+    name: cybershield-network
+    driver: bridge

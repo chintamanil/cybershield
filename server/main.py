@@ -37,6 +37,9 @@ from tools.regex_checker import RegexChecker
 # Configure structured logging
 from utils.logging_config import setup_from_env, get_logger
 
+# Import Temporal service for workflow orchestration
+from utils.temporal_service import get_temporal_service
+
 # Setup logging from environment
 setup_from_env()
 logger = get_logger(__name__, component="server")
@@ -76,6 +79,7 @@ abuseipdb_client = None
 shodan_client = None
 virustotal_client = None
 regex_checker = None
+temporal_service = None
 
 
 async def initialize_component(name: str, coro):
@@ -127,7 +131,7 @@ async def parallel_initialization():
 async def lifespan(app: FastAPI):
     """Optimized async startup and shutdown for FastAPI app"""
     # Startup
-    global memory, vectorstore, agent, abuseipdb_client, shodan_client, virustotal_client, regex_checker
+    global memory, vectorstore, agent, abuseipdb_client, shodan_client, virustotal_client, regex_checker, temporal_service
 
     startup_start = time.time()
 
@@ -178,6 +182,14 @@ async def lifespan(app: FastAPI):
                 logger.info("SupervisorAgent clients initialized")
             except Exception as e:
                 logger.warning("Agent client initialization failed", error=str(e))
+
+        # Initialize Temporal service
+        try:
+            temporal_service = await get_temporal_service()
+            logger.info("Temporal workflow service initialized")
+        except Exception as e:
+            logger.warning("Temporal service initialization failed", error=str(e))
+            temporal_service = None
 
         startup_duration = time.time() - startup_start
         successful_components = sum(1 for name, (result, error) in components.items() if not error)
@@ -245,7 +257,9 @@ app.add_middleware(
 class AnalysisRequest(BaseModel):
     text: str
     use_react_workflow: Optional[bool] = True
+    use_temporal_workflow: Optional[bool] = False
     include_vision: Optional[bool] = False
+    analysis_type: Optional[str] = "comprehensive"
 
 
 class BatchAnalysisRequest(BaseModel):
@@ -313,13 +327,23 @@ async def _safe_hash_lookup(hash_value: str) -> Dict[str, Any]:
 @app.get("/")
 async def root():
     """API root endpoint with basic information"""
+    temporal_status = "available" if temporal_service else "unavailable"
     return {
         "message": "CyberShield AI Security System",
-        "version": "2.0.0",
-        "description": "Multi-agent AI system for cybersecurity analysis with Vision AI and ReAct workflow",
+        "version": "3.0.0",
+        "description": "Multi-agent AI system for cybersecurity analysis with Temporal workflow orchestration",
         "frontend": "Streamlit UI available at http://localhost:8501",
         "docs": "Interactive API documentation at /docs",
         "status": "GET /status for system information",
+        "workflows": {
+            "traditional": "POST /analyze - LangChain/LangGraph workflows",
+            "temporal": f"POST /temporal/analyze - Temporal orchestration ({temporal_status})",
+            "temporal_with_image": f"POST /temporal/analyze-with-image - Temporal with vision ({temporal_status})"
+        },
+        "workflow_management": {
+            "status": "GET /temporal/workflow/{workflow_id}/status",
+            "cancel": "POST /temporal/workflow/{workflow_id}/cancel"
+        }
     }
 
 
@@ -330,12 +354,46 @@ async def analyze_text(request: AnalysisRequest):
     """
     start_time = time.time()
     request_logger = logger.bind(
-        endpoint="analyze", react_workflow=request.use_react_workflow
+        endpoint="analyze",
+        react_workflow=request.use_react_workflow,
+        temporal_workflow=request.use_temporal_workflow
     )
 
     try:
-        request_logger.info("Analysis request started", text_length=len(request.text))
+        request_logger.info(
+            "Analysis request started",
+            text_length=len(request.text),
+            analysis_type=request.analysis_type
+        )
 
+        # Check if Temporal workflow is requested
+        if request.use_temporal_workflow and temporal_service:
+            request_logger.info("Using Temporal workflow for analysis")
+
+            try:
+                result = await temporal_service.execute_analysis(
+                    text=request.text,
+                    analysis_type=request.analysis_type,
+                    request_id=f"api-{int(time.time())}-{hash(request.text[:50]) % 10000}"
+                )
+
+                processing_time = time.time() - start_time
+
+                return AnalysisResponse(
+                    status="success",
+                    result=result,
+                    processing_time=processing_time
+                )
+
+            except Exception as e:
+                request_logger.error(f"Temporal workflow failed: {e}")
+                # Fall back to traditional workflow
+                request_logger.info("Falling back to traditional workflow")
+
+        elif request.use_temporal_workflow and not temporal_service:
+            request_logger.warning("Temporal workflow requested but service not available, using traditional workflow")
+
+        # Traditional workflow path
         # Configure agent workflow
         if hasattr(agent, "use_react_workflow"):
             agent.use_react_workflow = request.use_react_workflow
@@ -489,6 +547,164 @@ async def analyze_text(request: AnalysisRequest):
             processing_time_ms=round(processing_time * 1000, 2),
         )
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# Temporal workflow endpoints
+@app.post("/temporal/analyze")
+async def analyze_with_temporal(request: AnalysisRequest):
+    """
+    Analyze text using Temporal workflow orchestration for improved reliability and observability
+    """
+    start_time = time.time()
+
+    if not temporal_service:
+        raise HTTPException(
+            status_code=503,
+            detail="Temporal workflow service not available"
+        )
+
+    try:
+        logger.info(
+            "Temporal workflow analysis started",
+            text_length=len(request.text),
+            analysis_type=request.analysis_type
+        )
+
+        result = await temporal_service.execute_analysis(
+            text=request.text,
+            analysis_type=request.analysis_type,
+            request_id=f"temporal-api-{int(time.time())}-{hash(request.text[:50]) % 10000}"
+        )
+
+        processing_time = time.time() - start_time
+
+        logger.info(
+            "Temporal workflow analysis completed",
+            processing_time=processing_time,
+            status=result.get("status", "unknown")
+        )
+
+        return AnalysisResponse(
+            status="success",
+            result=result,
+            processing_time=processing_time
+        )
+
+    except Exception as e:
+        processing_time = time.time() - start_time
+        logger.error(f"Temporal workflow analysis failed: {e}", processing_time=processing_time)
+
+        raise HTTPException(
+            status_code=500,
+            detail=f"Temporal workflow execution failed: {str(e)}"
+        )
+
+
+@app.post("/temporal/analyze-with-image")
+async def analyze_with_image_temporal(
+    text: str = Form(...),
+    image: UploadFile = File(...),
+    analysis_type: str = Form("comprehensive")
+):
+    """
+    Analyze text and image using Temporal workflow orchestration
+    """
+    start_time = time.time()
+
+    if not temporal_service:
+        raise HTTPException(
+            status_code=503,
+            detail="Temporal workflow service not available"
+        )
+
+    try:
+        # Read image data
+        image_data = await image.read()
+
+        logger.info(
+            "Temporal workflow image analysis started",
+            text_length=len(text),
+            image_size=len(image_data),
+            analysis_type=analysis_type
+        )
+
+        result = await temporal_service.execute_analysis(
+            text=text,
+            image_data=image_data,
+            analysis_type=analysis_type,
+            request_id=f"temporal-image-{int(time.time())}-{hash(text[:50]) % 10000}"
+        )
+
+        processing_time = time.time() - start_time
+
+        logger.info(
+            "Temporal workflow image analysis completed",
+            processing_time=processing_time,
+            status=result.get("status", "unknown")
+        )
+
+        return JSONResponse(
+            content={
+                "status": "success",
+                "result": result,
+                "processing_time": processing_time
+            }
+        )
+
+    except Exception as e:
+        processing_time = time.time() - start_time
+        logger.error(f"Temporal workflow image analysis failed: {e}", processing_time=processing_time)
+
+        raise HTTPException(
+            status_code=500,
+            detail=f"Temporal workflow execution failed: {str(e)}"
+        )
+
+
+@app.get("/temporal/workflow/{workflow_id}/status")
+async def get_workflow_status(workflow_id: str):
+    """
+    Get status of a running Temporal workflow
+    """
+    if not temporal_service:
+        raise HTTPException(
+            status_code=503,
+            detail="Temporal workflow service not available"
+        )
+
+    try:
+        status = await temporal_service.get_workflow_status(workflow_id)
+        return JSONResponse(content=status)
+
+    except Exception as e:
+        logger.error(f"Failed to get workflow status: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to get workflow status: {str(e)}"
+        )
+
+
+@app.post("/temporal/workflow/{workflow_id}/cancel")
+async def cancel_workflow(workflow_id: str):
+    """
+    Cancel a running Temporal workflow
+    """
+    if not temporal_service:
+        raise HTTPException(
+            status_code=503,
+            detail="Temporal workflow service not available"
+        )
+
+    try:
+        result = await temporal_service.cancel_workflow(workflow_id)
+        return JSONResponse(content=result)
+
+    except Exception as e:
+        logger.error(f"Failed to cancel workflow: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to cancel workflow: {str(e)}"
+        )
 
 
 @app.post("/analyze-with-image")

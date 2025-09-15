@@ -1,0 +1,81 @@
+# Docker Compose for Temporal development (minimal setup)
+version: '3.8'
+
+services:
+  # Temporal PostgreSQL Database
+  temporal-postgresql:
+    container_name: temporal-postgresql-dev
+    environment:
+      POSTGRES_PASSWORD: temporal
+      POSTGRES_USER: temporal
+      POSTGRES_DB: temporal
+    image: postgres:13
+    networks:
+      - temporal-dev
+    ports:
+      - 5433:5432
+    volumes:
+      - temporal_postgresql_dev:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U temporal -d temporal"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Temporal Server
+  temporal-server:
+    container_name: temporal-server-dev
+    depends_on:
+      temporal-postgresql:
+        condition: service_healthy
+    environment:
+      - DB=postgres12
+      - DB_PORT=5432
+      - POSTGRES_USER=temporal
+      - POSTGRES_PWD=temporal
+      - POSTGRES_SEEDS=temporal-postgresql
+      # - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
+      - ENABLE_ES=false
+      - TEMPORAL_CLI_ADDRESS=temporal-server:7233
+    image: temporalio/auto-setup:1.24.2
+    platform: linux/amd64
+    networks:
+      - temporal-dev
+    ports:
+      - 7233:7233
+    healthcheck:
+      test: ["CMD-SHELL", "tctl cluster health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  # Temporal Web UI
+  temporal-web:
+    container_name: temporal-web-dev
+    depends_on:
+      temporal-server:
+        condition: service_healthy
+    environment:
+      - TEMPORAL_ADDRESS=temporal-server:7233
+      - TEMPORAL_CORS_ORIGINS=http://localhost:3000,http://localhost:8000
+    image: temporalio/web:1.15.0
+    platform: linux/amd64
+    networks:
+      - temporal-dev
+    ports:
+      - 8080:8088
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:8088 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  temporal_postgresql_dev:
+    driver: local
+
+networks:
+  temporal-dev:
+    name: temporal-dev-network
+    driver: bridge
