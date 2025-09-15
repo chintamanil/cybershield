@@ -65,7 +65,100 @@ The main `CyberShieldWorkflow` class orchestrates the entire security analysis p
 4. **Optional Analysis** - Vision analysis and PII detection as needed
 5. **Result Synthesis** - Aggregate results and generate recommendations
 
-## 🚀 How CyberShieldWorkflow Processes IP & Domain Queries
+## 🆕 Dynamic LLM-Based Tool Selection (New!)
+
+### **Intelligent Tool Selection with DynamicCyberShieldWorkflow**
+
+We now support **dynamic, LLM-driven tool selection** that combines Temporal's reliability with intelligent decision making:
+
+```python
+# New workflow with LLM-based tool selection
+from workflows.temporal import DynamicCyberShieldWorkflow
+
+# LLM analyzes context and selects appropriate tools
+# Falls back to rule-based selection if OpenAI unavailable
+```
+
+#### **Three Execution Strategies**
+
+1. **Parallel Execution** (Fastest, 3-4 seconds)
+   - All selected tools run simultaneously
+   - Best for comprehensive analysis
+
+2. **Sequential Execution** (Adaptive, 4-6 seconds)
+   - Tools run in priority order
+   - Can stop early if critical threats found
+   - Saves resources when high-risk indicators detected
+
+3. **Staged Execution** (Hybrid, 4-5 seconds)
+   - High-priority tools run first in parallel
+   - Additional tools only if needed
+   - Balances speed and resource efficiency
+
+#### **How LLM Tool Selection Works**
+
+```python
+# Phase 1: Extract IOCs for context
+ioc_analysis = extract_iocs(request)
+
+# Phase 2: LLM selects tools based on:
+# - Type and quantity of IOCs
+# - Threat keywords in text
+# - Analysis type requested
+# - Resource efficiency
+tool_selection = llm_select_tools_activity(request, ioc_analysis)
+
+# Returns:
+{
+    "selected_tools": ["virustotal", "abuseipdb", "shodan"],
+    "reasoning": "Found 3 public IPs and malware keywords...",
+    "priority_order": ["virustotal", "shodan", "abuseipdb"],
+    "confidence": 0.85,
+    "execution_strategy": "parallel"  # or "sequential" or "staged"
+}
+
+# Phase 3: Execute based on strategy
+if strategy == "parallel":
+    results = asyncio.gather(*selected_activities)
+elif strategy == "sequential":
+    for tool in priority_order:
+        result = execute(tool)
+        if critical_threat_found: break
+elif strategy == "staged":
+    stage1 = execute(high_priority_tools)
+    if not critical: stage2 = execute(remaining_tools)
+```
+
+#### **Adaptive Early Stopping**
+
+The workflow can intelligently stop analysis early:
+
+```python
+# After each tool execution:
+should_continue = evaluate_continue_analysis_activity({
+    "current_results": results,
+    "original_request": request
+})
+
+# Stops if:
+# - Critical threats found (risk_level == "critical")
+# - High malicious count (>5 detections)
+# - Confidence threshold met
+```
+
+#### **Comparison: Static vs Dynamic Workflows**
+
+| Feature | **CyberShieldWorkflow** | **DynamicCyberShieldWorkflow** |
+|---------|------------------------|-------------------------------|
+| **Tool Selection** | Rule-based (if/else) | LLM-driven with fallback |
+| **Execution** | Always parallel all tools | Parallel/Sequential/Staged |
+| **Adaptability** | Fixed patterns | Context-aware selection |
+| **Early Stopping** | No | Yes, based on results |
+| **Resource Usage** | May over-analyze | Optimized per context |
+| **LLM Dependency** | None | Optional (has fallback) |
+| **Performance** | 3-4 seconds always | 3-6 seconds adaptive |
+
+## 🚀 How CyberShieldWorkflow Processes IP & Domain Queries (Original)
 
 ### **Execution Pipeline for IP & Domain Analysis**
 
@@ -139,24 +232,34 @@ All parallel results are aggregated into final threat analysis with risk scoring
 
 ### **🔥 Key Differences from LangChain/ReAct Workflows**
 
-| Aspect | **Temporal CyberShield** | **LangChain ReAct with Supervisor** |
-|--------|--------------------------|-------------------------------------|
-| **Execution Model** | Deterministic parallel execution | LLM supervisor selects agents, then parallel tool execution |
-| **Decision Making** | Rule-based (if/else conditions) | LLM-driven agent selection via supervisor |
-| **Tool Coordination** | All tools execute simultaneously always | Supervisor chooses agents → agents run tools in parallel |
-| **Durability** | Activities retry independently | Entire workflow restarts on failure |
-| **Performance** | ~3-4 seconds (no LLM calls) | ~5-8 seconds (LLM supervisor + parallel tools) |
-| **Observability** | Native workflow tracking & history | Custom logging and state management |
+| Aspect | **Temporal Static** | **Temporal Dynamic** | **LangChain ReAct** |
+|--------|-------------------|-------------------|-------------------|
+| **Tool Selection** | Rule-based (if/else) | LLM + rule-based fallback | LLM supervisor |
+| **Execution** | Always parallel all tools | Parallel/Sequential/Staged | Agent-driven parallel |
+| **Adaptability** | Fixed patterns | Context-aware + early stopping | Agent-based decisions |
+| **Durability** | Activities retry independently | Activities retry independently | Workflow restarts on failure |
+| **Performance** | 3-4 seconds (no LLM) | 3-6 seconds (1 LLM call) | 5-8 seconds (multiple LLM calls) |
+| **Cost** | $0 (no LLM usage) | $ (single LLM call) | $$$ (supervisor + agent calls) |
+| **Observability** | Native Temporal tracking | Enhanced with tool selection reasoning | Custom logging |
 
 ### **Performance Characteristics for IP+Domain Query:**
 
 ```bash
-# Temporal (Deterministic Parallel Execution):
+# Temporal Static (Rule-Based, Always Parallel):
 ┌─ VirusTotal ─┐    ┌─ AbuseIPDB ─┐    ┌─ Shodan ─┐    ┌─ Milvus ─┐
 │   IP + Domain│    │   IP only   │    │  IP only │    │  Vector  │
 │   2-3 seconds│    │  1-2 seconds│    │ 1-2 secs │    │  Search  │
 └──────────────┘    └─────────────┘    └──────────┘    └──────────┘
 Total: ~3-4 seconds (longest activity wins, no LLM overhead)
+
+# Temporal Dynamic (LLM Tool Selection + Adaptive Execution):
+LLM Selection → Execute Selected Tools → Early Stop if Critical
+     ↓ 1 sec         ↓ 2-4 sec              ↓ Optional
+   Tool Selection  ┌─ Selected Tools ─┐    Stop Analysis
+                   │   (Parallel or   │    if High Risk
+                   │   Sequential)    │    Detected
+                   └─────────────────┘
+Total: ~3-6 seconds (LLM selection + optimized tool execution)
 
 # LangChain ReAct (Supervisor + Parallel Tools):
 Supervisor (LLM) → Select ThreatAgent → Run tools in parallel (asyncio.gather)
@@ -172,11 +275,15 @@ Total: ~8-12 seconds (sequential API calls, no parallelization)
 ```
 
 **Key Insights**:
-- **Temporal**: Eliminates LLM overhead entirely with deterministic rule-based routing
-- **LangChain ReAct**: Uses supervisor for intelligent agent selection, then runs tools in parallel within selected agents
-- **LangChain Basic**: Falls back to sequential execution without ReAct workflow
+- **Temporal Static**: Fastest but fixed - eliminates LLM overhead with deterministic routing
+- **Temporal Dynamic**: Best balance - intelligent selection with single LLM call + adaptive execution
+- **LangChain ReAct**: Most flexible but slowest - multiple LLM calls for supervisor + agent coordination
+- **LangChain Basic**: Fallback sequential execution without intelligent routing
 
-**Performance Advantage**: Temporal's ~30-50% faster due to no LLM calls, though both support parallel tool execution.
+**Performance & Intelligence Trade-offs**:
+- **Static Temporal**: Fastest (3-4s) but least adaptive
+- **Dynamic Temporal**: Good speed (3-6s) with high intelligence
+- **LangChain ReAct**: Slower (5-8s) but most flexible agent coordination
 
 ### 2. Data Models (`models.py`)
 
@@ -365,13 +472,49 @@ curl -X POST http://localhost:8000/temporal/analyze \
 
 ### **🚀 Running Your First Temporal Workflow**
 
-#### **Test with IP + Domain Analysis:**
+#### **Test with IP + Domain Analysis (Original Static Workflow):**
 ```bash
 curl -X POST http://localhost:8000/temporal/analyze \
   -H "Content-Type: application/json" \
   -d '{
     "text": "Security analysis for IP 8.8.8.8 and domain google.com",
     "analysis_type": "comprehensive"
+  }'
+```
+
+#### **Test with Dynamic LLM Tool Selection (New!):**
+```bash
+# Dynamic workflow with intelligent tool selection
+curl -X POST http://localhost:8000/temporal/analyze-dynamic \
+  -H "Content-Type: application/json" \
+  -d '{
+    "text": "Suspicious malware detected at IP 203.0.113.5 and domain evil-c2.com",
+    "analysis_type": "threat_intel"
+  }'
+
+# LLM will analyze context and select appropriate tools
+# Expected: VirusTotal, AbuseIPDB, Shodan, Milvus (due to "malware" keyword)
+# Strategy: Likely "parallel" for comprehensive threat analysis
+```
+
+#### **Test Different Execution Strategies:**
+```bash
+# Force sequential execution for adaptive analysis
+curl -X POST http://localhost:8000/temporal/analyze-dynamic \
+  -H "Content-Type: application/json" \
+  -d '{
+    "text": "Investigating potential threat at IP 192.168.1.100",
+    "analysis_type": "basic",
+    "execution_strategy": "sequential"
+  }'
+
+# Force staged execution for balanced approach
+curl -X POST http://localhost:8000/temporal/analyze-dynamic \
+  -H "Content-Type: application/json" \
+  -d '{
+    "text": "Multiple suspicious IPs detected: 1.2.3.4, 5.6.7.8, 9.10.11.12",
+    "analysis_type": "comprehensive",
+    "execution_strategy": "staged"
   }'
 ```
 
