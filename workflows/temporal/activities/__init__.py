@@ -13,6 +13,11 @@ try:
     )
     from .vision_processing import vision_analysis_activity
     from .pii_processing import pii_analysis_activity
+    from .llm_tool_selection import (
+        llm_select_tools_activity,
+        evaluate_continue_analysis_activity,
+        ToolSelectionResult
+    )
 
     _activities_available = True
 
@@ -25,7 +30,10 @@ try:
         "shodan_analysis_activity",
         "milvus_search_activity",
         "vision_analysis_activity",
-        "pii_analysis_activity"
+        "pii_analysis_activity",
+        "llm_select_tools_activity",
+        "evaluate_continue_analysis_activity",
+        "ToolSelectionResult"
     ]
 
 except ImportError:
