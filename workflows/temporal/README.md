@@ -53,6 +53,135 @@ workflows/temporal/
 └── README.md                  # This file
 ```
 
+## 🏗️ Enterprise Temporal Architecture
+
+### **Current vs Target Architecture**
+
+#### **Current Implementation (Basic)**
+```mermaid
+graph TD
+    A[Clients] --> B[FastAPI Server]
+    B --> C[CyberShieldWorkflow]
+    C --> D[Activities]
+    D --> E[External APIs]
+    D --> F[Database]
+
+    subgraph "Single Task Queue"
+        C
+        D
+    end
+```
+
+#### **Target Enterprise Architecture**
+```mermaid
+graph TD
+    A[Clients] --> B[Traffic Orchestrator Workflow]
+    B --> C{Multi-Tenant Routing}
+
+    C --> D[Premium Task Queue]
+    C --> E[Standard Task Queue]
+    C --> F[Basic Task Queue]
+
+    D --> G[Threat Intel Child Workflow]
+    D --> H[Scanner Child Workflow]
+    E --> I[Vision Child Workflow]
+    F --> J[Basic Analysis Child Workflow]
+
+    G --> K[VirusTotal Activity]
+    G --> L[Shodan Activity]
+    H --> M[Scheduled Scan Activity]
+    I --> N[OCR Activity]
+    J --> O[IOC Extract Activity]
+
+    K --> P[HTTP/gRPC Calls]
+    L --> P
+    M --> Q[Database Writes]
+    N --> R[Encrypted Payloads]
+    O --> S[Search Attributes]
+
+    subgraph "Enterprise Features"
+        T[Signals & Queries]
+        U[Worker Versioning]
+        V[Multi-Region]
+        W[mTLS Security]
+    end
+```
+
+### **Enterprise Temporal Features Analysis**
+
+| Feature | Current Status | Implementation Priority | Benefits |
+|---------|---------------|------------------------|----------|
+| **Task Queues** | ✅ Basic | ✅ Implemented | Single queue per workflow type |
+| **Multi-Tenant Queues** | ❌ Missing | 🔥 High | `cybershield-{tenant}-{sla}` isolation |
+| **Search Attributes** | ❌ Missing | 🔥 High | Filter by `tenant_id`, `region`, `sla_tier` |
+| **Signals & Queries** | ❌ Missing | 🔥 High | Real-time workflow control & monitoring |
+| **Child Workflows** | ❌ Missing | 🟡 Medium | Traffic shaping, resource isolation |
+| **Schedules** | ❌ Missing | 🟡 Medium | Periodic scans, backfill missed windows |
+| **Data Converter** | ❌ Missing | 🟢 Low | Client-side payload encryption |
+| **Worker Versioning** | ❌ Missing | 🟡 Medium | Blue/green deployments |
+| **Observability** | ❌ Missing | 🔥 High | Tracing headers, end-to-end monitoring |
+| **Multi-Region** | ❌ Missing | 🟢 Low | Graceful failover, geo-distribution |
+| **mTLS** | ❌ Missing | 🟡 Medium | Secure client-server communication |
+
+### **Enterprise Use Cases**
+
+#### **Multi-Tenant Security Platform**
+```python
+# Tag workflows with search attributes for ops dashboards
+workflow.upsert_search_attributes({
+    "tenant_id": "enterprise_customer_1",
+    "region": "us-east-1",
+    "sla_tier": "premium",
+    "threat_level": "critical"
+})
+
+# Query workflows for monitoring
+temporal workflow list --query 'sla_tier="premium" AND threat_level="critical"'
+```
+
+#### **Scheduled Security Operations**
+```python
+# Periodic vulnerability scans
+schedule = Schedule(
+    cron="0 2 * * *",  # Daily at 2 AM
+    workflow=VulnerabilityScawWorkflow,
+    task_queue="cybershield-scheduled"
+)
+
+# Backfill missed scans after incidents
+schedule.backfill(start_time=outage_start, end_time=outage_end)
+```
+
+#### **Real-Time Workflow Control**
+```python
+# Pause high-resource analysis during peak hours
+await workflow.signal("pause_analysis")
+
+# Query current progress
+status = await workflow.query("get_progress")
+# Returns: {"completed_tools": 3, "total_tools": 5, "progress_percent": 60}
+```
+
+#### **Traffic Shaping & Resource Management**
+```python
+# Per-tenant concurrency limits via child workflows
+if tenant.sla_tier == "premium":
+    max_concurrent_tools = 10
+elif tenant.sla_tier == "standard":
+    max_concurrent_tools = 5
+else:  # basic
+    max_concurrent_tools = 2
+
+# Execute with tenant-specific limits
+child_result = await workflow.execute_child_workflow(
+    ThreatIntelWorkflow,
+    args=[request],
+    task_queue=f"cybershield-{tenant.id}-{tenant.sla_tier}"
+)
+```
+
+See **[ENTERPRISE_FEATURES.md](./ENTERPRISE_FEATURES.md)** for complete implementation details.
+
 ## 🔧 Core Components
 
 ### 1. Workflow Definition (`cybershield_workflow.py`)
