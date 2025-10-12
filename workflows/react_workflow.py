@@ -18,34 +18,43 @@ _langgraph_imported = False
 _langchain_imported = False
 _workflow_steps = None
 
+
 def _ensure_langgraph():
     """Lazy import LangGraph components"""
     global _langgraph_imported, StateGraph, END
     if not _langgraph_imported:
         from langgraph.graph import StateGraph, END
+
         _langgraph_imported = True
     return StateGraph, END
+
 
 def _ensure_langchain():
     """Lazy import LangChain components"""
     global _langchain_imported, HumanMessage, SystemMessage
     if not _langchain_imported:
         from langchain_core.messages import HumanMessage, SystemMessage
+
         _langchain_imported = True
     return HumanMessage, SystemMessage
+
 
 def _get_workflow_steps():
     """Lazy import workflow steps"""
     global _workflow_steps
     if _workflow_steps is None:
         from workflows.workflow_steps import WorkflowSteps
+
         _workflow_steps = WorkflowSteps
     return _workflow_steps
+
 
 def _get_llm_factory():
     """Lazy import LLM factory function"""
     from utils.llm_factory import create_llm
+
     return create_llm
+
 
 logger = get_security_logger("react_workflow")
 
@@ -168,22 +177,30 @@ def session_id_reducer(existing: Optional[str], new: Optional[str]) -> Optional[
     return existing if existing else new
 
 
-def original_input_text_reducer(existing: Optional[str], new: Optional[str]) -> Optional[str]:
+def original_input_text_reducer(
+    existing: Optional[str], new: Optional[str]
+) -> Optional[str]:
     """Reducer to preserve original user input before enrichment"""
     return existing if existing else new
 
 
-def context_enrichment_reducer(existing: Optional[Dict], new: Optional[Dict]) -> Optional[Dict]:
+def context_enrichment_reducer(
+    existing: Optional[Dict], new: Optional[Dict]
+) -> Optional[Dict]:
     """Reducer to handle context enrichment metadata"""
     return new if new is not None else existing
 
 
-def previous_iocs_reducer(existing: Optional[Dict], new: Optional[Dict]) -> Optional[Dict]:
+def previous_iocs_reducer(
+    existing: Optional[Dict], new: Optional[Dict]
+) -> Optional[Dict]:
     """Reducer to handle previous IOCs from session"""
     return new if new is not None else existing
 
 
-def session_history_reducer(existing: Optional[List[Dict]], new: Optional[List[Dict]]) -> Optional[List[Dict]]:
+def session_history_reducer(
+    existing: Optional[List[Dict]], new: Optional[List[Dict]]
+) -> Optional[List[Dict]]:
     """Reducer to handle session history - append mode"""
     if not existing:
         return new
@@ -283,6 +300,7 @@ class CyberShieldReActAgent:
 
         # NEW: Initialize SessionStorage for context persistence
         from memory.session_storage import SessionStorage
+
         self.session_storage = SessionStorage(memory=memory, postgres_client=None)
 
         # Initialize workflow steps helper - lazy loaded
@@ -324,6 +342,7 @@ class CyberShieldReActAgent:
                 logger.debug("No session_id provided, skipping context resolution")
                 # Still extract IOCs even without session_id for first-time storage
                 import re
+
                 ips = re.findall(r"\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b", input_text)
                 domains = re.findall(r"\b[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b", input_text)
                 hashes = re.findall(r"\b[a-fA-F0-9]{32,}\b", input_text)
@@ -334,13 +353,15 @@ class CyberShieldReActAgent:
                         "domains": list(set(domains)),
                         "hashes": list(set(hashes)),
                     }
-                    logger.debug(f"Extracted IOCs without session: ips={len(ips)}, domains={len(domains)}, hashes={len(hashes)}")
+                    logger.debug(
+                        f"Extracted IOCs without session: ips={len(ips)}, domains={len(domains)}, hashes={len(hashes)}"
+                    )
 
                 return state
 
             # Resolve context references and enrich input
-            enriched_text, context_metadata = await self.context_resolver.resolve_and_enrich(
-                input_text, session_id
+            enriched_text, context_metadata = (
+                await self.context_resolver.resolve_and_enrich(input_text, session_id)
             )
 
             # Update state with enriched text if it changed
@@ -356,6 +377,7 @@ class CyberShieldReActAgent:
 
                 # Extract IOCs from ENRICHED text (after pronoun resolution)
                 import re
+
                 ips = re.findall(r"\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b", enriched_text)
                 domains = re.findall(r"\b[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b", enriched_text)
                 hashes = re.findall(r"\b[a-fA-F0-9]{32,}\b", enriched_text)
@@ -366,11 +388,14 @@ class CyberShieldReActAgent:
                         "domains": list(set(domains)),
                         "hashes": list(set(hashes)),
                     }
-                    logger.info(f"Extracted IOCs from enriched text: ips={len(ips)}, domains={len(domains)}, hashes={len(hashes)}")
+                    logger.info(
+                        f"Extracted IOCs from enriched text: ips={len(ips)}, domains={len(domains)}, hashes={len(hashes)}"
+                    )
             else:
                 logger.debug("No context enrichment applied")
                 # Extract IOCs from original text even if no enrichment
                 import re
+
                 ips = re.findall(r"\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b", input_text)
                 domains = re.findall(r"\b[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b", input_text)
                 hashes = re.findall(r"\b[a-fA-F0-9]{32,}\b", input_text)
@@ -381,7 +406,9 @@ class CyberShieldReActAgent:
                         "domains": list(set(domains)),
                         "hashes": list(set(hashes)),
                     }
-                    logger.debug(f"Extracted IOCs from original text: ips={len(ips)}, domains={len(domains)}, hashes={len(hashes)}")
+                    logger.debug(
+                        f"Extracted IOCs from original text: ips={len(ips)}, domains={len(domains)}, hashes={len(hashes)}"
+                    )
 
             return state
 
@@ -397,7 +424,9 @@ class CyberShieldReActAgent:
         builder = StateGraph(CyberShieldState)
 
         # Add nodes
-        builder.add_node("ContextResolve", self._context_resolve_step)  # NEW: Context resolution first
+        builder.add_node(
+            "ContextResolve", self._context_resolve_step
+        )  # NEW: Context resolution first
         builder.add_node("Supervisor", self._supervisor_step)
         builder.add_node("ThreatIntel", self._threat_intel_step)
         builder.add_node("VirusScanner", self._virustotal_step)
@@ -407,7 +436,9 @@ class CyberShieldReActAgent:
         builder.add_node("RegexChecker", self._regex_checker_step)
         builder.add_node("ToolExecutorNode", self._dynamic_tool_executor)
         builder.add_node("synthesize", self._synthesize_step)
-        builder.add_node("StoreContext", self._store_context_step)  # NEW: Context storage after synthesis
+        builder.add_node(
+            "StoreContext", self._store_context_step
+        )  # NEW: Context storage after synthesis
 
         # NEW: Set entry point to context resolution
         builder.set_entry_point("ContextResolve")
@@ -526,7 +557,7 @@ Respond with only one word: ThreatIntel, ToolExecutorNode, or synthesize"""
         try:
             # Ensure message classes are imported
             HumanMessage, SystemMessage = _ensure_langchain()
-            
+
             response = await self.llm.ainvoke([HumanMessage(content=routing_prompt)])
             routing_decision = response.content.strip()
 
@@ -624,7 +655,7 @@ If no threat intelligence tools are needed, respond with: []"""
         try:
             # Ensure message classes are imported
             HumanMessage, SystemMessage = _ensure_langchain()
-            
+
             response = await self.llm.ainvoke(
                 [HumanMessage(content=tool_selection_prompt)]
             )
@@ -870,33 +901,36 @@ If no threat intelligence tools are needed, respond with: []"""
                 success = await self.session_storage.store_iocs(
                     session_id=session_id,
                     iocs=extracted_iocs,
-                    merge=True  # Merge with existing IOCs
+                    merge=True,  # Merge with existing IOCs
                 )
 
                 if success:
                     logger.info(
                         "Stored IOCs for session",
                         session_id=session_id,
-                        ioc_count=sum(len(v) if isinstance(v, list) else 0
-                                     for v in extracted_iocs.values())
+                        ioc_count=sum(
+                            len(v) if isinstance(v, list) else 0
+                            for v in extracted_iocs.values()
+                        ),
                     )
 
             # Store analysis event in history
             if final_report:
                 success = await self.session_storage.store_analysis_event(
-                    session_id=session_id,
-                    analysis_result=final_report
+                    session_id=session_id, analysis_result=final_report
                 )
 
                 if success:
-                    logger.info("Stored analysis event in session history", session_id=session_id)
+                    logger.info(
+                        "Stored analysis event in session history",
+                        session_id=session_id,
+                    )
 
             # Store PII mapping if available
             pii_mapping = state.get("pii_mapping")
             if pii_mapping:
                 await self.session_storage.store_pii_mapping(
-                    session_id=session_id,
-                    pii_mapping=pii_mapping
+                    session_id=session_id, pii_mapping=pii_mapping
                 )
 
             return state
@@ -1288,7 +1322,10 @@ If no threat intelligence tools are needed, respond with: []"""
         return recommendations
 
     async def process(
-        self, user_input: str, image_data: Optional[bytes] = None, session_id: Optional[str] = None
+        self,
+        user_input: str,
+        image_data: Optional[bytes] = None,
+        session_id: Optional[str] = None,
     ) -> Dict[str, Any]:
         """Main processing method with caching and context preservation"""
         try:

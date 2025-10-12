@@ -1060,12 +1060,155 @@ def main():
             "💡 **Tip**: For IP investigations, the system will automatically search historical attack data using the vector database when ReAct workflow is enabled."
         )
 
+        # Session Management Section
+        st.markdown("### 🧠 Context Memory & Session Management")
+
+        # Initialize previous session IDs tracker
+        if "previous_session_ids" not in st.session_state:
+            st.session_state.previous_session_ids = []
+
+        # Check if we have previous sessions
+        has_previous_sessions = len(st.session_state.previous_session_ids) > 0
+
+        # Checkbox to reuse previous session (only enabled if previous sessions exist)
+        reuse_previous = False
+        if has_previous_sessions:
+            reuse_previous = st.checkbox(
+                f"📋 Reuse previous session ID ({len(st.session_state.previous_session_ids)} available)",
+                help="Select this to reuse your most recent session ID",
+                key="reuse_previous_session_checkbox"
+            )
+
+        col1, col2 = st.columns([3, 1])
+        with col1:
+            # If reusing previous session, populate with last session ID
+            default_value = ""
+            if reuse_previous and st.session_state.previous_session_ids:
+                default_value = st.session_state.previous_session_ids[-1]
+
+            session_id = st.text_input(
+                "Session ID (optional):",
+                value=default_value if reuse_previous else st.session_state.get("session_id_main", ""),
+                placeholder="e.g., investigation-001",
+                help="Use the same session ID across multiple requests to enable context memory and pronoun resolution",
+                key="session_id_main" if not reuse_previous else "session_id_main_reused"
+            )
+        with col2:
+            if st.button("🎲 Generate Random", help="Generate a random session ID"):
+                import uuid
+                st.session_state.session_id_main = f"session-{uuid.uuid4().hex[:8]}"
+                st.rerun()
+
+        # Show dropdown of previous sessions if reusing
+        if reuse_previous and has_previous_sessions:
+            st.markdown("**Available Previous Sessions:**")
+            # Show last 5 sessions in a selectbox
+            recent_sessions = st.session_state.previous_session_ids[-5:]
+            selected_session = st.selectbox(
+                "Choose a session:",
+                options=list(reversed(recent_sessions)),  # Most recent first
+                help="Select from your recent session IDs",
+                key="selected_previous_session"
+            )
+
+            if selected_session and selected_session != session_id:
+                st.info(f"💡 Click 'Analyze Text' to use session: `{selected_session}`")
+                # Update the session_id to the selected one
+                session_id = selected_session
+
+        # Context memory explanation
+        if session_id:
+            st.success(f"✅ Context memory enabled for session: `{session_id}`")
+            st.caption(
+                "💡 Previous IOCs from this session will be automatically resolved. "
+                "You can use phrases like 'that IP', 'same domain', 'the hash from before'"
+            )
+        else:
+            st.info(
+                "ℹ️ Enter a session ID to enable context memory across multiple analyses. "
+                "This allows you to use pronoun references like 'that IP address' in follow-up queries."
+            )
+
+        # Show example usage
+        with st.expander("📖 Context Memory Examples"):
+            st.markdown("""
+            **Example 1: Basic Pronoun Resolution**
+            ```
+            Request 1: "Suspicious activity from 192.168.1.100"
+            Request 2: "Tell me more about that IP" → Resolves to 192.168.1.100
+            ```
+
+            **Example 2: Multi-Step Investigation**
+            ```
+            Request 1: "IP 185.220.101.42 connecting to bitcoin-miner.ru"
+            Request 2: "Check if same IP tried other ports" → Tracks both IP and domain
+            Request 3: "What's the threat score for that IP?" → Full context analysis
+            ```
+
+            **Example 3: Cross-IOC Analysis**
+            ```
+            Request 1: "Email from suspicious@temp.com with hash d41d8cd98f00b204e9800998ecf8427e"
+            Request 2: "Is that email known malicious and does the hash match malware?" → Resolves both
+            ```
+            """)
+
+        st.markdown("---")
+
+        # Previous Request History (if session_id exists)
+        if session_id:
+            # Initialize session state for request history
+            if "request_history" not in st.session_state:
+                st.session_state.request_history = {}
+
+            # Check if this session has history
+            if session_id in st.session_state.request_history:
+                history = st.session_state.request_history[session_id]
+
+                st.markdown("### 📜 Previous Requests in This Session")
+                st.info(f"Found {len(history)} previous request(s) in session `{session_id}`")
+
+                # Show last few requests
+                with st.expander(f"View Previous Requests ({len(history)} total)"):
+                    for i, req in enumerate(reversed(history[-5:]), 1):  # Show last 5
+                        st.markdown(f"**Request {len(history) - i + 1}:**")
+                        st.text_area(
+                            f"Request {len(history) - i + 1}",
+                            value=req.get("text", ""),
+                            height=80,
+                            key=f"prev_req_{i}",
+                            disabled=True,
+                            label_visibility="collapsed"
+                        )
+                        if req.get("iocs_found"):
+                            st.caption(f"🔍 IOCs found: {', '.join(req['iocs_found'][:3])}...")
+
+                # Option to include previous request in current analysis
+                include_previous = st.checkbox(
+                    "📎 Include previous request as context",
+                    help="Append the most recent request to your current input for continuity",
+                    key="include_previous_checkbox"
+                )
+
+                if include_previous and history:
+                    last_request = history[-1]
+                    st.success(f"✅ Will include: \"{last_request.get('text', '')[:100]}...\"")
+
         # Text input
         text_input = st.text_area(
             "Enter text to analyze:",
             placeholder="Paste logs, emails, or any text content here...",
             height=200,
         )
+
+        # If including previous request, prepend it
+        if session_id and "request_history" in st.session_state:
+            if session_id in st.session_state.request_history:
+                history = st.session_state.request_history[session_id]
+                if st.session_state.get("include_previous_checkbox", False) and history:
+                    last_request = history[-1]
+                    if text_input and last_request.get("text"):
+                        combined_input = f"Previous: {last_request['text']}\n\nCurrent: {text_input}"
+                        st.caption(f"Combined input length: {len(combined_input)} characters")
 
         col1, col2 = st.columns([2, 1])
         with col1:
@@ -1080,24 +1223,138 @@ def main():
 
         if analyze_btn and text_input:
             with st.spinner("Analyzing text..."):
-                result = make_api_request(
-                    "/analyze",
-                    "POST",
-                    {
-                        "text": text_input,
-                        "use_react_workflow": use_react_workflow,
-                        "include_vision": include_vision,
-                        "enable_concurrent_tools": enable_concurrent,
-                        "show_performance_metrics": show_metrics,
-                    },
-                )
+                # Check if we should include previous request
+                actual_input = text_input
+                if session_id and "request_history" in st.session_state:
+                    if session_id in st.session_state.request_history:
+                        history = st.session_state.request_history[session_id]
+                        if st.session_state.get("include_previous_checkbox", False) and history:
+                            last_request = history[-1]
+                            if last_request.get("text"):
+                                actual_input = f"Previous context: {last_request['text']}\n\nCurrent query: {text_input}"
+                                st.info(f"📎 Including previous request in analysis ({len(last_request['text'])} chars)")
+
+                # Build request payload
+                request_data = {
+                    "text": actual_input,
+                    "use_react_workflow": use_react_workflow,
+                    "include_vision": include_vision,
+                    "enable_concurrent_tools": enable_concurrent,
+                    "show_performance_metrics": show_metrics,
+                }
+
+                # Add session_id if provided
+                if session_id:
+                    request_data["session_id"] = session_id
+
+                result = make_api_request("/analyze", "POST", request_data)
 
                 if result:
+                    # Save request to history and track session ID
+                    if session_id:
+                        # Track this session ID if not already tracked
+                        if "previous_session_ids" not in st.session_state:
+                            st.session_state.previous_session_ids = []
+                        if session_id not in st.session_state.previous_session_ids:
+                            st.session_state.previous_session_ids.append(session_id)
+                            # Keep only last 10 session IDs
+                            if len(st.session_state.previous_session_ids) > 10:
+                                st.session_state.previous_session_ids = st.session_state.previous_session_ids[-10:]
+
+                        # Save request history
+                        if "request_history" not in st.session_state:
+                            st.session_state.request_history = {}
+                        if session_id not in st.session_state.request_history:
+                            st.session_state.request_history[session_id] = []
+
+                        # Extract IOCs from result for history display
+                        iocs_found = []
+                        if "result" in result and isinstance(result["result"], dict):
+                            result_data = result["result"]
+                            if "ioc_analysis" in result_data:
+                                ioc_data = result_data["ioc_analysis"]
+                                extracted_iocs = ioc_data.get("extracted_iocs", {})
+                                for ioc_type, ioc_list in extracted_iocs.items():
+                                    if ioc_list:
+                                        iocs_found.extend([str(ioc) for ioc in ioc_list[:2]])  # First 2 of each type
+
+                        # Save to history
+                        st.session_state.request_history[session_id].append({
+                            "text": text_input,  # Save original, not combined
+                            "iocs_found": iocs_found,
+                            "timestamp": pd.Timestamp.now().isoformat()
+                        })
+
+                    # Display context enrichment info if available
+                    if "result" in result and isinstance(result["result"], dict):
+                        result_data = result["result"]
+                        if "context_enrichment" in result_data:
+                            context_info = result_data["context_enrichment"]
+
+                            if context_info.get("enriched", False):
+                                st.success("🧠 Context Memory Applied!")
+
+                                col1, col2, col3 = st.columns(3)
+                                with col1:
+                                    st.metric(
+                                        "Session Age",
+                                        context_info.get("session_age", "N/A")
+                                    )
+                                with col2:
+                                    st.metric(
+                                        "Session Events",
+                                        context_info.get("session_events", 0)
+                                    )
+                                with col3:
+                                    context_used = context_info.get("context_used", {})
+                                    st.metric(
+                                        "IOCs Resolved",
+                                        len(context_used)
+                                    )
+
+                                # Show resolved context
+                                if context_used:
+                                    with st.expander("🔍 View Resolved Context"):
+                                        for ioc_type, ioc_value in context_used.items():
+                                            st.code(f"{ioc_type}: {ioc_value}")
+
+                                # Show text enrichment
+                                if "original_text" in result_data.get("input_analysis", {}):
+                                    input_analysis = result_data["input_analysis"]
+                                    with st.expander("📝 Text Enrichment Details"):
+                                        st.markdown("**Original Text:**")
+                                        st.text(input_analysis.get("original_text", "N/A"))
+                                        st.markdown("**Enriched Text:**")
+                                        st.text(input_analysis.get("enriched_text", "N/A"))
+
                     display_analysis_results(result)
 
     with batch_tab:
         st.markdown("## Batch Analysis")
         st.markdown("Analyze multiple text inputs simultaneously.")
+
+        # Session Management for Batch
+        st.markdown("### 🧠 Session Management")
+        col1, col2 = st.columns([3, 1])
+        with col1:
+            batch_session_id = st.text_input(
+                "Batch Session ID (optional):",
+                placeholder="e.g., batch-investigation-001",
+                help="Use the same session ID for all batch items to enable cross-item context",
+                key="session_id_batch"
+            )
+        with col2:
+            if st.button("🎲 Generate Random", key="gen_batch_session", help="Generate a random session ID"):
+                import uuid
+                st.session_state.session_id_batch = f"batch-{uuid.uuid4().hex[:8]}"
+                st.rerun()
+
+        if batch_session_id:
+            st.success(f"✅ Batch context enabled for session: `{batch_session_id}`")
+        else:
+            st.info("ℹ️ Session ID will enable context sharing across all batch items")
+
+        st.markdown("---")
 
         # Batch input options
         input_method = st.radio("Input Method:", ["Manual Entry", "Upload File"])
@@ -1150,15 +1407,18 @@ def main():
             "🔍 Analyze Batch", type="primary", use_container_width=True
         ):
             with st.spinner(f"Analyzing {len(inputs)} inputs..."):
-                result = make_api_request(
-                    "/batch-analyze",
-                    "POST",
-                    {
-                        "inputs": inputs,
-                        "use_react_workflow": use_react_workflow,
-                        "enable_concurrent_tools": enable_concurrent,
-                    },
-                )
+                # Build batch request payload
+                batch_request_data = {
+                    "inputs": inputs,
+                    "use_react_workflow": use_react_workflow,
+                    "enable_concurrent_tools": enable_concurrent,
+                }
+
+                # Add session_id if provided
+                if batch_session_id:
+                    batch_request_data["session_id"] = batch_session_id
+
+                result = make_api_request("/batch-analyze", "POST", batch_request_data)
 
                 if result:
                     st.success(f"✅ Batch analysis completed!")
@@ -1209,6 +1469,29 @@ def main():
             "Analyze images for security risks, extract text, and detect sensitive content."
         )
 
+        # Session Management for Image Analysis
+        st.markdown("### 🧠 Session Management")
+        col1, col2 = st.columns([3, 1])
+        with col1:
+            image_session_id = st.text_input(
+                "Image Session ID (optional):",
+                placeholder="e.g., image-investigation-001",
+                help="Use session ID to track IOCs extracted from images across multiple uploads",
+                key="session_id_image"
+            )
+        with col2:
+            if st.button("🎲 Generate Random", key="gen_image_session", help="Generate a random session ID"):
+                import uuid
+                st.session_state.session_id_image = f"image-{uuid.uuid4().hex[:8]}"
+                st.rerun()
+
+        if image_session_id:
+            st.success(f"✅ Image context enabled for session: `{image_session_id}`")
+        else:
+            st.info("ℹ️ Session ID will track IOCs extracted from OCR text across multiple images")
+
+        st.markdown("---")
+
         # Image upload
         uploaded_image = st.file_uploader(
             "Choose an image file",
@@ -1234,7 +1517,11 @@ def main():
                 if st.button("🔍 Analyze Image Only", use_container_width=True):
                     with st.spinner("Analyzing image..."):
                         files = {"image": uploaded_image.getvalue()}
-                        result = make_api_request("/upload-image", "POST", files=files)
+                        data = {}
+                        if image_session_id:
+                            data["session_id"] = image_session_id
+
+                        result = make_api_request("/upload-image", "POST", data=data, files=files)
 
                         if result:
                             display_analysis_results(result)
@@ -1248,6 +1535,11 @@ def main():
                             "use_react_workflow": use_react_workflow,
                             "enable_concurrent_tools": enable_concurrent,
                         }
+
+                        # Add session_id if provided
+                        if image_session_id:
+                            data["session_id"] = image_session_id
+
                         result = make_api_request(
                             "/analyze-with-image", "POST", data=data, files=files
                         )

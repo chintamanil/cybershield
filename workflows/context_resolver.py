@@ -173,9 +173,7 @@ class ContextResolver:
 
         return detected
 
-    async def _fetch_session_context(
-        self, session_id: str
-    ) -> Optional[Dict[str, Any]]:
+    async def _fetch_session_context(self, session_id: str) -> Optional[Dict[str, Any]]:
         """
         Fetch session context from Redis.
 
@@ -199,7 +197,9 @@ class ContextResolver:
             history = await self.memory.get(history_key)
 
             if not iocs and not history:
-                logger.debug("No IOCs or history found for session", session_id=session_id)
+                logger.debug(
+                    "No IOCs or history found for session", session_id=session_id
+                )
                 return None
 
             context = {"iocs": iocs or {}, "history": history or []}
@@ -214,7 +214,9 @@ class ContextResolver:
             return context
 
         except Exception as e:
-            logger.error("Failed to fetch session context", error=str(e), session_id=session_id)
+            logger.error(
+                "Failed to fetch session context", error=str(e), session_id=session_id
+            )
             return None
 
     def _resolve_pronouns(
@@ -253,7 +255,11 @@ class ContextResolver:
             for pattern in self.pronoun_patterns["domain"]:
                 if re.search(pattern, enriched_text, re.IGNORECASE):
                     enriched_text = re.sub(
-                        pattern, latest_domain, enriched_text, flags=re.IGNORECASE, count=1
+                        pattern,
+                        latest_domain,
+                        enriched_text,
+                        flags=re.IGNORECASE,
+                        count=1,
                     )
                     context_used["domain"] = latest_domain
                     logger.debug(f"Resolved domain reference to {latest_domain}")
@@ -265,7 +271,11 @@ class ContextResolver:
             for pattern in self.pronoun_patterns["hash"]:
                 if re.search(pattern, enriched_text, re.IGNORECASE):
                     enriched_text = re.sub(
-                        pattern, f"hash {latest_hash}", enriched_text, flags=re.IGNORECASE, count=1
+                        pattern,
+                        f"hash {latest_hash}",
+                        enriched_text,
+                        flags=re.IGNORECASE,
+                        count=1,
                     )
                     context_used["hash"] = latest_hash
                     logger.debug(f"Resolved hash reference to {latest_hash}")
@@ -277,7 +287,11 @@ class ContextResolver:
             for pattern in self.pronoun_patterns["email"]:
                 if re.search(pattern, enriched_text, re.IGNORECASE):
                     enriched_text = re.sub(
-                        pattern, latest_email, enriched_text, flags=re.IGNORECASE, count=1
+                        pattern,
+                        latest_email,
+                        enriched_text,
+                        flags=re.IGNORECASE,
+                        count=1,
                     )
                     context_used["email"] = latest_email
                     logger.debug(f"Resolved email reference to {latest_email}")

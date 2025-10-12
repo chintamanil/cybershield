@@ -209,16 +209,29 @@ class WorkflowSteps:
                     if "error" in result:
                         error_msg = str(result.get("error", "")).lower()
                         # Detect rate limit errors: 403 Forbidden, 429 Too Many Requests
-                        if "403" in error_msg or "429" in error_msg or "forbidden" in error_msg or "rate" in error_msg:
-                            logger.warning(f"Shodan rate limit detected, excluding from results: {result.get('error')}")
+                        if (
+                            "403" in error_msg
+                            or "429" in error_msg
+                            or "forbidden" in error_msg
+                            or "rate" in error_msg
+                        ):
+                            logger.warning(
+                                f"Shodan rate limit detected, excluding from results: {result.get('error')}"
+                            )
                             rate_limited = True
                             break  # Stop processing on rate limit
 
                     results.append({"type": "ip", "value": ip, "result": result})
                 except Exception as e:
                     error_msg = str(e).lower()
-                    if "403" in error_msg or "429" in error_msg or "forbidden" in error_msg:
-                        logger.warning(f"Shodan rate limit detected (exception), excluding from results: {e}")
+                    if (
+                        "403" in error_msg
+                        or "429" in error_msg
+                        or "forbidden" in error_msg
+                    ):
+                        logger.warning(
+                            f"Shodan rate limit detected (exception), excluding from results: {e}"
+                        )
                         rate_limited = True
                         break
                     results.append({"type": "ip", "value": ip, "error": str(e)})
@@ -249,7 +262,9 @@ class WorkflowSteps:
         except Exception as e:
             error_msg = str(e).lower()
             if "403" in error_msg or "429" in error_msg or "forbidden" in error_msg:
-                logger.warning(f"Shodan rate limit detected (outer exception), excluding from results: {e}")
+                logger.warning(
+                    f"Shodan rate limit detected (outer exception), excluding from results: {e}"
+                )
                 return {**state, "threat_results": []}  # Empty results, no error shown
             logger.error(f"Shodan step failed: {e}")
             return {**state, "threat_results": []}
@@ -598,31 +613,31 @@ If no special tools are needed, respond with: []"""
             if tool_name == "virustotal_lookup_tool":
                 result = await self.virustotal_step(state)
                 return result.get("threat_results", [{}])[0]
-            
+
             elif tool_name == "abuseipdb_check_tool":
                 result = await self.abuseipdb_step(state)
                 return result.get("threat_results", [{}])[0]
-            
+
             elif tool_name == "shodan_lookup_tool":
                 result = await self.shodan_step(state)
                 return result.get("threat_results", [{}])[0]
-            
+
             elif tool_name == "ioc_extraction_tool":
                 result = await self.regex_checker_step(state)
                 return result.get("extracted_iocs", {})
-            
+
             elif tool_name == "vector_search_tool":
                 result = await self.milvus_search_step(state)
                 return result.get("vector_results", {})
-            
+
             elif tool_name == "vision_analysis_tool":
                 # Vision analysis would be handled by vision agent
                 return {
-                    "tool": tool_name, 
+                    "tool": tool_name,
                     "status": "info",
-                    "message": "Vision analysis requires image input"
+                    "message": "Vision analysis requires image input",
                 }
-            
+
             else:
                 logger.warning(f"Unknown tool name: {tool_name}")
                 return {
@@ -630,14 +645,14 @@ If no special tools are needed, respond with: []"""
                     "error": f"Unknown tool: {tool_name}",
                     "available_tools": [
                         "virustotal_lookup_tool",
-                        "abuseipdb_check_tool", 
+                        "abuseipdb_check_tool",
                         "shodan_lookup_tool",
                         "ioc_extraction_tool",
                         "vector_search_tool",
-                        "vision_analysis_tool"
-                    ]
+                        "vision_analysis_tool",
+                    ],
                 }
-                
+
         except Exception as e:
             logger.error(f"Tool execution failed for {tool_name}: {e}")
             return {"tool": tool_name, "error": str(e), "input": tool_input}
