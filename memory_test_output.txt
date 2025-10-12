@@ -1,0 +1,9 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.12.11, pytest-8.4.1, pluggy-1.6.0
+rootdir: /Users/manil/Projects/IK/Project-up/CyberShield/cybershield
+configfile: pyproject.toml
+plugins: asyncio-1.1.0, langsmith-0.4.9, anyio-3.7.1, typeguard-2.13.3
+asyncio: mode=Mode.AUTO, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 0 items
+
+============================ no tests ran in 0.02s =============================

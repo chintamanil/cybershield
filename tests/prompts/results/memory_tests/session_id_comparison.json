@@ -1,14 +1,14 @@
 {
-  "timestamp": "2025-10-12T12:17:16.578810",
+  "timestamp": "2025-10-12T15:02:31.579753",
   "test_name": "session_id_comparison",
-  "session_id": "849df1ac-cfb4-4fcb-9c70-5654ef64e1b2",
+  "session_id": "34573d92-542a-4501-9b3a-a5e3829c97d5",
   "requests_chain": {
     "with_session": [
       {
         "description": "Request 1 - WITH session ID",
         "request": {
           "text": "Analyze IP address 8.8.8.8",
-          "session_id": "849df1ac-cfb4-4fcb-9c70-5654ef64e1b2"
+          "session_id": "34573d92-542a-4501-9b3a-a5e3829c97d5"
         },
         "response": {
           "status": "success",
@@ -35,7 +35,7 @@
                 {
                   "indicator": "8.8.8.8",
                   "type": "ip",
-                  "risk_level": "low",
+                  "risk_level": "medium",
                   "source": "VirusTotal",
                   "details": {
                     "ip_address": "8.8.8.8",
@@ -43,13 +43,13 @@
                     "as_owner": "GOOGLE",
                     "reputation": 524,
                     "last_analysis_stats": {
-                      "malicious": 0,
+                      "malicious": 1,
                       "suspicious": 0,
-                      "undetected": 33,
+                      "undetected": 32,
                       "harmless": 62,
                       "timeout": 0
                     },
-                    "malicious_count": 0,
+                    "malicious_count": 1,
                     "suspicious_count": 0,
                     "harmless_count": 62,
                     "network": "8.8.8.0/24",
@@ -63,9 +63,97 @@
                           "self": "https://www.virustotal.com/api/v3/ip_addresses/8.8.8.8"
                         },
                         "attributes": {
-                          "last_https_certificate_date": 1760290704,
-                          "last_modification_date": 1760295265,
+                          "tags": [],
+                          "whois": "NetRange: 8.8.8.0 - 8.8.8.255\nCIDR: 8.8.8.0/24\nNetName: GOGL\nNetHandle: NET-8-8-8-0-2\nParent: NET8 (NET-8-0-0-0-0)\nNetType: Direct Allocation\nOriginAS: \nOrganization: Google LLC (GOGL)\nRegDate: 2023-12-28\nUpdated: 2023-12-28\nRef: https://rdap.arin.net/registry/ip/8.8.8.0\nOrgName: Google LLC\nOrgId: GOGL\nAddress: 1600 Amphitheatre Parkway\nCity: Mountain View\nStateProv: CA\nPostalCode: 94043\nCountry: US\nRegDate: 2000-03-30\nUpdated: 2019-10-31\nComment: Please note that the recommended way to file abuse complaints are located in the following links. \nComment: \nComment: To report abuse and illegal activity: https://www.google.com/contact/\nComment: \nComment: For legal requests: http://support.google.com/legal \nComment: \nComment: Regards, \nComment: The Google Team\nRef: https://rdap.arin.net/registry/entity/GOGL\nOrgTechHandle: ZG39-ARIN\nOrgTechName: Google LLC\nOrgTechPhone: +1-650-253-0000 \nOrgTechEmail: arin-contact@google.com\nOrgTechRef: https://rdap.arin.net/registry/entity/ZG39-ARIN\nOrgAbuseHandle: ABUSE5250-ARIN\nOrgAbuseName: Abuse\nOrgAbusePhone: +1-650-253-0000 \nOrgAbuseEmail: network-abuse@google.com\nOrgAbuseRef: https://rdap.arin.net/registry/entity/ABUSE5250-ARIN\n",
+                          "jarm": "29d3fd00029d29d00042d43d00041d8f924f5255cbc229bc55efa16391dad6",
+                          "total_votes": {
+                            "harmless": 247,
+                            "malicious": 49
+                          },
                           "continent": "NA",
+                          "country": "US",
+                          "last_analysis_date": 1760306322,
+                          "crowdsourced_context": [
+                            {
+                              "details": "AsyncRAT botnet C2 server (confidence level: 100%)",
+                              "severity": "medium",
+                              "timestamp": 1694383565,
+                              "title": "ThreatFox IOCs for 2023-09-10",
+                              "source": "ArcSight Threat Intelligence"
+                            }
+                          ],
+                          "asn": 15169,
+                          "reputation": 524,
+                          "last_https_certificate": {
+                            "cert_signature": {
+                              "signature_algorithm": "sha256RSA",
+                              "signature": "1bb0b1731557d2a51b5f385948f2f9a7dfe312c5bc5d946743aae632e47ca552b876c3ca7920f21f9abd638404a302458cbb8a0eb0b78590f0405bb5b3a8fb5ee1c35cfd116ecec0386493a0ac763ba28a49bfcd6ea10daf7e0ebf2ac077ab4d56f84d913d6290f2f108006956d8d3acdcd5a06a3724a214a7cd777deebbeedfb5abba8b1090a1dab553d4a69fd65c312b92435da14e8c116763be98baa8ac65ce32f51bac6cb1466711ff61b9013f176756bd6d611cceedfa3c9193c24b2c6a7c9df867842792bda5550d294ee66ce6fc321c8cf1d063e7521019eeca89e5e2e0f1bebaea6d734b3b679f36962c41dffdee17b2380ffdea56c865c55ae0b642"
+                            },
+                            "extensions": {
+                              "key_usage": [
+                                "digitalSignature",
+                                "keyEncipherment"
+                              ],
+                              "extended_key_usage": [
+                                "serverAuth"
+                              ],
+                              "CA": false,
+                              "subject_key_identifier": "1a6f6cffaf46c41f6297c4f64f86d4c7b69e10ff",
+                              "authority_key_identifier": {
+                                "keyid": "de1b1eed7915d43e3724c321bbec34396d42b230"
+                              },
+                              "ca_information_access": {
+                                "OCSP": "http://o.pki.goog/wr2",
+                                "CA Issuers": "http://i.pki.goog/wr2.crt"
+                              },
+                              "subject_alternative_name": [
+                                "dns.google",
+                                "dns.google.com",
+                                "*.dns.google.com",
+                                "8888.google",
+                                "dns64.dns.google",
+                                "8.8.8.8",
+                                "8.8.4.4",
+                                "2001:4860:4860::8888",
+                                "2001:4860:4860::8844",
+                                "2001:4860:4860::6464",
+                                "2001:4860:4860::64"
+                              ],
+                              "certificate_policies": [
+                                "2.23.140.1.2.1"
+                              ],
+                              "crl_distribution_points": [
+                                "http://c.pki.goog/wr2/GSyT1N4PBrg.crl"
+                              ],
+                              "1.3.6.1.4.1.11129.2.4.2": "0481f200f0007600ccfb0f6a85710965fe959b53cee9b27c22e9855c0d978db6"
+                            },
+                            "validity": {
+                              "not_after": "2025-12-15 08:42:43",
+                              "not_before": "2025-09-22 08:42:44"
+                            },
+                            "size": 1462,
+                            "version": "V3",
+                            "public_key": {
+                              "algorithm": "RSA",
+                              "rsa": {
+                                "modulus": "aaace65a8dcd5b8dee3297af7e2987b27b52f55c4356f5057dbd4fb9eb263bd99afdfabb41157f2207a4d096a288578eef992128f3934d2c994accbff83f00aafc9873e8e4c680f57321bbe2bb04be3b0ceb8f9558966658daf5de39de2ff56a40083dc876ef4d08be9fcf60e5b539447d617ccbd9438e0135edabea742a445390b60657248bf2d4d97c7d10a7518f09cb00a379561ffefc74dba644ad19333558b03867efa9d4f54e41f0ef5f783fd7fb88539ce96e2ab9a9227ed64fbb9cecdbb2e5d124d53bab23b6542496751e3e024e1f93333cac3b93750e5c610dbc09fd5a306f04962cbed0f70b24768f2a2f3d3b899cb823e33a00e6b5b0d07ab25d",
+                                "exponent": "10001",
+                                "key_size": 2048
+                              }
+                            },
+                            "thumbprint_sha256": "7155e0b3092e33a420c5d8ccca108808e3b95b2aff5967fd8a5fe2eb18780603",
+                            "thumbprint": "2492c9ae6ad6763d6cf75b92c8b00f557ae7ff23",
+                            "serial_number": "d28734b8a6bbce4c094f4afdc3ab8b94",
+                            "issuer": {
+                              "C": "US",
+                              "O": "Google Trust Services",
+                              "CN": "WR2"
+                            },
+                            "subject": {
+                              "CN": "dns.google"
+                            }
+                          },
+                          "whois_date": 1760037144,
                           "last_analysis_results": {
                             "Acronis": {
                               "method": "blacklist",
@@ -622,8 +710,8 @@
                             "Xcitium Verdict Cloud": {
                               "method": "blacklist",
                               "engine_name": "Xcitium Verdict Cloud",
-                              "category": "undetected",
-                              "result": "unrated"
+                              "category": "malicious",
+                              "result": "malware"
                             },
                             "zvelo": {
                               "method": "blacklist",
@@ -638,35 +726,7 @@
                               "result": "unrated"
                             }
                           },
-                          "asn": 15169,
-                          "tags": [],
-                          "last_analysis_stats": {
-                            "malicious": 0,
-                            "suspicious": 0,
-                            "undetected": 33,
-                            "harmless": 62,
-                            "timeout": 0
-                          },
-                          "reputation": 524,
                           "regional_internet_registry": "ARIN",
-                          "whois_date": 1760037144,
-                          "total_votes": {
-                            "harmless": 247,
-                            "malicious": 49
-                          },
-                          "jarm": "29d3fd00029d29d00042d43d00041d8f924f5255cbc229bc55efa16391dad6",
-                          "country": "US",
-                          "crowdsourced_context": [
-                            {
-                              "details": "AsyncRAT botnet C2 server (confidence level: 100%)",
-                              "severity": "medium",
-                              "timestamp": 1694383565,
-                              "title": "ThreatFox IOCs for 2023-09-10",
-                              "source": "ArcSight Threat Intelligence"
-                            }
-                          ],
-                          "network": "8.8.8.0/24",
-                          "whois": "NetRange: 8.8.8.0 - 8.8.8.255\nCIDR: 8.8.8.0/24\nNetName: GOGL\nNetHandle: NET-8-8-8-0-2\nParent: NET8 (NET-8-0-0-0-0)\nNetType: Direct Allocation\nOriginAS: \nOrganization: Google LLC (GOGL)\nRegDate: 2023-12-28\nUpdated: 2023-12-28\nRef: https://rdap.arin.net/registry/ip/8.8.8.0\nOrgName: Google LLC\nOrgId: GOGL\nAddress: 1600 Amphitheatre Parkway\nCity: Mountain View\nStateProv: CA\nPostalCode: 94043\nCountry: US\nRegDate: 2000-03-30\nUpdated: 2019-10-31\nComment: Please note that the recommended way to file abuse complaints are located in the following links. \nComment: \nComment: To report abuse and illegal activity: https://www.google.com/contact/\nComment: \nComment: For legal requests: http://support.google.com/legal \nComment: \nComment: Regards, \nComment: The Google Team\nRef: https://rdap.arin.net/registry/entity/GOGL\nOrgTechHandle: ZG39-ARIN\nOrgTechName: Google LLC\nOrgTechPhone: +1-650-253-0000 \nOrgTechEmail: arin-contact@google.com\nOrgTechRef: https://rdap.arin.net/registry/entity/ZG39-ARIN\nOrgAbuseHandle: ABUSE5250-ARIN\nOrgAbuseName: Abuse\nOrgAbusePhone: +1-650-253-0000 \nOrgAbuseEmail: network-abuse@google.com\nOrgAbuseRef: https://rdap.arin.net/registry/entity/ABUSE5250-ARIN\n",
                           "rdap": {
                             "object_class_name": "ip network",
                             "handle": "NET-8-8-8-0-2",
@@ -1164,76 +1224,16 @@
                             "remarks": []
                           },
                           "as_owner": "GOOGLE",
-                          "last_analysis_date": 1760290691,
-                          "last_https_certificate": {
-                            "cert_signature": {
-                              "signature_algorithm": "sha256RSA",
-                              "signature": "1bb0b1731557d2a51b5f385948f2f9a7dfe312c5bc5d946743aae632e47ca552b876c3ca7920f21f9abd638404a302458cbb8a0eb0b78590f0405bb5b3a8fb5ee1c35cfd116ecec0386493a0ac763ba28a49bfcd6ea10daf7e0ebf2ac077ab4d56f84d913d6290f2f108006956d8d3acdcd5a06a3724a214a7cd777deebbeedfb5abba8b1090a1dab553d4a69fd65c312b92435da14e8c116763be98baa8ac65ce32f51bac6cb1466711ff61b9013f176756bd6d611cceedfa3c9193c24b2c6a7c9df867842792bda5550d294ee66ce6fc321c8cf1d063e7521019eeca89e5e2e0f1bebaea6d734b3b679f36962c41dffdee17b2380ffdea56c865c55ae0b642"
-                            },
-                            "extensions": {
-                              "key_usage": [
-                                "digitalSignature",
-                                "keyEncipherment"
-                              ],
-                              "extended_key_usage": [
-                                "serverAuth"
-                              ],
-                              "CA": false,
-                              "subject_key_identifier": "1a6f6cffaf46c41f6297c4f64f86d4c7b69e10ff",
-                              "authority_key_identifier": {
-                                "keyid": "de1b1eed7915d43e3724c321bbec34396d42b230"
-                              },
-                              "ca_information_access": {
-                                "OCSP": "http://o.pki.goog/wr2",
-                                "CA Issuers": "http://i.pki.goog/wr2.crt"
-                              },
-                              "subject_alternative_name": [
-                                "dns.google",
-                                "dns.google.com",
-                                "*.dns.google.com",
-                                "8888.google",
-                                "dns64.dns.google",
-                                "8.8.8.8",
-                                "8.8.4.4",
-                                "2001:4860:4860::8888",
-                                "2001:4860:4860::8844",
-                                "2001:4860:4860::6464",
-                                "2001:4860:4860::64"
-                              ],
-                              "certificate_policies": [
-                                "2.23.140.1.2.1"
-                              ],
-                              "crl_distribution_points": [
-                                "http://c.pki.goog/wr2/GSyT1N4PBrg.crl"
-                              ],
-                              "1.3.6.1.4.1.11129.2.4.2": "0481f200f0007600ccfb0f6a85710965fe959b53cee9b27c22e9855c0d978db6"
-                            },
-                            "validity": {
-                              "not_after": "2025-12-15 08:42:43",
-                              "not_before": "2025-09-22 08:42:44"
-                            },
-                            "size": 1462,
-                            "version": "V3",
-                            "public_key": {
-                              "algorithm": "RSA",
-                              "rsa": {
-                                "modulus": "aaace65a8dcd5b8dee3297af7e2987b27b52f55c4356f5057dbd4fb9eb263bd99afdfabb41157f2207a4d096a288578eef992128f3934d2c994accbff83f00aafc9873e8e4c680f57321bbe2bb04be3b0ceb8f9558966658daf5de39de2ff56a40083dc876ef4d08be9fcf60e5b539447d617ccbd9438e0135edabea742a445390b60657248bf2d4d97c7d10a7518f09cb00a379561ffefc74dba644ad19333558b03867efa9d4f54e41f0ef5f783fd7fb88539ce96e2ab9a9227ed64fbb9cecdbb2e5d124d53bab23b6542496751e3e024e1f93333cac3b93750e5c610dbc09fd5a306f04962cbed0f70b24768f2a2f3d3b899cb823e33a00e6b5b0d07ab25d",
-                                "exponent": "10001",
-                                "key_size": 2048
-                              }
-                            },
-                            "thumbprint_sha256": "7155e0b3092e33a420c5d8ccca108808e3b95b2aff5967fd8a5fe2eb18780603",
-                            "thumbprint": "2492c9ae6ad6763d6cf75b92c8b00f557ae7ff23",
-                            "serial_number": "d28734b8a6bbce4c094f4afdc3ab8b94",
-                            "issuer": {
-                              "C": "US",
-                              "O": "Google Trust Services",
-                              "CN": "WR2"
-                            },
-                            "subject": {
-                              "CN": "dns.google"
-                            }
-                          }
+                          "network": "8.8.8.0/24",
+                          "last_analysis_stats": {
+                            "malicious": 1,
+                            "suspicious": 0,
+                            "undetected": 32,
+                            "harmless": 62,
+                            "timeout": 0
+                          },
+                          "last_https_certificate_date": 1760306337,
+                          "last_modification_date": 1760306547
                         }
                       }
                     }
@@ -3129,8 +3129,8 @@
                 }
               ],
               "high_risk_count": 0,
-              "medium_risk_count": 0,
-              "low_risk_count": 3,
+              "medium_risk_count": 1,
+              "low_risk_count": 2,
               "total_analyzed": 3
             },
             "tool_analysis": {
@@ -3145,13 +3145,13 @@
                       "as_owner": "GOOGLE",
                       "reputation": 524,
                       "last_analysis_stats": {
-                        "malicious": 0,
+                        "malicious": 1,
                         "suspicious": 0,
-                        "undetected": 33,
+                        "undetected": 32,
                         "harmless": 62,
                         "timeout": 0
                       },
-                      "malicious_count": 0,
+                      "malicious_count": 1,
                       "suspicious_count": 0,
                       "harmless_count": 62,
                       "network": "8.8.8.0/24",
@@ -3165,9 +3165,97 @@
                             "self": "https://www.virustotal.com/api/v3/ip_addresses/8.8.8.8"
                           },
                           "attributes": {
-                            "last_https_certificate_date": 1760290704,
-                            "last_modification_date": 1760295265,
+                            "tags": [],
+                            "whois": "NetRange: 8.8.8.0 - 8.8.8.255\nCIDR: 8.8.8.0/24\nNetName: GOGL\nNetHandle: NET-8-8-8-0-2\nParent: NET8 (NET-8-0-0-0-0)\nNetType: Direct Allocation\nOriginAS: \nOrganization: Google LLC (GOGL)\nRegDate: 2023-12-28\nUpdated: 2023-12-28\nRef: https://rdap.arin.net/registry/ip/8.8.8.0\nOrgName: Google LLC\nOrgId: GOGL\nAddress: 1600 Amphitheatre Parkway\nCity: Mountain View\nStateProv: CA\nPostalCode: 94043\nCountry: US\nRegDate: 2000-03-30\nUpdated: 2019-10-31\nComment: Please note that the recommended way to file abuse complaints are located in the following links. \nComment: \nComment: To report abuse and illegal activity: https://www.google.com/contact/\nComment: \nComment: For legal requests: http://support.google.com/legal \nComment: \nComment: Regards, \nComment: The Google Team\nRef: https://rdap.arin.net/registry/entity/GOGL\nOrgTechHandle: ZG39-ARIN\nOrgTechName: Google LLC\nOrgTechPhone: +1-650-253-0000 \nOrgTechEmail: arin-contact@google.com\nOrgTechRef: https://rdap.arin.net/registry/entity/ZG39-ARIN\nOrgAbuseHandle: ABUSE5250-ARIN\nOrgAbuseName: Abuse\nOrgAbusePhone: +1-650-253-0000 \nOrgAbuseEmail: network-abuse@google.com\nOrgAbuseRef: https://rdap.arin.net/registry/entity/ABUSE5250-ARIN\n",
+                            "jarm": "29d3fd00029d29d00042d43d00041d8f924f5255cbc229bc55efa16391dad6",
+                            "total_votes": {
+                              "harmless": 247,
+                              "malicious": 49
+                            },
                             "continent": "NA",
+                            "country": "US",
+                            "last_analysis_date": 1760306322,
+                            "crowdsourced_context": [
+                              {
+                                "details": "AsyncRAT botnet C2 server (confidence level: 100%)",
+                                "severity": "medium",
+                                "timestamp": 1694383565,
+                                "title": "ThreatFox IOCs for 2023-09-10",
+                                "source": "ArcSight Threat Intelligence"
+                              }
+                            ],
+                            "asn": 15169,
+                            "reputation": 524,
+                            "last_https_certificate": {
+                              "cert_signature": {
+                                "signature_algorithm": "sha256RSA",
+                                "signature": "1bb0b1731557d2a51b5f385948f2f9a7dfe312c5bc5d946743aae632e47ca552b876c3ca7920f21f9abd638404a302458cbb8a0eb0b78590f0405bb5b3a8fb5ee1c35cfd116ecec0386493a0ac763ba28a49bfcd6ea10daf7e0ebf2ac077ab4d56f84d913d6290f2f108006956d8d3acdcd5a06a3724a214a7cd777deebbeedfb5abba8b1090a1dab553d4a69fd65c312b92435da14e8c116763be98baa8ac65ce32f51bac6cb1466711ff61b9013f176756bd6d611cceedfa3c9193c24b2c6a7c9df867842792bda5550d294ee66ce6fc321c8cf1d063e7521019eeca89e5e2e0f1bebaea6d734b3b679f36962c41dffdee17b2380ffdea56c865c55ae0b642"
+                              },
+                              "extensions": {
+                                "key_usage": [
+                                  "digitalSignature",
+                                  "keyEncipherment"
+                                ],
+                                "extended_key_usage": [
+                                  "serverAuth"
+                                ],
+                                "CA": false,
+                                "subject_key_identifier": "1a6f6cffaf46c41f6297c4f64f86d4c7b69e10ff",
+                                "authority_key_identifier": {
+                                  "keyid": "de1b1eed7915d43e3724c321bbec34396d42b230"
+                                },
+                                "ca_information_access": {
+                                  "OCSP": "http://o.pki.goog/wr2",
+                                  "CA Issuers": "http://i.pki.goog/wr2.crt"
+                                },
+                                "subject_alternative_name": [
+                                  "dns.google",
+                                  "dns.google.com",
+                                  "*.dns.google.com",
+                                  "8888.google",
+                                  "dns64.dns.google",
+                                  "8.8.8.8",
+                                  "8.8.4.4",
+                                  "2001:4860:4860::8888",
+                                  "2001:4860:4860::8844",
+                                  "2001:4860:4860::6464",
+                                  "2001:4860:4860::64"
+                                ],
+                                "certificate_policies": [
+                                  "2.23.140.1.2.1"
+                                ],
+                                "crl_distribution_points": [
+                                  "http://c.pki.goog/wr2/GSyT1N4PBrg.crl"
+                                ],
+                                "1.3.6.1.4.1.11129.2.4.2": "0481f200f0007600ccfb0f6a85710965fe959b53cee9b27c22e9855c0d978db6"
+                              },
+                              "validity": {
+                                "not_after": "2025-12-15 08:42:43",
+                                "not_before": "2025-09-22 08:42:44"
+                              },
+                              "size": 1462,
+                              "version": "V3",
+                              "public_key": {
+                                "algorithm": "RSA",
+                                "rsa": {
+                                  "modulus": "aaace65a8dcd5b8dee3297af7e2987b27b52f55c4356f5057dbd4fb9eb263bd99afdfabb41157f2207a4d096a288578eef992128f3934d2c994accbff83f00aafc9873e8e4c680f57321bbe2bb04be3b0ceb8f9558966658daf5de39de2ff56a40083dc876ef4d08be9fcf60e5b539447d617ccbd9438e0135edabea742a445390b60657248bf2d4d97c7d10a7518f09cb00a379561ffefc74dba644ad19333558b03867efa9d4f54e41f0ef5f783fd7fb88539ce96e2ab9a9227ed64fbb9cecdbb2e5d124d53bab23b6542496751e3e024e1f93333cac3b93750e5c610dbc09fd5a306f04962cbed0f70b24768f2a2f3d3b899cb823e33a00e6b5b0d07ab25d",
+                                  "exponent": "10001",
+                                  "key_size": 2048
+                                }
+                              },
+                              "thumbprint_sha256": "7155e0b3092e33a420c5d8ccca108808e3b95b2aff5967fd8a5fe2eb18780603",
+                              "thumbprint": "2492c9ae6ad6763d6cf75b92c8b00f557ae7ff23",
+                              "serial_number": "d28734b8a6bbce4c094f4afdc3ab8b94",
+                              "issuer": {
+                                "C": "US",
+                                "O": "Google Trust Services",
+                                "CN": "WR2"
+                              },
+                              "subject": {
+                                "CN": "dns.google"
+                              }
+                            },
+                            "whois_date": 1760037144,
                             "last_analysis_results": {
                               "Acronis": {
                                 "method": "blacklist",
@@ -3724,8 +3812,8 @@
                               "Xcitium Verdict Cloud": {
                                 "method": "blacklist",
                                 "engine_name": "Xcitium Verdict Cloud",
-                                "category": "undetected",
-                                "result": "unrated"
+                                "category": "malicious",
+                                "result": "malware"
                               },
                               "zvelo": {
                                 "method": "blacklist",
@@ -3740,35 +3828,7 @@
                                 "result": "unrated"
                               }
                             },
-                            "asn": 15169,
-                            "tags": [],
-                            "last_analysis_stats": {
-                              "malicious": 0,
-                              "suspicious": 0,
-                              "undetected": 33,
-                              "harmless": 62,
-                              "timeout": 0
-                            },
-                            "reputation": 524,
                             "regional_internet_registry": "ARIN",
-                            "whois_date": 1760037144,
-                            "total_votes": {
-                              "harmless": 247,
-                              "malicious": 49
-                            },
-                            "jarm": "29d3fd00029d29d00042d43d00041d8f924f5255cbc229bc55efa16391dad6",
-                            "country": "US",
-                            "crowdsourced_context": [
-                              {
-                                "details": "AsyncRAT botnet C2 server (confidence level: 100%)",
-                                "severity": "medium",
-                                "timestamp": 1694383565,
-                                "title": "ThreatFox IOCs for 2023-09-10",
-                                "source": "ArcSight Threat Intelligence"
-                              }
-                            ],
-                            "network": "8.8.8.0/24",
-                            "whois": "NetRange: 8.8.8.0 - 8.8.8.255\nCIDR: 8.8.8.0/24\nNetName: GOGL\nNetHandle: NET-8-8-8-0-2\nParent: NET8 (NET-8-0-0-0-0)\nNetType: Direct Allocation\nOriginAS: \nOrganization: Google LLC (GOGL)\nRegDate: 2023-12-28\nUpdated: 2023-12-28\nRef: https://rdap.arin.net/registry/ip/8.8.8.0\nOrgName: Google LLC\nOrgId: GOGL\nAddress: 1600 Amphitheatre Parkway\nCity: Mountain View\nStateProv: CA\nPostalCode: 94043\nCountry: US\nRegDate: 2000-03-30\nUpdated: 2019-10-31\nComment: Please note that the recommended way to file abuse complaints are located in the following links. \nComment: \nComment: To report abuse and illegal activity: https://www.google.com/contact/\nComment: \nComment: For legal requests: http://support.google.com/legal \nComment: \nComment: Regards, \nComment: The Google Team\nRef: https://rdap.arin.net/registry/entity/GOGL\nOrgTechHandle: ZG39-ARIN\nOrgTechName: Google LLC\nOrgTechPhone: +1-650-253-0000 \nOrgTechEmail: arin-contact@google.com\nOrgTechRef: https://rdap.arin.net/registry/entity/ZG39-ARIN\nOrgAbuseHandle: ABUSE5250-ARIN\nOrgAbuseName: Abuse\nOrgAbusePhone: +1-650-253-0000 \nOrgAbuseEmail: network-abuse@google.com\nOrgAbuseRef: https://rdap.arin.net/registry/entity/ABUSE5250-ARIN\n",
                             "rdap": {
                               "object_class_name": "ip network",
                               "handle": "NET-8-8-8-0-2",
@@ -4266,76 +4326,16 @@
                               "remarks": []
                             },
                             "as_owner": "GOOGLE",
-                            "last_analysis_date": 1760290691,
-                            "last_https_certificate": {
-                              "cert_signature": {
-                                "signature_algorithm": "sha256RSA",
-                                "signature": "1bb0b1731557d2a51b5f385948f2f9a7dfe312c5bc5d946743aae632e47ca552b876c3ca7920f21f9abd638404a302458cbb8a0eb0b78590f0405bb5b3a8fb5ee1c35cfd116ecec0386493a0ac763ba28a49bfcd6ea10daf7e0ebf2ac077ab4d56f84d913d6290f2f108006956d8d3acdcd5a06a3724a214a7cd777deebbeedfb5abba8b1090a1dab553d4a69fd65c312b92435da14e8c116763be98baa8ac65ce32f51bac6cb1466711ff61b9013f176756bd6d611cceedfa3c9193c24b2c6a7c9df867842792bda5550d294ee66ce6fc321c8cf1d063e7521019eeca89e5e2e0f1bebaea6d734b3b679f36962c41dffdee17b2380ffdea56c865c55ae0b642"
-                              },
-                              "extensions": {
-                                "key_usage": [
-                                  "digitalSignature",
-                                  "keyEncipherment"
-                                ],
-                                "extended_key_usage": [
-                                  "serverAuth"
-                                ],
-                                "CA": false,
-                                "subject_key_identifier": "1a6f6cffaf46c41f6297c4f64f86d4c7b69e10ff",
-                                "authority_key_identifier": {
-                                  "keyid": "de1b1eed7915d43e3724c321bbec34396d42b230"
-                                },
-                                "ca_information_access": {
-                                  "OCSP": "http://o.pki.goog/wr2",
-                                  "CA Issuers": "http://i.pki.goog/wr2.crt"
-                                },
-                                "subject_alternative_name": [
-                                  "dns.google",
-                                  "dns.google.com",
-                                  "*.dns.google.com",
-                                  "8888.google",
-                                  "dns64.dns.google",
-                                  "8.8.8.8",
-                                  "8.8.4.4",
-                                  "2001:4860:4860::8888",
-                                  "2001:4860:4860::8844",
-                                  "2001:4860:4860::6464",
-                                  "2001:4860:4860::64"
-                                ],
-                                "certificate_policies": [
-                                  "2.23.140.1.2.1"
-                                ],
-                                "crl_distribution_points": [
-                                  "http://c.pki.goog/wr2/GSyT1N4PBrg.crl"
-                                ],
-                                "1.3.6.1.4.1.11129.2.4.2": "0481f200f0007600ccfb0f6a85710965fe959b53cee9b27c22e9855c0d978db6"
-                              },
-                              "validity": {
-                                "not_after": "2025-12-15 08:42:43",
-                                "not_before": "2025-09-22 08:42:44"
-                              },
-                              "size": 1462,
-                              "version": "V3",
-                              "public_key": {
-                                "algorithm": "RSA",
-                                "rsa": {
-                                  "modulus": "aaace65a8dcd5b8dee3297af7e2987b27b52f55c4356f5057dbd4fb9eb263bd99afdfabb41157f2207a4d096a288578eef992128f3934d2c994accbff83f00aafc9873e8e4c680f57321bbe2bb04be3b0ceb8f9558966658daf5de39de2ff56a40083dc876ef4d08be9fcf60e5b539447d617ccbd9438e0135edabea742a445390b60657248bf2d4d97c7d10a7518f09cb00a379561ffefc74dba644ad19333558b03867efa9d4f54e41f0ef5f783fd7fb88539ce96e2ab9a9227ed64fbb9cecdbb2e5d124d53bab23b6542496751e3e024e1f93333cac3b93750e5c610dbc09fd5a306f04962cbed0f70b24768f2a2f3d3b899cb823e33a00e6b5b0d07ab25d",
-                                  "exponent": "10001",
-                                  "key_size": 2048
-                                }
-                              },
-                              "thumbprint_sha256": "7155e0b3092e33a420c5d8ccca108808e3b95b2aff5967fd8a5fe2eb18780603",
-                              "thumbprint": "2492c9ae6ad6763d6cf75b92c8b00f557ae7ff23",
-                              "serial_number": "d28734b8a6bbce4c094f4afdc3ab8b94",
-                              "issuer": {
-                                "C": "US",
-                                "O": "Google Trust Services",
-                                "CN": "WR2"
-                              },
-                              "subject": {
-                                "CN": "dns.google"
-                              }
-                            }
+                            "network": "8.8.8.0/24",
+                            "last_analysis_stats": {
+                              "malicious": 1,
+                              "suspicious": 0,
+                              "undetected": 32,
+                              "harmless": 62,
+                              "timeout": 0
+                            },
+                            "last_https_certificate_date": 1760306337,
+                            "last_modification_date": 1760306547
                           }
                         }
                       }
@@ -6275,16 +6275,16 @@
             },
             "supervisor_version": "2.0"
           },
-          "processing_time": 0.012121200561523438
+          "processing_time": 2.376171112060547
         },
-        "response_time": 0.016160964965820312,
+        "response_time": 2.380789041519165,
         "status": "success"
       },
       {
         "description": "Request 2 - Follow-up WITH same session ID",
         "request": {
           "text": "What was the IP we just analyzed?",
-          "session_id": "849df1ac-cfb4-4fcb-9c70-5654ef64e1b2"
+          "session_id": "34573d92-542a-4501-9b3a-a5e3829c97d5"
         },
         "response": {
           "status": "success",
@@ -6356,7 +6356,7 @@
                 "ip": "8.8.8.8"
               },
               "resolution_method": "llm",
-              "timestamp": "2025-10-12T11:54:27.552991",
+              "timestamp": "2025-10-12T15:02:30.031932",
               "enriched_text": "What was 8.8.8.8 we just analyzed?"
             },
             "pii_analysis": {
@@ -6365,9 +6365,9 @@
             },
             "supervisor_version": "2.0"
           },
-          "processing_time": 0.008655071258544922
+          "processing_time": 0.5087859630584717
         },
-        "response_time": 0.012598037719726562,
+        "response_time": 0.5136568546295166,
         "status": "success"
       }
     ],
@@ -6376,7 +6376,7 @@
         "description": "Request 1 - New session ID",
         "request": {
           "text": "Analyze IP address 8.8.8.8",
-          "session_id": "29cd7105-3729-4ca2-a5d2-6cb54b549168"
+          "session_id": "4ffb4b50-2cbc-42c2-9e5f-ee4dd671e1b6"
         },
         "response": {
           "status": "success",
@@ -6403,7 +6403,7 @@
                 {
                   "indicator": "8.8.8.8",
                   "type": "ip",
-                  "risk_level": "low",
+                  "risk_level": "medium",
                   "source": "VirusTotal",
                   "details": {
                     "ip_address": "8.8.8.8",
@@ -6411,13 +6411,13 @@
                     "as_owner": "GOOGLE",
                     "reputation": 524,
                     "last_analysis_stats": {
-                      "malicious": 0,
+                      "malicious": 1,
                       "suspicious": 0,
-                      "undetected": 33,
+                      "undetected": 32,
                       "harmless": 62,
                       "timeout": 0
                     },
-                    "malicious_count": 0,
+                    "malicious_count": 1,
                     "suspicious_count": 0,
                     "harmless_count": 62,
                     "network": "8.8.8.0/24",
@@ -6431,9 +6431,97 @@
                           "self": "https://www.virustotal.com/api/v3/ip_addresses/8.8.8.8"
                         },
                         "attributes": {
-                          "last_https_certificate_date": 1760290704,
-                          "last_modification_date": 1760295265,
+                          "tags": [],
+                          "whois": "NetRange: 8.8.8.0 - 8.8.8.255\nCIDR: 8.8.8.0/24\nNetName: GOGL\nNetHandle: NET-8-8-8-0-2\nParent: NET8 (NET-8-0-0-0-0)\nNetType: Direct Allocation\nOriginAS: \nOrganization: Google LLC (GOGL)\nRegDate: 2023-12-28\nUpdated: 2023-12-28\nRef: https://rdap.arin.net/registry/ip/8.8.8.0\nOrgName: Google LLC\nOrgId: GOGL\nAddress: 1600 Amphitheatre Parkway\nCity: Mountain View\nStateProv: CA\nPostalCode: 94043\nCountry: US\nRegDate: 2000-03-30\nUpdated: 2019-10-31\nComment: Please note that the recommended way to file abuse complaints are located in the following links. \nComment: \nComment: To report abuse and illegal activity: https://www.google.com/contact/\nComment: \nComment: For legal requests: http://support.google.com/legal \nComment: \nComment: Regards, \nComment: The Google Team\nRef: https://rdap.arin.net/registry/entity/GOGL\nOrgTechHandle: ZG39-ARIN\nOrgTechName: Google LLC\nOrgTechPhone: +1-650-253-0000 \nOrgTechEmail: arin-contact@google.com\nOrgTechRef: https://rdap.arin.net/registry/entity/ZG39-ARIN\nOrgAbuseHandle: ABUSE5250-ARIN\nOrgAbuseName: Abuse\nOrgAbusePhone: +1-650-253-0000 \nOrgAbuseEmail: network-abuse@google.com\nOrgAbuseRef: https://rdap.arin.net/registry/entity/ABUSE5250-ARIN\n",
+                          "jarm": "29d3fd00029d29d00042d43d00041d8f924f5255cbc229bc55efa16391dad6",
+                          "total_votes": {
+                            "harmless": 247,
+                            "malicious": 49
+                          },
                           "continent": "NA",
+                          "country": "US",
+                          "last_analysis_date": 1760306322,
+                          "crowdsourced_context": [
+                            {
+                              "details": "AsyncRAT botnet C2 server (confidence level: 100%)",
+                              "severity": "medium",
+                              "timestamp": 1694383565,
+                              "title": "ThreatFox IOCs for 2023-09-10",
+                              "source": "ArcSight Threat Intelligence"
+                            }
+                          ],
+                          "asn": 15169,
+                          "reputation": 524,
+                          "last_https_certificate": {
+                            "cert_signature": {
+                              "signature_algorithm": "sha256RSA",
+                              "signature": "1bb0b1731557d2a51b5f385948f2f9a7dfe312c5bc5d946743aae632e47ca552b876c3ca7920f21f9abd638404a302458cbb8a0eb0b78590f0405bb5b3a8fb5ee1c35cfd116ecec0386493a0ac763ba28a49bfcd6ea10daf7e0ebf2ac077ab4d56f84d913d6290f2f108006956d8d3acdcd5a06a3724a214a7cd777deebbeedfb5abba8b1090a1dab553d4a69fd65c312b92435da14e8c116763be98baa8ac65ce32f51bac6cb1466711ff61b9013f176756bd6d611cceedfa3c9193c24b2c6a7c9df867842792bda5550d294ee66ce6fc321c8cf1d063e7521019eeca89e5e2e0f1bebaea6d734b3b679f36962c41dffdee17b2380ffdea56c865c55ae0b642"
+                            },
+                            "extensions": {
+                              "key_usage": [
+                                "digitalSignature",
+                                "keyEncipherment"
+                              ],
+                              "extended_key_usage": [
+                                "serverAuth"
+                              ],
+                              "CA": false,
+                              "subject_key_identifier": "1a6f6cffaf46c41f6297c4f64f86d4c7b69e10ff",
+                              "authority_key_identifier": {
+                                "keyid": "de1b1eed7915d43e3724c321bbec34396d42b230"
+                              },
+                              "ca_information_access": {
+                                "OCSP": "http://o.pki.goog/wr2",
+                                "CA Issuers": "http://i.pki.goog/wr2.crt"
+                              },
+                              "subject_alternative_name": [
+                                "dns.google",
+                                "dns.google.com",
+                                "*.dns.google.com",
+                                "8888.google",
+                                "dns64.dns.google",
+                                "8.8.8.8",
+                                "8.8.4.4",
+                                "2001:4860:4860::8888",
+                                "2001:4860:4860::8844",
+                                "2001:4860:4860::6464",
+                                "2001:4860:4860::64"
+                              ],
+                              "certificate_policies": [
+                                "2.23.140.1.2.1"
+                              ],
+                              "crl_distribution_points": [
+                                "http://c.pki.goog/wr2/GSyT1N4PBrg.crl"
+                              ],
+                              "1.3.6.1.4.1.11129.2.4.2": "0481f200f0007600ccfb0f6a85710965fe959b53cee9b27c22e9855c0d978db6"
+                            },
+                            "validity": {
+                              "not_after": "2025-12-15 08:42:43",
+                              "not_before": "2025-09-22 08:42:44"
+                            },
+                            "size": 1462,
+                            "version": "V3",
+                            "public_key": {
+                              "algorithm": "RSA",
+                              "rsa": {
+                                "modulus": "aaace65a8dcd5b8dee3297af7e2987b27b52f55c4356f5057dbd4fb9eb263bd99afdfabb41157f2207a4d096a288578eef992128f3934d2c994accbff83f00aafc9873e8e4c680f57321bbe2bb04be3b0ceb8f9558966658daf5de39de2ff56a40083dc876ef4d08be9fcf60e5b539447d617ccbd9438e0135edabea742a445390b60657248bf2d4d97c7d10a7518f09cb00a379561ffefc74dba644ad19333558b03867efa9d4f54e41f0ef5f783fd7fb88539ce96e2ab9a9227ed64fbb9cecdbb2e5d124d53bab23b6542496751e3e024e1f93333cac3b93750e5c610dbc09fd5a306f04962cbed0f70b24768f2a2f3d3b899cb823e33a00e6b5b0d07ab25d",
+                                "exponent": "10001",
+                                "key_size": 2048
+                              }
+                            },
+                            "thumbprint_sha256": "7155e0b3092e33a420c5d8ccca108808e3b95b2aff5967fd8a5fe2eb18780603",
+                            "thumbprint": "2492c9ae6ad6763d6cf75b92c8b00f557ae7ff23",
+                            "serial_number": "d28734b8a6bbce4c094f4afdc3ab8b94",
+                            "issuer": {
+                              "C": "US",
+                              "O": "Google Trust Services",
+                              "CN": "WR2"
+                            },
+                            "subject": {
+                              "CN": "dns.google"
+                            }
+                          },
+                          "whois_date": 1760037144,
                           "last_analysis_results": {
                             "Acronis": {
                               "method": "blacklist",
@@ -6990,8 +7078,8 @@
                             "Xcitium Verdict Cloud": {
                               "method": "blacklist",
                               "engine_name": "Xcitium Verdict Cloud",
-                              "category": "undetected",
-                              "result": "unrated"
+                              "category": "malicious",
+                              "result": "malware"
                             },
                             "zvelo": {
                               "method": "blacklist",
@@ -7006,35 +7094,7 @@
                               "result": "unrated"
                             }
                           },
-                          "asn": 15169,
-                          "tags": [],
-                          "last_analysis_stats": {
-                            "malicious": 0,
-                            "suspicious": 0,
-                            "undetected": 33,
-                            "harmless": 62,
-                            "timeout": 0
-                          },
-                          "reputation": 524,
                           "regional_internet_registry": "ARIN",
-                          "whois_date": 1760037144,
-                          "total_votes": {
-                            "harmless": 247,
-                            "malicious": 49
-                          },
-                          "jarm": "29d3fd00029d29d00042d43d00041d8f924f5255cbc229bc55efa16391dad6",
-                          "country": "US",
-                          "crowdsourced_context": [
-                            {
-                              "details": "AsyncRAT botnet C2 server (confidence level: 100%)",
-                              "severity": "medium",
-                              "timestamp": 1694383565,
-                              "title": "ThreatFox IOCs for 2023-09-10",
-                              "source": "ArcSight Threat Intelligence"
-                            }
-                          ],
-                          "network": "8.8.8.0/24",
-                          "whois": "NetRange: 8.8.8.0 - 8.8.8.255\nCIDR: 8.8.8.0/24\nNetName: GOGL\nNetHandle: NET-8-8-8-0-2\nParent: NET8 (NET-8-0-0-0-0)\nNetType: Direct Allocation\nOriginAS: \nOrganization: Google LLC (GOGL)\nRegDate: 2023-12-28\nUpdated: 2023-12-28\nRef: https://rdap.arin.net/registry/ip/8.8.8.0\nOrgName: Google LLC\nOrgId: GOGL\nAddress: 1600 Amphitheatre Parkway\nCity: Mountain View\nStateProv: CA\nPostalCode: 94043\nCountry: US\nRegDate: 2000-03-30\nUpdated: 2019-10-31\nComment: Please note that the recommended way to file abuse complaints are located in the following links. \nComment: \nComment: To report abuse and illegal activity: https://www.google.com/contact/\nComment: \nComment: For legal requests: http://support.google.com/legal \nComment: \nComment: Regards, \nComment: The Google Team\nRef: https://rdap.arin.net/registry/entity/GOGL\nOrgTechHandle: ZG39-ARIN\nOrgTechName: Google LLC\nOrgTechPhone: +1-650-253-0000 \nOrgTechEmail: arin-contact@google.com\nOrgTechRef: https://rdap.arin.net/registry/entity/ZG39-ARIN\nOrgAbuseHandle: ABUSE5250-ARIN\nOrgAbuseName: Abuse\nOrgAbusePhone: +1-650-253-0000 \nOrgAbuseEmail: network-abuse@google.com\nOrgAbuseRef: https://rdap.arin.net/registry/entity/ABUSE5250-ARIN\n",
                           "rdap": {
                             "object_class_name": "ip network",
                             "handle": "NET-8-8-8-0-2",
@@ -7532,76 +7592,16 @@
                             "remarks": []
                           },
                           "as_owner": "GOOGLE",
-                          "last_analysis_date": 1760290691,
-                          "last_https_certificate": {
-                            "cert_signature": {
-                              "signature_algorithm": "sha256RSA",
-                              "signature": "1bb0b1731557d2a51b5f385948f2f9a7dfe312c5bc5d946743aae632e47ca552b876c3ca7920f21f9abd638404a302458cbb8a0eb0b78590f0405bb5b3a8fb5ee1c35cfd116ecec0386493a0ac763ba28a49bfcd6ea10daf7e0ebf2ac077ab4d56f84d913d6290f2f108006956d8d3acdcd5a06a3724a214a7cd777deebbeedfb5abba8b1090a1dab553d4a69fd65c312b92435da14e8c116763be98baa8ac65ce32f51bac6cb1466711ff61b9013f176756bd6d611cceedfa3c9193c24b2c6a7c9df867842792bda5550d294ee66ce6fc321c8cf1d063e7521019eeca89e5e2e0f1bebaea6d734b3b679f36962c41dffdee17b2380ffdea56c865c55ae0b642"
-                            },
-                            "extensions": {
-                              "key_usage": [
-                                "digitalSignature",
-                                "keyEncipherment"
-                              ],
-                              "extended_key_usage": [
-                                "serverAuth"
-                              ],
-                              "CA": false,
-                              "subject_key_identifier": "1a6f6cffaf46c41f6297c4f64f86d4c7b69e10ff",
-                              "authority_key_identifier": {
-                                "keyid": "de1b1eed7915d43e3724c321bbec34396d42b230"
-                              },
-                              "ca_information_access": {
-                                "OCSP": "http://o.pki.goog/wr2",
-                                "CA Issuers": "http://i.pki.goog/wr2.crt"
-                              },
-                              "subject_alternative_name": [
-                                "dns.google",
-                                "dns.google.com",
-                                "*.dns.google.com",
-                                "8888.google",
-                                "dns64.dns.google",
-                                "8.8.8.8",
-                                "8.8.4.4",
-                                "2001:4860:4860::8888",
-                                "2001:4860:4860::8844",
-                                "2001:4860:4860::6464",
-                                "2001:4860:4860::64"
-                              ],
-                              "certificate_policies": [
-                                "2.23.140.1.2.1"
-                              ],
-                              "crl_distribution_points": [
-                                "http://c.pki.goog/wr2/GSyT1N4PBrg.crl"
-                              ],
-                              "1.3.6.1.4.1.11129.2.4.2": "0481f200f0007600ccfb0f6a85710965fe959b53cee9b27c22e9855c0d978db6"
-                            },
-                            "validity": {
-                              "not_after": "2025-12-15 08:42:43",
-                              "not_before": "2025-09-22 08:42:44"
-                            },
-                            "size": 1462,
-                            "version": "V3",
-                            "public_key": {
-                              "algorithm": "RSA",
-                              "rsa": {
-                                "modulus": "aaace65a8dcd5b8dee3297af7e2987b27b52f55c4356f5057dbd4fb9eb263bd99afdfabb41157f2207a4d096a288578eef992128f3934d2c994accbff83f00aafc9873e8e4c680f57321bbe2bb04be3b0ceb8f9558966658daf5de39de2ff56a40083dc876ef4d08be9fcf60e5b539447d617ccbd9438e0135edabea742a445390b60657248bf2d4d97c7d10a7518f09cb00a379561ffefc74dba644ad19333558b03867efa9d4f54e41f0ef5f783fd7fb88539ce96e2ab9a9227ed64fbb9cecdbb2e5d124d53bab23b6542496751e3e024e1f93333cac3b93750e5c610dbc09fd5a306f04962cbed0f70b24768f2a2f3d3b899cb823e33a00e6b5b0d07ab25d",
-                                "exponent": "10001",
-                                "key_size": 2048
-                              }
-                            },
-                            "thumbprint_sha256": "7155e0b3092e33a420c5d8ccca108808e3b95b2aff5967fd8a5fe2eb18780603",
-                            "thumbprint": "2492c9ae6ad6763d6cf75b92c8b00f557ae7ff23",
-                            "serial_number": "d28734b8a6bbce4c094f4afdc3ab8b94",
-                            "issuer": {
-                              "C": "US",
-                              "O": "Google Trust Services",
-                              "CN": "WR2"
-                            },
-                            "subject": {
-                              "CN": "dns.google"
-                            }
-                          }
+                          "network": "8.8.8.0/24",
+                          "last_analysis_stats": {
+                            "malicious": 1,
+                            "suspicious": 0,
+                            "undetected": 32,
+                            "harmless": 62,
+                            "timeout": 0
+                          },
+                          "last_https_certificate_date": 1760306337,
+                          "last_modification_date": 1760306547
                         }
                       }
                     }
@@ -9497,8 +9497,8 @@
                 }
               ],
               "high_risk_count": 0,
-              "medium_risk_count": 0,
-              "low_risk_count": 3,
+              "medium_risk_count": 1,
+              "low_risk_count": 2,
               "total_analyzed": 3
             },
             "tool_analysis": {
@@ -9513,13 +9513,13 @@
                       "as_owner": "GOOGLE",
                       "reputation": 524,
                       "last_analysis_stats": {
-                        "malicious": 0,
+                        "malicious": 1,
                         "suspicious": 0,
-                        "undetected": 33,
+                        "undetected": 32,
                         "harmless": 62,
                         "timeout": 0
                       },
-                      "malicious_count": 0,
+                      "malicious_count": 1,
                       "suspicious_count": 0,
                       "harmless_count": 62,
                       "network": "8.8.8.0/24",
@@ -9533,9 +9533,97 @@
                             "self": "https://www.virustotal.com/api/v3/ip_addresses/8.8.8.8"
                           },
                           "attributes": {
-                            "last_https_certificate_date": 1760290704,
-                            "last_modification_date": 1760295265,
+                            "tags": [],
+                            "whois": "NetRange: 8.8.8.0 - 8.8.8.255\nCIDR: 8.8.8.0/24\nNetName: GOGL\nNetHandle: NET-8-8-8-0-2\nParent: NET8 (NET-8-0-0-0-0)\nNetType: Direct Allocation\nOriginAS: \nOrganization: Google LLC (GOGL)\nRegDate: 2023-12-28\nUpdated: 2023-12-28\nRef: https://rdap.arin.net/registry/ip/8.8.8.0\nOrgName: Google LLC\nOrgId: GOGL\nAddress: 1600 Amphitheatre Parkway\nCity: Mountain View\nStateProv: CA\nPostalCode: 94043\nCountry: US\nRegDate: 2000-03-30\nUpdated: 2019-10-31\nComment: Please note that the recommended way to file abuse complaints are located in the following links. \nComment: \nComment: To report abuse and illegal activity: https://www.google.com/contact/\nComment: \nComment: For legal requests: http://support.google.com/legal \nComment: \nComment: Regards, \nComment: The Google Team\nRef: https://rdap.arin.net/registry/entity/GOGL\nOrgTechHandle: ZG39-ARIN\nOrgTechName: Google LLC\nOrgTechPhone: +1-650-253-0000 \nOrgTechEmail: arin-contact@google.com\nOrgTechRef: https://rdap.arin.net/registry/entity/ZG39-ARIN\nOrgAbuseHandle: ABUSE5250-ARIN\nOrgAbuseName: Abuse\nOrgAbusePhone: +1-650-253-0000 \nOrgAbuseEmail: network-abuse@google.com\nOrgAbuseRef: https://rdap.arin.net/registry/entity/ABUSE5250-ARIN\n",
+                            "jarm": "29d3fd00029d29d00042d43d00041d8f924f5255cbc229bc55efa16391dad6",
+                            "total_votes": {
+                              "harmless": 247,
+                              "malicious": 49
+                            },
                             "continent": "NA",
+                            "country": "US",
+                            "last_analysis_date": 1760306322,
+                            "crowdsourced_context": [
+                              {
+                                "details": "AsyncRAT botnet C2 server (confidence level: 100%)",
+                                "severity": "medium",
+                                "timestamp": 1694383565,
+                                "title": "ThreatFox IOCs for 2023-09-10",
+                                "source": "ArcSight Threat Intelligence"
+                              }
+                            ],
+                            "asn": 15169,
+                            "reputation": 524,
+                            "last_https_certificate": {
+                              "cert_signature": {
+                                "signature_algorithm": "sha256RSA",
+                                "signature": "1bb0b1731557d2a51b5f385948f2f9a7dfe312c5bc5d946743aae632e47ca552b876c3ca7920f21f9abd638404a302458cbb8a0eb0b78590f0405bb5b3a8fb5ee1c35cfd116ecec0386493a0ac763ba28a49bfcd6ea10daf7e0ebf2ac077ab4d56f84d913d6290f2f108006956d8d3acdcd5a06a3724a214a7cd777deebbeedfb5abba8b1090a1dab553d4a69fd65c312b92435da14e8c116763be98baa8ac65ce32f51bac6cb1466711ff61b9013f176756bd6d611cceedfa3c9193c24b2c6a7c9df867842792bda5550d294ee66ce6fc321c8cf1d063e7521019eeca89e5e2e0f1bebaea6d734b3b679f36962c41dffdee17b2380ffdea56c865c55ae0b642"
+                              },
+                              "extensions": {
+                                "key_usage": [
+                                  "digitalSignature",
+                                  "keyEncipherment"
+                                ],
+                                "extended_key_usage": [
+                                  "serverAuth"
+                                ],
+                                "CA": false,
+                                "subject_key_identifier": "1a6f6cffaf46c41f6297c4f64f86d4c7b69e10ff",
+                                "authority_key_identifier": {
+                                  "keyid": "de1b1eed7915d43e3724c321bbec34396d42b230"
+                                },
+                                "ca_information_access": {
+                                  "OCSP": "http://o.pki.goog/wr2",
+                                  "CA Issuers": "http://i.pki.goog/wr2.crt"
+                                },
+                                "subject_alternative_name": [
+                                  "dns.google",
+                                  "dns.google.com",
+                                  "*.dns.google.com",
+                                  "8888.google",
+                                  "dns64.dns.google",
+                                  "8.8.8.8",
+                                  "8.8.4.4",
+                                  "2001:4860:4860::8888",
+                                  "2001:4860:4860::8844",
+                                  "2001:4860:4860::6464",
+                                  "2001:4860:4860::64"
+                                ],
+                                "certificate_policies": [
+                                  "2.23.140.1.2.1"
+                                ],
+                                "crl_distribution_points": [
+                                  "http://c.pki.goog/wr2/GSyT1N4PBrg.crl"
+                                ],
+                                "1.3.6.1.4.1.11129.2.4.2": "0481f200f0007600ccfb0f6a85710965fe959b53cee9b27c22e9855c0d978db6"
+                              },
+                              "validity": {
+                                "not_after": "2025-12-15 08:42:43",
+                                "not_before": "2025-09-22 08:42:44"
+                              },
+                              "size": 1462,
+                              "version": "V3",
+                              "public_key": {
+                                "algorithm": "RSA",
+                                "rsa": {
+                                  "modulus": "aaace65a8dcd5b8dee3297af7e2987b27b52f55c4356f5057dbd4fb9eb263bd99afdfabb41157f2207a4d096a288578eef992128f3934d2c994accbff83f00aafc9873e8e4c680f57321bbe2bb04be3b0ceb8f9558966658daf5de39de2ff56a40083dc876ef4d08be9fcf60e5b539447d617ccbd9438e0135edabea742a445390b60657248bf2d4d97c7d10a7518f09cb00a379561ffefc74dba644ad19333558b03867efa9d4f54e41f0ef5f783fd7fb88539ce96e2ab9a9227ed64fbb9cecdbb2e5d124d53bab23b6542496751e3e024e1f93333cac3b93750e5c610dbc09fd5a306f04962cbed0f70b24768f2a2f3d3b899cb823e33a00e6b5b0d07ab25d",
+                                  "exponent": "10001",
+                                  "key_size": 2048
+                                }
+                              },
+                              "thumbprint_sha256": "7155e0b3092e33a420c5d8ccca108808e3b95b2aff5967fd8a5fe2eb18780603",
+                              "thumbprint": "2492c9ae6ad6763d6cf75b92c8b00f557ae7ff23",
+                              "serial_number": "d28734b8a6bbce4c094f4afdc3ab8b94",
+                              "issuer": {
+                                "C": "US",
+                                "O": "Google Trust Services",
+                                "CN": "WR2"
+                              },
+                              "subject": {
+                                "CN": "dns.google"
+                              }
+                            },
+                            "whois_date": 1760037144,
                             "last_analysis_results": {
                               "Acronis": {
                                 "method": "blacklist",
@@ -10092,8 +10180,8 @@
                               "Xcitium Verdict Cloud": {
                                 "method": "blacklist",
                                 "engine_name": "Xcitium Verdict Cloud",
-                                "category": "undetected",
-                                "result": "unrated"
+                                "category": "malicious",
+                                "result": "malware"
                               },
                               "zvelo": {
                                 "method": "blacklist",
@@ -10108,35 +10196,7 @@
                                 "result": "unrated"
                               }
                             },
-                            "asn": 15169,
-                            "tags": [],
-                            "last_analysis_stats": {
-                              "malicious": 0,
-                              "suspicious": 0,
-                              "undetected": 33,
-                              "harmless": 62,
-                              "timeout": 0
-                            },
-                            "reputation": 524,
                             "regional_internet_registry": "ARIN",
-                            "whois_date": 1760037144,
-                            "total_votes": {
-                              "harmless": 247,
-                              "malicious": 49
-                            },
-                            "jarm": "29d3fd00029d29d00042d43d00041d8f924f5255cbc229bc55efa16391dad6",
-                            "country": "US",
-                            "crowdsourced_context": [
-                              {
-                                "details": "AsyncRAT botnet C2 server (confidence level: 100%)",
-                                "severity": "medium",
-                                "timestamp": 1694383565,
-                                "title": "ThreatFox IOCs for 2023-09-10",
-                                "source": "ArcSight Threat Intelligence"
-                              }
-                            ],
-                            "network": "8.8.8.0/24",
-                            "whois": "NetRange: 8.8.8.0 - 8.8.8.255\nCIDR: 8.8.8.0/24\nNetName: GOGL\nNetHandle: NET-8-8-8-0-2\nParent: NET8 (NET-8-0-0-0-0)\nNetType: Direct Allocation\nOriginAS: \nOrganization: Google LLC (GOGL)\nRegDate: 2023-12-28\nUpdated: 2023-12-28\nRef: https://rdap.arin.net/registry/ip/8.8.8.0\nOrgName: Google LLC\nOrgId: GOGL\nAddress: 1600 Amphitheatre Parkway\nCity: Mountain View\nStateProv: CA\nPostalCode: 94043\nCountry: US\nRegDate: 2000-03-30\nUpdated: 2019-10-31\nComment: Please note that the recommended way to file abuse complaints are located in the following links. \nComment: \nComment: To report abuse and illegal activity: https://www.google.com/contact/\nComment: \nComment: For legal requests: http://support.google.com/legal \nComment: \nComment: Regards, \nComment: The Google Team\nRef: https://rdap.arin.net/registry/entity/GOGL\nOrgTechHandle: ZG39-ARIN\nOrgTechName: Google LLC\nOrgTechPhone: +1-650-253-0000 \nOrgTechEmail: arin-contact@google.com\nOrgTechRef: https://rdap.arin.net/registry/entity/ZG39-ARIN\nOrgAbuseHandle: ABUSE5250-ARIN\nOrgAbuseName: Abuse\nOrgAbusePhone: +1-650-253-0000 \nOrgAbuseEmail: network-abuse@google.com\nOrgAbuseRef: https://rdap.arin.net/registry/entity/ABUSE5250-ARIN\n",
                             "rdap": {
                               "object_class_name": "ip network",
                               "handle": "NET-8-8-8-0-2",
@@ -10634,76 +10694,16 @@
                               "remarks": []
                             },
                             "as_owner": "GOOGLE",
-                            "last_analysis_date": 1760290691,
-                            "last_https_certificate": {
-                              "cert_signature": {
-                                "signature_algorithm": "sha256RSA",
-                                "signature": "1bb0b1731557d2a51b5f385948f2f9a7dfe312c5bc5d946743aae632e47ca552b876c3ca7920f21f9abd638404a302458cbb8a0eb0b78590f0405bb5b3a8fb5ee1c35cfd116ecec0386493a0ac763ba28a49bfcd6ea10daf7e0ebf2ac077ab4d56f84d913d6290f2f108006956d8d3acdcd5a06a3724a214a7cd777deebbeedfb5abba8b1090a1dab553d4a69fd65c312b92435da14e8c116763be98baa8ac65ce32f51bac6cb1466711ff61b9013f176756bd6d611cceedfa3c9193c24b2c6a7c9df867842792bda5550d294ee66ce6fc321c8cf1d063e7521019eeca89e5e2e0f1bebaea6d734b3b679f36962c41dffdee17b2380ffdea56c865c55ae0b642"
-                              },
-                              "extensions": {
-                                "key_usage": [
-                                  "digitalSignature",
-                                  "keyEncipherment"
-                                ],
-                                "extended_key_usage": [
-                                  "serverAuth"
-                                ],
-                                "CA": false,
-                                "subject_key_identifier": "1a6f6cffaf46c41f6297c4f64f86d4c7b69e10ff",
-                                "authority_key_identifier": {
-                                  "keyid": "de1b1eed7915d43e3724c321bbec34396d42b230"
-                                },
-                                "ca_information_access": {
-                                  "OCSP": "http://o.pki.goog/wr2",
-                                  "CA Issuers": "http://i.pki.goog/wr2.crt"
-                                },
-                                "subject_alternative_name": [
-                                  "dns.google",
-                                  "dns.google.com",
-                                  "*.dns.google.com",
-                                  "8888.google",
-                                  "dns64.dns.google",
-                                  "8.8.8.8",
-                                  "8.8.4.4",
-                                  "2001:4860:4860::8888",
-                                  "2001:4860:4860::8844",
-                                  "2001:4860:4860::6464",
-                                  "2001:4860:4860::64"
-                                ],
-                                "certificate_policies": [
-                                  "2.23.140.1.2.1"
-                                ],
-                                "crl_distribution_points": [
-                                  "http://c.pki.goog/wr2/GSyT1N4PBrg.crl"
-                                ],
-                                "1.3.6.1.4.1.11129.2.4.2": "0481f200f0007600ccfb0f6a85710965fe959b53cee9b27c22e9855c0d978db6"
-                              },
-                              "validity": {
-                                "not_after": "2025-12-15 08:42:43",
-                                "not_before": "2025-09-22 08:42:44"
-                              },
-                              "size": 1462,
-                              "version": "V3",
-                              "public_key": {
-                                "algorithm": "RSA",
-                                "rsa": {
-                                  "modulus": "aaace65a8dcd5b8dee3297af7e2987b27b52f55c4356f5057dbd4fb9eb263bd99afdfabb41157f2207a4d096a288578eef992128f3934d2c994accbff83f00aafc9873e8e4c680f57321bbe2bb04be3b0ceb8f9558966658daf5de39de2ff56a40083dc876ef4d08be9fcf60e5b539447d617ccbd9438e0135edabea742a445390b60657248bf2d4d97c7d10a7518f09cb00a379561ffefc74dba644ad19333558b03867efa9d4f54e41f0ef5f783fd7fb88539ce96e2ab9a9227ed64fbb9cecdbb2e5d124d53bab23b6542496751e3e024e1f93333cac3b93750e5c610dbc09fd5a306f04962cbed0f70b24768f2a2f3d3b899cb823e33a00e6b5b0d07ab25d",
-                                  "exponent": "10001",
-                                  "key_size": 2048
-                                }
-                              },
-                              "thumbprint_sha256": "7155e0b3092e33a420c5d8ccca108808e3b95b2aff5967fd8a5fe2eb18780603",
-                              "thumbprint": "2492c9ae6ad6763d6cf75b92c8b00f557ae7ff23",
-                              "serial_number": "d28734b8a6bbce4c094f4afdc3ab8b94",
-                              "issuer": {
-                                "C": "US",
-                                "O": "Google Trust Services",
-                                "CN": "WR2"
-                              },
-                              "subject": {
-                                "CN": "dns.google"
-                              }
-                            }
+                            "network": "8.8.8.0/24",
+                            "last_analysis_stats": {
+                              "malicious": 1,
+                              "suspicious": 0,
+                              "undetected": 32,
+                              "harmless": 62,
+                              "timeout": 0
+                            },
+                            "last_https_certificate_date": 1760306337,
+                            "last_modification_date": 1760306547
                           }
                         }
                       }
@@ -12643,16 +12643,16 @@
             },
             "supervisor_version": "2.0"
           },
-          "processing_time": 0.01095890998840332
+          "processing_time": 0.011100053787231445
         },
-        "response_time": 0.01522207260131836,
+        "response_time": 0.015110015869140625,
         "status": "success"
       },
       {
         "description": "Request 2 - Follow-up with DIFFERENT session ID",
         "request": {
           "text": "What was the IP we just analyzed?",
-          "session_id": "0ddaf445-d44c-4d9e-80a1-60771550afa5"
+          "session_id": "d71ddbc3-3fbd-4bca-a01e-224a5fde96e1"
         },
         "response": {
           "status": "success",
@@ -12724,7 +12724,7 @@
                 "ip": "8.8.8.8"
               },
               "resolution_method": "llm",
-              "timestamp": "2025-10-12T11:54:27.552991",
+              "timestamp": "2025-10-12T15:02:30.031932",
               "enriched_text": "What was 8.8.8.8 we just analyzed?"
             },
             "pii_analysis": {
@@ -12733,9 +12733,9 @@
             },
             "supervisor_version": "2.0"
           },
-          "processing_time": 0.0064470767974853516
+          "processing_time": 0.01463174819946289
         },
-        "response_time": 0.009288787841796875,
+        "response_time": 0.020357131958007812,
         "status": "success"
       }
     ]

@@ -1,13 +1,13 @@
 {
-  "timestamp": "2025-10-12T12:17:12.447431",
+  "timestamp": "2025-10-12T15:02:19.372362",
   "test_name": "incremental_threat_investigation",
-  "session_id": "849df1ac-cfb4-4fcb-9c70-5654ef64e1b2",
+  "session_id": "34573d92-542a-4501-9b3a-a5e3829c97d5",
   "requests_chain": [
     {
       "description": "Step 1 - Initial suspicious activity detected",
       "request": {
         "text": "Detected failed login from IP 198.51.100.25",
-        "session_id": "849df1ac-cfb4-4fcb-9c70-5654ef64e1b2"
+        "session_id": "34573d92-542a-4501-9b3a-a5e3829c97d5"
       },
       "response": {
         "status": "success",
@@ -65,19 +65,13 @@
                         "tags": [
                           "private"
                         ],
+                        "whois": "NetRange: 198.51.100.0 - 198.51.100.255\nCIDR: 198.51.100.0/24\nNetName: TEST-NET-1\nNetHandle: NET-198-51-100-0-1\nParent: NET198 (NET-198-0-0-0-0)\nNetType: IANA Special Use\nOriginAS: \nOrganization: Internet Assigned Numbers Authority (IANA)\nRegDate: 2009-08-26\nUpdated: 2013-08-30\nComment: Addresses starting with \"192.0.2.\", \"198.51.100.\", or \"203.0.113.\" are reserved for use in documentation and sample configurations. They should never be used in a live network configuration. No one has permission to use these addresses on the Internet.\r\nComment: \r\nComment: Network operators should add these address blocks to the list of non-routable address space, and if packet filters are deployed, then these address blocks should be added to packet filters. These blocks are not for local use, and the filters may be used in both local and public contexts.\r\nComment: \r\nComment: These addresses are assigned by the IETF, the organization that develops Internet protocols, in the Informational document RFC 5737, which can be found at:\r\nComment: http://datatracker.ietf.org/doc/rfc5737\nRef: https://rdap.arin.net/registry/ip/198.51.100.0\nOrgName: Internet Assigned Numbers Authority\nOrgId: IANA\nAddress: 12025 Waterfront Drive\r\nAddress: Suite 300\nCity: Los Angeles\nStateProv: CA\nPostalCode: 90292\nCountry: US\nRegDate: \nUpdated: 2012-08-31\nRef: https://rdap.arin.net/registry/entity/IANA\nOrgAbuseHandle: IANA-IP-ARIN\nOrgAbuseName: ICANN\nOrgAbusePhone: +1-310-301-5820 \nOrgAbuseEmail: abuse@iana.org\nOrgAbuseRef: https://rdap.arin.net/registry/entity/IANA-IP-ARIN\nOrgTechHandle: IANA-IP-ARIN\nOrgTechName: ICANN\nOrgTechPhone: +1-310-301-5820 \nOrgTechEmail: abuse@iana.org\nOrgTechRef: https://rdap.arin.net/registry/entity/IANA-IP-ARIN\n",
                         "last_analysis_stats": {
                           "malicious": 0,
                           "suspicious": 0,
                           "undetected": 35,
                           "harmless": 60,
                           "timeout": 0
-                        },
-                        "whois_date": 1670142285,
-                        "whois": "NetRange: 198.51.100.0 - 198.51.100.255\nCIDR: 198.51.100.0/24\nNetName: TEST-NET-1\nNetHandle: NET-198-51-100-0-1\nParent: NET198 (NET-198-0-0-0-0)\nNetType: IANA Special Use\nOriginAS: \nOrganization: Internet Assigned Numbers Authority (IANA)\nRegDate: 2009-08-26\nUpdated: 2013-08-30\nComment: Addresses starting with \"192.0.2.\", \"198.51.100.\", or \"203.0.113.\" are reserved for use in documentation and sample configurations. They should never be used in a live network configuration. No one has permission to use these addresses on the Internet.\r\nComment: \r\nComment: Network operators should add these address blocks to the list of non-routable address space, and if packet filters are deployed, then these address blocks should be added to packet filters. These blocks are not for local use, and the filters may be used in both local and public contexts.\r\nComment: \r\nComment: These addresses are assigned by the IETF, the organization that develops Internet protocols, in the Informational document RFC 5737, which can be found at:\r\nComment: http://datatracker.ietf.org/doc/rfc5737\nRef: https://rdap.arin.net/registry/ip/198.51.100.0\nOrgName: Internet Assigned Numbers Authority\nOrgId: IANA\nAddress: 12025 Waterfront Drive\r\nAddress: Suite 300\nCity: Los Angeles\nStateProv: CA\nPostalCode: 90292\nCountry: US\nRegDate: \nUpdated: 2012-08-31\nRef: https://rdap.arin.net/registry/entity/IANA\nOrgAbuseHandle: IANA-IP-ARIN\nOrgAbuseName: ICANN\nOrgAbusePhone: +1-310-301-5820 \nOrgAbuseEmail: abuse@iana.org\nOrgAbuseRef: https://rdap.arin.net/registry/entity/IANA-IP-ARIN\nOrgTechHandle: IANA-IP-ARIN\nOrgTechName: ICANN\nOrgTechPhone: +1-310-301-5820 \nOrgTechEmail: abuse@iana.org\nOrgTechRef: https://rdap.arin.net/registry/entity/IANA-IP-ARIN\n",
-                        "reputation": 0,
-                        "total_votes": {
-                          "harmless": 0,
-                          "malicious": 0
                         },
                         "last_analysis_results": {
                           "Acronis": {
@@ -651,8 +645,14 @@
                             "result": "unrated"
                           }
                         },
-                        "last_modification_date": 1759845883,
-                        "last_analysis_date": 1759845580
+                        "total_votes": {
+                          "harmless": 0,
+                          "malicious": 0
+                        },
+                        "reputation": 0,
+                        "whois_date": 1670142285,
+                        "last_analysis_date": 1759845580,
+                        "last_modification_date": 1759845883
                       }
                     }
                   }
@@ -720,21 +720,12 @@
                     }
                   }
                 }
-              },
-              {
-                "indicator": "198.51.100.25",
-                "type": "ip",
-                "risk_level": "low",
-                "source": "Shodan",
-                "details": {
-                  "error": "403, message='Forbidden', url='https://api.shodan.io/shodan/host/198.51.100.25?key=[REDACTED]'"
-                }
               }
             ],
             "high_risk_count": 0,
             "medium_risk_count": 0,
-            "low_risk_count": 3,
-            "total_analyzed": 3
+            "low_risk_count": 2,
+            "total_analyzed": 2
           },
           "tool_analysis": {
             "detailed_results": {
@@ -771,19 +762,13 @@
                           "tags": [
                             "private"
                           ],
+                          "whois": "NetRange: 198.51.100.0 - 198.51.100.255\nCIDR: 198.51.100.0/24\nNetName: TEST-NET-1\nNetHandle: NET-198-51-100-0-1\nParent: NET198 (NET-198-0-0-0-0)\nNetType: IANA Special Use\nOriginAS: \nOrganization: Internet Assigned Numbers Authority (IANA)\nRegDate: 2009-08-26\nUpdated: 2013-08-30\nComment: Addresses starting with \"192.0.2.\", \"198.51.100.\", or \"203.0.113.\" are reserved for use in documentation and sample configurations. They should never be used in a live network configuration. No one has permission to use these addresses on the Internet.\r\nComment: \r\nComment: Network operators should add these address blocks to the list of non-routable address space, and if packet filters are deployed, then these address blocks should be added to packet filters. These blocks are not for local use, and the filters may be used in both local and public contexts.\r\nComment: \r\nComment: These addresses are assigned by the IETF, the organization that develops Internet protocols, in the Informational document RFC 5737, which can be found at:\r\nComment: http://datatracker.ietf.org/doc/rfc5737\nRef: https://rdap.arin.net/registry/ip/198.51.100.0\nOrgName: Internet Assigned Numbers Authority\nOrgId: IANA\nAddress: 12025 Waterfront Drive\r\nAddress: Suite 300\nCity: Los Angeles\nStateProv: CA\nPostalCode: 90292\nCountry: US\nRegDate: \nUpdated: 2012-08-31\nRef: https://rdap.arin.net/registry/entity/IANA\nOrgAbuseHandle: IANA-IP-ARIN\nOrgAbuseName: ICANN\nOrgAbusePhone: +1-310-301-5820 \nOrgAbuseEmail: abuse@iana.org\nOrgAbuseRef: https://rdap.arin.net/registry/entity/IANA-IP-ARIN\nOrgTechHandle: IANA-IP-ARIN\nOrgTechName: ICANN\nOrgTechPhone: +1-310-301-5820 \nOrgTechEmail: abuse@iana.org\nOrgTechRef: https://rdap.arin.net/registry/entity/IANA-IP-ARIN\n",
                           "last_analysis_stats": {
                             "malicious": 0,
                             "suspicious": 0,
                             "undetected": 35,
                             "harmless": 60,
                             "timeout": 0
-                          },
-                          "whois_date": 1670142285,
-                          "whois": "NetRange: 198.51.100.0 - 198.51.100.255\nCIDR: 198.51.100.0/24\nNetName: TEST-NET-1\nNetHandle: NET-198-51-100-0-1\nParent: NET198 (NET-198-0-0-0-0)\nNetType: IANA Special Use\nOriginAS: \nOrganization: Internet Assigned Numbers Authority (IANA)\nRegDate: 2009-08-26\nUpdated: 2013-08-30\nComment: Addresses starting with \"192.0.2.\", \"198.51.100.\", or \"203.0.113.\" are reserved for use in documentation and sample configurations. They should never be used in a live network configuration. No one has permission to use these addresses on the Internet.\r\nComment: \r\nComment: Network operators should add these address blocks to the list of non-routable address space, and if packet filters are deployed, then these address blocks should be added to packet filters. These blocks are not for local use, and the filters may be used in both local and public contexts.\r\nComment: \r\nComment: These addresses are assigned by the IETF, the organization that develops Internet protocols, in the Informational document RFC 5737, which can be found at:\r\nComment: http://datatracker.ietf.org/doc/rfc5737\nRef: https://rdap.arin.net/registry/ip/198.51.100.0\nOrgName: Internet Assigned Numbers Authority\nOrgId: IANA\nAddress: 12025 Waterfront Drive\r\nAddress: Suite 300\nCity: Los Angeles\nStateProv: CA\nPostalCode: 90292\nCountry: US\nRegDate: \nUpdated: 2012-08-31\nRef: https://rdap.arin.net/registry/entity/IANA\nOrgAbuseHandle: IANA-IP-ARIN\nOrgAbuseName: ICANN\nOrgAbusePhone: +1-310-301-5820 \nOrgAbuseEmail: abuse@iana.org\nOrgAbuseRef: https://rdap.arin.net/registry/entity/IANA-IP-ARIN\nOrgTechHandle: IANA-IP-ARIN\nOrgTechName: ICANN\nOrgTechPhone: +1-310-301-5820 \nOrgTechEmail: abuse@iana.org\nOrgTechRef: https://rdap.arin.net/registry/entity/IANA-IP-ARIN\n",
-                          "reputation": 0,
-                          "total_votes": {
-                            "harmless": 0,
-                            "malicious": 0
                           },
                           "last_analysis_results": {
                             "Acronis": {
@@ -1357,8 +1342,14 @@
                               "result": "unrated"
                             }
                           },
-                          "last_modification_date": 1759845883,
-                          "last_analysis_date": 1759845580
+                          "total_votes": {
+                            "harmless": 0,
+                            "malicious": 0
+                          },
+                          "reputation": 0,
+                          "whois_date": 1670142285,
+                          "last_analysis_date": 1759845580,
+                          "last_modification_date": 1759845883
                         }
                       }
                     }
@@ -1427,19 +1418,10 @@
                     }
                   }
                 }
-              ],
-              "Shodan": [
-                {
-                  "type": "ip",
-                  "value": "198.51.100.25",
-                  "result": {
-                    "error": "403, message='Forbidden', url='https://api.shodan.io/shodan/host/198.51.100.25?key=[REDACTED]'"
-                  }
-                }
               ]
             },
             "execution_metrics": {
-              "tools_count": 3,
+              "tools_count": 2,
               "success_rate": 1.0,
               "concurrent": true,
               "performance_gain": "Optimized concurrent execution with caching",
@@ -1451,15 +1433,14 @@
             "note": "No vector database search performed"
           },
           "recommendations": [
-            "📋 1 potential security indicators identified - monitor closely",
-            "⚡ Analysis completed with caching optimization - 60-80% API cost reduction achieved"
+            "\ud83d\udccb 1 potential security indicators identified - monitor closely",
+            "\u26a1 Analysis completed with caching optimization - 60-80% API cost reduction achieved"
           ],
           "processing_summary": {
             "iterations": 1,
             "tools_used": [
               "VirusTotal",
-              "AbuseIPDB",
-              "Shodan"
+              "AbuseIPDB"
             ],
             "processing_method": "react_workflow_cached",
             "cached_operations": [
@@ -1482,16 +1463,16 @@
           },
           "supervisor_version": "2.0"
         },
-        "processing_time": 0.008487939834594727
+        "processing_time": 2.266752004623413
       },
-      "response_time": 0.01093602180480957,
+      "response_time": 2.2693302631378174,
       "status": "success"
     },
     {
       "description": "Step 2 - Escalation - port scanning from same IP",
       "request": {
         "text": "The same IP is now scanning ports 22, 23, 3389",
-        "session_id": "849df1ac-cfb4-4fcb-9c70-5654ef64e1b2"
+        "session_id": "34573d92-542a-4501-9b3a-a5e3829c97d5"
       },
       "response": {
         "status": "success",
@@ -1520,11 +1501,10 @@
           },
           "tool_analysis": {
             "detailed_results": {
-              "AbuseIPDB": [],
-              "Shodan": []
+              "AbuseIPDB": []
             },
             "execution_metrics": {
-              "tools_count": 2,
+              "tools_count": 1,
               "success_rate": 1.0,
               "concurrent": true,
               "performance_gain": "Optimized concurrent execution with caching",
@@ -1536,14 +1516,13 @@
             "note": "No vector database search performed"
           },
           "recommendations": [
-            "⚡ Analysis completed with caching optimization - 60-80% API cost reduction achieved",
-            "✅ No immediate security threats detected in current analysis"
+            "\u26a1 Analysis completed with caching optimization - 60-80% API cost reduction achieved",
+            "\u2705 No immediate security threats detected in current analysis"
           ],
           "processing_summary": {
             "iterations": 1,
             "tools_used": [
-              "AbuseIPDB",
-              "Shodan"
+              "AbuseIPDB"
             ],
             "processing_method": "react_workflow_cached",
             "cached_operations": [
@@ -1567,7 +1546,7 @@
               "ip": "198.51.100.25"
             },
             "resolution_method": "llm",
-            "timestamp": "2025-10-12T11:54:10.248494",
+            "timestamp": "2025-10-12T15:02:12.946947",
             "enriched_text": "The 198.51.100.25 is now scanning ports 22, 23, 3389"
           },
           "pii_analysis": {
@@ -1576,16 +1555,16 @@
           },
           "supervisor_version": "2.0"
         },
-        "processing_time": 0.012222051620483398
+        "processing_time": 1.39146089553833
       },
-      "response_time": 0.015536308288574219,
+      "response_time": 1.3936347961425781,
       "status": "success"
     },
     {
       "description": "Step 3 - Successful compromise from the IP",
       "request": {
         "text": "Successful SSH connection established from that IP",
-        "session_id": "849df1ac-cfb4-4fcb-9c70-5654ef64e1b2"
+        "session_id": "34573d92-542a-4501-9b3a-a5e3829c97d5"
       },
       "response": {
         "status": "success",
@@ -1614,11 +1593,10 @@
           },
           "tool_analysis": {
             "detailed_results": {
-              "AbuseIPDB": [],
-              "Shodan": []
+              "AbuseIPDB": []
             },
             "execution_metrics": {
-              "tools_count": 2,
+              "tools_count": 1,
               "success_rate": 1.0,
               "concurrent": true,
               "performance_gain": "Optimized concurrent execution with caching",
@@ -1630,14 +1608,13 @@
             "note": "No vector database search performed"
           },
           "recommendations": [
-            "⚡ Analysis completed with caching optimization - 60-80% API cost reduction achieved",
-            "✅ No immediate security threats detected in current analysis"
+            "\u26a1 Analysis completed with caching optimization - 60-80% API cost reduction achieved",
+            "\u2705 No immediate security threats detected in current analysis"
           ],
           "processing_summary": {
             "iterations": 1,
             "tools_used": [
-              "AbuseIPDB",
-              "Shodan"
+              "AbuseIPDB"
             ],
             "processing_method": "react_workflow_cached",
             "cached_operations": [
@@ -1661,7 +1638,7 @@
               "ip": "198.51.100.25"
             },
             "resolution_method": "llm",
-            "timestamp": "2025-10-12T11:54:13.134592",
+            "timestamp": "2025-10-12T15:02:15.347794",
             "enriched_text": "Successful SSH connection established from 198.51.100.25"
           },
           "pii_analysis": {
@@ -1670,16 +1647,16 @@
           },
           "supervisor_version": "2.0"
         },
-        "processing_time": 0.017349958419799805
+        "processing_time": 1.3600151538848877
       },
-      "response_time": 0.021481037139892578,
+      "response_time": 1.3632712364196777,
       "status": "success"
     },
     {
       "description": "Step 4 - Request summary of entire attack chain",
       "request": {
         "text": "Summarize the entire attack chain we've been tracking",
-        "session_id": "849df1ac-cfb4-4fcb-9c70-5654ef64e1b2"
+        "session_id": "34573d92-542a-4501-9b3a-a5e3829c97d5"
       },
       "response": {
         "status": "success",
@@ -1717,8 +1694,8 @@
             "note": "No vector database search performed"
           },
           "recommendations": [
-            "⚡ Analysis completed with caching optimization - 60-80% API cost reduction achieved",
-            "✅ No immediate security threats detected in current analysis"
+            "\u26a1 Analysis completed with caching optimization - 60-80% API cost reduction achieved",
+            "\u2705 No immediate security threats detected in current analysis"
           ],
           "processing_summary": {
             "iterations": 1,
@@ -1729,7 +1706,7 @@
               "tool_selection",
               "tool_results"
             ],
-            "execution_time_seconds": 0.0054378509521484375,
+            "execution_time_seconds": 0.0023801326751708984,
             "performance_gain": "60-80% API cost reduction with caching"
           },
           "processing_method": "react_workflow",
@@ -1746,12 +1723,12 @@
                 "event_count": 6,
                 "events": [
                   {
-                    "timestamp": "2025-10-12T11:54:01.390519",
+                    "timestamp": "2025-10-12T15:02:03.557945",
                     "input_text": "Suspicious activity from 192.168.1.100 connecting to malware-c2.example.com. Also detected traffic to 203.0.113.50 on port 443. File hash: d41d8cd98f00b204e9800998ecf8427e",
                     "iocs_found": {
                       "ips": [
-                        "203.0.113.50",
-                        "192.168.1.100"
+                        "192.168.1.100",
+                        "203.0.113.50"
                       ],
                       "domains": [
                         "malware-c2.example.com"
@@ -1763,14 +1740,14 @@
                     "threats_detected": {
                       "high_risk": 0,
                       "medium_risk": 0,
-                      "low_risk": 7,
-                      "total": 7
+                      "low_risk": 5,
+                      "total": 5
                     },
                     "risk_level": "low",
                     "summary": "4 IOCs detected, no significant threats"
                   },
                   {
-                    "timestamp": "2025-10-12T11:54:04.573072",
+                    "timestamp": "2025-10-12T15:02:06.438306",
                     "input_text": "Tell me more about the IP address 192.168.1.100 from the previous analysis. What threats are associated with it?",
                     "iocs_found": {
                       "ips": [
@@ -1789,7 +1766,7 @@
                     "summary": "1 IOCs detected, no significant threats"
                   },
                   {
-                    "timestamp": "2025-10-12T11:54:07.461910",
+                    "timestamp": "2025-10-12T15:02:09.654680",
                     "input_text": "What about the domain malware-c2.example.com? Is it malicious?",
                     "iocs_found": {
                       "ips": [],
@@ -1808,7 +1785,7 @@
                     "summary": "1 IOCs detected, no significant threats"
                   },
                   {
-                    "timestamp": "2025-10-12T11:54:09.229182",
+                    "timestamp": "2025-10-12T15:02:11.935261",
                     "input_text": "Detected failed login from IP 198.51.100.25",
                     "iocs_found": {
                       "ips": [
@@ -1820,14 +1797,14 @@
                     "threats_detected": {
                       "high_risk": 0,
                       "medium_risk": 0,
-                      "low_risk": 3,
-                      "total": 3
+                      "low_risk": 2,
+                      "total": 2
                     },
                     "risk_level": "low",
                     "summary": "1 IOCs detected, no significant threats"
                   },
                   {
-                    "timestamp": "2025-10-12T11:54:12.125126",
+                    "timestamp": "2025-10-12T15:02:14.335138",
                     "input_text": "The same IP is now scanning ports 22, 23, 3389",
                     "iocs_found": {
                       "ips": [],
@@ -1844,7 +1821,7 @@
                     "summary": "No IOCs or threats detected"
                   },
                   {
-                    "timestamp": "2025-10-12T11:54:14.714959",
+                    "timestamp": "2025-10-12T15:02:16.704144",
                     "input_text": "Successful SSH connection established from that IP",
                     "iocs_found": {
                       "ips": [],
@@ -1864,7 +1841,7 @@
               }
             },
             "resolution_method": "llm",
-            "timestamp": "2025-10-12T11:54:15.727200",
+            "timestamp": "2025-10-12T15:02:17.716400",
             "enriched_text": "Based on 6 previous security events: Summarize the entire attack chain we've been tracking"
           },
           "pii_analysis": {
@@ -1873,9 +1850,9 @@
           },
           "supervisor_version": "2.0"
         },
-        "processing_time": 2.044926881790161
+        "processing_time": 1.6561646461486816
       },
-      "response_time": 2.0502920150756836,
+      "response_time": 1.6590039730072021,
       "status": "success"
     }
   ],
@@ -1916,12 +1893,12 @@
             "event_count": 6,
             "events": [
               {
-                "timestamp": "2025-10-12T11:54:01.390519",
+                "timestamp": "2025-10-12T15:02:03.557945",
                 "input_text": "Suspicious activity from 192.168.1.100 connecting to malware-c2.example.com. Also detected traffic to 203.0.113.50 on port 443. File hash: d41d8cd98f00b204e9800998ecf8427e",
                 "iocs_found": {
                   "ips": [
-                    "203.0.113.50",
-                    "192.168.1.100"
+                    "192.168.1.100",
+                    "203.0.113.50"
                   ],
                   "domains": [
                     "malware-c2.example.com"
@@ -1933,14 +1910,14 @@
                 "threats_detected": {
                   "high_risk": 0,
                   "medium_risk": 0,
-                  "low_risk": 7,
-                  "total": 7
+                  "low_risk": 5,
+                  "total": 5
                 },
                 "risk_level": "low",
                 "summary": "4 IOCs detected, no significant threats"
               },
               {
-                "timestamp": "2025-10-12T11:54:04.573072",
+                "timestamp": "2025-10-12T15:02:06.438306",
                 "input_text": "Tell me more about the IP address 192.168.1.100 from the previous analysis. What threats are associated with it?",
                 "iocs_found": {
                   "ips": [
@@ -1959,7 +1936,7 @@
                 "summary": "1 IOCs detected, no significant threats"
               },
               {
-                "timestamp": "2025-10-12T11:54:07.461910",
+                "timestamp": "2025-10-12T15:02:09.654680",
                 "input_text": "What about the domain malware-c2.example.com? Is it malicious?",
                 "iocs_found": {
                   "ips": [],
@@ -1978,7 +1955,7 @@
                 "summary": "1 IOCs detected, no significant threats"
               },
               {
-                "timestamp": "2025-10-12T11:54:09.229182",
+                "timestamp": "2025-10-12T15:02:11.935261",
                 "input_text": "Detected failed login from IP 198.51.100.25",
                 "iocs_found": {
                   "ips": [
@@ -1990,14 +1967,14 @@
                 "threats_detected": {
                   "high_risk": 0,
                   "medium_risk": 0,
-                  "low_risk": 3,
-                  "total": 3
+                  "low_risk": 2,
+                  "total": 2
                 },
                 "risk_level": "low",
                 "summary": "1 IOCs detected, no significant threats"
               },
               {
-                "timestamp": "2025-10-12T11:54:12.125126",
+                "timestamp": "2025-10-12T15:02:14.335138",
                 "input_text": "The same IP is now scanning ports 22, 23, 3389",
                 "iocs_found": {
                   "ips": [],
@@ -2014,7 +1991,7 @@
                 "summary": "No IOCs or threats detected"
               },
               {
-                "timestamp": "2025-10-12T11:54:14.714959",
+                "timestamp": "2025-10-12T15:02:16.704144",
                 "input_text": "Successful SSH connection established from that IP",
                 "iocs_found": {
                   "ips": [],

@@ -1,13 +1,13 @@
 {
-  "timestamp": "2025-10-12T12:17:14.506238",
+  "timestamp": "2025-10-12T15:02:26.627915",
   "test_name": "cross_agent_data_sharing",
-  "session_id": "849df1ac-cfb4-4fcb-9c70-5654ef64e1b2",
+  "session_id": "34573d92-542a-4501-9b3a-a5e3829c97d5",
   "requests_chain": [
     {
       "description": "Step 1 - Initial IOC detection (IP, domain, hash)",
       "request": {
         "text": "Traffic detected from IP 45.76.123.89 connecting to suspicious-domain.net. File hash: 5d41402abc4b2a76b9719d911017c592 was executed.",
-        "session_id": "849df1ac-cfb4-4fcb-9c70-5654ef64e1b2"
+        "session_id": "34573d92-542a-4501-9b3a-a5e3829c97d5"
       },
       "response": {
         "status": "success",
@@ -66,17 +66,85 @@
                         "self": "https://www.virustotal.com/api/v3/ip_addresses/45.76.123.89"
                       },
                       "attributes": {
-                        "regional_internet_registry": "APNIC",
-                        "continent": "OC",
-                        "country": "AU",
-                        "network": "45.76.0.0/15",
-                        "tags": [],
                         "jarm": "2ad2ad0002ad2ad00042d42d0000005d86ccb1a0567e012264097a0315d7a7",
-                        "as_owner": "AS-VULTR",
-                        "last_https_certificate_date": 1644891524,
-                        "reputation": 0,
-                        "asn": 20473,
                         "last_modification_date": 1758114545,
+                        "as_owner": "AS-VULTR",
+                        "last_analysis_date": 1669969131,
+                        "continent": "OC",
+                        "last_https_certificate_date": 1644891524,
+                        "last_https_certificate": {
+                          "public_key": {
+                            "rsa": {
+                              "key_size": 2048,
+                              "modulus": "00b1ca10e7bd705e2ebb8e8d8f11ffb06bf4134a8dcae5855549b482918378ed5c96e0730fba5f339160a37b990420632cbad8dbafbedbf293f889d9404bd0d0aa5dd5b69c4565d00d5adc7b06dda6dcca1e203686deceb1eadb3d90cc1f025cc4aa1150f74e7a55e5b4f9c37026455a9f1f2d1a2ef1bb6e77b5137f13fcec6490289dfa4e82c98bfb4d111b992078fe14e129814ce775f8cc0d86b3c31d17596f8156af05c63f0f06f26bf4595e34905fc0372ed8a25365de7e83d4459bb1b1d62fc610a8ff371a7035f9ede446796604f7a2afa041eb83195cf33327a75a3bd17ba57a948dbf0547869de01030bc2f9b3cfcaadb441ba3ddc7338b67908cd295",
+                              "exponent": "010001"
+                            },
+                            "algorithm": "RSA"
+                          },
+                          "thumbprint_sha256": "bd53ac87efb663af33407413f0582fa2668cc89c50d3ae67c07a8392dbbd7471",
+                          "tags": [],
+                          "signature_algorithm": "sha256RSA",
+                          "subject": {
+                            "CN": "*.roadsconnect.com"
+                          },
+                          "validity": {
+                            "not_after": "2022-04-21 02:53:15",
+                            "not_before": "2022-01-21 02:53:16"
+                          },
+                          "version": "V3",
+                          "extensions": {
+                            "certificate_policies": [
+                              "2.23.140.1.2.1",
+                              "1.3.6.1.4.1.44947.1.1.1"
+                            ],
+                            "extended_key_usage": [
+                              "serverAuth",
+                              "clientAuth"
+                            ],
+                            "authority_key_identifier": {
+                              "keyid": "142eb317b75856cbae500940e61faf9d8b14c2c6"
+                            },
+                            "subject_alternative_name": [
+                              "*.roadsconnect.com"
+                            ],
+                            "tags": [],
+                            "subject_key_identifier": "29bf447155960ed379aa342fc6ff84ca4dbc87ca",
+                            "key_usage": [
+                              "ff"
+                            ],
+                            "1.3.6.1.4.1.11129.2.4.2": "0481f300f1007700dfa55eab68824f1f6cadeeb85f4e3e5aeacda212a46a5e8e",
+                            "CA": true,
+                            "ca_information_access": {
+                              "CA Issuers": "http://r3.i.lencr.org/",
+                              "OCSP": "http://r3.o.lencr.org"
+                            }
+                          },
+                          "cert_signature": {
+                            "signature": "9e9b55658b9a35e0bae4165220af10978d3159b4459cff68e562df877e89916e0aa9ecad52913b7986181556aa10b7762a0b54ce73b792210438469cefbc42395cd71f247691d5ff5f4f2d63cf57f605ddf908c489d318da2aae6a418c4c35e796ea833c27692eed8e2ec41c380381cf3b47bccfba213a5c58c5de5e832652fa5abb737cdc8cdbfaaaac0cb6804f62021d52e9e9da4c9ea152d8f5712d04705430afced6917e10b7d7bc3dfd6133b5277d6d5336c26f067c199f2ed151ffb2d8e56e7509c24c14760e678b99604d505c9c01b13c64e6527b562ba32f706646272d8d0953cbacb1d8a34b8cdb499f0b0c624c63fd1bccd4553c0bf447aca7a751",
+                            "signature_algorithm": "sha256RSA"
+                          },
+                          "serial_number": "3297a568d2b135be5319585bd4b6e577b1e",
+                          "thumbprint": "be9473de734e9d76a7d15e35b5c5e58251340362",
+                          "issuer": {
+                            "C": "US",
+                            "CN": "R3",
+                            "O": "Let's Encrypt"
+                          },
+                          "size": 1327
+                        },
+                        "last_analysis_stats": {
+                          "malicious": 0,
+                          "suspicious": 0,
+                          "undetected": 95,
+                          "harmless": 0,
+                          "timeout": 0
+                        },
+                        "tags": [],
+                        "regional_internet_registry": "APNIC",
+                        "total_votes": {
+                          "harmless": 0,
+                          "malicious": 0
+                        },
                         "last_analysis_results": {
                           "Acronis": {
                             "method": "blacklist",
@@ -649,78 +717,10 @@
                             "result": "unrated"
                           }
                         },
-                        "last_https_certificate": {
-                          "public_key": {
-                            "rsa": {
-                              "key_size": 2048,
-                              "modulus": "00b1ca10e7bd705e2ebb8e8d8f11ffb06bf4134a8dcae5855549b482918378ed5c96e0730fba5f339160a37b990420632cbad8dbafbedbf293f889d9404bd0d0aa5dd5b69c4565d00d5adc7b06dda6dcca1e203686deceb1eadb3d90cc1f025cc4aa1150f74e7a55e5b4f9c37026455a9f1f2d1a2ef1bb6e77b5137f13fcec6490289dfa4e82c98bfb4d111b992078fe14e129814ce775f8cc0d86b3c31d17596f8156af05c63f0f06f26bf4595e34905fc0372ed8a25365de7e83d4459bb1b1d62fc610a8ff371a7035f9ede446796604f7a2afa041eb83195cf33327a75a3bd17ba57a948dbf0547869de01030bc2f9b3cfcaadb441ba3ddc7338b67908cd295",
-                              "exponent": "010001"
-                            },
-                            "algorithm": "RSA"
-                          },
-                          "thumbprint_sha256": "bd53ac87efb663af33407413f0582fa2668cc89c50d3ae67c07a8392dbbd7471",
-                          "tags": [],
-                          "signature_algorithm": "sha256RSA",
-                          "subject": {
-                            "CN": "*.roadsconnect.com"
-                          },
-                          "validity": {
-                            "not_after": "2022-04-21 02:53:15",
-                            "not_before": "2022-01-21 02:53:16"
-                          },
-                          "version": "V3",
-                          "extensions": {
-                            "certificate_policies": [
-                              "2.23.140.1.2.1",
-                              "1.3.6.1.4.1.44947.1.1.1"
-                            ],
-                            "extended_key_usage": [
-                              "serverAuth",
-                              "clientAuth"
-                            ],
-                            "authority_key_identifier": {
-                              "keyid": "142eb317b75856cbae500940e61faf9d8b14c2c6"
-                            },
-                            "subject_alternative_name": [
-                              "*.roadsconnect.com"
-                            ],
-                            "tags": [],
-                            "subject_key_identifier": "29bf447155960ed379aa342fc6ff84ca4dbc87ca",
-                            "key_usage": [
-                              "ff"
-                            ],
-                            "1.3.6.1.4.1.11129.2.4.2": "0481f300f1007700dfa55eab68824f1f6cadeeb85f4e3e5aeacda212a46a5e8e",
-                            "CA": true,
-                            "ca_information_access": {
-                              "CA Issuers": "http://r3.i.lencr.org/",
-                              "OCSP": "http://r3.o.lencr.org"
-                            }
-                          },
-                          "cert_signature": {
-                            "signature": "9e9b55658b9a35e0bae4165220af10978d3159b4459cff68e562df877e89916e0aa9ecad52913b7986181556aa10b7762a0b54ce73b792210438469cefbc42395cd71f247691d5ff5f4f2d63cf57f605ddf908c489d318da2aae6a418c4c35e796ea833c27692eed8e2ec41c380381cf3b47bccfba213a5c58c5de5e832652fa5abb737cdc8cdbfaaaac0cb6804f62021d52e9e9da4c9ea152d8f5712d04705430afced6917e10b7d7bc3dfd6133b5277d6d5336c26f067c199f2ed151ffb2d8e56e7509c24c14760e678b99604d505c9c01b13c64e6527b562ba32f706646272d8d0953cbacb1d8a34b8cdb499f0b0c624c63fd1bccd4553c0bf447aca7a751",
-                            "signature_algorithm": "sha256RSA"
-                          },
-                          "serial_number": "3297a568d2b135be5319585bd4b6e577b1e",
-                          "thumbprint": "be9473de734e9d76a7d15e35b5c5e58251340362",
-                          "issuer": {
-                            "C": "US",
-                            "CN": "R3",
-                            "O": "Let's Encrypt"
-                          },
-                          "size": 1327
-                        },
-                        "last_analysis_date": 1669969131,
-                        "total_votes": {
-                          "harmless": 0,
-                          "malicious": 0
-                        },
-                        "last_analysis_stats": {
-                          "malicious": 0,
-                          "suspicious": 0,
-                          "undetected": 95,
-                          "harmless": 0,
-                          "timeout": 0
-                        }
+                        "reputation": 0,
+                        "asn": 20473,
+                        "network": "45.76.0.0/15",
+                        "country": "AU"
                       }
                     }
                   }
@@ -757,14 +757,25 @@
                         "self": "https://www.virustotal.com/api/v3/domains/suspicious-domain.net"
                       },
                       "attributes": {
-                        "tags": [],
-                        "tld": "net",
-                        "last_analysis_date": 1759847042,
                         "total_votes": {
                           "harmless": 0,
                           "malicious": 0
                         },
+                        "last_analysis_stats": {
+                          "malicious": 1,
+                          "suspicious": 0,
+                          "undetected": 36,
+                          "harmless": 58,
+                          "timeout": 0
+                        },
+                        "tld": "net",
                         "popularity_ranks": {},
+                        "last_modification_date": 1759847371,
+                        "last_analysis_date": 1759847042,
+                        "reputation": 0,
+                        "last_dns_records": [],
+                        "categories": {},
+                        "tags": [],
                         "last_analysis_results": {
                           "Acronis": {
                             "method": "blacklist",
@@ -1336,18 +1347,7 @@
                             "category": "undetected",
                             "result": "unrated"
                           }
-                        },
-                        "categories": {},
-                        "last_analysis_stats": {
-                          "malicious": 1,
-                          "suspicious": 0,
-                          "undetected": 36,
-                          "harmless": 58,
-                          "timeout": 0
-                        },
-                        "reputation": 0,
-                        "last_modification_date": 1759847371,
-                        "last_dns_records": []
+                        }
                       }
                     }
                   }
@@ -1434,17 +1434,85 @@
                           "self": "https://www.virustotal.com/api/v3/ip_addresses/45.76.123.89"
                         },
                         "attributes": {
-                          "regional_internet_registry": "APNIC",
-                          "continent": "OC",
-                          "country": "AU",
-                          "network": "45.76.0.0/15",
-                          "tags": [],
                           "jarm": "2ad2ad0002ad2ad00042d42d0000005d86ccb1a0567e012264097a0315d7a7",
-                          "as_owner": "AS-VULTR",
-                          "last_https_certificate_date": 1644891524,
-                          "reputation": 0,
-                          "asn": 20473,
                           "last_modification_date": 1758114545,
+                          "as_owner": "AS-VULTR",
+                          "last_analysis_date": 1669969131,
+                          "continent": "OC",
+                          "last_https_certificate_date": 1644891524,
+                          "last_https_certificate": {
+                            "public_key": {
+                              "rsa": {
+                                "key_size": 2048,
+                                "modulus": "00b1ca10e7bd705e2ebb8e8d8f11ffb06bf4134a8dcae5855549b482918378ed5c96e0730fba5f339160a37b990420632cbad8dbafbedbf293f889d9404bd0d0aa5dd5b69c4565d00d5adc7b06dda6dcca1e203686deceb1eadb3d90cc1f025cc4aa1150f74e7a55e5b4f9c37026455a9f1f2d1a2ef1bb6e77b5137f13fcec6490289dfa4e82c98bfb4d111b992078fe14e129814ce775f8cc0d86b3c31d17596f8156af05c63f0f06f26bf4595e34905fc0372ed8a25365de7e83d4459bb1b1d62fc610a8ff371a7035f9ede446796604f7a2afa041eb83195cf33327a75a3bd17ba57a948dbf0547869de01030bc2f9b3cfcaadb441ba3ddc7338b67908cd295",
+                                "exponent": "010001"
+                              },
+                              "algorithm": "RSA"
+                            },
+                            "thumbprint_sha256": "bd53ac87efb663af33407413f0582fa2668cc89c50d3ae67c07a8392dbbd7471",
+                            "tags": [],
+                            "signature_algorithm": "sha256RSA",
+                            "subject": {
+                              "CN": "*.roadsconnect.com"
+                            },
+                            "validity": {
+                              "not_after": "2022-04-21 02:53:15",
+                              "not_before": "2022-01-21 02:53:16"
+                            },
+                            "version": "V3",
+                            "extensions": {
+                              "certificate_policies": [
+                                "2.23.140.1.2.1",
+                                "1.3.6.1.4.1.44947.1.1.1"
+                              ],
+                              "extended_key_usage": [
+                                "serverAuth",
+                                "clientAuth"
+                              ],
+                              "authority_key_identifier": {
+                                "keyid": "142eb317b75856cbae500940e61faf9d8b14c2c6"
+                              },
+                              "subject_alternative_name": [
+                                "*.roadsconnect.com"
+                              ],
+                              "tags": [],
+                              "subject_key_identifier": "29bf447155960ed379aa342fc6ff84ca4dbc87ca",
+                              "key_usage": [
+                                "ff"
+                              ],
+                              "1.3.6.1.4.1.11129.2.4.2": "0481f300f1007700dfa55eab68824f1f6cadeeb85f4e3e5aeacda212a46a5e8e",
+                              "CA": true,
+                              "ca_information_access": {
+                                "CA Issuers": "http://r3.i.lencr.org/",
+                                "OCSP": "http://r3.o.lencr.org"
+                              }
+                            },
+                            "cert_signature": {
+                              "signature": "9e9b55658b9a35e0bae4165220af10978d3159b4459cff68e562df877e89916e0aa9ecad52913b7986181556aa10b7762a0b54ce73b792210438469cefbc42395cd71f247691d5ff5f4f2d63cf57f605ddf908c489d318da2aae6a418c4c35e796ea833c27692eed8e2ec41c380381cf3b47bccfba213a5c58c5de5e832652fa5abb737cdc8cdbfaaaac0cb6804f62021d52e9e9da4c9ea152d8f5712d04705430afced6917e10b7d7bc3dfd6133b5277d6d5336c26f067c199f2ed151ffb2d8e56e7509c24c14760e678b99604d505c9c01b13c64e6527b562ba32f706646272d8d0953cbacb1d8a34b8cdb499f0b0c624c63fd1bccd4553c0bf447aca7a751",
+                              "signature_algorithm": "sha256RSA"
+                            },
+                            "serial_number": "3297a568d2b135be5319585bd4b6e577b1e",
+                            "thumbprint": "be9473de734e9d76a7d15e35b5c5e58251340362",
+                            "issuer": {
+                              "C": "US",
+                              "CN": "R3",
+                              "O": "Let's Encrypt"
+                            },
+                            "size": 1327
+                          },
+                          "last_analysis_stats": {
+                            "malicious": 0,
+                            "suspicious": 0,
+                            "undetected": 95,
+                            "harmless": 0,
+                            "timeout": 0
+                          },
+                          "tags": [],
+                          "regional_internet_registry": "APNIC",
+                          "total_votes": {
+                            "harmless": 0,
+                            "malicious": 0
+                          },
                           "last_analysis_results": {
                             "Acronis": {
                               "method": "blacklist",
@@ -2017,78 +2085,10 @@
                               "result": "unrated"
                             }
                           },
-                          "last_https_certificate": {
-                            "public_key": {
-                              "rsa": {
-                                "key_size": 2048,
-                                "modulus": "00b1ca10e7bd705e2ebb8e8d8f11ffb06bf4134a8dcae5855549b482918378ed5c96e0730fba5f339160a37b990420632cbad8dbafbedbf293f889d9404bd0d0aa5dd5b69c4565d00d5adc7b06dda6dcca1e203686deceb1eadb3d90cc1f025cc4aa1150f74e7a55e5b4f9c37026455a9f1f2d1a2ef1bb6e77b5137f13fcec6490289dfa4e82c98bfb4d111b992078fe14e129814ce775f8cc0d86b3c31d17596f8156af05c63f0f06f26bf4595e34905fc0372ed8a25365de7e83d4459bb1b1d62fc610a8ff371a7035f9ede446796604f7a2afa041eb83195cf33327a75a3bd17ba57a948dbf0547869de01030bc2f9b3cfcaadb441ba3ddc7338b67908cd295",
-                                "exponent": "010001"
-                              },
-                              "algorithm": "RSA"
-                            },
-                            "thumbprint_sha256": "bd53ac87efb663af33407413f0582fa2668cc89c50d3ae67c07a8392dbbd7471",
-                            "tags": [],
-                            "signature_algorithm": "sha256RSA",
-                            "subject": {
-                              "CN": "*.roadsconnect.com"
-                            },
-                            "validity": {
-                              "not_after": "2022-04-21 02:53:15",
-                              "not_before": "2022-01-21 02:53:16"
-                            },
-                            "version": "V3",
-                            "extensions": {
-                              "certificate_policies": [
-                                "2.23.140.1.2.1",
-                                "1.3.6.1.4.1.44947.1.1.1"
-                              ],
-                              "extended_key_usage": [
-                                "serverAuth",
-                                "clientAuth"
-                              ],
-                              "authority_key_identifier": {
-                                "keyid": "142eb317b75856cbae500940e61faf9d8b14c2c6"
-                              },
-                              "subject_alternative_name": [
-                                "*.roadsconnect.com"
-                              ],
-                              "tags": [],
-                              "subject_key_identifier": "29bf447155960ed379aa342fc6ff84ca4dbc87ca",
-                              "key_usage": [
-                                "ff"
-                              ],
-                              "1.3.6.1.4.1.11129.2.4.2": "0481f300f1007700dfa55eab68824f1f6cadeeb85f4e3e5aeacda212a46a5e8e",
-                              "CA": true,
-                              "ca_information_access": {
-                                "CA Issuers": "http://r3.i.lencr.org/",
-                                "OCSP": "http://r3.o.lencr.org"
-                              }
-                            },
-                            "cert_signature": {
-                              "signature": "9e9b55658b9a35e0bae4165220af10978d3159b4459cff68e562df877e89916e0aa9ecad52913b7986181556aa10b7762a0b54ce73b792210438469cefbc42395cd71f247691d5ff5f4f2d63cf57f605ddf908c489d318da2aae6a418c4c35e796ea833c27692eed8e2ec41c380381cf3b47bccfba213a5c58c5de5e832652fa5abb737cdc8cdbfaaaac0cb6804f62021d52e9e9da4c9ea152d8f5712d04705430afced6917e10b7d7bc3dfd6133b5277d6d5336c26f067c199f2ed151ffb2d8e56e7509c24c14760e678b99604d505c9c01b13c64e6527b562ba32f706646272d8d0953cbacb1d8a34b8cdb499f0b0c624c63fd1bccd4553c0bf447aca7a751",
-                              "signature_algorithm": "sha256RSA"
-                            },
-                            "serial_number": "3297a568d2b135be5319585bd4b6e577b1e",
-                            "thumbprint": "be9473de734e9d76a7d15e35b5c5e58251340362",
-                            "issuer": {
-                              "C": "US",
-                              "CN": "R3",
-                              "O": "Let's Encrypt"
-                            },
-                            "size": 1327
-                          },
-                          "last_analysis_date": 1669969131,
-                          "total_votes": {
-                            "harmless": 0,
-                            "malicious": 0
-                          },
-                          "last_analysis_stats": {
-                            "malicious": 0,
-                            "suspicious": 0,
-                            "undetected": 95,
-                            "harmless": 0,
-                            "timeout": 0
-                          }
+                          "reputation": 0,
+                          "asn": 20473,
+                          "network": "45.76.0.0/15",
+                          "country": "AU"
                         }
                       }
                     }
@@ -2123,14 +2123,25 @@
                           "self": "https://www.virustotal.com/api/v3/domains/suspicious-domain.net"
                         },
                         "attributes": {
-                          "tags": [],
-                          "tld": "net",
-                          "last_analysis_date": 1759847042,
                           "total_votes": {
                             "harmless": 0,
                             "malicious": 0
                           },
+                          "last_analysis_stats": {
+                            "malicious": 1,
+                            "suspicious": 0,
+                            "undetected": 36,
+                            "harmless": 58,
+                            "timeout": 0
+                          },
+                          "tld": "net",
                           "popularity_ranks": {},
+                          "last_modification_date": 1759847371,
+                          "last_analysis_date": 1759847042,
+                          "reputation": 0,
+                          "last_dns_records": [],
+                          "categories": {},
+                          "tags": [],
                           "last_analysis_results": {
                             "Acronis": {
                               "method": "blacklist",
@@ -2702,18 +2713,7 @@
                               "category": "undetected",
                               "result": "unrated"
                             }
-                          },
-                          "categories": {},
-                          "last_analysis_stats": {
-                            "malicious": 1,
-                            "suspicious": 0,
-                            "undetected": 36,
-                            "harmless": 58,
-                            "timeout": 0
-                          },
-                          "reputation": 0,
-                          "last_modification_date": 1759847371,
-                          "last_dns_records": []
+                          }
                         }
                       }
                     }
@@ -2807,16 +2807,16 @@
           },
           "supervisor_version": "2.0"
         },
-        "processing_time": 0.010663032531738281
+        "processing_time": 2.277794122695923
       },
-      "response_time": 0.014061212539672852,
+      "response_time": 2.2807159423828125,
       "status": "success"
     },
     {
       "description": "Step 2 - Reference IP using pronoun",
       "request": {
         "text": "The IP from before is now attempting port 445 access",
-        "session_id": "849df1ac-cfb4-4fcb-9c70-5654ef64e1b2"
+        "session_id": "34573d92-542a-4501-9b3a-a5e3829c97d5"
       },
       "response": {
         "status": "success",
@@ -2845,11 +2845,10 @@
           },
           "tool_analysis": {
             "detailed_results": {
-              "AbuseIPDB": [],
-              "Shodan": []
+              "AbuseIPDB": []
             },
             "execution_metrics": {
-              "tools_count": 2,
+              "tools_count": 1,
               "success_rate": 1.0,
               "concurrent": true,
               "performance_gain": "Optimized concurrent execution with caching",
@@ -2867,8 +2866,7 @@
           "processing_summary": {
             "iterations": 1,
             "tools_used": [
-              "AbuseIPDB",
-              "Shodan"
+              "AbuseIPDB"
             ],
             "processing_method": "react_workflow_cached",
             "cached_operations": [
@@ -2892,7 +2890,7 @@
               "ip": "45.76.123.89"
             },
             "resolution_method": "llm",
-            "timestamp": "2025-10-12T12:10:30.833638",
+            "timestamp": "2025-10-12T15:02:22.664725",
             "enriched_text": "45.76.123.89 from before is now attempting port 445 access"
           },
           "pii_analysis": {
@@ -2901,16 +2899,16 @@
           },
           "supervisor_version": "2.0"
         },
-        "processing_time": 0.017506837844848633
+        "processing_time": 1.535653829574585
       },
-      "response_time": 0.021374940872192383,
+      "response_time": 1.5380818843841553,
       "status": "success"
     },
     {
       "description": "Step 3 - Reference domain using pronoun",
       "request": {
         "text": "Is that domain associated with any known malware campaigns?",
-        "session_id": "849df1ac-cfb4-4fcb-9c70-5654ef64e1b2"
+        "session_id": "34573d92-542a-4501-9b3a-a5e3829c97d5"
       },
       "response": {
         "status": "success",
@@ -2984,7 +2982,7 @@
               "domain": "suspicious-domain.net"
             },
             "resolution_method": "llm",
-            "timestamp": "2025-10-12T12:10:33.905442",
+            "timestamp": "2025-10-12T15:02:25.214842",
             "enriched_text": "Is suspicious-domain.net associated with any known malware campaigns?"
           },
           "pii_analysis": {
@@ -2993,9 +2991,9 @@
           },
           "supervisor_version": "2.0"
         },
-        "processing_time": 0.009354829788208008
+        "processing_time": 1.4164648056030273
       },
-      "response_time": 0.011438131332397461,
+      "response_time": 1.4217259883880615,
       "status": "success"
     }
   ],

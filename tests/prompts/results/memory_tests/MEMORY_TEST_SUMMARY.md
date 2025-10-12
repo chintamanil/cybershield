@@ -1,8 +1,8 @@
 # Memory & Context Test Summary
 
-**Generated**: 2025-10-12T12:17:20.755152
+**Generated**: 2025-10-12T15:02:41.492828
 
-**Session ID**: 849df1ac-cfb4-4fcb-9c70-5654ef64e1b2
+**Session ID**: 34573d92-542a-4501-9b3a-a5e3829c97d5
 
 ## Scoring Metric
 
@@ -23,7 +23,7 @@
 **Resolution Details**:
 
 - Request 2: ✓ Success
-  - Resolved ip: `192.168.1.100`
+  - Resolved ip: `203.0.113.50`
 - Request 3: ✓ Success
   - Resolved domain: `malware-c2.example.com`
 
@@ -38,11 +38,11 @@
       "has_context_enrichment": true,
       "enriched": true,
       "context_used": {
-        "ip": "192.168.1.100"
+        "ip": "203.0.113.50"
       },
       "resolution_successful": true,
       "resolved_iocs": {
-        "ip": "192.168.1.100"
+        "ip": "203.0.113.50"
       }
     },
     {
@@ -114,12 +114,12 @@
           "event_count": 6,
           "events": [
             {
-              "timestamp": "2025-10-12T11:54:01.390519",
+              "timestamp": "2025-10-12T15:02:03.557945",
               "input_text": "Suspicious activity from 192.168.1.100 connecting to malware-c2.example.com. Also detected traffic to 203.0.113.50 on port 443. File hash: d41d8cd98f00b204e9800998ecf8427e",
               "iocs_found": {
                 "ips": [
-                  "203.0.113.50",
-                  "192.168.1.100"
+                  "192.168.1.100",
+                  "203.0.113.50"
                 ],
                 "domains": [
                   "malware-c2.example.com"
@@ -131,14 +131,14 @@
               "threats_detected": {
                 "high_risk": 0,
                 "medium_risk": 0,
-                "low_risk": 7,
-                "total": 7
+                "low_risk": 5,
+                "total": 5
               },
               "risk_level": "low",
               "summary": "4 IOCs detected, no significant threats"
             },
             {
-              "timestamp": "2025-10-12T11:54:04.573072",
+              "timestamp": "2025-10-12T15:02:06.438306",
               "input_text": "Tell me more about the IP address 192.168.1.100 from the previous analysis. What threats are associated with it?",
               "iocs_found": {
                 "ips": [
@@ -157,7 +157,7 @@
               "summary": "1 IOCs detected, no significant threats"
             },
             {
-              "timestamp": "2025-10-12T11:54:07.461910",
+              "timestamp": "2025-10-12T15:02:09.654680",
               "input_text": "What about the domain malware-c2.example.com? Is it malicious?",
               "iocs_found": {
                 "ips": [],
@@ -176,7 +176,7 @@
               "summary": "1 IOCs detected, no significant threats"
             },
             {
-              "timestamp": "2025-10-12T11:54:09.229182",
+              "timestamp": "2025-10-12T15:02:11.935261",
               "input_text": "Detected failed login from IP 198.51.100.25",
               "iocs_found": {
                 "ips": [
@@ -188,14 +188,14 @@
               "threats_detected": {
                 "high_risk": 0,
                 "medium_risk": 0,
-                "low_risk": 3,
-                "total": 3
+                "low_risk": 2,
+                "total": 2
               },
               "risk_level": "low",
               "summary": "1 IOCs detected, no significant threats"
             },
             {
-              "timestamp": "2025-10-12T11:54:12.125126",
+              "timestamp": "2025-10-12T15:02:14.335138",
               "input_text": "The same IP is now scanning ports 22, 23, 3389",
               "iocs_found": {
                 "ips": [],
@@ -212,7 +212,7 @@
               "summary": "No IOCs or threats detected"
             },
             {
-              "timestamp": "2025-10-12T11:54:14.714959",
+              "timestamp": "2025-10-12T15:02:16.704144",
               "input_text": "Successful SSH connection established from that IP",
               "iocs_found": {
                 "ips": [],
@@ -348,19 +348,19 @@
 ```json
 {
   "cache_effectiveness": {
-    "first_request_time": 0.028115272521972656,
-    "subsequent_avg_time": 0.032973408699035645,
-    "cache_likely_used": false,
+    "first_request_time": 2.915587902069092,
+    "subsequent_avg_time": 1.4711440801620483,
+    "cache_likely_used": true,
     "all_response_times": [
-      0.028115272521972656,
-      0.03699302673339844,
-      0.02895379066467285
+      2.915587902069092,
+      0.12030529975891113,
+      2.8219828605651855
     ]
   },
   "response_time_comparison": {
-    "first_request": 0.028115272521972656,
-    "cached_request": 0.03699302673339844,
-    "speedup_percentage": -31.57626946168719
+    "first_request": 2.915587902069092,
+    "cached_request": 0.12030529975891113,
+    "speedup_percentage": 95.8737207108887
   }
 }
 ```
