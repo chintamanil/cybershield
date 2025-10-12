@@ -1402,7 +1402,7 @@
             "risk_level": "low",
             "source": "Shodan",
             "details": {
-              "error": "403, message='Forbidden', url='https://api.shodan.io/shodan/host/198.51.100.5?key=3D342uViZy3b3YLfwE2k5EEjRIDWoK5e'"
+              "error": "403, message='Forbidden', url='https://api.shodan.io/shodan/host/198.51.100.5?key=[REDACTED]'"
             }
           }
         ],
@@ -2767,7 +2767,7 @@
               "type": "ip",
               "value": "198.51.100.5",
               "result": {
-                "error": "403, message='Forbidden', url='https://api.shodan.io/shodan/host/198.51.100.5?key=3D342uViZy3b3YLfwE2k5EEjRIDWoK5e'"
+                "error": "403, message='Forbidden', url='https://api.shodan.io/shodan/host/198.51.100.5?key=[REDACTED]'"
               }
             }
           ]
@@ -2785,8 +2785,8 @@
         "note": "No vector database search performed"
       },
       "recommendations": [
-        "\ud83d\udccb 3 potential security indicators identified - monitor closely",
-        "\u26a1 Analysis completed with caching optimization - 60-80% API cost reduction achieved"
+        "📋 3 potential security indicators identified - monitor closely",
+        "⚡ Analysis completed with caching optimization - 60-80% API cost reduction achieved"
       ],
       "processing_summary": {
         "iterations": 1,

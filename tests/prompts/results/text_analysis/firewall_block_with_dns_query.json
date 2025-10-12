@@ -2620,7 +2620,7 @@
                     },
                     {
                       "reportedAt": "2025-09-26T02:10:06+00:00",
-                      "comment": "\ud83c\udf6f WinnieThePooh Honeypot : Detected Port Scanning (tcp/6080) \ud83d\udc80",
+                      "comment": "🍯 WinnieThePooh Honeypot : Detected Port Scanning (tcp/6080) 💀",
                       "categories": [
                         14,
                         15,
@@ -3896,7 +3896,7 @@
                     },
                     {
                       "reportedAt": "2025-08-03T00:00:24+00:00",
-                      "comment": "2025-08-03 00:00:12 UTC | \ud83d\udccf System; Transactio | katrishkalis@mytempm | https://graph.org/OBTAIN-CRYPTO-07-23 | 185.220.101.42 | Mozilla/5.0 (Linux; Android 9; Redmi Note 8T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.162 Mobile Safari/537.36 OPR/57.1.2830.52643 | arlgs3 | comment",
+                      "comment": "2025-08-03 00:00:12 UTC | 📏 System; Transactio | katrishkalis@mytempm | https://graph.org/OBTAIN-CRYPTO-07-23 | 185.220.101.42 | Mozilla/5.0 (Linux; Android 9; Redmi Note 8T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.162 Mobile Safari/537.36 OPR/57.1.2830.52643 | arlgs3 | comment",
                       "categories": [
                         12
                       ],
@@ -4485,7 +4485,7 @@
             "risk_level": "low",
             "source": "Shodan",
             "details": {
-              "error": "403, message='Forbidden', url='https://api.shodan.io/shodan/host/185.220.101.42?key=3D342uViZy3b3YLfwE2k5EEjRIDWoK5e'"
+              "error": "403, message='Forbidden', url='https://api.shodan.io/shodan/host/185.220.101.42?key=[REDACTED]'"
             }
           }
         ],
@@ -7065,7 +7065,7 @@
                       },
                       {
                         "reportedAt": "2025-09-26T02:10:06+00:00",
-                        "comment": "\ud83c\udf6f WinnieThePooh Honeypot : Detected Port Scanning (tcp/6080) \ud83d\udc80",
+                        "comment": "🍯 WinnieThePooh Honeypot : Detected Port Scanning (tcp/6080) 💀",
                         "categories": [
                           14,
                           15,
@@ -8341,7 +8341,7 @@
                       },
                       {
                         "reportedAt": "2025-08-03T00:00:24+00:00",
-                        "comment": "2025-08-03 00:00:12 UTC | \ud83d\udccf System; Transactio | katrishkalis@mytempm | https://graph.org/OBTAIN-CRYPTO-07-23 | 185.220.101.42 | Mozilla/5.0 (Linux; Android 9; Redmi Note 8T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.162 Mobile Safari/537.36 OPR/57.1.2830.52643 | arlgs3 | comment",
+                        "comment": "2025-08-03 00:00:12 UTC | 📏 System; Transactio | katrishkalis@mytempm | https://graph.org/OBTAIN-CRYPTO-07-23 | 185.220.101.42 | Mozilla/5.0 (Linux; Android 9; Redmi Note 8T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.162 Mobile Safari/537.36 OPR/57.1.2830.52643 | arlgs3 | comment",
                         "categories": [
                           12
                         ],
@@ -8930,7 +8930,7 @@
               "type": "ip",
               "value": "185.220.101.42",
               "result": {
-                "error": "403, message='Forbidden', url='https://api.shodan.io/shodan/host/185.220.101.42?key=3D342uViZy3b3YLfwE2k5EEjRIDWoK5e'"
+                "error": "403, message='Forbidden', url='https://api.shodan.io/shodan/host/185.220.101.42?key=[REDACTED]'"
               }
             }
           ]
@@ -8948,9 +8948,9 @@
         "note": "No vector database search performed"
       },
       "recommendations": [
-        "\u26a0\ufe0f 1 high-risk indicators detected - immediate investigation required",
-        "\ud83d\udccb 3 potential security indicators identified - monitor closely",
-        "\u26a1 Analysis completed with caching optimization - 60-80% API cost reduction achieved"
+        "⚠️ 1 high-risk indicators detected - immediate investigation required",
+        "📋 3 potential security indicators identified - monitor closely",
+        "⚡ Analysis completed with caching optimization - 60-80% API cost reduction achieved"
       ],
       "processing_summary": {
         "iterations": 1,

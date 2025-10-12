@@ -300,7 +300,7 @@
             "risk_level": "low",
             "source": "Shodan",
             "details": {
-              "error": "403, message='Forbidden', url='https://api.shodan.io/shodan/host/203.0.113.42?key=3D342uViZy3b3YLfwE2k5EEjRIDWoK5e'"
+              "error": "403, message='Forbidden', url='https://api.shodan.io/shodan/host/203.0.113.42?key=[REDACTED]'"
             }
           },
           {
@@ -309,7 +309,7 @@
             "risk_level": "low",
             "source": "Shodan",
             "details": {
-              "error": "404, message='Not Found', url='https://api.shodan.io/shodan/host/192.168.1.100?key=3D342uViZy3b3YLfwE2k5EEjRIDWoK5e'"
+              "error": "404, message='Not Found', url='https://api.shodan.io/shodan/host/192.168.1.100?key=[REDACTED]'"
             }
           }
         ],
@@ -580,14 +580,14 @@
               "type": "ip",
               "value": "203.0.113.42",
               "result": {
-                "error": "403, message='Forbidden', url='https://api.shodan.io/shodan/host/203.0.113.42?key=3D342uViZy3b3YLfwE2k5EEjRIDWoK5e'"
+                "error": "403, message='Forbidden', url='https://api.shodan.io/shodan/host/203.0.113.42?key=[REDACTED]'"
               }
             },
             {
               "type": "ip",
               "value": "192.168.1.100",
               "result": {
-                "error": "404, message='Not Found', url='https://api.shodan.io/shodan/host/192.168.1.100?key=3D342uViZy3b3YLfwE2k5EEjRIDWoK5e'"
+                "error": "404, message='Not Found', url='https://api.shodan.io/shodan/host/192.168.1.100?key=[REDACTED]'"
               }
             }
           ]
@@ -605,8 +605,8 @@
         "note": "No vector database search performed"
       },
       "recommendations": [
-        "\ud83d\udccb 2 potential security indicators identified - monitor closely",
-        "\u26a1 Analysis completed with caching optimization - 60-80% API cost reduction achieved"
+        "📋 2 potential security indicators identified - monitor closely",
+        "⚡ Analysis completed with caching optimization - 60-80% API cost reduction achieved"
       ],
       "processing_summary": {
         "iterations": 1,

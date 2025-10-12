@@ -1,13 +1,13 @@
 {
-  "timestamp": "2025-10-12T10:21:48.491458",
+  "timestamp": "2025-10-12T12:10:22.057562",
   "test_name": "sequential_ioc_analysis",
-  "session_id": "00da04ef-c801-4972-a6b6-b22331d89187",
+  "session_id": "d40126c7-7c38-4a4b-ad28-aea4a980b27f",
   "requests_chain": [
     {
       "description": "Initial analysis - Extract multiple IOCs",
       "request": {
         "text": "Suspicious activity from 192.168.1.100 connecting to malware-c2.example.com. Also detected traffic to 203.0.113.50 on port 443. File hash: d41d8cd98f00b204e9800998ecf8427e",
-        "session_id": "00da04ef-c801-4972-a6b6-b22331d89187"
+        "session_id": "d40126c7-7c38-4a4b-ad28-aea4a980b27f"
       },
       "response": {
         "status": "success",
@@ -67,7 +67,25 @@
                         "self": "https://www.virustotal.com/api/v3/ip_addresses/203.0.113.50"
                       },
                       "attributes": {
+                        "last_analysis_stats": {
+                          "malicious": 0,
+                          "suspicious": 0,
+                          "undetected": 35,
+                          "harmless": 60,
+                          "timeout": 0
+                        },
+                        "last_analysis_date": 1760224566,
+                        "tags": [
+                          "private"
+                        ],
+                        "total_votes": {
+                          "harmless": 0,
+                          "malicious": 0
+                        },
                         "whois_date": 1667101285,
+                        "whois": "Asia Pacific Network Information Centre APNIC-203 (NET-203-0-0-0-1) 203.0.0.0 - 203.255.255.255\nInternet Assigned Numbers Authority IANA-DOCUMENTATION-TEST-NET-3 (NET-203-0-113-0-1) 203.0.113.0 - 203.0.113.255\n",
+                        "reputation": 0,
+                        "last_modification_date": 1760224871,
                         "last_analysis_results": {
                           "Acronis": {
                             "method": "blacklist",
@@ -639,25 +657,7 @@
                             "category": "undetected",
                             "result": "unrated"
                           }
-                        },
-                        "tags": [
-                          "private"
-                        ],
-                        "total_votes": {
-                          "harmless": 0,
-                          "malicious": 0
-                        },
-                        "last_modification_date": 1760224871,
-                        "last_analysis_stats": {
-                          "malicious": 0,
-                          "suspicious": 0,
-                          "undetected": 35,
-                          "harmless": 60,
-                          "timeout": 0
-                        },
-                        "reputation": 0,
-                        "last_analysis_date": 1760224566,
-                        "whois": "Asia Pacific Network Information Centre APNIC-203 (NET-203-0-0-0-1) 203.0.0.0 - 203.255.255.255\nInternet Assigned Numbers Authority IANA-DOCUMENTATION-TEST-NET-3 (NET-203-0-113-0-1) 203.0.113.0 - 203.0.113.255\n"
+                        }
                       }
                     }
                   }
@@ -694,25 +694,11 @@
                         "self": "https://www.virustotal.com/api/v3/ip_addresses/192.168.1.100"
                       },
                       "attributes": {
-                        "reputation": 1,
-                        "last_analysis_stats": {
-                          "malicious": 0,
-                          "suspicious": 0,
-                          "undetected": 32,
-                          "harmless": 63,
-                          "timeout": 0
-                        },
-                        "whois_date": 1668688241,
                         "tags": [
                           "private"
                         ],
-                        "total_votes": {
-                          "harmless": 3,
-                          "malicious": 2
-                        },
-                        "last_analysis_date": 1760281831,
                         "whois": "NetRange: 192.168.0.0 - 192.168.255.255\nCIDR: 192.168.0.0/16\nNetName: PRIVATE-ADDRESS-CBLK-RFC1918-IANA-RESERVED\nNetHandle: NET-192-168-0-0-1\nParent: NET192 (NET-192-0-0-0-0)\nNetType: IANA Special Use\nOriginAS: \nOrganization: Internet Assigned Numbers Authority (IANA)\nRegDate: 1994-03-15\nUpdated: 2013-08-30\nComment: These addresses are in use by many millions of independently operated networks, which might be as small as a single computer connected to a home gateway, and are automatically configured in hundreds of millions of devices. They are only intended for use within a private context and traffic that needs to cross the Internet will need to use a different, unique address.\r\nComment: \r\nComment: These addresses can be used by anyone without any need to coordinate with IANA or an Internet registry. The traffic from these addresses does not come from ICANN or IANA. We are not the source of activity you may see on logs or in e-mail records. Please refer to http://www.iana.org/abuse/answers\r\nComment: \r\nComment: These addresses were assigned by the IETF, the organization that develops Internet protocols, in the Best Current Practice document, RFC 1918 which can be found at:\r\nComment: http://datatracker.ietf.org/doc/rfc1918\nRef: https://rdap.arin.net/registry/ip/192.168.0.0\nOrgName: Internet Assigned Numbers Authority\nOrgId: IANA\nAddress: 12025 Waterfront Drive\r\nAddress: Suite 300\nCity: Los Angeles\nStateProv: CA\nPostalCode: 90292\nCountry: US\nRegDate: \nUpdated: 2012-08-31\nRef: https://rdap.arin.net/registry/entity/IANA\nOrgTechHandle: IANA-IP-ARIN\nOrgTechName: ICANN\nOrgTechPhone: +1-310-301-5820 \nOrgTechEmail: abuse@iana.org\nOrgTechRef: https://rdap.arin.net/registry/entity/IANA-IP-ARIN\nOrgAbuseHandle: IANA-IP-ARIN\nOrgAbuseName: ICANN\nOrgAbusePhone: +1-310-301-5820 \nOrgAbuseEmail: abuse@iana.org\nOrgAbuseRef: https://rdap.arin.net/registry/entity/IANA-IP-ARIN\n",
-                        "last_modification_date": 1760282246,
+                        "whois_date": 1668688241,
                         "last_analysis_results": {
                           "Acronis": {
                             "method": "blacklist",
@@ -1284,6 +1270,20 @@
                             "category": "undetected",
                             "result": "unrated"
                           }
+                        },
+                        "reputation": 1,
+                        "total_votes": {
+                          "harmless": 3,
+                          "malicious": 2
+                        },
+                        "last_analysis_date": 1760294600,
+                        "last_modification_date": 1760294920,
+                        "last_analysis_stats": {
+                          "malicious": 0,
+                          "suspicious": 0,
+                          "undetected": 32,
+                          "harmless": 63,
+                          "timeout": 0
                         }
                       }
                     }
@@ -1321,11 +1321,6 @@
                         "self": "https://www.virustotal.com/api/v3/domains/malware-c2.example.com"
                       },
                       "attributes": {
-                        "reputation": 0,
-                        "last_modification_date": 1753873534,
-                        "tld": "com",
-                        "expiration_date": 1786593600,
-                        "last_update_date": 1755154899,
                         "last_analysis_results": {
                           "Acronis": {
                             "method": "blacklist",
@@ -1898,7 +1893,6 @@
                             "result": "unrated"
                           }
                         },
-                        "last_analysis_date": 1751454058,
                         "last_analysis_stats": {
                           "malicious": 0,
                           "suspicious": 0,
@@ -1906,17 +1900,23 @@
                           "harmless": 0,
                           "timeout": 0
                         },
-                        "last_dns_records": [],
-                        "creation_date": 808372800,
-                        "whois": "Creation Date: 1995-08-14T04:00:00Z\nDNSSEC: signedDelegation\nDomain Name: EXAMPLE.COM\nDomain Status: clientDeleteProhibited https://icann.org/epp#clientDeleteProhibited\nDomain Status: clientTransferProhibited https://icann.org/epp#clientTransferProhibited\nDomain Status: clientUpdateProhibited https://icann.org/epp#clientUpdateProhibited\nName Server: A.IANA-SERVERS.NET\nName Server: B.IANA-SERVERS.NET\nRegistrar IANA ID: 376\nRegistrar URL: http://res-dom.iana.org\nRegistrar WHOIS Server: whois.iana.org\nRegistrar: RESERVED-Internet Assigned Numbers Authority\nRegistry Domain ID: 2336799_DOMAIN_COM-VRSN\nRegistry Expiry Date: 2026-08-13T04:00:00Z\nUpdated Date: 2025-08-14T07:01:39Z",
+                        "last_modification_date": 1753873534,
                         "registrar": "RESERVED-Internet Assigned Numbers Authority",
-                        "categories": {},
-                        "tags": [],
+                        "creation_date": 808372800,
+                        "tld": "com",
+                        "last_dns_records": [],
+                        "last_update_date": 1755154899,
+                        "reputation": 0,
                         "popularity_ranks": {},
                         "total_votes": {
                           "harmless": 0,
                           "malicious": 0
-                        }
+                        },
+                        "tags": [],
+                        "categories": {},
+                        "expiration_date": 1786593600,
+                        "whois": "Creation Date: 1995-08-14T04:00:00Z\nDNSSEC: signedDelegation\nDomain Name: EXAMPLE.COM\nDomain Status: clientDeleteProhibited https://icann.org/epp#clientDeleteProhibited\nDomain Status: clientTransferProhibited https://icann.org/epp#clientTransferProhibited\nDomain Status: clientUpdateProhibited https://icann.org/epp#clientUpdateProhibited\nName Server: A.IANA-SERVERS.NET\nName Server: B.IANA-SERVERS.NET\nRegistrar IANA ID: 376\nRegistrar URL: http://res-dom.iana.org\nRegistrar WHOIS Server: whois.iana.org\nRegistrar: RESERVED-Internet Assigned Numbers Authority\nRegistry Domain ID: 2336799_DOMAIN_COM-VRSN\nRegistry Expiry Date: 2026-08-13T04:00:00Z\nUpdated Date: 2025-08-14T07:01:39Z",
+                        "last_analysis_date": 1751454058
                       }
                     }
                   }
@@ -2161,7 +2161,7 @@
                 "risk_level": "low",
                 "source": "Shodan",
                 "details": {
-                  "error": "403, message='Forbidden', url='https://api.shodan.io/shodan/host/203.0.113.50?key=3D342uViZy3b3YLfwE2k5EEjRIDWoK5e'"
+                  "error": "403, message='Forbidden', url='https://api.shodan.io/shodan/host/203.0.113.50?key=[REDACTED]'"
                 }
               },
               {
@@ -2170,7 +2170,7 @@
                 "risk_level": "low",
                 "source": "Shodan",
                 "details": {
-                  "error": "404, message='Not Found', url='https://api.shodan.io/shodan/host/192.168.1.100?key=3D342uViZy3b3YLfwE2k5EEjRIDWoK5e'"
+                  "error": "404, message='Not Found', url='https://api.shodan.io/shodan/host/192.168.1.100?key=[REDACTED]'"
                 }
               }
             ],
@@ -2211,7 +2211,25 @@
                           "self": "https://www.virustotal.com/api/v3/ip_addresses/203.0.113.50"
                         },
                         "attributes": {
+                          "last_analysis_stats": {
+                            "malicious": 0,
+                            "suspicious": 0,
+                            "undetected": 35,
+                            "harmless": 60,
+                            "timeout": 0
+                          },
+                          "last_analysis_date": 1760224566,
+                          "tags": [
+                            "private"
+                          ],
+                          "total_votes": {
+                            "harmless": 0,
+                            "malicious": 0
+                          },
                           "whois_date": 1667101285,
+                          "whois": "Asia Pacific Network Information Centre APNIC-203 (NET-203-0-0-0-1) 203.0.0.0 - 203.255.255.255\nInternet Assigned Numbers Authority IANA-DOCUMENTATION-TEST-NET-3 (NET-203-0-113-0-1) 203.0.113.0 - 203.0.113.255\n",
+                          "reputation": 0,
+                          "last_modification_date": 1760224871,
                           "last_analysis_results": {
                             "Acronis": {
                               "method": "blacklist",
@@ -2783,25 +2801,7 @@
                               "category": "undetected",
                               "result": "unrated"
                             }
-                          },
-                          "tags": [
-                            "private"
-                          ],
-                          "total_votes": {
-                            "harmless": 0,
-                            "malicious": 0
-                          },
-                          "last_modification_date": 1760224871,
-                          "last_analysis_stats": {
-                            "malicious": 0,
-                            "suspicious": 0,
-                            "undetected": 35,
-                            "harmless": 60,
-                            "timeout": 0
-                          },
-                          "reputation": 0,
-                          "last_analysis_date": 1760224566,
-                          "whois": "Asia Pacific Network Information Centre APNIC-203 (NET-203-0-0-0-1) 203.0.0.0 - 203.255.255.255\nInternet Assigned Numbers Authority IANA-DOCUMENTATION-TEST-NET-3 (NET-203-0-113-0-1) 203.0.113.0 - 203.0.113.255\n"
+                          }
                         }
                       }
                     }
@@ -2836,25 +2836,11 @@
                           "self": "https://www.virustotal.com/api/v3/ip_addresses/192.168.1.100"
                         },
                         "attributes": {
-                          "reputation": 1,
-                          "last_analysis_stats": {
-                            "malicious": 0,
-                            "suspicious": 0,
-                            "undetected": 32,
-                            "harmless": 63,
-                            "timeout": 0
-                          },
-                          "whois_date": 1668688241,
                           "tags": [
                             "private"
                           ],
-                          "total_votes": {
-                            "harmless": 3,
-                            "malicious": 2
-                          },
-                          "last_analysis_date": 1760281831,
                           "whois": "NetRange: 192.168.0.0 - 192.168.255.255\nCIDR: 192.168.0.0/16\nNetName: PRIVATE-ADDRESS-CBLK-RFC1918-IANA-RESERVED\nNetHandle: NET-192-168-0-0-1\nParent: NET192 (NET-192-0-0-0-0)\nNetType: IANA Special Use\nOriginAS: \nOrganization: Internet Assigned Numbers Authority (IANA)\nRegDate: 1994-03-15\nUpdated: 2013-08-30\nComment: These addresses are in use by many millions of independently operated networks, which might be as small as a single computer connected to a home gateway, and are automatically configured in hundreds of millions of devices. They are only intended for use within a private context and traffic that needs to cross the Internet will need to use a different, unique address.\r\nComment: \r\nComment: These addresses can be used by anyone without any need to coordinate with IANA or an Internet registry. The traffic from these addresses does not come from ICANN or IANA. We are not the source of activity you may see on logs or in e-mail records. Please refer to http://www.iana.org/abuse/answers\r\nComment: \r\nComment: These addresses were assigned by the IETF, the organization that develops Internet protocols, in the Best Current Practice document, RFC 1918 which can be found at:\r\nComment: http://datatracker.ietf.org/doc/rfc1918\nRef: https://rdap.arin.net/registry/ip/192.168.0.0\nOrgName: Internet Assigned Numbers Authority\nOrgId: IANA\nAddress: 12025 Waterfront Drive\r\nAddress: Suite 300\nCity: Los Angeles\nStateProv: CA\nPostalCode: 90292\nCountry: US\nRegDate: \nUpdated: 2012-08-31\nRef: https://rdap.arin.net/registry/entity/IANA\nOrgTechHandle: IANA-IP-ARIN\nOrgTechName: ICANN\nOrgTechPhone: +1-310-301-5820 \nOrgTechEmail: abuse@iana.org\nOrgTechRef: https://rdap.arin.net/registry/entity/IANA-IP-ARIN\nOrgAbuseHandle: IANA-IP-ARIN\nOrgAbuseName: ICANN\nOrgAbusePhone: +1-310-301-5820 \nOrgAbuseEmail: abuse@iana.org\nOrgAbuseRef: https://rdap.arin.net/registry/entity/IANA-IP-ARIN\n",
-                          "last_modification_date": 1760282246,
+                          "whois_date": 1668688241,
                           "last_analysis_results": {
                             "Acronis": {
                               "method": "blacklist",
@@ -3426,6 +3412,20 @@
                               "category": "undetected",
                               "result": "unrated"
                             }
+                          },
+                          "reputation": 1,
+                          "total_votes": {
+                            "harmless": 3,
+                            "malicious": 2
+                          },
+                          "last_analysis_date": 1760294600,
+                          "last_modification_date": 1760294920,
+                          "last_analysis_stats": {
+                            "malicious": 0,
+                            "suspicious": 0,
+                            "undetected": 32,
+                            "harmless": 63,
+                            "timeout": 0
                           }
                         }
                       }
@@ -3461,11 +3461,6 @@
                           "self": "https://www.virustotal.com/api/v3/domains/malware-c2.example.com"
                         },
                         "attributes": {
-                          "reputation": 0,
-                          "last_modification_date": 1753873534,
-                          "tld": "com",
-                          "expiration_date": 1786593600,
-                          "last_update_date": 1755154899,
                           "last_analysis_results": {
                             "Acronis": {
                               "method": "blacklist",
@@ -4038,7 +4033,6 @@
                               "result": "unrated"
                             }
                           },
-                          "last_analysis_date": 1751454058,
                           "last_analysis_stats": {
                             "malicious": 0,
                             "suspicious": 0,
@@ -4046,17 +4040,23 @@
                             "harmless": 0,
                             "timeout": 0
                           },
-                          "last_dns_records": [],
-                          "creation_date": 808372800,
-                          "whois": "Creation Date: 1995-08-14T04:00:00Z\nDNSSEC: signedDelegation\nDomain Name: EXAMPLE.COM\nDomain Status: clientDeleteProhibited https://icann.org/epp#clientDeleteProhibited\nDomain Status: clientTransferProhibited https://icann.org/epp#clientTransferProhibited\nDomain Status: clientUpdateProhibited https://icann.org/epp#clientUpdateProhibited\nName Server: A.IANA-SERVERS.NET\nName Server: B.IANA-SERVERS.NET\nRegistrar IANA ID: 376\nRegistrar URL: http://res-dom.iana.org\nRegistrar WHOIS Server: whois.iana.org\nRegistrar: RESERVED-Internet Assigned Numbers Authority\nRegistry Domain ID: 2336799_DOMAIN_COM-VRSN\nRegistry Expiry Date: 2026-08-13T04:00:00Z\nUpdated Date: 2025-08-14T07:01:39Z",
+                          "last_modification_date": 1753873534,
                           "registrar": "RESERVED-Internet Assigned Numbers Authority",
-                          "categories": {},
-                          "tags": [],
+                          "creation_date": 808372800,
+                          "tld": "com",
+                          "last_dns_records": [],
+                          "last_update_date": 1755154899,
+                          "reputation": 0,
                           "popularity_ranks": {},
                           "total_votes": {
                             "harmless": 0,
                             "malicious": 0
-                          }
+                          },
+                          "tags": [],
+                          "categories": {},
+                          "expiration_date": 1786593600,
+                          "whois": "Creation Date: 1995-08-14T04:00:00Z\nDNSSEC: signedDelegation\nDomain Name: EXAMPLE.COM\nDomain Status: clientDeleteProhibited https://icann.org/epp#clientDeleteProhibited\nDomain Status: clientTransferProhibited https://icann.org/epp#clientTransferProhibited\nDomain Status: clientUpdateProhibited https://icann.org/epp#clientUpdateProhibited\nName Server: A.IANA-SERVERS.NET\nName Server: B.IANA-SERVERS.NET\nRegistrar IANA ID: 376\nRegistrar URL: http://res-dom.iana.org\nRegistrar WHOIS Server: whois.iana.org\nRegistrar: RESERVED-Internet Assigned Numbers Authority\nRegistry Domain ID: 2336799_DOMAIN_COM-VRSN\nRegistry Expiry Date: 2026-08-13T04:00:00Z\nUpdated Date: 2025-08-14T07:01:39Z",
+                          "last_analysis_date": 1751454058
                         }
                       }
                     }
@@ -4299,14 +4299,14 @@
                   "type": "ip",
                   "value": "203.0.113.50",
                   "result": {
-                    "error": "403, message='Forbidden', url='https://api.shodan.io/shodan/host/203.0.113.50?key=3D342uViZy3b3YLfwE2k5EEjRIDWoK5e'"
+                    "error": "403, message='Forbidden', url='https://api.shodan.io/shodan/host/203.0.113.50?key=[REDACTED]'"
                   }
                 },
                 {
                   "type": "ip",
                   "value": "192.168.1.100",
                   "result": {
-                    "error": "404, message='Not Found', url='https://api.shodan.io/shodan/host/192.168.1.100?key=3D342uViZy3b3YLfwE2k5EEjRIDWoK5e'"
+                    "error": "404, message='Not Found', url='https://api.shodan.io/shodan/host/192.168.1.100?key=[REDACTED]'"
                   }
                 }
               ]
@@ -4324,8 +4324,8 @@
             "note": "No vector database search performed"
           },
           "recommendations": [
-            "\ud83d\udccb 4 potential security indicators identified - monitor closely",
-            "\u26a1 Analysis completed with caching optimization - 60-80% API cost reduction achieved"
+            "📋 4 potential security indicators identified - monitor closely",
+            "⚡ Analysis completed with caching optimization - 60-80% API cost reduction achieved"
           ],
           "processing_summary": {
             "iterations": 1,
@@ -4355,16 +4355,16 @@
           },
           "supervisor_version": "2.0"
         },
-        "processing_time": 3.2200889587402344
+        "processing_time": 0.015587091445922852
       },
-      "response_time": 3.231384754180908,
+      "response_time": 0.026592016220092773,
       "status": "success"
     },
     {
       "description": "Follow-up - Ask about specific IOC from previous request",
       "request": {
         "text": "Tell me more about the IP address 192.168.1.100 from the previous analysis. What threats are associated with it?",
-        "session_id": "00da04ef-c801-4972-a6b6-b22331d89187"
+        "session_id": "d40126c7-7c38-4a4b-ad28-aea4a980b27f"
       },
       "response": {
         "status": "success",
@@ -4419,6 +4419,25 @@
                         "self": "https://www.virustotal.com/api/v3/ip_addresses/192.168.1.100"
                       },
                       "attributes": {
+                        "last_analysis_stats": {
+                          "malicious": 0,
+                          "suspicious": 0,
+                          "undetected": 32,
+                          "harmless": 63,
+                          "timeout": 0
+                        },
+                        "last_modification_date": 1760294920,
+                        "last_analysis_date": 1760294600,
+                        "total_votes": {
+                          "harmless": 3,
+                          "malicious": 2
+                        },
+                        "reputation": 1,
+                        "tags": [
+                          "private"
+                        ],
+                        "whois": "NetRange: 192.168.0.0 - 192.168.255.255\nCIDR: 192.168.0.0/16\nNetName: PRIVATE-ADDRESS-CBLK-RFC1918-IANA-RESERVED\nNetHandle: NET-192-168-0-0-1\nParent: NET192 (NET-192-0-0-0-0)\nNetType: IANA Special Use\nOriginAS: \nOrganization: Internet Assigned Numbers Authority (IANA)\nRegDate: 1994-03-15\nUpdated: 2013-08-30\nComment: These addresses are in use by many millions of independently operated networks, which might be as small as a single computer connected to a home gateway, and are automatically configured in hundreds of millions of devices. They are only intended for use within a private context and traffic that needs to cross the Internet will need to use a different, unique address.\r\nComment: \r\nComment: These addresses can be used by anyone without any need to coordinate with IANA or an Internet registry. The traffic from these addresses does not come from ICANN or IANA. We are not the source of activity you may see on logs or in e-mail records. Please refer to http://www.iana.org/abuse/answers\r\nComment: \r\nComment: These addresses were assigned by the IETF, the organization that develops Internet protocols, in the Best Current Practice document, RFC 1918 which can be found at:\r\nComment: http://datatracker.ietf.org/doc/rfc1918\nRef: https://rdap.arin.net/registry/ip/192.168.0.0\nOrgName: Internet Assigned Numbers Authority\nOrgId: IANA\nAddress: 12025 Waterfront Drive\r\nAddress: Suite 300\nCity: Los Angeles\nStateProv: CA\nPostalCode: 90292\nCountry: US\nRegDate: \nUpdated: 2012-08-31\nRef: https://rdap.arin.net/registry/entity/IANA\nOrgTechHandle: IANA-IP-ARIN\nOrgTechName: ICANN\nOrgTechPhone: +1-310-301-5820 \nOrgTechEmail: abuse@iana.org\nOrgTechRef: https://rdap.arin.net/registry/entity/IANA-IP-ARIN\nOrgAbuseHandle: IANA-IP-ARIN\nOrgAbuseName: ICANN\nOrgAbusePhone: +1-310-301-5820 \nOrgAbuseEmail: abuse@iana.org\nOrgAbuseRef: https://rdap.arin.net/registry/entity/IANA-IP-ARIN\n",
+                        "whois_date": 1668688241,
                         "last_analysis_results": {
                           "Acronis": {
                             "method": "blacklist",
@@ -4990,26 +5009,7 @@
                             "category": "undetected",
                             "result": "unrated"
                           }
-                        },
-                        "tags": [
-                          "private"
-                        ],
-                        "whois_date": 1668688241,
-                        "last_analysis_date": 1760281831,
-                        "reputation": 1,
-                        "last_analysis_stats": {
-                          "malicious": 0,
-                          "suspicious": 0,
-                          "undetected": 32,
-                          "harmless": 63,
-                          "timeout": 0
-                        },
-                        "total_votes": {
-                          "harmless": 3,
-                          "malicious": 2
-                        },
-                        "last_modification_date": 1760282246,
-                        "whois": "NetRange: 192.168.0.0 - 192.168.255.255\nCIDR: 192.168.0.0/16\nNetName: PRIVATE-ADDRESS-CBLK-RFC1918-IANA-RESERVED\nNetHandle: NET-192-168-0-0-1\nParent: NET192 (NET-192-0-0-0-0)\nNetType: IANA Special Use\nOriginAS: \nOrganization: Internet Assigned Numbers Authority (IANA)\nRegDate: 1994-03-15\nUpdated: 2013-08-30\nComment: These addresses are in use by many millions of independently operated networks, which might be as small as a single computer connected to a home gateway, and are automatically configured in hundreds of millions of devices. They are only intended for use within a private context and traffic that needs to cross the Internet will need to use a different, unique address.\r\nComment: \r\nComment: These addresses can be used by anyone without any need to coordinate with IANA or an Internet registry. The traffic from these addresses does not come from ICANN or IANA. We are not the source of activity you may see on logs or in e-mail records. Please refer to http://www.iana.org/abuse/answers\r\nComment: \r\nComment: These addresses were assigned by the IETF, the organization that develops Internet protocols, in the Best Current Practice document, RFC 1918 which can be found at:\r\nComment: http://datatracker.ietf.org/doc/rfc1918\nRef: https://rdap.arin.net/registry/ip/192.168.0.0\nOrgName: Internet Assigned Numbers Authority\nOrgId: IANA\nAddress: 12025 Waterfront Drive\r\nAddress: Suite 300\nCity: Los Angeles\nStateProv: CA\nPostalCode: 90292\nCountry: US\nRegDate: \nUpdated: 2012-08-31\nRef: https://rdap.arin.net/registry/entity/IANA\nOrgTechHandle: IANA-IP-ARIN\nOrgTechName: ICANN\nOrgTechPhone: +1-310-301-5820 \nOrgTechEmail: abuse@iana.org\nOrgTechRef: https://rdap.arin.net/registry/entity/IANA-IP-ARIN\nOrgAbuseHandle: IANA-IP-ARIN\nOrgAbuseName: ICANN\nOrgAbusePhone: +1-310-301-5820 \nOrgAbuseEmail: abuse@iana.org\nOrgAbuseRef: https://rdap.arin.net/registry/entity/IANA-IP-ARIN\n"
+                        }
                       }
                     }
                   }
@@ -5181,7 +5181,7 @@
                 "risk_level": "low",
                 "source": "Shodan",
                 "details": {
-                  "error": "404, message='Not Found', url='https://api.shodan.io/shodan/host/192.168.1.100?key=3D342uViZy3b3YLfwE2k5EEjRIDWoK5e'"
+                  "error": "404, message='Not Found', url='https://api.shodan.io/shodan/host/192.168.1.100?key=[REDACTED]'"
                 }
               }
             ],
@@ -5222,6 +5222,25 @@
                           "self": "https://www.virustotal.com/api/v3/ip_addresses/192.168.1.100"
                         },
                         "attributes": {
+                          "last_analysis_stats": {
+                            "malicious": 0,
+                            "suspicious": 0,
+                            "undetected": 32,
+                            "harmless": 63,
+                            "timeout": 0
+                          },
+                          "last_modification_date": 1760294920,
+                          "last_analysis_date": 1760294600,
+                          "total_votes": {
+                            "harmless": 3,
+                            "malicious": 2
+                          },
+                          "reputation": 1,
+                          "tags": [
+                            "private"
+                          ],
+                          "whois": "NetRange: 192.168.0.0 - 192.168.255.255\nCIDR: 192.168.0.0/16\nNetName: PRIVATE-ADDRESS-CBLK-RFC1918-IANA-RESERVED\nNetHandle: NET-192-168-0-0-1\nParent: NET192 (NET-192-0-0-0-0)\nNetType: IANA Special Use\nOriginAS: \nOrganization: Internet Assigned Numbers Authority (IANA)\nRegDate: 1994-03-15\nUpdated: 2013-08-30\nComment: These addresses are in use by many millions of independently operated networks, which might be as small as a single computer connected to a home gateway, and are automatically configured in hundreds of millions of devices. They are only intended for use within a private context and traffic that needs to cross the Internet will need to use a different, unique address.\r\nComment: \r\nComment: These addresses can be used by anyone without any need to coordinate with IANA or an Internet registry. The traffic from these addresses does not come from ICANN or IANA. We are not the source of activity you may see on logs or in e-mail records. Please refer to http://www.iana.org/abuse/answers\r\nComment: \r\nComment: These addresses were assigned by the IETF, the organization that develops Internet protocols, in the Best Current Practice document, RFC 1918 which can be found at:\r\nComment: http://datatracker.ietf.org/doc/rfc1918\nRef: https://rdap.arin.net/registry/ip/192.168.0.0\nOrgName: Internet Assigned Numbers Authority\nOrgId: IANA\nAddress: 12025 Waterfront Drive\r\nAddress: Suite 300\nCity: Los Angeles\nStateProv: CA\nPostalCode: 90292\nCountry: US\nRegDate: \nUpdated: 2012-08-31\nRef: https://rdap.arin.net/registry/entity/IANA\nOrgTechHandle: IANA-IP-ARIN\nOrgTechName: ICANN\nOrgTechPhone: +1-310-301-5820 \nOrgTechEmail: abuse@iana.org\nOrgTechRef: https://rdap.arin.net/registry/entity/IANA-IP-ARIN\nOrgAbuseHandle: IANA-IP-ARIN\nOrgAbuseName: ICANN\nOrgAbusePhone: +1-310-301-5820 \nOrgAbuseEmail: abuse@iana.org\nOrgAbuseRef: https://rdap.arin.net/registry/entity/IANA-IP-ARIN\n",
+                          "whois_date": 1668688241,
                           "last_analysis_results": {
                             "Acronis": {
                               "method": "blacklist",
@@ -5793,26 +5812,7 @@
                               "category": "undetected",
                               "result": "unrated"
                             }
-                          },
-                          "tags": [
-                            "private"
-                          ],
-                          "whois_date": 1668688241,
-                          "last_analysis_date": 1760281831,
-                          "reputation": 1,
-                          "last_analysis_stats": {
-                            "malicious": 0,
-                            "suspicious": 0,
-                            "undetected": 32,
-                            "harmless": 63,
-                            "timeout": 0
-                          },
-                          "total_votes": {
-                            "harmless": 3,
-                            "malicious": 2
-                          },
-                          "last_modification_date": 1760282246,
-                          "whois": "NetRange: 192.168.0.0 - 192.168.255.255\nCIDR: 192.168.0.0/16\nNetName: PRIVATE-ADDRESS-CBLK-RFC1918-IANA-RESERVED\nNetHandle: NET-192-168-0-0-1\nParent: NET192 (NET-192-0-0-0-0)\nNetType: IANA Special Use\nOriginAS: \nOrganization: Internet Assigned Numbers Authority (IANA)\nRegDate: 1994-03-15\nUpdated: 2013-08-30\nComment: These addresses are in use by many millions of independently operated networks, which might be as small as a single computer connected to a home gateway, and are automatically configured in hundreds of millions of devices. They are only intended for use within a private context and traffic that needs to cross the Internet will need to use a different, unique address.\r\nComment: \r\nComment: These addresses can be used by anyone without any need to coordinate with IANA or an Internet registry. The traffic from these addresses does not come from ICANN or IANA. We are not the source of activity you may see on logs or in e-mail records. Please refer to http://www.iana.org/abuse/answers\r\nComment: \r\nComment: These addresses were assigned by the IETF, the organization that develops Internet protocols, in the Best Current Practice document, RFC 1918 which can be found at:\r\nComment: http://datatracker.ietf.org/doc/rfc1918\nRef: https://rdap.arin.net/registry/ip/192.168.0.0\nOrgName: Internet Assigned Numbers Authority\nOrgId: IANA\nAddress: 12025 Waterfront Drive\r\nAddress: Suite 300\nCity: Los Angeles\nStateProv: CA\nPostalCode: 90292\nCountry: US\nRegDate: \nUpdated: 2012-08-31\nRef: https://rdap.arin.net/registry/entity/IANA\nOrgTechHandle: IANA-IP-ARIN\nOrgTechName: ICANN\nOrgTechPhone: +1-310-301-5820 \nOrgTechEmail: abuse@iana.org\nOrgTechRef: https://rdap.arin.net/registry/entity/IANA-IP-ARIN\nOrgAbuseHandle: IANA-IP-ARIN\nOrgAbuseName: ICANN\nOrgAbusePhone: +1-310-301-5820 \nOrgAbuseEmail: abuse@iana.org\nOrgAbuseRef: https://rdap.arin.net/registry/entity/IANA-IP-ARIN\n"
+                          }
                         }
                       }
                     }
@@ -5984,13 +5984,25 @@
                   "type": "ip",
                   "value": "192.168.1.100",
                   "result": {
-                    "error": "404, message='Not Found', url='https://api.shodan.io/shodan/host/192.168.1.100?key=3D342uViZy3b3YLfwE2k5EEjRIDWoK5e'"
+                    "error": "404, message='Not Found', url='https://api.shodan.io/shodan/host/192.168.1.100?key=[REDACTED]'"
                   }
+                }
+              ],
+              "VectorSearch(CyberShieldVectorStore)": [
+                {
+                  "type": "similar_attacks",
+                  "query": "Tell me more about the IP address 192.168.1.100 from the previous analysis. What threats are associa...",
+                  "results": []
+                },
+                {
+                  "type": "ip_history",
+                  "value": "192.168.1.100",
+                  "results": []
                 }
               ]
             },
             "execution_metrics": {
-              "tools_count": 3,
+              "tools_count": 4,
               "success_rate": 1.0,
               "concurrent": true,
               "performance_gain": "Optimized concurrent execution with caching",
@@ -6002,15 +6014,16 @@
             "note": "No vector database search performed"
           },
           "recommendations": [
-            "\ud83d\udccb 1 potential security indicators identified - monitor closely",
-            "\u26a1 Analysis completed with caching optimization - 60-80% API cost reduction achieved"
+            "📋 1 potential security indicators identified - monitor closely",
+            "⚡ Analysis completed with caching optimization - 60-80% API cost reduction achieved"
           ],
           "processing_summary": {
             "iterations": 1,
             "tools_used": [
               "VirusTotal",
               "AbuseIPDB",
-              "Shodan"
+              "Shodan",
+              "VectorSearch(CyberShieldVectorStore)"
             ],
             "processing_method": "react_workflow_cached",
             "cached_operations": [
@@ -6027,22 +6040,32 @@
             "memory_optimization": true,
             "batch_size": 32
           },
+          "context_enrichment": {
+            "original_text": "Tell me more about the IP address 192.168.1.100 from the previous analysis. What threats are associated with it?",
+            "enriched": true,
+            "context_used": {
+              "ip": "192.168.1.100"
+            },
+            "resolution_method": "llm",
+            "timestamp": "2025-10-12T11:54:02.404639",
+            "enriched_text": "Tell me more about 192.168.1.100 address 192.168.1.100 from the previous analysis. What threats are associated with it?"
+          },
           "pii_analysis": {
             "pii_detected": false,
             "note": "PII analysis not yet integrated with ReAct workflow"
           },
           "supervisor_version": "2.0"
         },
-        "processing_time": 1.5792219638824463
+        "processing_time": 0.016679048538208008
       },
-      "response_time": 1.5851669311523438,
+      "response_time": 0.019784927368164062,
       "status": "success"
     },
     {
       "description": "Follow-up - Ask about domain from first request",
       "request": {
         "text": "What about the domain malware-c2.example.com? Is it malicious?",
-        "session_id": "00da04ef-c801-4972-a6b6-b22331d89187"
+        "session_id": "d40126c7-7c38-4a4b-ad28-aea4a980b27f"
       },
       "response": {
         "status": "success",
@@ -6097,17 +6120,8 @@
                         "self": "https://www.virustotal.com/api/v3/domains/malware-c2.example.com"
                       },
                       "attributes": {
-                        "total_votes": {
-                          "harmless": 0,
-                          "malicious": 0
-                        },
-                        "last_modification_date": 1753873534,
-                        "registrar": "RESERVED-Internet Assigned Numbers Authority",
-                        "last_analysis_date": 1751454058,
-                        "tags": [],
                         "last_update_date": 1755154899,
-                        "last_dns_records": [],
-                        "whois": "Creation Date: 1995-08-14T04:00:00Z\nDNSSEC: signedDelegation\nDomain Name: EXAMPLE.COM\nDomain Status: clientDeleteProhibited https://icann.org/epp#clientDeleteProhibited\nDomain Status: clientTransferProhibited https://icann.org/epp#clientTransferProhibited\nDomain Status: clientUpdateProhibited https://icann.org/epp#clientUpdateProhibited\nName Server: A.IANA-SERVERS.NET\nName Server: B.IANA-SERVERS.NET\nRegistrar IANA ID: 376\nRegistrar URL: http://res-dom.iana.org\nRegistrar WHOIS Server: whois.iana.org\nRegistrar: RESERVED-Internet Assigned Numbers Authority\nRegistry Domain ID: 2336799_DOMAIN_COM-VRSN\nRegistry Expiry Date: 2026-08-13T04:00:00Z\nUpdated Date: 2025-08-14T07:01:39Z",
+                        "last_analysis_date": 1751454058,
                         "last_analysis_results": {
                           "Acronis": {
                             "method": "blacklist",
@@ -6680,11 +6694,19 @@
                             "result": "unrated"
                           }
                         },
-                        "tld": "com",
+                        "last_modification_date": 1753873534,
+                        "registrar": "RESERVED-Internet Assigned Numbers Authority",
                         "creation_date": 808372800,
-                        "reputation": 0,
-                        "popularity_ranks": {},
+                        "last_dns_records": [],
                         "expiration_date": 1786593600,
+                        "reputation": 0,
+                        "total_votes": {
+                          "harmless": 0,
+                          "malicious": 0
+                        },
+                        "tags": [],
+                        "popularity_ranks": {},
+                        "categories": {},
                         "last_analysis_stats": {
                           "malicious": 0,
                           "suspicious": 0,
@@ -6692,7 +6714,8 @@
                           "harmless": 0,
                           "timeout": 0
                         },
-                        "categories": {}
+                        "whois": "Creation Date: 1995-08-14T04:00:00Z\nDNSSEC: signedDelegation\nDomain Name: EXAMPLE.COM\nDomain Status: clientDeleteProhibited https://icann.org/epp#clientDeleteProhibited\nDomain Status: clientTransferProhibited https://icann.org/epp#clientTransferProhibited\nDomain Status: clientUpdateProhibited https://icann.org/epp#clientUpdateProhibited\nName Server: A.IANA-SERVERS.NET\nName Server: B.IANA-SERVERS.NET\nRegistrar IANA ID: 376\nRegistrar URL: http://res-dom.iana.org\nRegistrar WHOIS Server: whois.iana.org\nRegistrar: RESERVED-Internet Assigned Numbers Authority\nRegistry Domain ID: 2336799_DOMAIN_COM-VRSN\nRegistry Expiry Date: 2026-08-13T04:00:00Z\nUpdated Date: 2025-08-14T07:01:39Z",
+                        "tld": "com"
                       }
                     }
                   }
@@ -6736,17 +6759,8 @@
                           "self": "https://www.virustotal.com/api/v3/domains/malware-c2.example.com"
                         },
                         "attributes": {
-                          "total_votes": {
-                            "harmless": 0,
-                            "malicious": 0
-                          },
-                          "last_modification_date": 1753873534,
-                          "registrar": "RESERVED-Internet Assigned Numbers Authority",
-                          "last_analysis_date": 1751454058,
-                          "tags": [],
                           "last_update_date": 1755154899,
-                          "last_dns_records": [],
-                          "whois": "Creation Date: 1995-08-14T04:00:00Z\nDNSSEC: signedDelegation\nDomain Name: EXAMPLE.COM\nDomain Status: clientDeleteProhibited https://icann.org/epp#clientDeleteProhibited\nDomain Status: clientTransferProhibited https://icann.org/epp#clientTransferProhibited\nDomain Status: clientUpdateProhibited https://icann.org/epp#clientUpdateProhibited\nName Server: A.IANA-SERVERS.NET\nName Server: B.IANA-SERVERS.NET\nRegistrar IANA ID: 376\nRegistrar URL: http://res-dom.iana.org\nRegistrar WHOIS Server: whois.iana.org\nRegistrar: RESERVED-Internet Assigned Numbers Authority\nRegistry Domain ID: 2336799_DOMAIN_COM-VRSN\nRegistry Expiry Date: 2026-08-13T04:00:00Z\nUpdated Date: 2025-08-14T07:01:39Z",
+                          "last_analysis_date": 1751454058,
                           "last_analysis_results": {
                             "Acronis": {
                               "method": "blacklist",
@@ -7319,11 +7333,19 @@
                               "result": "unrated"
                             }
                           },
-                          "tld": "com",
+                          "last_modification_date": 1753873534,
+                          "registrar": "RESERVED-Internet Assigned Numbers Authority",
                           "creation_date": 808372800,
-                          "reputation": 0,
-                          "popularity_ranks": {},
+                          "last_dns_records": [],
                           "expiration_date": 1786593600,
+                          "reputation": 0,
+                          "total_votes": {
+                            "harmless": 0,
+                            "malicious": 0
+                          },
+                          "tags": [],
+                          "popularity_ranks": {},
+                          "categories": {},
                           "last_analysis_stats": {
                             "malicious": 0,
                             "suspicious": 0,
@@ -7331,7 +7353,8 @@
                             "harmless": 0,
                             "timeout": 0
                           },
-                          "categories": {}
+                          "whois": "Creation Date: 1995-08-14T04:00:00Z\nDNSSEC: signedDelegation\nDomain Name: EXAMPLE.COM\nDomain Status: clientDeleteProhibited https://icann.org/epp#clientDeleteProhibited\nDomain Status: clientTransferProhibited https://icann.org/epp#clientTransferProhibited\nDomain Status: clientUpdateProhibited https://icann.org/epp#clientUpdateProhibited\nName Server: A.IANA-SERVERS.NET\nName Server: B.IANA-SERVERS.NET\nRegistrar IANA ID: 376\nRegistrar URL: http://res-dom.iana.org\nRegistrar WHOIS Server: whois.iana.org\nRegistrar: RESERVED-Internet Assigned Numbers Authority\nRegistry Domain ID: 2336799_DOMAIN_COM-VRSN\nRegistry Expiry Date: 2026-08-13T04:00:00Z\nUpdated Date: 2025-08-14T07:01:39Z",
+                          "tld": "com"
                         }
                       }
                     }
@@ -7352,8 +7375,8 @@
             "note": "No vector database search performed"
           },
           "recommendations": [
-            "\ud83d\udccb 1 potential security indicators identified - monitor closely",
-            "\u26a1 Analysis completed with caching optimization - 60-80% API cost reduction achieved"
+            "📋 1 potential security indicators identified - monitor closely",
+            "⚡ Analysis completed with caching optimization - 60-80% API cost reduction achieved"
           ],
           "processing_summary": {
             "iterations": 1,
@@ -7375,35 +7398,57 @@
             "memory_optimization": true,
             "batch_size": 32
           },
+          "context_enrichment": {
+            "original_text": "What about the domain malware-c2.example.com? Is it malicious?",
+            "enriched": true,
+            "context_used": {
+              "domain": "malware-c2.example.com"
+            },
+            "resolution_method": "llm",
+            "timestamp": "2025-10-12T11:54:05.588647",
+            "enriched_text": "What about malware-c2.example.com malware-c2.example.com? Is it malicious?"
+          },
           "pii_analysis": {
             "pii_detected": false,
             "note": "PII analysis not yet integrated with ReAct workflow"
           },
           "supervisor_version": "2.0"
         },
-        "processing_time": 2.025810956954956
+        "processing_time": 0.011044025421142578
       },
-      "response_time": 2.0283820629119873,
+      "response_time": 0.015522956848144531,
       "status": "success"
     }
   ],
   "analysis": {
     "total_requests": 3,
     "successful_requests": 3,
-    "context_indicators": [
+    "pronoun_resolution_indicators": [
       {
         "request_number": 2,
-        "references_previous": true,
-        "maintains_context": true,
-        "response_length": 41601
+        "has_context_enrichment": true,
+        "enriched": true,
+        "context_used": {
+          "ip": "192.168.1.100"
+        },
+        "resolution_successful": true,
+        "resolved_iocs": {
+          "ip": "192.168.1.100"
+        }
       },
       {
         "request_number": 3,
-        "references_previous": false,
-        "maintains_context": true,
-        "response_length": 28688
+        "has_context_enrichment": true,
+        "enriched": true,
+        "context_used": {
+          "domain": "malware-c2.example.com"
+        },
+        "resolution_successful": true,
+        "resolved_iocs": {
+          "domain": "malware-c2.example.com"
+        }
       }
     ],
-    "context_preservation_score": 0.5
+    "pronoun_resolution_score": 1.0
   }
 }
