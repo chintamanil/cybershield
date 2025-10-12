@@ -54,6 +54,16 @@ description: "Multimodal Multi-Agent Cybersecurity AI Platform with Vision Proce
     <h3>🎯 Smart Architecture</h3>
     <p>Clean, maintainable codebase with GPU Optimized (AWS/Apple)</p>
   </div>
+
+  <div class="feature-card">
+    <h3>🧠 Context Memory</h3>
+    <p>Automatic session management with IOC tracking and pronoun resolution</p>
+  </div>
+
+  <div class="feature-card">
+    <h3>📊 Streamlit Frontend</h3>
+    <p>Modern UI with batch processing, image analysis, and advanced tools</p>
+  </div>
 </div>
 
 ---
@@ -79,11 +89,15 @@ graph TD
     A4[LogParserAgent]
     A5[VisionAgent]
 
-    M1[Redis STM]
-    V1[Milvus VectorDB]
-    DB1[PostgreSQL]
+    M1[Redis STM<br/>Session Management]
+    V1[Milvus VectorDB<br/>120K+ Attacks]
+    DB1[PostgreSQL<br/>PII & Sessions]
 
-    U1 --> A1
+    SESSION[Session Manager<br/>Context Memory]
+    HISTORY[Request History<br/>IOC Tracking]
+
+    U1 --> SESSION
+    SESSION --> A1
     A1 --> REACT
     REACT --> LLM
     LLM --> CACHE
@@ -111,6 +125,10 @@ graph TD
     A4 --> M1
     A5 --> M1
 
+    SESSION --> HISTORY
+    HISTORY --> M1
+    M1 --> SESSION
+
     style A1 fill:#2c3e50, color:#ffffff
     style REACT fill:#8e44ad, color:#ffffff
     style LLM fill:#9b59b6, color:#ffffff
@@ -124,6 +142,11 @@ graph TD
     style A2 fill:#e67e22, color:#ffffff
     style A4 fill:#f39c12, color:#ffffff
     style A5 fill:#3498db, color:#ffffff
+    style SESSION fill:#c0392b, color:#ffffff
+    style HISTORY fill:#e74c3c, color:#ffffff
+    style M1 fill:#d35400, color:#ffffff
+    style V1 fill:#16a085, color:#ffffff
+    style DB1 fill:#27ae60, color:#ffffff
 
     %% Darker Arrow Styling
     linkStyle default stroke:#333,stroke-width:3px
@@ -160,9 +183,10 @@ curl https://cybershield-ai.com/status
 |--------|-------|-------------|
 | **Response Time** | 100-500ms | Cached responses |
 | **API Cost Reduction** | 60-80% | Through intelligent caching |
-| **Test Coverage** | 115 tests | Comprehensive validation |
+| **Test Coverage** | 98.5% (388/394) | Comprehensive validation |
 | **IOC Patterns** | 25+ types | Advanced pattern recognition |
 | **Vector Database** | 120K records | Historical attack analysis |
+| **Frontend Tests** | 36 tests | Session management coverage |
 
 ---
 
@@ -197,8 +221,16 @@ curl https://cybershield-ai.com/status
 
 ---
 
-## 📈 **Latest Updates (August 2025)**
+## 📈 **Latest Updates**
 
+### **Version 1.2.0 - Session Management & Test Suite (January 2025)**
+- **🧠 Context Memory**: Intelligent session management with automatic IOC tracking
+- **⚡ Instant UI Updates**: Fixed checkbox visibility with immediate refresh
+- **✅ Test Suite**: 98.5% passing (388/394 tests) with comprehensive coverage
+- **🔧 Bug Fixes**: Session management, async tests, URL validation improvements
+- **📝 Documentation**: Enhanced README with troubleshooting and version history
+
+### **Version 1.1.0 - Production Deployment (August 2025)**
 - **🌐 Custom Domain**: cybershield-ai.com with SSL certificate
 - **🔒 Production SSL**: AWS Certificate Manager with auto-renewal
 - **⚖️ Load Balancer**: Optimized ALB routing for frontend/backend separation

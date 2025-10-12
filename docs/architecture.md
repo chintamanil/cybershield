@@ -111,6 +111,12 @@ graph TD
             ToolCache[Tool Results Cache<br/>1hour TTL]
             ReportCache[Final Reports<br/>1hour TTL]
         end
+
+        subgraph "Session Management"
+            SessionMgr[Session Manager<br/>Auto-generated IDs]
+            ReqHistory[Request History<br/>IOC Tracking]
+            ContextMem[Context Memory<br/>Pronoun Resolution]
+        end
     end
 
     %% Vector Database
@@ -186,18 +192,27 @@ graph TD
     WorkflowSteps --> ToolCache
     ReactCore --> ReportCache
 
+    %% Session Management Integration
+    WebUI --> SessionMgr
+    SessionMgr --> ReqHistory
+    ReqHistory --> RedisSTM
+    SessionMgr --> ContextMem
+    ContextMem --> Supervisor
+
     %% Styling
     classDef agentClass fill:#e1f5fe,stroke:#01579b,stroke-width:2px
     classDef cacheClass fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
     classDef dbClass fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
     classDef apiClass fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
     classDef toolClass fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    classDef sessionClass fill:#ffe0e0,stroke:#c0392b,stroke-width:2px
 
     class PIIAgent,ThreatAgent,LogAgent,VisionAgent,Supervisor agentClass
     class RedisSTM,PIIStore,RoutingCache,ToolCache,ReportCache cacheClass
     class MilvusDB,PostgresDB,RedisCluster dbClass
     class FastAPI,AnalyzeEP,ImageEP,BatchEP apiClass
     class VirusTotal,AbuseIPDB,Shodan,RegexChecker,MilvusSearch toolClass
+    class SessionMgr,ReqHistory,ContextMem sessionClass
 
     %% Darker Arrow Styling
     linkStyle default stroke:#333,stroke-width:3px
@@ -343,6 +358,7 @@ graph TD
             SM1[Session IOCs<br/>Redis STM]
             SM2[PII Mappings<br/>Encrypted Store]
             SM3[Agent Context<br/>Cross-agent sharing]
+            SM4[Request History<br/>IOC Tracking]
         end
 
         subgraph "Performance Cache"
@@ -366,6 +382,42 @@ ttl_mapping = {
     "final_reports": 3600 # 1 hour
 }
 ```
+
+#### **Session Management & Context Memory**
+
+CyberShield implements intelligent **context continuation** through automatic session management:
+
+**Key Features:**
+- **Auto-Generated Sessions**: System creates unique session IDs automatically (no user input needed)
+- **IOC Tracking**: Extracts and stores IOCs from each analysis for future reference
+- **Pronoun Resolution**: Backend resolves references like "that IP", "previous domain", "same hash"
+- **Visual Context**: Frontend displays previous query summary and IOC preview
+- **Instant UI Updates**: Checkbox appears immediately after first analysis using `st.rerun()`
+- **Flexible Workflow**: Easy to continue investigation or start fresh
+
+**Session Flow:**
+```python
+# 1. First Query - System auto-generates session
+session_id = f"session-{uuid.uuid4().hex[:8]}"
+st.session_state.auto_session_id = session_id
+
+# 2. Extract and store IOCs
+iocs_found = extract_iocs_from_result(result)
+save_request_to_history(session_id, text_input, iocs_found)
+
+# 3. Display context continuation checkbox
+if use_previous_context:
+    # Continue with same session
+    return prev_session_id
+else:
+    # Start new session
+    return None
+```
+
+**Implementation Files:**
+- `frontend/components/session_components.py` - UI components for session management
+- `memory/redis_stm.py` - Redis short-term memory for session data
+- `frontend/streamlit_app.py` - Session integration and UI refresh logic
 
 ### **5. Data Architecture**
 
