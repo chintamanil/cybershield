@@ -38,8 +38,7 @@ CyberShield is a sophisticated AI-powered cybersecurity platform that combines m
 
 ```mermaid
 graph TD
-    U1[User Input + Session ID]
-    CTX[Context Resolver]
+    U1[User Input]
     A1[SupervisorAgent]
     REACT[ReAct Workflow]
     LLM[LLM Router]
@@ -56,16 +55,15 @@ graph TD
     A4[LogParserAgent]
     A5[VisionAgent]
 
-    M1[Redis STM<br/>Session Context]
-    V1[Milvus VectorDB]
-    DB1[PostgreSQL]
+    M1[Redis STM<br/>Session Management]
+    V1[Milvus VectorDB<br/>120K+ Attacks]
+    DB1[PostgreSQL<br/>PII & Sessions]
 
-    STORE[Store IOCs<br/>& Events]
+    SESSION[Session Manager<br/>Context Memory]
+    HISTORY[Request History<br/>IOC Tracking]
 
-    U1 --> CTX
-    CTX -->|Pronoun Resolution| A1
-    CTX <-->|Load Session History| M1
-
+    U1 --> SESSION
+    SESSION --> A1
     A1 --> REACT
     REACT --> LLM
     LLM --> CACHE
@@ -93,11 +91,10 @@ graph TD
     A4 --> M1
     A5 --> M1
 
-    A1 --> STORE
-    STORE --> M1
+    SESSION --> HISTORY
+    HISTORY --> M1
+    M1 --> SESSION
 
-    style U1 fill:#3498db, color:#ffffff
-    style CTX fill:#e74c3c, color:#ffffff
     style A1 fill:#2c3e50, color:#ffffff
     style REACT fill:#8e44ad, color:#ffffff
     style LLM fill:#9b59b6, color:#ffffff
@@ -111,8 +108,14 @@ graph TD
     style A2 fill:#e67e22, color:#ffffff
     style A4 fill:#f39c12, color:#ffffff
     style A5 fill:#3498db, color:#ffffff
-    style M1 fill:#e74c3c, color:#ffffff
-    style STORE fill:#c0392b, color:#ffffff
+    style SESSION fill:#c0392b, color:#ffffff
+    style HISTORY fill:#e74c3c, color:#ffffff
+    style M1 fill:#d35400, color:#ffffff
+    style V1 fill:#16a085, color:#ffffff
+    style DB1 fill:#27ae60, color:#ffffff
+
+    %% Darker Arrow Styling
+    linkStyle default stroke:#333,stroke-width:3px
 ```
 
 ### Intelligent Workflow with Caching
