@@ -1,0 +1,133 @@
+{
+  "basic_security_analysis": [
+    {
+      "id": "basic_001",
+      "name": "Failed Login with Hash and Domain",
+      "prompt": "2024-07-28 10:30:45 [ERROR] Failed login attempt from 198.51.100.5 for user admin. Hash detected: d41d8cd98f00b204e9800998ecf8427e. Suspicious domain: malware-c2.example.com",
+      "expected_iocs": {
+        "ips": ["198.51.100.5"],
+        "hashes": ["d41d8cd98f00b204e9800998ecf8427e"],
+        "domains": ["malware-c2.example.com"]
+      },
+      "category": "basic_threat"
+    },
+    {
+      "id": "basic_002",
+      "name": "SSH Connection Attempt",
+      "prompt": "192.168.1.100 attempted SSH connection from suspicious IP 203.0.113.42",
+      "expected_iocs": {
+        "ips": ["192.168.1.100", "203.0.113.42"]
+      },
+      "category": "basic_threat"
+    }
+  ],
+  "pii_detection": [
+    {
+      "id": "pii_001",
+      "name": "User with SSN and Credit Card",
+      "prompt": "User John Doe (SSN: 123-45-6789) accessed system from john.doe@company.com using credit card 4532-1234-5678-9012",
+      "expected_pii": {
+        "ssn": ["123-45-6789"],
+        "email": ["john.doe@company.com"],
+        "credit_card": ["4532-1234-5678-9012"],
+        "name": ["John Doe"]
+      },
+      "category": "pii"
+    },
+    {
+      "id": "pii_002",
+      "name": "Employee Record",
+      "prompt": "Employee record: Name: Jane Smith, Phone: +1-555-0123, Email: jane.smith@company.org, DOB: 1985-03-15",
+      "expected_pii": {
+        "name": ["Jane Smith"],
+        "phone": ["+1-555-0123"],
+        "email": ["jane.smith@company.org"],
+        "dob": ["1985-03-15"]
+      },
+      "category": "pii"
+    }
+  ],
+  "network_security_events": [
+    {
+      "id": "network_001",
+      "name": "Firewall Block with DNS Query",
+      "prompt": "Firewall blocked connection to 185.220.101.42:443. DNS query for bitcoin-miner.ru detected. Process hash: 5d41402abc4b2a76b9719d911017c592",
+      "expected_iocs": {
+        "ips": ["185.220.101.42"],
+        "domains": ["bitcoin-miner.ru"],
+        "hashes": ["5d41402abc4b2a76b9719d911017c592"],
+        "ports": ["443"]
+      },
+      "category": "network_threat"
+    },
+    {
+      "id": "network_002",
+      "name": "Malware C2 Server Detection",
+      "prompt": "Malware detected: C2 server command-control.darkweb.onion, Bitcoin wallet: 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa, File hash: a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+      "expected_iocs": {
+        "domains": ["command-control.darkweb.onion"],
+        "bitcoin_addresses": ["1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa"],
+        "hashes": ["a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3"]
+      },
+      "category": "malware"
+    }
+  ],
+  "advanced_persistent_threats": [
+    {
+      "id": "apt_001",
+      "name": "Lateral Movement with Cobalt Strike",
+      "prompt": "Lateral movement detected: 10.0.0.15 -> 10.0.0.25 using credentials admin@domain.local. Malware signature: Cobalt Strike beacon. Payload hash: 7c4a8d09ca3762af61e59520943dc26494f8941b",
+      "expected_iocs": {
+        "ips": ["10.0.0.15", "10.0.0.25"],
+        "emails": ["admin@domain.local"],
+        "hashes": ["7c4a8d09ca3762af61e59520943dc26494f8941b"]
+      },
+      "category": "apt",
+      "severity": "critical"
+    },
+    {
+      "id": "apt_002",
+      "name": "Phishing Email with Bitcoin",
+      "prompt": "Email from suspicious.sender@temp-mail.org containing bitcoin address 3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy and phone number +1-555-0199. Attachment hash: b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9",
+      "expected_iocs": {
+        "emails": ["suspicious.sender@temp-mail.org"],
+        "bitcoin_addresses": ["3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy"],
+        "hashes": ["b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9"]
+      },
+      "expected_pii": {
+        "phone": ["+1-555-0199"]
+      },
+      "category": "phishing"
+    }
+  ],
+  "error_handling": [
+    {
+      "id": "error_001",
+      "name": "Invalid IOCs",
+      "prompt": "Invalid hash: ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ, Invalid IP: 300.400.500.600, Invalid domain: .....invalid.....domain.....",
+      "expected_behavior": "graceful_error_handling",
+      "category": "error_test"
+    },
+    {
+      "id": "error_002",
+      "name": "Mixed Valid/Invalid Data",
+      "prompt": "Valid IP 8.8.8.8 and invalid IP 999.999.999.999 with valid hash d41d8cd98f00b204e9800998ecf8427e and invalid hash INVALID_HASH_FORMAT",
+      "expected_iocs": {
+        "ips": ["8.8.8.8"],
+        "hashes": ["d41d8cd98f00b204e9800998ecf8427e"]
+      },
+      "expected_behavior": "partial_extraction",
+      "category": "error_test"
+    },
+    {
+      "id": "error_003",
+      "name": "Rate Limiting Test",
+      "prompt": "192.168.1.1 192.168.1.2 192.168.1.3 192.168.1.4 192.168.1.5 192.168.1.6 192.168.1.7 192.168.1.8 192.168.1.9 192.168.1.10",
+      "expected_iocs": {
+        "ips": ["192.168.1.1", "192.168.1.2", "192.168.1.3", "192.168.1.4", "192.168.1.5", "192.168.1.6", "192.168.1.7", "192.168.1.8", "192.168.1.9", "192.168.1.10"]
+      },
+      "expected_behavior": "rate_limit_handling",
+      "category": "stress_test"
+    }
+  ]
+}

@@ -120,9 +120,15 @@ class VisionAgent:
                 "raw_ocr_data": ocr_data,
             }
 
-            # Store in memory if available
+            # Store in memory if available (using generic set method)
             if self.memory:
-                await self.memory.store_ocr_result(result)
+                try:
+                    # Store OCR result with 5 minute TTL
+                    import hashlib
+                    result_hash = hashlib.md5(full_text.encode()).hexdigest()[:8]
+                    await self.memory.set(f"ocr:{result_hash}", result, ttl=300)
+                except Exception as e:
+                    logger.debug(f"Failed to store OCR result in memory: {e}")
 
             return result
 
@@ -161,9 +167,16 @@ class VisionAgent:
                 "confidence": max([r["score"] for r in results]) if results else 0,
             }
 
-            # Store in memory if available
+            # Store in memory if available (using generic set method)
             if self.memory:
-                await self.memory.store_image_classification(classification_result)
+                try:
+                    # Store classification result with 5 minute TTL
+                    import hashlib
+                    import time
+                    result_hash = hashlib.md5(str(time.time()).encode()).hexdigest()[:8]
+                    await self.memory.set(f"classification:{result_hash}", classification_result, ttl=300)
+                except Exception as e:
+                    logger.debug(f"Failed to store classification result in memory: {e}")
 
             return classification_result
 

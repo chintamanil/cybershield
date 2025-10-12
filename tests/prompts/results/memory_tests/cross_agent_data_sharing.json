@@ -1,0 +1,362 @@
+{
+  "timestamp": "2025-10-12T10:22:05.548753",
+  "test_name": "cross_agent_data_sharing",
+  "session_id": "00da04ef-c801-4972-a6b6-b22331d89187",
+  "requests_chain": [
+    {
+      "description": "Step 1 - PII detection (should trigger PII agent)",
+      "request": {
+        "text": "User john.doe@company.com (SSN: 123-45-6789) accessed system from 10.0.0.15",
+        "session_id": "00da04ef-c801-4972-a6b6-b22331d89187"
+      },
+      "response": {
+        "status": "success",
+        "result": {
+          "input_analysis": {
+            "original_text": "User john.doe@company.com (SSN: 123-45-6789) accessed system from 10.0.0.15",
+            "text_length": 75,
+            "has_image": false,
+            "processing_iterations": 1
+          },
+          "ioc_analysis": {
+            "ioc_count": 3,
+            "total_ioc_count": 3,
+            "extracted_iocs": {
+              "ips": [
+                "10.0.0.15"
+              ],
+              "domains": [
+                "john.doe",
+                "company.com"
+              ],
+              "hashes": []
+            }
+          },
+          "threat_analysis": {
+            "threats": [
+              {
+                "indicator": "10.0.0.15",
+                "type": "ip",
+                "risk_level": "low",
+                "source": "AbuseIPDB",
+                "details": {
+                  "ip_address": "10.0.0.15",
+                  "is_public": false,
+                  "ip_version": 4,
+                  "is_whitelisted": false,
+                  "abuse_confidence": 0,
+                  "country_code": null,
+                  "country_name": null,
+                  "usage_type": "Reserved",
+                  "isp": null,
+                  "domain": null,
+                  "total_reports": 0,
+                  "num_distinct_users": 0,
+                  "last_reported_at": "2025-05-01T00:34:17+00:00",
+                  "raw_response": {
+                    "data": {
+                      "ipAddress": "10.0.0.15",
+                      "isPublic": false,
+                      "ipVersion": 4,
+                      "isWhitelisted": false,
+                      "abuseConfidenceScore": 0,
+                      "countryCode": null,
+                      "usageType": "Reserved",
+                      "isp": null,
+                      "domain": null,
+                      "hostnames": [],
+                      "isTor": false,
+                      "countryName": null,
+                      "totalReports": 0,
+                      "numDistinctUsers": 0,
+                      "lastReportedAt": "2025-05-01T00:34:17+00:00",
+                      "reports": []
+                    }
+                  }
+                }
+              },
+              {
+                "indicator": "10.0.0.15",
+                "type": "ip",
+                "risk_level": "low",
+                "source": "Shodan",
+                "details": {
+                  "error": "403, message='Forbidden', url='https://api.shodan.io/shodan/host/10.0.0.15?key=3D342uViZy3b3YLfwE2k5EEjRIDWoK5e'"
+                }
+              }
+            ],
+            "high_risk_count": 0,
+            "medium_risk_count": 0,
+            "low_risk_count": 2,
+            "total_analyzed": 2
+          },
+          "tool_analysis": {
+            "detailed_results": {
+              "AbuseIPDB": [
+                {
+                  "type": "ip",
+                  "value": "10.0.0.15",
+                  "result": {
+                    "ip_address": "10.0.0.15",
+                    "is_public": false,
+                    "ip_version": 4,
+                    "is_whitelisted": false,
+                    "abuse_confidence": 0,
+                    "country_code": null,
+                    "country_name": null,
+                    "usage_type": "Reserved",
+                    "isp": null,
+                    "domain": null,
+                    "total_reports": 0,
+                    "num_distinct_users": 0,
+                    "last_reported_at": "2025-05-01T00:34:17+00:00",
+                    "raw_response": {
+                      "data": {
+                        "ipAddress": "10.0.0.15",
+                        "isPublic": false,
+                        "ipVersion": 4,
+                        "isWhitelisted": false,
+                        "abuseConfidenceScore": 0,
+                        "countryCode": null,
+                        "usageType": "Reserved",
+                        "isp": null,
+                        "domain": null,
+                        "hostnames": [],
+                        "isTor": false,
+                        "countryName": null,
+                        "totalReports": 0,
+                        "numDistinctUsers": 0,
+                        "lastReportedAt": "2025-05-01T00:34:17+00:00",
+                        "reports": []
+                      }
+                    }
+                  }
+                }
+              ],
+              "Shodan": [
+                {
+                  "type": "ip",
+                  "value": "10.0.0.15",
+                  "result": {
+                    "error": "403, message='Forbidden', url='https://api.shodan.io/shodan/host/10.0.0.15?key=3D342uViZy3b3YLfwE2k5EEjRIDWoK5e'"
+                  }
+                }
+              ]
+            },
+            "execution_metrics": {
+              "tools_count": 2,
+              "success_rate": 1.0,
+              "concurrent": true,
+              "performance_gain": "Optimized concurrent execution with caching",
+              "execution_time": 0
+            }
+          },
+          "vector_analysis": {
+            "status": "no_vector_search",
+            "note": "No vector database search performed"
+          },
+          "recommendations": [
+            "\ud83d\udccb 3 potential security indicators identified - monitor closely",
+            "\u26a1 Analysis completed with caching optimization - 60-80% API cost reduction achieved"
+          ],
+          "processing_summary": {
+            "iterations": 1,
+            "tools_used": [
+              "AbuseIPDB",
+              "Shodan"
+            ],
+            "processing_method": "react_workflow_cached",
+            "cached_operations": [
+              "routing",
+              "tool_selection",
+              "tool_results"
+            ],
+            "execution_time_seconds": 0,
+            "performance_gain": "60-80% API cost reduction with caching"
+          },
+          "processing_method": "react_workflow",
+          "device_optimization": {
+            "device": "mps",
+            "memory_optimization": true,
+            "batch_size": 32
+          },
+          "pii_analysis": {
+            "pii_detected": false,
+            "note": "PII analysis not yet integrated with ReAct workflow"
+          },
+          "supervisor_version": "2.0"
+        },
+        "processing_time": 1.8772199153900146
+      },
+      "response_time": 1.8791570663452148,
+      "status": "success"
+    },
+    {
+      "description": "Step 2 - Threat analysis referencing previous user",
+      "request": {
+        "text": "The user from before is now accessing sensitive files",
+        "session_id": "00da04ef-c801-4972-a6b6-b22331d89187"
+      },
+      "response": {
+        "status": "success",
+        "result": {
+          "input_analysis": {
+            "original_text": "The user from before is now accessing sensitive files",
+            "text_length": 53,
+            "has_image": false,
+            "processing_iterations": 1
+          },
+          "ioc_analysis": {
+            "ioc_count": 0,
+            "total_ioc_count": 0,
+            "extracted_iocs": {}
+          },
+          "threat_analysis": {
+            "threats": [],
+            "high_risk_count": 0,
+            "medium_risk_count": 0,
+            "low_risk_count": 0,
+            "total_analyzed": 0
+          },
+          "tool_analysis": {
+            "detailed_results": {},
+            "execution_metrics": {
+              "tools_count": 0,
+              "success_rate": 0.0,
+              "concurrent": true,
+              "performance_gain": "Optimized concurrent execution with caching",
+              "execution_time": 0
+            }
+          },
+          "vector_analysis": {
+            "status": "no_vector_search",
+            "note": "No vector database search performed"
+          },
+          "recommendations": [
+            "\u26a1 Analysis completed with caching optimization - 60-80% API cost reduction achieved",
+            "\u2705 No immediate security threats detected in current analysis"
+          ],
+          "processing_summary": {
+            "iterations": 1,
+            "tools_used": [],
+            "processing_method": "react_workflow_cached",
+            "cached_operations": [
+              "routing",
+              "tool_selection",
+              "tool_results"
+            ],
+            "execution_time_seconds": 0,
+            "performance_gain": "60-80% API cost reduction with caching"
+          },
+          "processing_method": "react_workflow",
+          "device_optimization": {
+            "device": "mps",
+            "memory_optimization": true,
+            "batch_size": 32
+          },
+          "pii_analysis": {
+            "pii_detected": false,
+            "note": "PII analysis not yet integrated with ReAct workflow"
+          },
+          "supervisor_version": "2.0"
+        },
+        "processing_time": 0.5891458988189697
+      },
+      "response_time": 0.5959999561309814,
+      "status": "success"
+    },
+    {
+      "description": "Step 3 - Query about PII from first request",
+      "request": {
+        "text": "Was any PII detected for the user we've been tracking?",
+        "session_id": "00da04ef-c801-4972-a6b6-b22331d89187"
+      },
+      "response": {
+        "status": "success",
+        "result": {
+          "input_analysis": {
+            "original_text": "Was any PII detected for the user we've been tracking?",
+            "text_length": 54,
+            "has_image": false,
+            "processing_iterations": 1
+          },
+          "ioc_analysis": {
+            "ioc_count": 0,
+            "total_ioc_count": 0,
+            "extracted_iocs": {}
+          },
+          "threat_analysis": {
+            "threats": [],
+            "high_risk_count": 0,
+            "medium_risk_count": 0,
+            "low_risk_count": 0,
+            "total_analyzed": 0
+          },
+          "tool_analysis": {
+            "detailed_results": {},
+            "execution_metrics": {
+              "tools_count": 0,
+              "success_rate": 0.0,
+              "concurrent": true,
+              "performance_gain": "Optimized concurrent execution with caching",
+              "execution_time": 0
+            }
+          },
+          "vector_analysis": {
+            "status": "no_vector_search",
+            "note": "No vector database search performed"
+          },
+          "recommendations": [
+            "\u26a1 Analysis completed with caching optimization - 60-80% API cost reduction achieved",
+            "\u2705 No immediate security threats detected in current analysis"
+          ],
+          "processing_summary": {
+            "iterations": 1,
+            "tools_used": [],
+            "processing_method": "react_workflow_cached",
+            "cached_operations": [
+              "routing",
+              "tool_selection",
+              "tool_results"
+            ],
+            "execution_time_seconds": 0,
+            "performance_gain": "60-80% API cost reduction with caching"
+          },
+          "processing_method": "react_workflow",
+          "device_optimization": {
+            "device": "mps",
+            "memory_optimization": true,
+            "batch_size": 32
+          },
+          "pii_analysis": {
+            "pii_detected": false,
+            "note": "PII analysis not yet integrated with ReAct workflow"
+          },
+          "supervisor_version": "2.0"
+        },
+        "processing_time": 0.5414929389953613
+      },
+      "response_time": 0.5488479137420654,
+      "status": "success"
+    }
+  ],
+  "analysis": {
+    "total_requests": 3,
+    "successful_requests": 3,
+    "context_indicators": [
+      {
+        "request_number": 2,
+        "references_previous": true,
+        "maintains_context": true,
+        "response_length": 1371
+      },
+      {
+        "request_number": 3,
+        "references_previous": false,
+        "maintains_context": true,
+        "response_length": 1372
+      }
+    ],
+    "context_preservation_score": 0.5
+  }
+}

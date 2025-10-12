@@ -1,0 +1,36 @@
+{
+  "timestamp": "2025-10-12T09:31:17.035446",
+  "category": "Tools",
+  "test_name": "Regex IOC Extraction",
+  "metadata": {
+    "test_text": "Suspicious IP 203.0.113.42 with hash d41d8cd98f00b204e9800998ecf8427e",
+    "endpoint": "/tools/regex/extract"
+  },
+  "api_response": {
+    "ipv4": [
+      "203.0.113.42"
+    ],
+    "md5": [
+      "d41d8cd98f00b204e9800998ecf8427e"
+    ],
+    "port": [
+      "203",
+      "0",
+      "113",
+      "42"
+    ],
+    "base64": [
+      "d41d8cd98f00b204e9800998ecf8427e"
+    ],
+    "hex": [
+      "d41d8cd98f00b204e9800998ecf8427e"
+    ],
+    "mutex": [
+      "Suspicious",
+      "d41d8cd98f00b204e9800998ecf8427e"
+    ],
+    "private_ipv4": [
+      "203.0.113.42"
+    ]
+  }
+}

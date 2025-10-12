@@ -1,0 +1,177 @@
+{
+  "timestamp": "2025-10-12T09:30:50.269200",
+  "category": "Error Handling",
+  "test_name": "Invalid IOCs",
+  "metadata": {
+    "prompt": "Invalid hash: ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ, Invalid IP: 300.400.500.600, Invalid domain: .....invalid.....domain.....",
+    "expected_iocs": {},
+    "expected_pii": {},
+    "response_time": 1.597989797592163,
+    "status_code": 200
+  },
+  "api_response": {
+    "status": "success",
+    "result": {
+      "input_analysis": {
+        "original_text": "Invalid hash: ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ, Invalid IP: 300.400.500.600, Invalid domain: .....invalid.....domain.....",
+        "text_length": 121,
+        "has_image": false,
+        "processing_iterations": 1
+      },
+      "ioc_analysis": {
+        "ioc_count": 6,
+        "total_ioc_count": 6,
+        "extracted_iocs": {
+          "ipv4": [],
+          "port": [
+            "300",
+            "400",
+            "500",
+            "600"
+          ],
+          "base64": [
+            "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ"
+          ],
+          "mutex": [
+            "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ"
+          ]
+        }
+      },
+      "threat_analysis": {
+        "threats": [
+          {
+            "indicator": "300.400.500.600",
+            "type": "ip",
+            "risk_level": "low",
+            "source": "VirusTotal",
+            "details": {
+              "error": "Invalid IP address format"
+            }
+          },
+          {
+            "indicator": "invalid.....domain",
+            "type": "domain",
+            "risk_level": "low",
+            "source": "VirusTotal",
+            "details": {
+              "error": "API error 400: {\"error\": {\"code\": \"InvalidArgumentError\", \"message\": \"Domain \\\"b'invalid.....domain'\\\" is not a valid domain pattern\"}}"
+            }
+          },
+          {
+            "indicator": "300.400.500.600",
+            "type": "ip",
+            "risk_level": "low",
+            "source": "AbuseIPDB",
+            "details": {
+              "error": "Invalid IP address format"
+            }
+          }
+        ],
+        "high_risk_count": 0,
+        "medium_risk_count": 0,
+        "low_risk_count": 3,
+        "total_analyzed": 3
+      },
+      "tool_analysis": {
+        "detailed_results": {
+          "VirusTotal": [
+            {
+              "type": "ip",
+              "value": "300.400.500.600",
+              "result": {
+                "error": "Invalid IP address format"
+              }
+            },
+            {
+              "type": "domain",
+              "value": "invalid.....domain",
+              "result": {
+                "error": "API error 400: {\"error\": {\"code\": \"InvalidArgumentError\", \"message\": \"Domain \\\"b'invalid.....domain'\\\" is not a valid domain pattern\"}}"
+              }
+            }
+          ],
+          "AbuseIPDB": [
+            {
+              "type": "ip",
+              "value": "300.400.500.600",
+              "result": {
+                "error": "Invalid IP address format"
+              }
+            }
+          ],
+          "RegexChecker": {
+            "extracted_iocs": {
+              "ipv4": [],
+              "port": [
+                "300",
+                "400",
+                "500",
+                "600"
+              ],
+              "base64": [
+                "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ"
+              ],
+              "mutex": [
+                "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ"
+              ]
+            },
+            "validations": [],
+            "summary": {
+              "total_iocs": 6,
+              "ioc_types_found": [
+                "ipv4",
+                "port",
+                "base64",
+                "mutex"
+              ],
+              "validations_performed": 0
+            }
+          }
+        },
+        "execution_metrics": {
+          "tools_count": 3,
+          "success_rate": 1.0,
+          "concurrent": true,
+          "performance_gain": "Optimized concurrent execution with caching",
+          "execution_time": 0
+        }
+      },
+      "vector_analysis": {
+        "status": "no_vector_search",
+        "note": "No vector database search performed"
+      },
+      "recommendations": [
+        "\ud83d\udd0d 6 indicators of compromise found - perform comprehensive security review",
+        "\u26a1 Analysis completed with caching optimization - 60-80% API cost reduction achieved"
+      ],
+      "processing_summary": {
+        "iterations": 1,
+        "tools_used": [
+          "VirusTotal",
+          "AbuseIPDB",
+          "RegexChecker"
+        ],
+        "processing_method": "react_workflow_cached",
+        "cached_operations": [
+          "routing",
+          "tool_selection",
+          "tool_results"
+        ],
+        "execution_time_seconds": 0,
+        "performance_gain": "60-80% API cost reduction with caching"
+      },
+      "processing_method": "react_workflow",
+      "device_optimization": {
+        "device": "mps",
+        "memory_optimization": true,
+        "batch_size": 32
+      },
+      "pii_analysis": {
+        "pii_detected": false,
+        "note": "PII analysis not yet integrated with ReAct workflow"
+      },
+      "supervisor_version": "2.0"
+    },
+    "processing_time": 1.5953311920166016
+  }
+}

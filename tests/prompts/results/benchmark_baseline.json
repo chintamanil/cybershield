@@ -1,0 +1,80 @@
+{
+  "timestamp": "2025-10-12T09:11:29.869939",
+  "results": [
+    {
+      "prompt": "Test IP 8.8.8.8 with hash d41d8cd98f00b204e9800998ecf8427e",
+      "success": true,
+      "iterations": 3,
+      "success_count": 3,
+      "first_request_time": 2.0476181507110596,
+      "times": [
+        2.0476181507110596,
+        2.051225185394287,
+        1.8846759796142578
+      ],
+      "avg_cached_time": 1.9679505825042725,
+      "min_cached_time": 1.8846759796142578,
+      "cache_speedup_percent": 3.890743407364386
+    },
+    {
+      "prompt": "Failed login from 203.0.113.42 for user admin",
+      "success": true,
+      "iterations": 3,
+      "success_count": 3,
+      "first_request_time": 1.4668240547180176,
+      "times": [
+        1.4668240547180176,
+        1.6251018047332764,
+        1.5323951244354248
+      ],
+      "avg_cached_time": 1.5787484645843506,
+      "min_cached_time": 1.5323951244354248,
+      "cache_speedup_percent": -7.630390946094033
+    },
+    {
+      "prompt": "Firewall blocked 185.220.101.42:443",
+      "success": true,
+      "iterations": 3,
+      "success_count": 3,
+      "first_request_time": 2.083076000213623,
+      "times": [
+        2.083076000213623,
+        1.9782357215881348,
+        1.8333148956298828
+      ],
+      "avg_cached_time": 1.9057753086090088,
+      "min_cached_time": 1.8333148956298828,
+      "cache_speedup_percent": 8.511484534718452
+    },
+    {
+      "prompt": "User John Doe (SSN: 123-45-6789) accessed system",
+      "success": true,
+      "iterations": 3,
+      "success_count": 3,
+      "first_request_time": 0.6012709140777588,
+      "times": [
+        0.6012709140777588,
+        0.519495964050293,
+        0.46042680740356445
+      ],
+      "avg_cached_time": 0.4899613857269287,
+      "min_cached_time": 0.46042680740356445,
+      "cache_speedup_percent": 18.51237532777697
+    },
+    {
+      "prompt": "Malware hash: a665a45920422f9d417e4867efdc4fb8",
+      "success": true,
+      "iterations": 3,
+      "success_count": 3,
+      "first_request_time": 1.4913969039916992,
+      "times": [
+        1.4913969039916992,
+        1.6653401851654053,
+        1.5151050090789795
+      ],
+      "avg_cached_time": 1.5902225971221924,
+      "min_cached_time": 1.5151050090789795,
+      "cache_speedup_percent": -6.6263844900031525
+    }
+  ]
+}

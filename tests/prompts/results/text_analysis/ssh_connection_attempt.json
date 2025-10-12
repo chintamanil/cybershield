@@ -1,0 +1,640 @@
+{
+  "timestamp": "2025-10-12T09:30:36.010148",
+  "category": "Basic Security",
+  "test_name": "SSH Connection Attempt",
+  "metadata": {
+    "prompt": "192.168.1.100 attempted SSH connection from suspicious IP 203.0.113.42",
+    "expected_iocs": {
+      "ips": [
+        "192.168.1.100",
+        "203.0.113.42"
+      ]
+    },
+    "expected_pii": {},
+    "response_time": 1.545273780822754,
+    "status_code": 200
+  },
+  "api_response": {
+    "status": "success",
+    "result": {
+      "input_analysis": {
+        "original_text": "192.168.1.100 attempted SSH connection from suspicious IP 203.0.113.42",
+        "text_length": 70,
+        "has_image": false,
+        "processing_iterations": 1
+      },
+      "ioc_analysis": {
+        "ioc_count": 2,
+        "total_ioc_count": 2,
+        "extracted_iocs": {
+          "ips": [
+            "203.0.113.42",
+            "192.168.1.100"
+          ],
+          "domains": [],
+          "hashes": []
+        }
+      },
+      "threat_analysis": {
+        "threats": [
+          {
+            "indicator": "203.0.113.42",
+            "type": "ip",
+            "risk_level": "low",
+            "source": "AbuseIPDB",
+            "details": {
+              "ip_address": "203.0.113.42",
+              "is_public": false,
+              "ip_version": 4,
+              "is_whitelisted": true,
+              "abuse_confidence": 0,
+              "country_code": null,
+              "country_name": null,
+              "usage_type": "Reserved",
+              "isp": null,
+              "domain": null,
+              "total_reports": 5,
+              "num_distinct_users": 2,
+              "last_reported_at": "2025-10-10T17:14:42+00:00",
+              "raw_response": {
+                "data": {
+                  "ipAddress": "203.0.113.42",
+                  "isPublic": false,
+                  "ipVersion": 4,
+                  "isWhitelisted": true,
+                  "abuseConfidenceScore": 0,
+                  "countryCode": null,
+                  "usageType": "Reserved",
+                  "isp": null,
+                  "domain": null,
+                  "hostnames": [],
+                  "isTor": false,
+                  "countryName": null,
+                  "totalReports": 5,
+                  "numDistinctUsers": 2,
+                  "lastReportedAt": "2025-10-10T17:14:42+00:00",
+                  "reports": [
+                    {
+                      "reportedAt": "2025-10-10T17:14:42+00:00",
+                      "comment": "High priority: Open proxy detected on common proxy ports (8080/3128). Immediate mitigation recommended. Add authentication or firewall rule. Row=126; Timestamp=2025-10-10T12:00:00+03:00",
+                      "categories": [
+                        18,
+                        22
+                      ],
+                      "reporterId": 198442,
+                      "reporterCountryCode": "BG",
+                      "reporterCountryName": "Bulgaria"
+                    },
+                    {
+                      "reportedAt": "2025-09-06T01:00:39+00:00",
+                      "comment": "SSH Brute Force Attack from 203.0.113.42\n\nThreat Details:\n- Type: SSH Brute Force Attack\n- Target Service: sshd\n- Target Server: matomo.goline.ch\n- Detection Time: 2025-09-06 03:00:39\n- Source Country: IP Address not found\n- Source ISP: IANA\n- Reverse DNS: \n\nDescription: Automated SSH login attempts detected from this IP address\n\nThis IP has been automatically blocked by our security monitoring system after triggering multiple security rules. The reported activity indicates malicious intent and poses a threat to network security.\n\nReported by: GOLINE SA Security Operations Center",
+                      "categories": [
+                        18,
+                        22
+                      ],
+                      "reporterId": 156039,
+                      "reporterCountryCode": "CH",
+                      "reporterCountryName": "Switzerland"
+                    },
+                    {
+                      "reportedAt": "2025-09-04T01:12:24+00:00",
+                      "comment": "[GOLINE SOC Security Alert] SSH Brute Force Attack from 203.0.113.42\n\nThreat Details:\n- Type: SSH Brute Force Attack\n- Target Service: sshd\n- Target Server: filecloud.goline.ch\n- Detection Time: 2025-09-04 03:12:23\n- Source Country: IP Address not found\n- Source ISP: IANA\n- Reverse DNS: \n\nDescription: Automated SSH login attempts detected from this IP address\n\nThis IP has been automatically blocked by our security monitoring system after triggering multiple security rules. The reported activity indicates malicious intent and poses a threat to network security.\n\nReported by: GOLINE SA Security Operations Center",
+                      "categories": [
+                        18,
+                        22
+                      ],
+                      "reporterId": 156039,
+                      "reporterCountryCode": "CH",
+                      "reporterCountryName": "Switzerland"
+                    },
+                    {
+                      "reportedAt": "2025-09-03T23:31:31+00:00",
+                      "comment": "[GOLINE SOC Security Alert] SSH Brute Force Attack from 203.0.113.42\n\nThreat Details:\n- Type: SSH Brute Force Attack\n- Target Service: sshd\n- Target Server: filecloud.goline.ch\n- Detection Time: 2025-09-04 01:31:30\n- Source Country: IP Address not found\n- Source ISP: IANA\n- Reverse DNS: \n\nDescription: Automated SSH login attempts detected from this IP address\n\nThis IP has been automatically blocked by our security monitoring system after triggering multiple security rules. The reported activity indicates malicious intent and poses a threat to network security.\n\nReported by: GOLINE SA Security Operations Center",
+                      "categories": [
+                        18,
+                        22
+                      ],
+                      "reporterId": 156039,
+                      "reporterCountryCode": "CH",
+                      "reporterCountryName": "Switzerland"
+                    },
+                    {
+                      "reportedAt": "2025-09-03T21:50:07+00:00",
+                      "comment": "Fail2ban sshd on filecloud.goline.ch - Multiple failed authentication attempts",
+                      "categories": [
+                        18,
+                        22
+                      ],
+                      "reporterId": 156039,
+                      "reporterCountryCode": "CH",
+                      "reporterCountryName": "Switzerland"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "indicator": "192.168.1.100",
+            "type": "ip",
+            "risk_level": "low",
+            "source": "AbuseIPDB",
+            "details": {
+              "ip_address": "192.168.1.100",
+              "is_public": false,
+              "ip_version": 4,
+              "is_whitelisted": false,
+              "abuse_confidence": 0,
+              "country_code": null,
+              "country_name": null,
+              "usage_type": "Reserved",
+              "isp": null,
+              "domain": null,
+              "total_reports": 11,
+              "num_distinct_users": 10,
+              "last_reported_at": "2025-10-06T11:45:13+00:00",
+              "raw_response": {
+                "data": {
+                  "ipAddress": "192.168.1.100",
+                  "isPublic": false,
+                  "ipVersion": 4,
+                  "isWhitelisted": false,
+                  "abuseConfidenceScore": 0,
+                  "countryCode": null,
+                  "usageType": "Reserved",
+                  "isp": null,
+                  "domain": null,
+                  "hostnames": [],
+                  "isTor": false,
+                  "countryName": null,
+                  "totalReports": 11,
+                  "numDistinctUsers": 10,
+                  "lastReportedAt": "2025-10-06T11:45:13+00:00",
+                  "reports": [
+                    {
+                      "reportedAt": "2025-10-02T19:57:27+00:00",
+                      "comment": "Repeated 404 errors from 192.168.1.100",
+                      "categories": [
+                        21
+                      ],
+                      "reporterId": 206361,
+                      "reporterCountryCode": "RU",
+                      "reporterCountryName": "Russian Federation"
+                    },
+                    {
+                      "reportedAt": "2025-09-21T21:12:44+00:00",
+                      "comment": "2025-09-21T09:15:43.090040+0300\nET POLICY Reserved Internal IP Traffic",
+                      "categories": [
+                        14
+                      ],
+                      "reporterId": 36449,
+                      "reporterCountryCode": "BY",
+                      "reporterCountryName": "Belarus"
+                    },
+                    {
+                      "reportedAt": "2025-09-21T09:30:41+00:00",
+                      "comment": "2025-09-21 06:54:00 UTC Unauthorized activity to TCP port 23. Telnet",
+                      "categories": [
+                        14
+                      ],
+                      "reporterId": 56992,
+                      "reporterCountryCode": "US",
+                      "reporterCountryName": "United States of America"
+                    },
+                    {
+                      "reportedAt": "2025-09-21T07:45:17+00:00",
+                      "comment": "Sep 21 10:06:55 server UFW BLOCK SRC=192.168.1.100 PROTO=TCP SPT=20879 DPT=23",
+                      "categories": [
+                        14
+                      ],
+                      "reporterId": 75354,
+                      "reporterCountryCode": "RO",
+                      "reporterCountryName": "Romania"
+                    },
+                    {
+                      "reportedAt": "2025-09-18T20:42:46+00:00",
+                      "comment": "SSH Login Attemp Blocked",
+                      "categories": [
+                        18,
+                        22
+                      ],
+                      "reporterId": 107900,
+                      "reporterCountryCode": "AD",
+                      "reporterCountryName": "Andorra"
+                    },
+                    {
+                      "reportedAt": "2025-09-17T17:10:27+00:00",
+                      "comment": "SSH Brute Force Attack from 192.168.1.100\n\nThreat Details:\n- Type: SSH Brute Force Attack\n- Target Service: sshd\n- Target Server: matomo.goline.ch\n- Detection Time: 2025-09-17 19:10:27\n- Source Country: IP Address not found\n- Source ISP: Internet Assigned Numbers Authority\n- Reverse DNS: \n\nDescription: Automated SSH login attempts detected from this IP address",
+                      "categories": [
+                        18,
+                        22
+                      ],
+                      "reporterId": 156039,
+                      "reporterCountryCode": "CH",
+                      "reporterCountryName": "Switzerland"
+                    },
+                    {
+                      "reportedAt": "2025-09-11T11:02:44+00:00",
+                      "comment": "Reported for SSH Brute Force Attack, Port Scanning, and Unauthorized Access Attempt.",
+                      "categories": [
+                        14,
+                        18,
+                        22
+                      ],
+                      "reporterId": 195062,
+                      "reporterCountryCode": "IN",
+                      "reporterCountryName": "India"
+                    },
+                    {
+                      "reportedAt": "2025-09-11T11:02:43+00:00",
+                      "comment": "Reported for SSH Brute Force Attack, Port Scanning, and Unauthorized Access Attempt.",
+                      "categories": [
+                        14,
+                        18,
+                        22
+                      ],
+                      "reporterId": 152852,
+                      "reporterCountryCode": "IN",
+                      "reporterCountryName": "India"
+                    },
+                    {
+                      "reportedAt": "2025-09-06T00:57:40+00:00",
+                      "comment": "[GOLINE SOC Security Alert] SSH Brute Force Attack from 192.168.1.100\n\nThreat Details:\n- Type: SSH Brute Force Attack\n- Target Service: sshd-test\n- Target Server: matomo.goline.ch\n- Detection Time: 2025-09-06 02:57:39\n- Source Country: IP Address not found\n- Source ISP: Internet Assigned Numbers Authority\n- Reverse DNS: \n\nDescription: Automated SSH login attempts detected from this IP address\n\nThis IP has been automatically blocked by our security monitoring system after triggering multiple security rules. The reported activity indicates malicious intent and poses a threat to network security.\n\nReported by: GOLINE SA Security Operations Center",
+                      "categories": [
+                        18,
+                        22
+                      ],
+                      "reporterId": 156039,
+                      "reporterCountryCode": "CH",
+                      "reporterCountryName": "Switzerland"
+                    },
+                    {
+                      "reportedAt": "2025-09-04T06:08:34+00:00",
+                      "comment": "Port 5355 scanned.",
+                      "categories": [
+                        14
+                      ],
+                      "reporterId": 85114,
+                      "reporterCountryCode": "FR",
+                      "reporterCountryName": "France"
+                    },
+                    {
+                      "reportedAt": "2025-09-03T15:13:21+00:00",
+                      "comment": "unauthorized attempt to access mail server-from fail2ban\n...",
+                      "categories": [
+                        14,
+                        18
+                      ],
+                      "reporterId": 50845,
+                      "reporterCountryCode": "US",
+                      "reporterCountryName": "United States of America"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "indicator": "203.0.113.42",
+            "type": "ip",
+            "risk_level": "low",
+            "source": "Shodan",
+            "details": {
+              "error": "403, message='Forbidden', url='https://api.shodan.io/shodan/host/203.0.113.42?key=3D342uViZy3b3YLfwE2k5EEjRIDWoK5e'"
+            }
+          },
+          {
+            "indicator": "192.168.1.100",
+            "type": "ip",
+            "risk_level": "low",
+            "source": "Shodan",
+            "details": {
+              "error": "404, message='Not Found', url='https://api.shodan.io/shodan/host/192.168.1.100?key=3D342uViZy3b3YLfwE2k5EEjRIDWoK5e'"
+            }
+          }
+        ],
+        "high_risk_count": 0,
+        "medium_risk_count": 0,
+        "low_risk_count": 4,
+        "total_analyzed": 4
+      },
+      "tool_analysis": {
+        "detailed_results": {
+          "AbuseIPDB": [
+            {
+              "type": "ip",
+              "value": "203.0.113.42",
+              "result": {
+                "ip_address": "203.0.113.42",
+                "is_public": false,
+                "ip_version": 4,
+                "is_whitelisted": true,
+                "abuse_confidence": 0,
+                "country_code": null,
+                "country_name": null,
+                "usage_type": "Reserved",
+                "isp": null,
+                "domain": null,
+                "total_reports": 5,
+                "num_distinct_users": 2,
+                "last_reported_at": "2025-10-10T17:14:42+00:00",
+                "raw_response": {
+                  "data": {
+                    "ipAddress": "203.0.113.42",
+                    "isPublic": false,
+                    "ipVersion": 4,
+                    "isWhitelisted": true,
+                    "abuseConfidenceScore": 0,
+                    "countryCode": null,
+                    "usageType": "Reserved",
+                    "isp": null,
+                    "domain": null,
+                    "hostnames": [],
+                    "isTor": false,
+                    "countryName": null,
+                    "totalReports": 5,
+                    "numDistinctUsers": 2,
+                    "lastReportedAt": "2025-10-10T17:14:42+00:00",
+                    "reports": [
+                      {
+                        "reportedAt": "2025-10-10T17:14:42+00:00",
+                        "comment": "High priority: Open proxy detected on common proxy ports (8080/3128). Immediate mitigation recommended. Add authentication or firewall rule. Row=126; Timestamp=2025-10-10T12:00:00+03:00",
+                        "categories": [
+                          18,
+                          22
+                        ],
+                        "reporterId": 198442,
+                        "reporterCountryCode": "BG",
+                        "reporterCountryName": "Bulgaria"
+                      },
+                      {
+                        "reportedAt": "2025-09-06T01:00:39+00:00",
+                        "comment": "SSH Brute Force Attack from 203.0.113.42\n\nThreat Details:\n- Type: SSH Brute Force Attack\n- Target Service: sshd\n- Target Server: matomo.goline.ch\n- Detection Time: 2025-09-06 03:00:39\n- Source Country: IP Address not found\n- Source ISP: IANA\n- Reverse DNS: \n\nDescription: Automated SSH login attempts detected from this IP address\n\nThis IP has been automatically blocked by our security monitoring system after triggering multiple security rules. The reported activity indicates malicious intent and poses a threat to network security.\n\nReported by: GOLINE SA Security Operations Center",
+                        "categories": [
+                          18,
+                          22
+                        ],
+                        "reporterId": 156039,
+                        "reporterCountryCode": "CH",
+                        "reporterCountryName": "Switzerland"
+                      },
+                      {
+                        "reportedAt": "2025-09-04T01:12:24+00:00",
+                        "comment": "[GOLINE SOC Security Alert] SSH Brute Force Attack from 203.0.113.42\n\nThreat Details:\n- Type: SSH Brute Force Attack\n- Target Service: sshd\n- Target Server: filecloud.goline.ch\n- Detection Time: 2025-09-04 03:12:23\n- Source Country: IP Address not found\n- Source ISP: IANA\n- Reverse DNS: \n\nDescription: Automated SSH login attempts detected from this IP address\n\nThis IP has been automatically blocked by our security monitoring system after triggering multiple security rules. The reported activity indicates malicious intent and poses a threat to network security.\n\nReported by: GOLINE SA Security Operations Center",
+                        "categories": [
+                          18,
+                          22
+                        ],
+                        "reporterId": 156039,
+                        "reporterCountryCode": "CH",
+                        "reporterCountryName": "Switzerland"
+                      },
+                      {
+                        "reportedAt": "2025-09-03T23:31:31+00:00",
+                        "comment": "[GOLINE SOC Security Alert] SSH Brute Force Attack from 203.0.113.42\n\nThreat Details:\n- Type: SSH Brute Force Attack\n- Target Service: sshd\n- Target Server: filecloud.goline.ch\n- Detection Time: 2025-09-04 01:31:30\n- Source Country: IP Address not found\n- Source ISP: IANA\n- Reverse DNS: \n\nDescription: Automated SSH login attempts detected from this IP address\n\nThis IP has been automatically blocked by our security monitoring system after triggering multiple security rules. The reported activity indicates malicious intent and poses a threat to network security.\n\nReported by: GOLINE SA Security Operations Center",
+                        "categories": [
+                          18,
+                          22
+                        ],
+                        "reporterId": 156039,
+                        "reporterCountryCode": "CH",
+                        "reporterCountryName": "Switzerland"
+                      },
+                      {
+                        "reportedAt": "2025-09-03T21:50:07+00:00",
+                        "comment": "Fail2ban sshd on filecloud.goline.ch - Multiple failed authentication attempts",
+                        "categories": [
+                          18,
+                          22
+                        ],
+                        "reporterId": 156039,
+                        "reporterCountryCode": "CH",
+                        "reporterCountryName": "Switzerland"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "type": "ip",
+              "value": "192.168.1.100",
+              "result": {
+                "ip_address": "192.168.1.100",
+                "is_public": false,
+                "ip_version": 4,
+                "is_whitelisted": false,
+                "abuse_confidence": 0,
+                "country_code": null,
+                "country_name": null,
+                "usage_type": "Reserved",
+                "isp": null,
+                "domain": null,
+                "total_reports": 11,
+                "num_distinct_users": 10,
+                "last_reported_at": "2025-10-06T11:45:13+00:00",
+                "raw_response": {
+                  "data": {
+                    "ipAddress": "192.168.1.100",
+                    "isPublic": false,
+                    "ipVersion": 4,
+                    "isWhitelisted": false,
+                    "abuseConfidenceScore": 0,
+                    "countryCode": null,
+                    "usageType": "Reserved",
+                    "isp": null,
+                    "domain": null,
+                    "hostnames": [],
+                    "isTor": false,
+                    "countryName": null,
+                    "totalReports": 11,
+                    "numDistinctUsers": 10,
+                    "lastReportedAt": "2025-10-06T11:45:13+00:00",
+                    "reports": [
+                      {
+                        "reportedAt": "2025-10-02T19:57:27+00:00",
+                        "comment": "Repeated 404 errors from 192.168.1.100",
+                        "categories": [
+                          21
+                        ],
+                        "reporterId": 206361,
+                        "reporterCountryCode": "RU",
+                        "reporterCountryName": "Russian Federation"
+                      },
+                      {
+                        "reportedAt": "2025-09-21T21:12:44+00:00",
+                        "comment": "2025-09-21T09:15:43.090040+0300\nET POLICY Reserved Internal IP Traffic",
+                        "categories": [
+                          14
+                        ],
+                        "reporterId": 36449,
+                        "reporterCountryCode": "BY",
+                        "reporterCountryName": "Belarus"
+                      },
+                      {
+                        "reportedAt": "2025-09-21T09:30:41+00:00",
+                        "comment": "2025-09-21 06:54:00 UTC Unauthorized activity to TCP port 23. Telnet",
+                        "categories": [
+                          14
+                        ],
+                        "reporterId": 56992,
+                        "reporterCountryCode": "US",
+                        "reporterCountryName": "United States of America"
+                      },
+                      {
+                        "reportedAt": "2025-09-21T07:45:17+00:00",
+                        "comment": "Sep 21 10:06:55 server UFW BLOCK SRC=192.168.1.100 PROTO=TCP SPT=20879 DPT=23",
+                        "categories": [
+                          14
+                        ],
+                        "reporterId": 75354,
+                        "reporterCountryCode": "RO",
+                        "reporterCountryName": "Romania"
+                      },
+                      {
+                        "reportedAt": "2025-09-18T20:42:46+00:00",
+                        "comment": "SSH Login Attemp Blocked",
+                        "categories": [
+                          18,
+                          22
+                        ],
+                        "reporterId": 107900,
+                        "reporterCountryCode": "AD",
+                        "reporterCountryName": "Andorra"
+                      },
+                      {
+                        "reportedAt": "2025-09-17T17:10:27+00:00",
+                        "comment": "SSH Brute Force Attack from 192.168.1.100\n\nThreat Details:\n- Type: SSH Brute Force Attack\n- Target Service: sshd\n- Target Server: matomo.goline.ch\n- Detection Time: 2025-09-17 19:10:27\n- Source Country: IP Address not found\n- Source ISP: Internet Assigned Numbers Authority\n- Reverse DNS: \n\nDescription: Automated SSH login attempts detected from this IP address",
+                        "categories": [
+                          18,
+                          22
+                        ],
+                        "reporterId": 156039,
+                        "reporterCountryCode": "CH",
+                        "reporterCountryName": "Switzerland"
+                      },
+                      {
+                        "reportedAt": "2025-09-11T11:02:44+00:00",
+                        "comment": "Reported for SSH Brute Force Attack, Port Scanning, and Unauthorized Access Attempt.",
+                        "categories": [
+                          14,
+                          18,
+                          22
+                        ],
+                        "reporterId": 195062,
+                        "reporterCountryCode": "IN",
+                        "reporterCountryName": "India"
+                      },
+                      {
+                        "reportedAt": "2025-09-11T11:02:43+00:00",
+                        "comment": "Reported for SSH Brute Force Attack, Port Scanning, and Unauthorized Access Attempt.",
+                        "categories": [
+                          14,
+                          18,
+                          22
+                        ],
+                        "reporterId": 152852,
+                        "reporterCountryCode": "IN",
+                        "reporterCountryName": "India"
+                      },
+                      {
+                        "reportedAt": "2025-09-06T00:57:40+00:00",
+                        "comment": "[GOLINE SOC Security Alert] SSH Brute Force Attack from 192.168.1.100\n\nThreat Details:\n- Type: SSH Brute Force Attack\n- Target Service: sshd-test\n- Target Server: matomo.goline.ch\n- Detection Time: 2025-09-06 02:57:39\n- Source Country: IP Address not found\n- Source ISP: Internet Assigned Numbers Authority\n- Reverse DNS: \n\nDescription: Automated SSH login attempts detected from this IP address\n\nThis IP has been automatically blocked by our security monitoring system after triggering multiple security rules. The reported activity indicates malicious intent and poses a threat to network security.\n\nReported by: GOLINE SA Security Operations Center",
+                        "categories": [
+                          18,
+                          22
+                        ],
+                        "reporterId": 156039,
+                        "reporterCountryCode": "CH",
+                        "reporterCountryName": "Switzerland"
+                      },
+                      {
+                        "reportedAt": "2025-09-04T06:08:34+00:00",
+                        "comment": "Port 5355 scanned.",
+                        "categories": [
+                          14
+                        ],
+                        "reporterId": 85114,
+                        "reporterCountryCode": "FR",
+                        "reporterCountryName": "France"
+                      },
+                      {
+                        "reportedAt": "2025-09-03T15:13:21+00:00",
+                        "comment": "unauthorized attempt to access mail server-from fail2ban\n...",
+                        "categories": [
+                          14,
+                          18
+                        ],
+                        "reporterId": 50845,
+                        "reporterCountryCode": "US",
+                        "reporterCountryName": "United States of America"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          ],
+          "Shodan": [
+            {
+              "type": "ip",
+              "value": "203.0.113.42",
+              "result": {
+                "error": "403, message='Forbidden', url='https://api.shodan.io/shodan/host/203.0.113.42?key=3D342uViZy3b3YLfwE2k5EEjRIDWoK5e'"
+              }
+            },
+            {
+              "type": "ip",
+              "value": "192.168.1.100",
+              "result": {
+                "error": "404, message='Not Found', url='https://api.shodan.io/shodan/host/192.168.1.100?key=3D342uViZy3b3YLfwE2k5EEjRIDWoK5e'"
+              }
+            }
+          ]
+        },
+        "execution_metrics": {
+          "tools_count": 2,
+          "success_rate": 1.0,
+          "concurrent": true,
+          "performance_gain": "Optimized concurrent execution with caching",
+          "execution_time": 0
+        }
+      },
+      "vector_analysis": {
+        "status": "no_vector_search",
+        "note": "No vector database search performed"
+      },
+      "recommendations": [
+        "\ud83d\udccb 2 potential security indicators identified - monitor closely",
+        "\u26a1 Analysis completed with caching optimization - 60-80% API cost reduction achieved"
+      ],
+      "processing_summary": {
+        "iterations": 1,
+        "tools_used": [
+          "AbuseIPDB",
+          "Shodan"
+        ],
+        "processing_method": "react_workflow_cached",
+        "cached_operations": [
+          "routing",
+          "tool_selection",
+          "tool_results"
+        ],
+        "execution_time_seconds": 0,
+        "performance_gain": "60-80% API cost reduction with caching"
+      },
+      "processing_method": "react_workflow",
+      "device_optimization": {
+        "device": "mps",
+        "memory_optimization": true,
+        "batch_size": 32
+      },
+      "pii_analysis": {
+        "pii_detected": false,
+        "note": "PII analysis not yet integrated with ReAct workflow"
+      },
+      "supervisor_version": "2.0"
+    },
+    "processing_time": 1.5420300960540771
+  }
+}

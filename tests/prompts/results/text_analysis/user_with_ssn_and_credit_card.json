@@ -1,0 +1,90 @@
+{
+  "timestamp": "2025-10-12T09:30:38.984987",
+  "category": "PII Detection",
+  "test_name": "User with SSN and Credit Card",
+  "metadata": {
+    "prompt": "User John Doe (SSN: 123-45-6789) accessed system from john.doe@company.com using credit card 4532-1234-5678-9012",
+    "expected_iocs": {},
+    "expected_pii": {
+      "ssn": [
+        "123-45-6789"
+      ],
+      "email": [
+        "john.doe@company.com"
+      ],
+      "credit_card": [
+        "4532-1234-5678-9012"
+      ],
+      "name": [
+        "John Doe"
+      ]
+    },
+    "response_time": 2.972590923309326,
+    "status_code": 200
+  },
+  "api_response": {
+    "status": "success",
+    "result": {
+      "input_analysis": {
+        "original_text": "User John Doe (SSN: 123-45-6789) accessed system from john.doe@company.com using credit card 4532-1234-5678-9012",
+        "text_length": 112,
+        "has_image": false,
+        "processing_iterations": 1
+      },
+      "ioc_analysis": {
+        "ioc_count": 0,
+        "total_ioc_count": 0,
+        "extracted_iocs": {}
+      },
+      "threat_analysis": {
+        "threats": [],
+        "high_risk_count": 0,
+        "medium_risk_count": 0,
+        "low_risk_count": 0,
+        "total_analyzed": 0
+      },
+      "tool_analysis": {
+        "detailed_results": {},
+        "execution_metrics": {
+          "tools_count": 0,
+          "success_rate": 0.0,
+          "concurrent": true,
+          "performance_gain": "Optimized concurrent execution with caching",
+          "execution_time": 0
+        }
+      },
+      "vector_analysis": {
+        "status": "no_vector_search",
+        "note": "No vector database search performed"
+      },
+      "recommendations": [
+        "\u26a1 Analysis completed with caching optimization - 60-80% API cost reduction achieved",
+        "\u2705 No immediate security threats detected in current analysis"
+      ],
+      "processing_summary": {
+        "iterations": 1,
+        "tools_used": [],
+        "processing_method": "react_workflow_cached",
+        "cached_operations": [
+          "routing",
+          "tool_selection",
+          "tool_results"
+        ],
+        "execution_time_seconds": 0.0007700920104980469,
+        "performance_gain": "60-80% API cost reduction with caching"
+      },
+      "processing_method": "react_workflow",
+      "device_optimization": {
+        "device": "mps",
+        "memory_optimization": true,
+        "batch_size": 32
+      },
+      "pii_analysis": {
+        "pii_detected": false,
+        "note": "PII analysis not yet integrated with ReAct workflow"
+      },
+      "supervisor_version": "2.0"
+    },
+    "processing_time": 2.9696428775787354
+  }
+}

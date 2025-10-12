@@ -1,0 +1,22 @@
+{
+  "timestamp": "2025-10-12T09:31:17.037578",
+  "category": "Tools",
+  "test_name": "Regex Pattern Validation",
+  "metadata": {
+    "test_text": "8.8.8.8",
+    "pattern_type": "ip",
+    "endpoint": "/tools/regex/validate"
+  },
+  "api_response": {
+    "ip_address": "8.8.8.8",
+    "is_valid": true,
+    "version": 4,
+    "is_private": false,
+    "is_reserved": false,
+    "is_multicast": false,
+    "is_loopback": false,
+    "is_link_local": false,
+    "compressed": "8.8.8.8",
+    "exploded": "8.8.8.8"
+  }
+}

@@ -1,0 +1,2575 @@
+{
+  "timestamp": "2025-10-12T09:30:48.665897",
+  "category": "Advanced Threats",
+  "test_name": "Phishing Email with Bitcoin",
+  "metadata": {
+    "prompt": "Email from suspicious.sender@temp-mail.org containing bitcoin address 3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy and phone number +1-555-0199. Attachment hash: b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9",
+    "expected_iocs": {
+      "emails": [
+        "suspicious.sender@temp-mail.org"
+      ],
+      "bitcoin_addresses": [
+        "3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy"
+      ],
+      "hashes": [
+        "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9"
+      ]
+    },
+    "expected_pii": {
+      "phone": [
+        "+1-555-0199"
+      ]
+    },
+    "response_time": 1.649919033050537,
+    "status_code": 200
+  },
+  "api_response": {
+    "status": "success",
+    "result": {
+      "input_analysis": {
+        "original_text": "Email from suspicious.sender@temp-mail.org containing bitcoin address 3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy and phone number +1-555-0199. Attachment hash: b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9",
+        "text_length": 216,
+        "has_image": false,
+        "processing_iterations": 1
+      },
+      "ioc_analysis": {
+        "ioc_count": 16,
+        "total_ioc_count": 16,
+        "extracted_iocs": {
+          "domain": [
+            "suspicious.sender",
+            "temp-mail.org"
+          ],
+          "sha256": [
+            "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9"
+          ],
+          "email": [
+            "suspicious.sender@temp-mail.org"
+          ],
+          "port": [
+            "1",
+            "555",
+            "0199"
+          ],
+          "bitcoin_address": [
+            "3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy"
+          ],
+          "base64": [
+            "3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy",
+            "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9"
+          ],
+          "hex": [
+            "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9"
+          ],
+          "mutex": [
+            "suspicious",
+            "temp-mail",
+            "containing",
+            "1-555-0199",
+            "Attachment"
+          ]
+        }
+      },
+      "threat_analysis": {
+        "threats": [
+          {
+            "indicator": "suspicious.sender",
+            "type": "domain",
+            "risk_level": "low",
+            "source": "VirusTotal",
+            "details": {
+              "error": "API error 400: {\"error\": {\"code\": \"InvalidArgumentError\", \"message\": \"Domain \\\"b'suspicious.sender'\\\" is not a valid domain pattern\"}}"
+            }
+          },
+          {
+            "indicator": "temp-mail.org",
+            "type": "domain",
+            "risk_level": "low",
+            "source": "VirusTotal",
+            "details": {
+              "domain": "temp-mail.org",
+              "categories": {},
+              "reputation": 0,
+              "last_analysis_stats": {
+                "malicious": 0,
+                "suspicious": 0,
+                "undetected": 30,
+                "harmless": 65,
+                "timeout": 0
+              },
+              "malicious_count": 0,
+              "suspicious_count": 0,
+              "harmless_count": 65,
+              "creation_date": 1336210657,
+              "last_modification_date": 1760285025,
+              "whois": "Creation Date: 2012-05-05T09:37:37Z\nDNSSEC: unsigned\nDomain Name: temp-mail.org\nDomain Status: clientDeleteProhibited https://icann.org/epp#clientDeleteProhibited\nDomain Status: clientRenewProhibited https://icann.org/epp#clientRenewProhibited\nDomain Status: clientTransferProhibited https://icann.org/epp#clientTransferProhibited\nDomain Status: clientUpdateProhibited https://icann.org/epp#clientUpdateProhibited\nName Server: ram.ns.cloudflare.com\nName Server: rosa.ns.cloudflare.com\nRegistrar Abuse Contact Email: abuse@godaddy.com\nRegistrar Abuse Contact Phone: +1.4806242505\nRegistrar IANA ID: 146\nRegistrar URL: http://www.whois.godaddy.com\nRegistrar WHOIS Server: http://whois.godaddy.com\nRegistrar: GoDaddy.com, LLC\nRegistry Domain ID: REDACTED\nRegistry Expiry Date: 2026-05-05T09:37:37Z\nUpdated Date: 2025-06-19T09:38:07Z",
+              "dns_records": [
+                {
+                  "type": "AAAA",
+                  "ttl": 300,
+                  "value": "2606:4700:20::681a:75f"
+                },
+                {
+                  "type": "A",
+                  "ttl": 300,
+                  "value": "104.26.7.95"
+                },
+                {
+                  "type": "A",
+                  "ttl": 300,
+                  "value": "104.26.6.95"
+                },
+                {
+                  "type": "NS",
+                  "ttl": 5303,
+                  "value": "rosa.ns.cloudflare.com"
+                },
+                {
+                  "type": "TXT",
+                  "ttl": 300,
+                  "value": "google-site-verification=w22iXmoi2M-zpA8vulF0vovL7xwJuRRMhXr-6xjXmb4"
+                },
+                {
+                  "type": "MX",
+                  "ttl": 300,
+                  "priority": 10,
+                  "value": "mx.yandex.net"
+                },
+                {
+                  "type": "TXT",
+                  "ttl": 300,
+                  "value": "v=spf1 include:_spf.smtp.mailtrap.live redirect=_spf.yandex.net"
+                },
+                {
+                  "type": "AAAA",
+                  "ttl": 300,
+                  "value": "2606:4700:20::ac43:4962"
+                },
+                {
+                  "type": "SOA",
+                  "ttl": 1800,
+                  "value": "ram.ns.cloudflare.com",
+                  "rname": "dns.cloudflare.com",
+                  "serial": 2383372049,
+                  "refresh": 10000,
+                  "retry": 2400,
+                  "expire": 604800,
+                  "minimum": 1800
+                },
+                {
+                  "type": "A",
+                  "ttl": 300,
+                  "value": "172.67.73.98"
+                },
+                {
+                  "type": "TXT",
+                  "ttl": 300,
+                  "value": "google-site-verification=m3SztUr2AJuA6LW0FDmurHnyXfuZa4uS6hTzg23zRSg"
+                },
+                {
+                  "type": "NS",
+                  "ttl": 5303,
+                  "value": "ram.ns.cloudflare.com"
+                },
+                {
+                  "type": "AAAA",
+                  "ttl": 300,
+                  "value": "2606:4700:20::681a:65f"
+                }
+              ],
+              "raw_response": {
+                "data": {
+                  "id": "temp-mail.org",
+                  "type": "domain",
+                  "links": {
+                    "self": "https://www.virustotal.com/api/v3/domains/temp-mail.org"
+                  },
+                  "attributes": {
+                    "last_dns_records": [
+                      {
+                        "type": "AAAA",
+                        "ttl": 300,
+                        "value": "2606:4700:20::681a:75f"
+                      },
+                      {
+                        "type": "A",
+                        "ttl": 300,
+                        "value": "104.26.7.95"
+                      },
+                      {
+                        "type": "A",
+                        "ttl": 300,
+                        "value": "104.26.6.95"
+                      },
+                      {
+                        "type": "NS",
+                        "ttl": 5303,
+                        "value": "rosa.ns.cloudflare.com"
+                      },
+                      {
+                        "type": "TXT",
+                        "ttl": 300,
+                        "value": "google-site-verification=w22iXmoi2M-zpA8vulF0vovL7xwJuRRMhXr-6xjXmb4"
+                      },
+                      {
+                        "type": "MX",
+                        "ttl": 300,
+                        "priority": 10,
+                        "value": "mx.yandex.net"
+                      },
+                      {
+                        "type": "TXT",
+                        "ttl": 300,
+                        "value": "v=spf1 include:_spf.smtp.mailtrap.live redirect=_spf.yandex.net"
+                      },
+                      {
+                        "type": "AAAA",
+                        "ttl": 300,
+                        "value": "2606:4700:20::ac43:4962"
+                      },
+                      {
+                        "type": "SOA",
+                        "ttl": 1800,
+                        "value": "ram.ns.cloudflare.com",
+                        "rname": "dns.cloudflare.com",
+                        "serial": 2383372049,
+                        "refresh": 10000,
+                        "retry": 2400,
+                        "expire": 604800,
+                        "minimum": 1800
+                      },
+                      {
+                        "type": "A",
+                        "ttl": 300,
+                        "value": "172.67.73.98"
+                      },
+                      {
+                        "type": "TXT",
+                        "ttl": 300,
+                        "value": "google-site-verification=m3SztUr2AJuA6LW0FDmurHnyXfuZa4uS6hTzg23zRSg"
+                      },
+                      {
+                        "type": "NS",
+                        "ttl": 5303,
+                        "value": "ram.ns.cloudflare.com"
+                      },
+                      {
+                        "type": "AAAA",
+                        "ttl": 300,
+                        "value": "2606:4700:20::681a:65f"
+                      }
+                    ],
+                    "last_dns_records_date": 1760285019,
+                    "tags": [],
+                    "creation_date": 1336210657,
+                    "last_https_certificate_date": 1760285019,
+                    "last_analysis_date": 1760285017,
+                    "last_https_certificate": {
+                      "cert_signature": {
+                        "signature_algorithm": "1.2.840.10045.4.3.2",
+                        "signature": "304502200090adf6d3e37617cff71cf9a949bdb5af3409d7201c4798ebd4d6ba744aed92022100b5fe41e779f2ca87106caee0717f053d75a3689170ec7c44ccf943b9315fcde4"
+                      },
+                      "extensions": {
+                        "key_usage": [
+                          "digitalSignature"
+                        ],
+                        "extended_key_usage": [
+                          "serverAuth"
+                        ],
+                        "CA": false,
+                        "subject_key_identifier": "e3ef64755a55f34d171b9820558ca1440293331c",
+                        "authority_key_identifier": {
+                          "keyid": "9077923567c4ffa8cca9e67bd980797bcc93f938"
+                        },
+                        "ca_information_access": {
+                          "OCSP": "http://o.pki.goog/s/we1/6aY",
+                          "CA Issuers": "http://i.pki.goog/we1.crt"
+                        },
+                        "subject_alternative_name": [
+                          "temp-mail.org",
+                          "*.temp-mail.org"
+                        ],
+                        "certificate_policies": [
+                          "2.23.140.1.2.1"
+                        ],
+                        "crl_distribution_points": [
+                          "http://c.pki.goog/we1/8iOxSmD0E50.crl"
+                        ],
+                        "1.3.6.1.4.1.11129.2.4.2": "0481f100ef007600dddcca3495d7e11605e79532fac79ff83d1c50dfdb003a14"
+                      },
+                      "validity": {
+                        "not_after": "2025-12-13 21:33:07",
+                        "not_before": "2025-09-14 20:45:28"
+                      },
+                      "size": 942,
+                      "version": "V3",
+                      "public_key": {
+                        "algorithm": "EC",
+                        "ec": {
+                          "oid": "secp256r1",
+                          "pub": "3059301306072a8648ce3d020106082a8648ce3d03010703420004be580e31144038027ffefb1d62b59d75ef84fef3cef5909d39ab70971abe9f660bd727098956ce57f079ce0ab6f8a3c0b722e3a59ec86ef1594c8c99c7a2789e"
+                        }
+                      },
+                      "thumbprint_sha256": "c121d4b4e608c85a8a5e53d8f5e9e0c16b6088e4391df237931a50b3f3b452aa",
+                      "thumbprint": "bd8745cbf7ae9aa73d936ba17bf343aadb7608cd",
+                      "serial_number": "e9a68f5c24b25a910e336dcf65a4021d",
+                      "issuer": {
+                        "C": "US",
+                        "O": "Google Trust Services",
+                        "CN": "WE1"
+                      },
+                      "subject": {
+                        "CN": "temp-mail.org"
+                      }
+                    },
+                    "last_modification_date": 1760285025,
+                    "registrar": "GoDaddy.com, LLC",
+                    "total_votes": {
+                      "harmless": 0,
+                      "malicious": 0
+                    },
+                    "last_analysis_results": {
+                      "Acronis": {
+                        "method": "blacklist",
+                        "engine_name": "Acronis",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "0xSI_f33d": {
+                        "method": "blacklist",
+                        "engine_name": "0xSI_f33d",
+                        "category": "undetected",
+                        "result": "unrated"
+                      },
+                      "Abusix": {
+                        "method": "blacklist",
+                        "engine_name": "Abusix",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "ADMINUSLabs": {
+                        "method": "blacklist",
+                        "engine_name": "ADMINUSLabs",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "Axur": {
+                        "method": "blacklist",
+                        "engine_name": "Axur",
+                        "category": "undetected",
+                        "result": "unrated"
+                      },
+                      "ChainPatrol": {
+                        "method": "blacklist",
+                        "engine_name": "ChainPatrol",
+                        "category": "undetected",
+                        "result": "unrated"
+                      },
+                      "Criminal IP": {
+                        "method": "blacklist",
+                        "engine_name": "Criminal IP",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "AILabs (MONITORAPP)": {
+                        "method": "blacklist",
+                        "engine_name": "AILabs (MONITORAPP)",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "AlienVault": {
+                        "method": "blacklist",
+                        "engine_name": "AlienVault",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "alphaMountain.ai": {
+                        "method": "blacklist",
+                        "engine_name": "alphaMountain.ai",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "AlphaSOC": {
+                        "method": "blacklist",
+                        "engine_name": "AlphaSOC",
+                        "category": "undetected",
+                        "result": "unrated"
+                      },
+                      "Antiy-AVL": {
+                        "method": "blacklist",
+                        "engine_name": "Antiy-AVL",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "ArcSight Threat Intelligence": {
+                        "method": "blacklist",
+                        "engine_name": "ArcSight Threat Intelligence",
+                        "category": "undetected",
+                        "result": "unrated"
+                      },
+                      "AutoShun": {
+                        "method": "blacklist",
+                        "engine_name": "AutoShun",
+                        "category": "undetected",
+                        "result": "unrated"
+                      },
+                      "benkow.cc": {
+                        "method": "blacklist",
+                        "engine_name": "benkow.cc",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "Bfore.Ai PreCrime": {
+                        "method": "blacklist",
+                        "engine_name": "Bfore.Ai PreCrime",
+                        "category": "undetected",
+                        "result": "unrated"
+                      },
+                      "BitDefender": {
+                        "method": "blacklist",
+                        "engine_name": "BitDefender",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "Bkav": {
+                        "method": "blacklist",
+                        "engine_name": "Bkav",
+                        "category": "undetected",
+                        "result": "unrated"
+                      },
+                      "Blueliv": {
+                        "method": "blacklist",
+                        "engine_name": "Blueliv",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "Certego": {
+                        "method": "blacklist",
+                        "engine_name": "Certego",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "Chong Lua Dao": {
+                        "method": "blacklist",
+                        "engine_name": "Chong Lua Dao",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "CINS Army": {
+                        "method": "blacklist",
+                        "engine_name": "CINS Army",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "Cluster25": {
+                        "method": "blacklist",
+                        "engine_name": "Cluster25",
+                        "category": "undetected",
+                        "result": "unrated"
+                      },
+                      "CRDF": {
+                        "method": "blacklist",
+                        "engine_name": "CRDF",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "CSIS Security Group": {
+                        "method": "blacklist",
+                        "engine_name": "CSIS Security Group",
+                        "category": "undetected",
+                        "result": "unrated"
+                      },
+                      "Snort IP sample list": {
+                        "method": "blacklist",
+                        "engine_name": "Snort IP sample list",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "CMC Threat Intelligence": {
+                        "method": "blacklist",
+                        "engine_name": "CMC Threat Intelligence",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "Cyan": {
+                        "method": "blacklist",
+                        "engine_name": "Cyan",
+                        "category": "undetected",
+                        "result": "unrated"
+                      },
+                      "Cyble": {
+                        "method": "blacklist",
+                        "engine_name": "Cyble",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "CyRadar": {
+                        "method": "blacklist",
+                        "engine_name": "CyRadar",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "DNS8": {
+                        "method": "blacklist",
+                        "engine_name": "DNS8",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "Dr.Web": {
+                        "method": "blacklist",
+                        "engine_name": "Dr.Web",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "Ermes": {
+                        "method": "blacklist",
+                        "engine_name": "Ermes",
+                        "category": "undetected",
+                        "result": "unrated"
+                      },
+                      "ESET": {
+                        "method": "blacklist",
+                        "engine_name": "ESET",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "ESTsecurity": {
+                        "method": "blacklist",
+                        "engine_name": "ESTsecurity",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "EmergingThreats": {
+                        "method": "blacklist",
+                        "engine_name": "EmergingThreats",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "Emsisoft": {
+                        "method": "blacklist",
+                        "engine_name": "Emsisoft",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "Forcepoint ThreatSeeker": {
+                        "method": "blacklist",
+                        "engine_name": "Forcepoint ThreatSeeker",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "Fortinet": {
+                        "method": "blacklist",
+                        "engine_name": "Fortinet",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "G-Data": {
+                        "method": "blacklist",
+                        "engine_name": "G-Data",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "GCP Abuse Intelligence": {
+                        "method": "blacklist",
+                        "engine_name": "GCP Abuse Intelligence",
+                        "category": "undetected",
+                        "result": "unrated"
+                      },
+                      "Google Safebrowsing": {
+                        "method": "blacklist",
+                        "engine_name": "Google Safebrowsing",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "GreenSnow": {
+                        "method": "blacklist",
+                        "engine_name": "GreenSnow",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "Gridinsoft": {
+                        "method": "blacklist",
+                        "engine_name": "Gridinsoft",
+                        "category": "undetected",
+                        "result": "unrated"
+                      },
+                      "Heimdal Security": {
+                        "method": "blacklist",
+                        "engine_name": "Heimdal Security",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "Hunt.io Intelligence": {
+                        "method": "blacklist",
+                        "engine_name": "Hunt.io Intelligence",
+                        "category": "undetected",
+                        "result": "unrated"
+                      },
+                      "IPsum": {
+                        "method": "blacklist",
+                        "engine_name": "IPsum",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "Juniper Networks": {
+                        "method": "blacklist",
+                        "engine_name": "Juniper Networks",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "Kaspersky": {
+                        "method": "blacklist",
+                        "engine_name": "Kaspersky",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "Lionic": {
+                        "method": "blacklist",
+                        "engine_name": "Lionic",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "Lumu": {
+                        "method": "blacklist",
+                        "engine_name": "Lumu",
+                        "category": "undetected",
+                        "result": "unrated"
+                      },
+                      "MalwarePatrol": {
+                        "method": "blacklist",
+                        "engine_name": "MalwarePatrol",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "MalwareURL": {
+                        "method": "blacklist",
+                        "engine_name": "MalwareURL",
+                        "category": "undetected",
+                        "result": "unrated"
+                      },
+                      "Malwared": {
+                        "method": "blacklist",
+                        "engine_name": "Malwared",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "Mimecast": {
+                        "method": "blacklist",
+                        "engine_name": "Mimecast",
+                        "category": "undetected",
+                        "result": "unrated"
+                      },
+                      "Netcraft": {
+                        "method": "blacklist",
+                        "engine_name": "Netcraft",
+                        "category": "undetected",
+                        "result": "unrated"
+                      },
+                      "OpenPhish": {
+                        "method": "blacklist",
+                        "engine_name": "OpenPhish",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "Phishing Database": {
+                        "method": "blacklist",
+                        "engine_name": "Phishing Database",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "PhishFort": {
+                        "method": "blacklist",
+                        "engine_name": "PhishFort",
+                        "category": "undetected",
+                        "result": "unrated"
+                      },
+                      "PhishLabs": {
+                        "method": "blacklist",
+                        "engine_name": "PhishLabs",
+                        "category": "undetected",
+                        "result": "unrated"
+                      },
+                      "Phishtank": {
+                        "method": "blacklist",
+                        "engine_name": "Phishtank",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "PREBYTES": {
+                        "method": "blacklist",
+                        "engine_name": "PREBYTES",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "PrecisionSec": {
+                        "method": "blacklist",
+                        "engine_name": "PrecisionSec",
+                        "category": "undetected",
+                        "result": "unrated"
+                      },
+                      "Quick Heal": {
+                        "method": "blacklist",
+                        "engine_name": "Quick Heal",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "Quttera": {
+                        "method": "blacklist",
+                        "engine_name": "Quttera",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "SafeToOpen": {
+                        "method": "blacklist",
+                        "engine_name": "SafeToOpen",
+                        "category": "undetected",
+                        "result": "unrated"
+                      },
+                      "Sansec eComscan": {
+                        "method": "blacklist",
+                        "engine_name": "Sansec eComscan",
+                        "category": "undetected",
+                        "result": "unrated"
+                      },
+                      "Scantitan": {
+                        "method": "blacklist",
+                        "engine_name": "Scantitan",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "SCUMWARE.org": {
+                        "method": "blacklist",
+                        "engine_name": "SCUMWARE.org",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "Seclookup": {
+                        "method": "blacklist",
+                        "engine_name": "Seclookup",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "SecureBrain": {
+                        "method": "blacklist",
+                        "engine_name": "SecureBrain",
+                        "category": "undetected",
+                        "result": "unrated"
+                      },
+                      "SOCRadar": {
+                        "method": "blacklist",
+                        "engine_name": "SOCRadar",
+                        "category": "undetected",
+                        "result": "unrated"
+                      },
+                      "Sophos": {
+                        "method": "blacklist",
+                        "engine_name": "Sophos",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "Spam404": {
+                        "method": "blacklist",
+                        "engine_name": "Spam404",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "StopForumSpam": {
+                        "method": "blacklist",
+                        "engine_name": "StopForumSpam",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "Sucuri SiteCheck": {
+                        "method": "blacklist",
+                        "engine_name": "Sucuri SiteCheck",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "ThreatHive": {
+                        "method": "blacklist",
+                        "engine_name": "ThreatHive",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "Threatsourcing": {
+                        "method": "blacklist",
+                        "engine_name": "Threatsourcing",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "Trustwave": {
+                        "method": "blacklist",
+                        "engine_name": "Trustwave",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "Underworld": {
+                        "method": "blacklist",
+                        "engine_name": "Underworld",
+                        "category": "undetected",
+                        "result": "unrated"
+                      },
+                      "URLhaus": {
+                        "method": "blacklist",
+                        "engine_name": "URLhaus",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "URLQuery": {
+                        "method": "blacklist",
+                        "engine_name": "URLQuery",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "Viettel Threat Intelligence": {
+                        "method": "blacklist",
+                        "engine_name": "Viettel Threat Intelligence",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "VIPRE": {
+                        "method": "blacklist",
+                        "engine_name": "VIPRE",
+                        "category": "undetected",
+                        "result": "unrated"
+                      },
+                      "VX Vault": {
+                        "method": "blacklist",
+                        "engine_name": "VX Vault",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "ViriBack": {
+                        "method": "blacklist",
+                        "engine_name": "ViriBack",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "Webroot": {
+                        "method": "blacklist",
+                        "engine_name": "Webroot",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "Yandex Safebrowsing": {
+                        "method": "blacklist",
+                        "engine_name": "Yandex Safebrowsing",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "ZeroCERT": {
+                        "method": "blacklist",
+                        "engine_name": "ZeroCERT",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "desenmascara.me": {
+                        "method": "blacklist",
+                        "engine_name": "desenmascara.me",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "malwares.com URL checker": {
+                        "method": "blacklist",
+                        "engine_name": "malwares.com URL checker",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "securolytics": {
+                        "method": "blacklist",
+                        "engine_name": "securolytics",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "Xcitium Verdict Cloud": {
+                        "method": "blacklist",
+                        "engine_name": "Xcitium Verdict Cloud",
+                        "category": "harmless",
+                        "result": "clean"
+                      },
+                      "zvelo": {
+                        "method": "blacklist",
+                        "engine_name": "zvelo",
+                        "category": "undetected",
+                        "result": "unrated"
+                      },
+                      "ZeroFox": {
+                        "method": "blacklist",
+                        "engine_name": "ZeroFox",
+                        "category": "undetected",
+                        "result": "unrated"
+                      }
+                    },
+                    "last_update_date": 1750325887,
+                    "popularity_ranks": {
+                      "Majestic": {
+                        "rank": 29898,
+                        "timestamp": 1760279887
+                      },
+                      "Statvoo": {
+                        "timestamp": 1684083481,
+                        "rank": 1224
+                      },
+                      "Alexa": {
+                        "timestamp": 1684083481,
+                        "rank": 1224
+                      },
+                      "Cisco Umbrella": {
+                        "rank": 98468,
+                        "timestamp": 1760193493
+                      },
+                      "Quantcast": {
+                        "timestamp": 1585841763,
+                        "rank": 8107
+                      },
+                      "Cloudflare Radar": {
+                        "rank": 10000,
+                        "timestamp": 1760279885
+                      }
+                    },
+                    "jarm": "27d40d40d00040d1dc42d43d00041d6183ff1bfae51ebd88d70384363d525c",
+                    "reputation": 0,
+                    "whois": "Creation Date: 2012-05-05T09:37:37Z\nDNSSEC: unsigned\nDomain Name: temp-mail.org\nDomain Status: clientDeleteProhibited https://icann.org/epp#clientDeleteProhibited\nDomain Status: clientRenewProhibited https://icann.org/epp#clientRenewProhibited\nDomain Status: clientTransferProhibited https://icann.org/epp#clientTransferProhibited\nDomain Status: clientUpdateProhibited https://icann.org/epp#clientUpdateProhibited\nName Server: ram.ns.cloudflare.com\nName Server: rosa.ns.cloudflare.com\nRegistrar Abuse Contact Email: abuse@godaddy.com\nRegistrar Abuse Contact Phone: +1.4806242505\nRegistrar IANA ID: 146\nRegistrar URL: http://www.whois.godaddy.com\nRegistrar WHOIS Server: http://whois.godaddy.com\nRegistrar: GoDaddy.com, LLC\nRegistry Domain ID: REDACTED\nRegistry Expiry Date: 2026-05-05T09:37:37Z\nUpdated Date: 2025-06-19T09:38:07Z",
+                    "last_analysis_stats": {
+                      "malicious": 0,
+                      "suspicious": 0,
+                      "undetected": 30,
+                      "harmless": 65,
+                      "timeout": 0
+                    },
+                    "rdap": {
+                      "ldh_name": "temp-mail.org",
+                      "unicode_name": "temp-mail.org",
+                      "events": [
+                        {
+                          "event_action": "transfer",
+                          "event_date": "2019-05-27T02:40:22.882Z",
+                          "event_actor": "",
+                          "links": []
+                        },
+                        {
+                          "event_action": "expiration",
+                          "event_date": "2026-05-05T09:37:37.699Z",
+                          "event_actor": "",
+                          "links": []
+                        },
+                        {
+                          "event_action": "registration",
+                          "event_date": "2012-05-05T09:37:37.699Z",
+                          "event_actor": "",
+                          "links": []
+                        },
+                        {
+                          "event_action": "last changed",
+                          "event_date": "2025-06-19T09:38:07.479Z",
+                          "event_actor": "",
+                          "links": []
+                        },
+                        {
+                          "event_action": "last update of RDAP database",
+                          "event_date": "2025-10-07T23:11:29.784Z",
+                          "event_actor": "",
+                          "links": []
+                        }
+                      ],
+                      "links": [
+                        {
+                          "href": "https://rdap.godaddy.com/v1/domain/temp-mail.org",
+                          "rel": "related",
+                          "type": "application/rdap+json",
+                          "value": "https://rdap.publicinterestregistry.org/rdap/domain/temp-mail.org",
+                          "title": "",
+                          "media": "",
+                          "href_lang": []
+                        },
+                        {
+                          "href": "https://rdap.publicinterestregistry.org/rdap/domain/temp-mail.org",
+                          "rel": "self",
+                          "type": "application/rdap+json",
+                          "value": "https://rdap.publicinterestregistry.org/rdap/domain/temp-mail.org",
+                          "title": "",
+                          "media": "",
+                          "href_lang": []
+                        }
+                      ],
+                      "notices": [
+                        {
+                          "title": "Terms of Service",
+                          "description": [
+                            "Public Interest Registry provides this RDAP service for informational purposes only, and to assist persons in obtaining information about or related to a domain name registration record. Public Interest Registry does not guarantee its accuracy. Users accessing the Public Interest Registry RDAP service agree to use the data only for lawful purposes, and under no circumstances may this data be used to: a) allow, enable, or otherwise support the transmission by e-mail, telephone, or facsimile of mass unsolicited, commercial advertising or solicitations to entities other than the registrar's own existing customers and b) enable high volume, automated, electronic processes that send queries or data to the systems of Public Interest Registry or any ICANN-accredited registrar, except as reasonably necessary to register domain names or modify existing registrations. When using the Public Interest Registry RDAP service, please consider the following: the RDAP service is not a replacement for standard EPP commands to the SRS service. RDAP is not considered authoritative for registered domain objects. The RDAP service may be scheduled for downtime during production or OT&E maintenance periods. Queries to the RDAP services are throttled. If too many queries are received from a single IP address within a specified time, the service will begin to reject further queries for a period of time to prevent disruption of RDAP service access. Abuse of the RDAP system through data mining is mitigated by detecting and limiting bulk query access from single sources. Where applicable, the presence of a [Non-Public Data] tag indicates that such data is not made publicly available due to applicable data privacy laws or requirements. Should you wish to contact the registrant, please refer to the RDAP records available through the registrar URL listed above. Access to non-public data may be provided, upon request, where it can be reasonably confirmed that the requester holds a specific legitimate interest and a proper legal basis for accessing the withheld data. Access to this data can be requested by submitting a request to WHOISrequest@pir.org. Public Interest Registry Inc. reserves the right to modify these terms at any time. By submitting this query, you agree to abide by this policy."
+                          ],
+                          "links": [
+                            {
+                              "href": "https://thenew.org/org-people/about-pir/policies/",
+                              "rel": "terms-of-service",
+                              "type": "text/html",
+                              "value": "https://rdap.publicinterestregistry.org/rdap/domain/temp-mail.org",
+                              "title": "",
+                              "media": "",
+                              "href_lang": []
+                            }
+                          ],
+                          "type": ""
+                        },
+                        {
+                          "title": "Status Codes",
+                          "description": [
+                            "For more information on domain status codes, please visit https://icann.org/epp"
+                          ],
+                          "links": [
+                            {
+                              "href": "https://icann.org/epp",
+                              "rel": "glossary",
+                              "type": "application/rdap+json",
+                              "value": "https://rdap.publicinterestregistry.org/rdap/domain/temp-mail.org",
+                              "title": "",
+                              "media": "",
+                              "href_lang": []
+                            }
+                          ],
+                          "type": ""
+                        },
+                        {
+                          "title": "RDDS Inaccuracy Complaint Form",
+                          "description": [
+                            "URL of the ICANN RDDS Inaccuracy Complaint Form: https://icann.org/wicf"
+                          ],
+                          "links": [
+                            {
+                              "href": "https://icann.org/wicf",
+                              "rel": "help",
+                              "type": "application/rdap+json",
+                              "value": "https://rdap.publicinterestregistry.org/rdap/domain/temp-mail.org",
+                              "title": "",
+                              "media": "",
+                              "href_lang": []
+                            }
+                          ],
+                          "type": ""
+                        }
+                      ],
+                      "nameservers": [
+                        {
+                          "handle": "9075a380911043199ab92f570804cab6-LROR",
+                          "ldh_name": "ram.ns.cloudflare.com",
+                          "unicode_name": "ram.ns.cloudflare.com",
+                          "object_class_name": "nameserver",
+                          "status": [
+                            "associated"
+                          ],
+                          "events": [],
+                          "links": [],
+                          "notices": [],
+                          "lang": "",
+                          "port43": "",
+                          "entities": [],
+                          "remarks": []
+                        },
+                        {
+                          "handle": "81efc4bc9f3547aa96ba383a208c0b20-LROR",
+                          "ldh_name": "rosa.ns.cloudflare.com",
+                          "unicode_name": "rosa.ns.cloudflare.com",
+                          "object_class_name": "nameserver",
+                          "status": [
+                            "associated"
+                          ],
+                          "events": [],
+                          "links": [],
+                          "notices": [],
+                          "lang": "",
+                          "port43": "",
+                          "entities": [],
+                          "remarks": []
+                        }
+                      ],
+                      "rdap_conformance": [
+                        "rdap_level_0",
+                        "icann_rdap_response_profile_1",
+                        "icann_rdap_technical_implementation_guide_1",
+                        "redacted"
+                      ],
+                      "entities": [
+                        {
+                          "object_class_name": "entity",
+                          "handle": "146",
+                          "vcard_array": [
+                            {
+                              "name": "version",
+                              "type": "text",
+                              "values": [
+                                "4.0"
+                              ],
+                              "parameters": {}
+                            },
+                            {
+                              "name": "fn",
+                              "type": "text",
+                              "values": [
+                                "GoDaddy.com, LLC"
+                              ],
+                              "parameters": {}
+                            }
+                          ],
+                          "roles": [
+                            "registrar"
+                          ],
+                          "public_ids": [
+                            {
+                              "type": "IANA Registrar ID",
+                              "identifier": "146"
+                            }
+                          ],
+                          "entities": [
+                            {
+                              "object_class_name": "entity",
+                              "handle": "2e245ac341044535ad2f256defd5d975-LROR",
+                              "vcard_array": [
+                                {
+                                  "name": "version",
+                                  "type": "text",
+                                  "values": [
+                                    "4.0"
+                                  ],
+                                  "parameters": {}
+                                },
+                                {
+                                  "name": "fn",
+                                  "type": "text",
+                                  "values": [
+                                    "Domains Abuse"
+                                  ],
+                                  "parameters": {}
+                                },
+                                {
+                                  "name": "tel",
+                                  "parameters": {
+                                    "type": [
+                                      "voice"
+                                    ]
+                                  },
+                                  "type": "uri",
+                                  "values": [
+                                    "tel:+1.4806242505"
+                                  ]
+                                },
+                                {
+                                  "name": "email",
+                                  "type": "text",
+                                  "values": [
+                                    "abuse@godaddy.com"
+                                  ],
+                                  "parameters": {}
+                                }
+                              ],
+                              "roles": [
+                                "abuse"
+                              ],
+                              "public_ids": [],
+                              "entities": [],
+                              "remarks": [],
+                              "links": [],
+                              "events": [],
+                              "as_event_actor": [],
+                              "status": [],
+                              "port43": "",
+                              "networks": [],
+                              "autnums": [],
+                              "url": "",
+                              "lang": "",
+                              "rdap_conformance": []
+                            }
+                          ],
+                          "links": [
+                            {
+                              "href": "https://rdap.publicinterestregistry.org/rdap/entity/146",
+                              "rel": "self",
+                              "type": "application/rdap+json",
+                              "value": "https://rdap.publicinterestregistry.org/rdap/entity/146",
+                              "title": "",
+                              "media": "",
+                              "href_lang": []
+                            },
+                            {
+                              "href": "https://rdap.godaddy.com/v1",
+                              "rel": "about",
+                              "type": "application/rdap+json",
+                              "value": "https://rdap.godaddy.com/v1",
+                              "title": "",
+                              "media": "",
+                              "href_lang": []
+                            }
+                          ],
+                          "remarks": [],
+                          "events": [],
+                          "as_event_actor": [],
+                          "status": [],
+                          "port43": "",
+                          "networks": [],
+                          "autnums": [],
+                          "url": "",
+                          "lang": "",
+                          "rdap_conformance": []
+                        }
+                      ],
+                      "object_class_name": "domain",
+                      "status": [
+                        "client delete prohibited",
+                        "client renew prohibited",
+                        "client transfer prohibited",
+                        "client update prohibited"
+                      ],
+                      "secure_dns": {
+                        "max_sig_life": 1,
+                        "delegation_signed": false,
+                        "zone_signed": false,
+                        "ds_data": [],
+                        "key_data": []
+                      },
+                      "public_ids": [
+                        {
+                          "type": "IANA Registrar ID",
+                          "identifier": "146"
+                        }
+                      ],
+                      "handle": "",
+                      "punycode": "",
+                      "type": "",
+                      "port43": "",
+                      "switch_name": "",
+                      "lang": "",
+                      "remarks": [],
+                      "nask0_state": "",
+                      "variants": []
+                    },
+                    "tld": "org",
+                    "whois_date": 1760136440,
+                    "categories": {},
+                    "expiration_date": 1777973857
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "high_risk_count": 0,
+        "medium_risk_count": 0,
+        "low_risk_count": 2,
+        "total_analyzed": 2
+      },
+      "tool_analysis": {
+        "detailed_results": {
+          "VirusTotal": [
+            {
+              "type": "domain",
+              "value": "suspicious.sender",
+              "result": {
+                "error": "API error 400: {\"error\": {\"code\": \"InvalidArgumentError\", \"message\": \"Domain \\\"b'suspicious.sender'\\\" is not a valid domain pattern\"}}"
+              }
+            },
+            {
+              "type": "domain",
+              "value": "temp-mail.org",
+              "result": {
+                "domain": "temp-mail.org",
+                "categories": {},
+                "reputation": 0,
+                "last_analysis_stats": {
+                  "malicious": 0,
+                  "suspicious": 0,
+                  "undetected": 30,
+                  "harmless": 65,
+                  "timeout": 0
+                },
+                "malicious_count": 0,
+                "suspicious_count": 0,
+                "harmless_count": 65,
+                "creation_date": 1336210657,
+                "last_modification_date": 1760285025,
+                "whois": "Creation Date: 2012-05-05T09:37:37Z\nDNSSEC: unsigned\nDomain Name: temp-mail.org\nDomain Status: clientDeleteProhibited https://icann.org/epp#clientDeleteProhibited\nDomain Status: clientRenewProhibited https://icann.org/epp#clientRenewProhibited\nDomain Status: clientTransferProhibited https://icann.org/epp#clientTransferProhibited\nDomain Status: clientUpdateProhibited https://icann.org/epp#clientUpdateProhibited\nName Server: ram.ns.cloudflare.com\nName Server: rosa.ns.cloudflare.com\nRegistrar Abuse Contact Email: abuse@godaddy.com\nRegistrar Abuse Contact Phone: +1.4806242505\nRegistrar IANA ID: 146\nRegistrar URL: http://www.whois.godaddy.com\nRegistrar WHOIS Server: http://whois.godaddy.com\nRegistrar: GoDaddy.com, LLC\nRegistry Domain ID: REDACTED\nRegistry Expiry Date: 2026-05-05T09:37:37Z\nUpdated Date: 2025-06-19T09:38:07Z",
+                "dns_records": [
+                  {
+                    "type": "AAAA",
+                    "ttl": 300,
+                    "value": "2606:4700:20::681a:75f"
+                  },
+                  {
+                    "type": "A",
+                    "ttl": 300,
+                    "value": "104.26.7.95"
+                  },
+                  {
+                    "type": "A",
+                    "ttl": 300,
+                    "value": "104.26.6.95"
+                  },
+                  {
+                    "type": "NS",
+                    "ttl": 5303,
+                    "value": "rosa.ns.cloudflare.com"
+                  },
+                  {
+                    "type": "TXT",
+                    "ttl": 300,
+                    "value": "google-site-verification=w22iXmoi2M-zpA8vulF0vovL7xwJuRRMhXr-6xjXmb4"
+                  },
+                  {
+                    "type": "MX",
+                    "ttl": 300,
+                    "priority": 10,
+                    "value": "mx.yandex.net"
+                  },
+                  {
+                    "type": "TXT",
+                    "ttl": 300,
+                    "value": "v=spf1 include:_spf.smtp.mailtrap.live redirect=_spf.yandex.net"
+                  },
+                  {
+                    "type": "AAAA",
+                    "ttl": 300,
+                    "value": "2606:4700:20::ac43:4962"
+                  },
+                  {
+                    "type": "SOA",
+                    "ttl": 1800,
+                    "value": "ram.ns.cloudflare.com",
+                    "rname": "dns.cloudflare.com",
+                    "serial": 2383372049,
+                    "refresh": 10000,
+                    "retry": 2400,
+                    "expire": 604800,
+                    "minimum": 1800
+                  },
+                  {
+                    "type": "A",
+                    "ttl": 300,
+                    "value": "172.67.73.98"
+                  },
+                  {
+                    "type": "TXT",
+                    "ttl": 300,
+                    "value": "google-site-verification=m3SztUr2AJuA6LW0FDmurHnyXfuZa4uS6hTzg23zRSg"
+                  },
+                  {
+                    "type": "NS",
+                    "ttl": 5303,
+                    "value": "ram.ns.cloudflare.com"
+                  },
+                  {
+                    "type": "AAAA",
+                    "ttl": 300,
+                    "value": "2606:4700:20::681a:65f"
+                  }
+                ],
+                "raw_response": {
+                  "data": {
+                    "id": "temp-mail.org",
+                    "type": "domain",
+                    "links": {
+                      "self": "https://www.virustotal.com/api/v3/domains/temp-mail.org"
+                    },
+                    "attributes": {
+                      "last_dns_records": [
+                        {
+                          "type": "AAAA",
+                          "ttl": 300,
+                          "value": "2606:4700:20::681a:75f"
+                        },
+                        {
+                          "type": "A",
+                          "ttl": 300,
+                          "value": "104.26.7.95"
+                        },
+                        {
+                          "type": "A",
+                          "ttl": 300,
+                          "value": "104.26.6.95"
+                        },
+                        {
+                          "type": "NS",
+                          "ttl": 5303,
+                          "value": "rosa.ns.cloudflare.com"
+                        },
+                        {
+                          "type": "TXT",
+                          "ttl": 300,
+                          "value": "google-site-verification=w22iXmoi2M-zpA8vulF0vovL7xwJuRRMhXr-6xjXmb4"
+                        },
+                        {
+                          "type": "MX",
+                          "ttl": 300,
+                          "priority": 10,
+                          "value": "mx.yandex.net"
+                        },
+                        {
+                          "type": "TXT",
+                          "ttl": 300,
+                          "value": "v=spf1 include:_spf.smtp.mailtrap.live redirect=_spf.yandex.net"
+                        },
+                        {
+                          "type": "AAAA",
+                          "ttl": 300,
+                          "value": "2606:4700:20::ac43:4962"
+                        },
+                        {
+                          "type": "SOA",
+                          "ttl": 1800,
+                          "value": "ram.ns.cloudflare.com",
+                          "rname": "dns.cloudflare.com",
+                          "serial": 2383372049,
+                          "refresh": 10000,
+                          "retry": 2400,
+                          "expire": 604800,
+                          "minimum": 1800
+                        },
+                        {
+                          "type": "A",
+                          "ttl": 300,
+                          "value": "172.67.73.98"
+                        },
+                        {
+                          "type": "TXT",
+                          "ttl": 300,
+                          "value": "google-site-verification=m3SztUr2AJuA6LW0FDmurHnyXfuZa4uS6hTzg23zRSg"
+                        },
+                        {
+                          "type": "NS",
+                          "ttl": 5303,
+                          "value": "ram.ns.cloudflare.com"
+                        },
+                        {
+                          "type": "AAAA",
+                          "ttl": 300,
+                          "value": "2606:4700:20::681a:65f"
+                        }
+                      ],
+                      "last_dns_records_date": 1760285019,
+                      "tags": [],
+                      "creation_date": 1336210657,
+                      "last_https_certificate_date": 1760285019,
+                      "last_analysis_date": 1760285017,
+                      "last_https_certificate": {
+                        "cert_signature": {
+                          "signature_algorithm": "1.2.840.10045.4.3.2",
+                          "signature": "304502200090adf6d3e37617cff71cf9a949bdb5af3409d7201c4798ebd4d6ba744aed92022100b5fe41e779f2ca87106caee0717f053d75a3689170ec7c44ccf943b9315fcde4"
+                        },
+                        "extensions": {
+                          "key_usage": [
+                            "digitalSignature"
+                          ],
+                          "extended_key_usage": [
+                            "serverAuth"
+                          ],
+                          "CA": false,
+                          "subject_key_identifier": "e3ef64755a55f34d171b9820558ca1440293331c",
+                          "authority_key_identifier": {
+                            "keyid": "9077923567c4ffa8cca9e67bd980797bcc93f938"
+                          },
+                          "ca_information_access": {
+                            "OCSP": "http://o.pki.goog/s/we1/6aY",
+                            "CA Issuers": "http://i.pki.goog/we1.crt"
+                          },
+                          "subject_alternative_name": [
+                            "temp-mail.org",
+                            "*.temp-mail.org"
+                          ],
+                          "certificate_policies": [
+                            "2.23.140.1.2.1"
+                          ],
+                          "crl_distribution_points": [
+                            "http://c.pki.goog/we1/8iOxSmD0E50.crl"
+                          ],
+                          "1.3.6.1.4.1.11129.2.4.2": "0481f100ef007600dddcca3495d7e11605e79532fac79ff83d1c50dfdb003a14"
+                        },
+                        "validity": {
+                          "not_after": "2025-12-13 21:33:07",
+                          "not_before": "2025-09-14 20:45:28"
+                        },
+                        "size": 942,
+                        "version": "V3",
+                        "public_key": {
+                          "algorithm": "EC",
+                          "ec": {
+                            "oid": "secp256r1",
+                            "pub": "3059301306072a8648ce3d020106082a8648ce3d03010703420004be580e31144038027ffefb1d62b59d75ef84fef3cef5909d39ab70971abe9f660bd727098956ce57f079ce0ab6f8a3c0b722e3a59ec86ef1594c8c99c7a2789e"
+                          }
+                        },
+                        "thumbprint_sha256": "c121d4b4e608c85a8a5e53d8f5e9e0c16b6088e4391df237931a50b3f3b452aa",
+                        "thumbprint": "bd8745cbf7ae9aa73d936ba17bf343aadb7608cd",
+                        "serial_number": "e9a68f5c24b25a910e336dcf65a4021d",
+                        "issuer": {
+                          "C": "US",
+                          "O": "Google Trust Services",
+                          "CN": "WE1"
+                        },
+                        "subject": {
+                          "CN": "temp-mail.org"
+                        }
+                      },
+                      "last_modification_date": 1760285025,
+                      "registrar": "GoDaddy.com, LLC",
+                      "total_votes": {
+                        "harmless": 0,
+                        "malicious": 0
+                      },
+                      "last_analysis_results": {
+                        "Acronis": {
+                          "method": "blacklist",
+                          "engine_name": "Acronis",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "0xSI_f33d": {
+                          "method": "blacklist",
+                          "engine_name": "0xSI_f33d",
+                          "category": "undetected",
+                          "result": "unrated"
+                        },
+                        "Abusix": {
+                          "method": "blacklist",
+                          "engine_name": "Abusix",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "ADMINUSLabs": {
+                          "method": "blacklist",
+                          "engine_name": "ADMINUSLabs",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "Axur": {
+                          "method": "blacklist",
+                          "engine_name": "Axur",
+                          "category": "undetected",
+                          "result": "unrated"
+                        },
+                        "ChainPatrol": {
+                          "method": "blacklist",
+                          "engine_name": "ChainPatrol",
+                          "category": "undetected",
+                          "result": "unrated"
+                        },
+                        "Criminal IP": {
+                          "method": "blacklist",
+                          "engine_name": "Criminal IP",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "AILabs (MONITORAPP)": {
+                          "method": "blacklist",
+                          "engine_name": "AILabs (MONITORAPP)",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "AlienVault": {
+                          "method": "blacklist",
+                          "engine_name": "AlienVault",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "alphaMountain.ai": {
+                          "method": "blacklist",
+                          "engine_name": "alphaMountain.ai",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "AlphaSOC": {
+                          "method": "blacklist",
+                          "engine_name": "AlphaSOC",
+                          "category": "undetected",
+                          "result": "unrated"
+                        },
+                        "Antiy-AVL": {
+                          "method": "blacklist",
+                          "engine_name": "Antiy-AVL",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "ArcSight Threat Intelligence": {
+                          "method": "blacklist",
+                          "engine_name": "ArcSight Threat Intelligence",
+                          "category": "undetected",
+                          "result": "unrated"
+                        },
+                        "AutoShun": {
+                          "method": "blacklist",
+                          "engine_name": "AutoShun",
+                          "category": "undetected",
+                          "result": "unrated"
+                        },
+                        "benkow.cc": {
+                          "method": "blacklist",
+                          "engine_name": "benkow.cc",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "Bfore.Ai PreCrime": {
+                          "method": "blacklist",
+                          "engine_name": "Bfore.Ai PreCrime",
+                          "category": "undetected",
+                          "result": "unrated"
+                        },
+                        "BitDefender": {
+                          "method": "blacklist",
+                          "engine_name": "BitDefender",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "Bkav": {
+                          "method": "blacklist",
+                          "engine_name": "Bkav",
+                          "category": "undetected",
+                          "result": "unrated"
+                        },
+                        "Blueliv": {
+                          "method": "blacklist",
+                          "engine_name": "Blueliv",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "Certego": {
+                          "method": "blacklist",
+                          "engine_name": "Certego",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "Chong Lua Dao": {
+                          "method": "blacklist",
+                          "engine_name": "Chong Lua Dao",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "CINS Army": {
+                          "method": "blacklist",
+                          "engine_name": "CINS Army",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "Cluster25": {
+                          "method": "blacklist",
+                          "engine_name": "Cluster25",
+                          "category": "undetected",
+                          "result": "unrated"
+                        },
+                        "CRDF": {
+                          "method": "blacklist",
+                          "engine_name": "CRDF",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "CSIS Security Group": {
+                          "method": "blacklist",
+                          "engine_name": "CSIS Security Group",
+                          "category": "undetected",
+                          "result": "unrated"
+                        },
+                        "Snort IP sample list": {
+                          "method": "blacklist",
+                          "engine_name": "Snort IP sample list",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "CMC Threat Intelligence": {
+                          "method": "blacklist",
+                          "engine_name": "CMC Threat Intelligence",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "Cyan": {
+                          "method": "blacklist",
+                          "engine_name": "Cyan",
+                          "category": "undetected",
+                          "result": "unrated"
+                        },
+                        "Cyble": {
+                          "method": "blacklist",
+                          "engine_name": "Cyble",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "CyRadar": {
+                          "method": "blacklist",
+                          "engine_name": "CyRadar",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "DNS8": {
+                          "method": "blacklist",
+                          "engine_name": "DNS8",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "Dr.Web": {
+                          "method": "blacklist",
+                          "engine_name": "Dr.Web",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "Ermes": {
+                          "method": "blacklist",
+                          "engine_name": "Ermes",
+                          "category": "undetected",
+                          "result": "unrated"
+                        },
+                        "ESET": {
+                          "method": "blacklist",
+                          "engine_name": "ESET",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "ESTsecurity": {
+                          "method": "blacklist",
+                          "engine_name": "ESTsecurity",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "EmergingThreats": {
+                          "method": "blacklist",
+                          "engine_name": "EmergingThreats",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "Emsisoft": {
+                          "method": "blacklist",
+                          "engine_name": "Emsisoft",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "Forcepoint ThreatSeeker": {
+                          "method": "blacklist",
+                          "engine_name": "Forcepoint ThreatSeeker",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "Fortinet": {
+                          "method": "blacklist",
+                          "engine_name": "Fortinet",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "G-Data": {
+                          "method": "blacklist",
+                          "engine_name": "G-Data",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "GCP Abuse Intelligence": {
+                          "method": "blacklist",
+                          "engine_name": "GCP Abuse Intelligence",
+                          "category": "undetected",
+                          "result": "unrated"
+                        },
+                        "Google Safebrowsing": {
+                          "method": "blacklist",
+                          "engine_name": "Google Safebrowsing",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "GreenSnow": {
+                          "method": "blacklist",
+                          "engine_name": "GreenSnow",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "Gridinsoft": {
+                          "method": "blacklist",
+                          "engine_name": "Gridinsoft",
+                          "category": "undetected",
+                          "result": "unrated"
+                        },
+                        "Heimdal Security": {
+                          "method": "blacklist",
+                          "engine_name": "Heimdal Security",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "Hunt.io Intelligence": {
+                          "method": "blacklist",
+                          "engine_name": "Hunt.io Intelligence",
+                          "category": "undetected",
+                          "result": "unrated"
+                        },
+                        "IPsum": {
+                          "method": "blacklist",
+                          "engine_name": "IPsum",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "Juniper Networks": {
+                          "method": "blacklist",
+                          "engine_name": "Juniper Networks",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "Kaspersky": {
+                          "method": "blacklist",
+                          "engine_name": "Kaspersky",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "Lionic": {
+                          "method": "blacklist",
+                          "engine_name": "Lionic",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "Lumu": {
+                          "method": "blacklist",
+                          "engine_name": "Lumu",
+                          "category": "undetected",
+                          "result": "unrated"
+                        },
+                        "MalwarePatrol": {
+                          "method": "blacklist",
+                          "engine_name": "MalwarePatrol",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "MalwareURL": {
+                          "method": "blacklist",
+                          "engine_name": "MalwareURL",
+                          "category": "undetected",
+                          "result": "unrated"
+                        },
+                        "Malwared": {
+                          "method": "blacklist",
+                          "engine_name": "Malwared",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "Mimecast": {
+                          "method": "blacklist",
+                          "engine_name": "Mimecast",
+                          "category": "undetected",
+                          "result": "unrated"
+                        },
+                        "Netcraft": {
+                          "method": "blacklist",
+                          "engine_name": "Netcraft",
+                          "category": "undetected",
+                          "result": "unrated"
+                        },
+                        "OpenPhish": {
+                          "method": "blacklist",
+                          "engine_name": "OpenPhish",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "Phishing Database": {
+                          "method": "blacklist",
+                          "engine_name": "Phishing Database",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "PhishFort": {
+                          "method": "blacklist",
+                          "engine_name": "PhishFort",
+                          "category": "undetected",
+                          "result": "unrated"
+                        },
+                        "PhishLabs": {
+                          "method": "blacklist",
+                          "engine_name": "PhishLabs",
+                          "category": "undetected",
+                          "result": "unrated"
+                        },
+                        "Phishtank": {
+                          "method": "blacklist",
+                          "engine_name": "Phishtank",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "PREBYTES": {
+                          "method": "blacklist",
+                          "engine_name": "PREBYTES",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "PrecisionSec": {
+                          "method": "blacklist",
+                          "engine_name": "PrecisionSec",
+                          "category": "undetected",
+                          "result": "unrated"
+                        },
+                        "Quick Heal": {
+                          "method": "blacklist",
+                          "engine_name": "Quick Heal",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "Quttera": {
+                          "method": "blacklist",
+                          "engine_name": "Quttera",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "SafeToOpen": {
+                          "method": "blacklist",
+                          "engine_name": "SafeToOpen",
+                          "category": "undetected",
+                          "result": "unrated"
+                        },
+                        "Sansec eComscan": {
+                          "method": "blacklist",
+                          "engine_name": "Sansec eComscan",
+                          "category": "undetected",
+                          "result": "unrated"
+                        },
+                        "Scantitan": {
+                          "method": "blacklist",
+                          "engine_name": "Scantitan",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "SCUMWARE.org": {
+                          "method": "blacklist",
+                          "engine_name": "SCUMWARE.org",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "Seclookup": {
+                          "method": "blacklist",
+                          "engine_name": "Seclookup",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "SecureBrain": {
+                          "method": "blacklist",
+                          "engine_name": "SecureBrain",
+                          "category": "undetected",
+                          "result": "unrated"
+                        },
+                        "SOCRadar": {
+                          "method": "blacklist",
+                          "engine_name": "SOCRadar",
+                          "category": "undetected",
+                          "result": "unrated"
+                        },
+                        "Sophos": {
+                          "method": "blacklist",
+                          "engine_name": "Sophos",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "Spam404": {
+                          "method": "blacklist",
+                          "engine_name": "Spam404",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "StopForumSpam": {
+                          "method": "blacklist",
+                          "engine_name": "StopForumSpam",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "Sucuri SiteCheck": {
+                          "method": "blacklist",
+                          "engine_name": "Sucuri SiteCheck",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "ThreatHive": {
+                          "method": "blacklist",
+                          "engine_name": "ThreatHive",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "Threatsourcing": {
+                          "method": "blacklist",
+                          "engine_name": "Threatsourcing",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "Trustwave": {
+                          "method": "blacklist",
+                          "engine_name": "Trustwave",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "Underworld": {
+                          "method": "blacklist",
+                          "engine_name": "Underworld",
+                          "category": "undetected",
+                          "result": "unrated"
+                        },
+                        "URLhaus": {
+                          "method": "blacklist",
+                          "engine_name": "URLhaus",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "URLQuery": {
+                          "method": "blacklist",
+                          "engine_name": "URLQuery",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "Viettel Threat Intelligence": {
+                          "method": "blacklist",
+                          "engine_name": "Viettel Threat Intelligence",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "VIPRE": {
+                          "method": "blacklist",
+                          "engine_name": "VIPRE",
+                          "category": "undetected",
+                          "result": "unrated"
+                        },
+                        "VX Vault": {
+                          "method": "blacklist",
+                          "engine_name": "VX Vault",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "ViriBack": {
+                          "method": "blacklist",
+                          "engine_name": "ViriBack",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "Webroot": {
+                          "method": "blacklist",
+                          "engine_name": "Webroot",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "Yandex Safebrowsing": {
+                          "method": "blacklist",
+                          "engine_name": "Yandex Safebrowsing",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "ZeroCERT": {
+                          "method": "blacklist",
+                          "engine_name": "ZeroCERT",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "desenmascara.me": {
+                          "method": "blacklist",
+                          "engine_name": "desenmascara.me",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "malwares.com URL checker": {
+                          "method": "blacklist",
+                          "engine_name": "malwares.com URL checker",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "securolytics": {
+                          "method": "blacklist",
+                          "engine_name": "securolytics",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "Xcitium Verdict Cloud": {
+                          "method": "blacklist",
+                          "engine_name": "Xcitium Verdict Cloud",
+                          "category": "harmless",
+                          "result": "clean"
+                        },
+                        "zvelo": {
+                          "method": "blacklist",
+                          "engine_name": "zvelo",
+                          "category": "undetected",
+                          "result": "unrated"
+                        },
+                        "ZeroFox": {
+                          "method": "blacklist",
+                          "engine_name": "ZeroFox",
+                          "category": "undetected",
+                          "result": "unrated"
+                        }
+                      },
+                      "last_update_date": 1750325887,
+                      "popularity_ranks": {
+                        "Majestic": {
+                          "rank": 29898,
+                          "timestamp": 1760279887
+                        },
+                        "Statvoo": {
+                          "timestamp": 1684083481,
+                          "rank": 1224
+                        },
+                        "Alexa": {
+                          "timestamp": 1684083481,
+                          "rank": 1224
+                        },
+                        "Cisco Umbrella": {
+                          "rank": 98468,
+                          "timestamp": 1760193493
+                        },
+                        "Quantcast": {
+                          "timestamp": 1585841763,
+                          "rank": 8107
+                        },
+                        "Cloudflare Radar": {
+                          "rank": 10000,
+                          "timestamp": 1760279885
+                        }
+                      },
+                      "jarm": "27d40d40d00040d1dc42d43d00041d6183ff1bfae51ebd88d70384363d525c",
+                      "reputation": 0,
+                      "whois": "Creation Date: 2012-05-05T09:37:37Z\nDNSSEC: unsigned\nDomain Name: temp-mail.org\nDomain Status: clientDeleteProhibited https://icann.org/epp#clientDeleteProhibited\nDomain Status: clientRenewProhibited https://icann.org/epp#clientRenewProhibited\nDomain Status: clientTransferProhibited https://icann.org/epp#clientTransferProhibited\nDomain Status: clientUpdateProhibited https://icann.org/epp#clientUpdateProhibited\nName Server: ram.ns.cloudflare.com\nName Server: rosa.ns.cloudflare.com\nRegistrar Abuse Contact Email: abuse@godaddy.com\nRegistrar Abuse Contact Phone: +1.4806242505\nRegistrar IANA ID: 146\nRegistrar URL: http://www.whois.godaddy.com\nRegistrar WHOIS Server: http://whois.godaddy.com\nRegistrar: GoDaddy.com, LLC\nRegistry Domain ID: REDACTED\nRegistry Expiry Date: 2026-05-05T09:37:37Z\nUpdated Date: 2025-06-19T09:38:07Z",
+                      "last_analysis_stats": {
+                        "malicious": 0,
+                        "suspicious": 0,
+                        "undetected": 30,
+                        "harmless": 65,
+                        "timeout": 0
+                      },
+                      "rdap": {
+                        "ldh_name": "temp-mail.org",
+                        "unicode_name": "temp-mail.org",
+                        "events": [
+                          {
+                            "event_action": "transfer",
+                            "event_date": "2019-05-27T02:40:22.882Z",
+                            "event_actor": "",
+                            "links": []
+                          },
+                          {
+                            "event_action": "expiration",
+                            "event_date": "2026-05-05T09:37:37.699Z",
+                            "event_actor": "",
+                            "links": []
+                          },
+                          {
+                            "event_action": "registration",
+                            "event_date": "2012-05-05T09:37:37.699Z",
+                            "event_actor": "",
+                            "links": []
+                          },
+                          {
+                            "event_action": "last changed",
+                            "event_date": "2025-06-19T09:38:07.479Z",
+                            "event_actor": "",
+                            "links": []
+                          },
+                          {
+                            "event_action": "last update of RDAP database",
+                            "event_date": "2025-10-07T23:11:29.784Z",
+                            "event_actor": "",
+                            "links": []
+                          }
+                        ],
+                        "links": [
+                          {
+                            "href": "https://rdap.godaddy.com/v1/domain/temp-mail.org",
+                            "rel": "related",
+                            "type": "application/rdap+json",
+                            "value": "https://rdap.publicinterestregistry.org/rdap/domain/temp-mail.org",
+                            "title": "",
+                            "media": "",
+                            "href_lang": []
+                          },
+                          {
+                            "href": "https://rdap.publicinterestregistry.org/rdap/domain/temp-mail.org",
+                            "rel": "self",
+                            "type": "application/rdap+json",
+                            "value": "https://rdap.publicinterestregistry.org/rdap/domain/temp-mail.org",
+                            "title": "",
+                            "media": "",
+                            "href_lang": []
+                          }
+                        ],
+                        "notices": [
+                          {
+                            "title": "Terms of Service",
+                            "description": [
+                              "Public Interest Registry provides this RDAP service for informational purposes only, and to assist persons in obtaining information about or related to a domain name registration record. Public Interest Registry does not guarantee its accuracy. Users accessing the Public Interest Registry RDAP service agree to use the data only for lawful purposes, and under no circumstances may this data be used to: a) allow, enable, or otherwise support the transmission by e-mail, telephone, or facsimile of mass unsolicited, commercial advertising or solicitations to entities other than the registrar's own existing customers and b) enable high volume, automated, electronic processes that send queries or data to the systems of Public Interest Registry or any ICANN-accredited registrar, except as reasonably necessary to register domain names or modify existing registrations. When using the Public Interest Registry RDAP service, please consider the following: the RDAP service is not a replacement for standard EPP commands to the SRS service. RDAP is not considered authoritative for registered domain objects. The RDAP service may be scheduled for downtime during production or OT&E maintenance periods. Queries to the RDAP services are throttled. If too many queries are received from a single IP address within a specified time, the service will begin to reject further queries for a period of time to prevent disruption of RDAP service access. Abuse of the RDAP system through data mining is mitigated by detecting and limiting bulk query access from single sources. Where applicable, the presence of a [Non-Public Data] tag indicates that such data is not made publicly available due to applicable data privacy laws or requirements. Should you wish to contact the registrant, please refer to the RDAP records available through the registrar URL listed above. Access to non-public data may be provided, upon request, where it can be reasonably confirmed that the requester holds a specific legitimate interest and a proper legal basis for accessing the withheld data. Access to this data can be requested by submitting a request to WHOISrequest@pir.org. Public Interest Registry Inc. reserves the right to modify these terms at any time. By submitting this query, you agree to abide by this policy."
+                            ],
+                            "links": [
+                              {
+                                "href": "https://thenew.org/org-people/about-pir/policies/",
+                                "rel": "terms-of-service",
+                                "type": "text/html",
+                                "value": "https://rdap.publicinterestregistry.org/rdap/domain/temp-mail.org",
+                                "title": "",
+                                "media": "",
+                                "href_lang": []
+                              }
+                            ],
+                            "type": ""
+                          },
+                          {
+                            "title": "Status Codes",
+                            "description": [
+                              "For more information on domain status codes, please visit https://icann.org/epp"
+                            ],
+                            "links": [
+                              {
+                                "href": "https://icann.org/epp",
+                                "rel": "glossary",
+                                "type": "application/rdap+json",
+                                "value": "https://rdap.publicinterestregistry.org/rdap/domain/temp-mail.org",
+                                "title": "",
+                                "media": "",
+                                "href_lang": []
+                              }
+                            ],
+                            "type": ""
+                          },
+                          {
+                            "title": "RDDS Inaccuracy Complaint Form",
+                            "description": [
+                              "URL of the ICANN RDDS Inaccuracy Complaint Form: https://icann.org/wicf"
+                            ],
+                            "links": [
+                              {
+                                "href": "https://icann.org/wicf",
+                                "rel": "help",
+                                "type": "application/rdap+json",
+                                "value": "https://rdap.publicinterestregistry.org/rdap/domain/temp-mail.org",
+                                "title": "",
+                                "media": "",
+                                "href_lang": []
+                              }
+                            ],
+                            "type": ""
+                          }
+                        ],
+                        "nameservers": [
+                          {
+                            "handle": "9075a380911043199ab92f570804cab6-LROR",
+                            "ldh_name": "ram.ns.cloudflare.com",
+                            "unicode_name": "ram.ns.cloudflare.com",
+                            "object_class_name": "nameserver",
+                            "status": [
+                              "associated"
+                            ],
+                            "events": [],
+                            "links": [],
+                            "notices": [],
+                            "lang": "",
+                            "port43": "",
+                            "entities": [],
+                            "remarks": []
+                          },
+                          {
+                            "handle": "81efc4bc9f3547aa96ba383a208c0b20-LROR",
+                            "ldh_name": "rosa.ns.cloudflare.com",
+                            "unicode_name": "rosa.ns.cloudflare.com",
+                            "object_class_name": "nameserver",
+                            "status": [
+                              "associated"
+                            ],
+                            "events": [],
+                            "links": [],
+                            "notices": [],
+                            "lang": "",
+                            "port43": "",
+                            "entities": [],
+                            "remarks": []
+                          }
+                        ],
+                        "rdap_conformance": [
+                          "rdap_level_0",
+                          "icann_rdap_response_profile_1",
+                          "icann_rdap_technical_implementation_guide_1",
+                          "redacted"
+                        ],
+                        "entities": [
+                          {
+                            "object_class_name": "entity",
+                            "handle": "146",
+                            "vcard_array": [
+                              {
+                                "name": "version",
+                                "type": "text",
+                                "values": [
+                                  "4.0"
+                                ],
+                                "parameters": {}
+                              },
+                              {
+                                "name": "fn",
+                                "type": "text",
+                                "values": [
+                                  "GoDaddy.com, LLC"
+                                ],
+                                "parameters": {}
+                              }
+                            ],
+                            "roles": [
+                              "registrar"
+                            ],
+                            "public_ids": [
+                              {
+                                "type": "IANA Registrar ID",
+                                "identifier": "146"
+                              }
+                            ],
+                            "entities": [
+                              {
+                                "object_class_name": "entity",
+                                "handle": "2e245ac341044535ad2f256defd5d975-LROR",
+                                "vcard_array": [
+                                  {
+                                    "name": "version",
+                                    "type": "text",
+                                    "values": [
+                                      "4.0"
+                                    ],
+                                    "parameters": {}
+                                  },
+                                  {
+                                    "name": "fn",
+                                    "type": "text",
+                                    "values": [
+                                      "Domains Abuse"
+                                    ],
+                                    "parameters": {}
+                                  },
+                                  {
+                                    "name": "tel",
+                                    "parameters": {
+                                      "type": [
+                                        "voice"
+                                      ]
+                                    },
+                                    "type": "uri",
+                                    "values": [
+                                      "tel:+1.4806242505"
+                                    ]
+                                  },
+                                  {
+                                    "name": "email",
+                                    "type": "text",
+                                    "values": [
+                                      "abuse@godaddy.com"
+                                    ],
+                                    "parameters": {}
+                                  }
+                                ],
+                                "roles": [
+                                  "abuse"
+                                ],
+                                "public_ids": [],
+                                "entities": [],
+                                "remarks": [],
+                                "links": [],
+                                "events": [],
+                                "as_event_actor": [],
+                                "status": [],
+                                "port43": "",
+                                "networks": [],
+                                "autnums": [],
+                                "url": "",
+                                "lang": "",
+                                "rdap_conformance": []
+                              }
+                            ],
+                            "links": [
+                              {
+                                "href": "https://rdap.publicinterestregistry.org/rdap/entity/146",
+                                "rel": "self",
+                                "type": "application/rdap+json",
+                                "value": "https://rdap.publicinterestregistry.org/rdap/entity/146",
+                                "title": "",
+                                "media": "",
+                                "href_lang": []
+                              },
+                              {
+                                "href": "https://rdap.godaddy.com/v1",
+                                "rel": "about",
+                                "type": "application/rdap+json",
+                                "value": "https://rdap.godaddy.com/v1",
+                                "title": "",
+                                "media": "",
+                                "href_lang": []
+                              }
+                            ],
+                            "remarks": [],
+                            "events": [],
+                            "as_event_actor": [],
+                            "status": [],
+                            "port43": "",
+                            "networks": [],
+                            "autnums": [],
+                            "url": "",
+                            "lang": "",
+                            "rdap_conformance": []
+                          }
+                        ],
+                        "object_class_name": "domain",
+                        "status": [
+                          "client delete prohibited",
+                          "client renew prohibited",
+                          "client transfer prohibited",
+                          "client update prohibited"
+                        ],
+                        "secure_dns": {
+                          "max_sig_life": 1,
+                          "delegation_signed": false,
+                          "zone_signed": false,
+                          "ds_data": [],
+                          "key_data": []
+                        },
+                        "public_ids": [
+                          {
+                            "type": "IANA Registrar ID",
+                            "identifier": "146"
+                          }
+                        ],
+                        "handle": "",
+                        "punycode": "",
+                        "type": "",
+                        "port43": "",
+                        "switch_name": "",
+                        "lang": "",
+                        "remarks": [],
+                        "nask0_state": "",
+                        "variants": []
+                      },
+                      "tld": "org",
+                      "whois_date": 1760136440,
+                      "categories": {},
+                      "expiration_date": 1777973857
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "RegexChecker": {
+            "extracted_iocs": {
+              "domain": [
+                "suspicious.sender",
+                "temp-mail.org"
+              ],
+              "sha256": [
+                "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9"
+              ],
+              "email": [
+                "suspicious.sender@temp-mail.org"
+              ],
+              "port": [
+                "1",
+                "555",
+                "0199"
+              ],
+              "bitcoin_address": [
+                "3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy"
+              ],
+              "base64": [
+                "3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy",
+                "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9"
+              ],
+              "hex": [
+                "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9"
+              ],
+              "mutex": [
+                "suspicious",
+                "temp-mail",
+                "containing",
+                "1-555-0199",
+                "Attachment"
+              ]
+            },
+            "validations": [
+              {
+                "type": "domain_validation",
+                "value": "suspicious.sender",
+                "validation": {
+                  "domain": "suspicious.sender",
+                  "is_valid": true,
+                  "tld": "sender",
+                  "subdomain_count": 0,
+                  "is_suspicious_tld": false,
+                  "length": 17,
+                  "has_numbers": false,
+                  "has_hyphens": false
+                }
+              },
+              {
+                "type": "domain_validation",
+                "value": "temp-mail.org",
+                "validation": {
+                  "domain": "temp-mail.org",
+                  "is_valid": true,
+                  "tld": "org",
+                  "subdomain_count": 0,
+                  "is_suspicious_tld": false,
+                  "length": 13,
+                  "has_numbers": false,
+                  "has_hyphens": true
+                }
+              },
+              {
+                "type": "hash_validation",
+                "value": "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9",
+                "hash_type": "sha256",
+                "validation": {
+                  "hash": "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9",
+                  "is_valid": true,
+                  "type": "SHA256",
+                  "length": 64,
+                  "uppercase": "B94D27B9934D3E08A52E52D7DA7DABFAC484EFE37A5380EE9088F7ACE2EFCDE9"
+                }
+              }
+            ],
+            "summary": {
+              "total_iocs": 16,
+              "ioc_types_found": [
+                "domain",
+                "sha256",
+                "email",
+                "port",
+                "bitcoin_address",
+                "base64",
+                "hex",
+                "mutex"
+              ],
+              "validations_performed": 3
+            }
+          }
+        },
+        "execution_metrics": {
+          "tools_count": 2,
+          "success_rate": 1.0,
+          "concurrent": true,
+          "performance_gain": "Optimized concurrent execution with caching",
+          "execution_time": 0
+        }
+      },
+      "vector_analysis": {
+        "status": "no_vector_search",
+        "note": "No vector database search performed"
+      },
+      "recommendations": [
+        "\ud83d\udd0d 16 indicators of compromise found - perform comprehensive security review",
+        "\u26a1 Analysis completed with caching optimization - 60-80% API cost reduction achieved"
+      ],
+      "processing_summary": {
+        "iterations": 1,
+        "tools_used": [
+          "VirusTotal",
+          "RegexChecker"
+        ],
+        "processing_method": "react_workflow_cached",
+        "cached_operations": [
+          "routing",
+          "tool_selection",
+          "tool_results"
+        ],
+        "execution_time_seconds": 0,
+        "performance_gain": "60-80% API cost reduction with caching"
+      },
+      "processing_method": "react_workflow",
+      "device_optimization": {
+        "device": "mps",
+        "memory_optimization": true,
+        "batch_size": 32
+      },
+      "pii_analysis": {
+        "pii_detected": false,
+        "note": "PII analysis not yet integrated with ReAct workflow"
+      },
+      "supervisor_version": "2.0"
+    },
+    "processing_time": 1.6457290649414062
+  }
+}

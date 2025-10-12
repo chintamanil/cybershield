@@ -1,0 +1,158 @@
+{
+  "timestamp": "2025-10-12T09:30:31.414298",
+  "run_directory": "/Users/manil/Projects/IK/Project-up/CyberShield/cybershield/tests/prompts/results",
+  "summary": {
+    "total_tests": 17,
+    "successful": 17,
+    "failed": 0,
+    "errors": 0,
+    "success_rate": "100.0%",
+    "average_response_time": "2.676s"
+  },
+  "by_category": {
+    "Basic Security": {
+      "total": 2,
+      "successful": 2,
+      "success_rate": "100.0%"
+    },
+    "PII Detection": {
+      "total": 2,
+      "successful": 2,
+      "success_rate": "100.0%"
+    },
+    "Network Security": {
+      "total": 2,
+      "successful": 2,
+      "success_rate": "100.0%"
+    },
+    "Advanced Threats": {
+      "total": 2,
+      "successful": 2,
+      "success_rate": "100.0%"
+    },
+    "Error Handling": {
+      "total": 3,
+      "successful": 3,
+      "success_rate": "100.0%"
+    },
+    "Image Analysis": {
+      "total": 3,
+      "successful": 3,
+      "success_rate": "100.0%"
+    },
+    "Multimodal": {
+      "total": 2,
+      "successful": 2,
+      "success_rate": "100.0%"
+    },
+    "Batch": {
+      "total": 1,
+      "successful": 1,
+      "success_rate": "100.0%"
+    }
+  },
+  "detailed_results": [
+    {
+      "category": "Basic Security",
+      "test": "Failed Login with Hash and Domain",
+      "status": "success",
+      "time": 3.026439905166626
+    },
+    {
+      "category": "Basic Security",
+      "test": "SSH Connection Attempt",
+      "status": "success",
+      "time": 1.545273780822754
+    },
+    {
+      "category": "PII Detection",
+      "test": "User with SSN and Credit Card",
+      "status": "success",
+      "time": 2.972590923309326
+    },
+    {
+      "category": "PII Detection",
+      "test": "Employee Record",
+      "status": "success",
+      "time": 0.6478550434112549
+    },
+    {
+      "category": "Network Security",
+      "test": "Firewall Block with DNS Query",
+      "status": "success",
+      "time": 2.9710938930511475
+    },
+    {
+      "category": "Network Security",
+      "test": "Malware C2 Server Detection",
+      "status": "success",
+      "time": 2.2553279399871826
+    },
+    {
+      "category": "Advanced Threats",
+      "test": "Lateral Movement with Cobalt Strike",
+      "status": "success",
+      "time": 2.126401901245117
+    },
+    {
+      "category": "Advanced Threats",
+      "test": "Phishing Email with Bitcoin",
+      "status": "success",
+      "time": 1.649919033050537
+    },
+    {
+      "category": "Error Handling",
+      "test": "Invalid IOCs",
+      "status": "success",
+      "time": 1.597989797592163
+    },
+    {
+      "category": "Error Handling",
+      "test": "Mixed Valid/Invalid Data",
+      "status": "success",
+      "time": 2.2383029460906982
+    },
+    {
+      "category": "Error Handling",
+      "test": "Rate Limiting Test",
+      "status": "success",
+      "time": 3.7002639770507812
+    },
+    {
+      "category": "Image Analysis",
+      "test": "Security Logs Screenshot",
+      "status": "success",
+      "time": 2.4156877994537354
+    },
+    {
+      "category": "Image Analysis",
+      "test": "Email with PII",
+      "status": "success",
+      "time": 4.053085088729858
+    },
+    {
+      "category": "Image Analysis",
+      "test": "Security Dashboard",
+      "status": "success",
+      "time": 2.358236789703369
+    },
+    {
+      "category": "Multimodal",
+      "test": "Security Logs + Text",
+      "status": "success",
+      "time": 1.7340950965881348
+    },
+    {
+      "category": "Multimodal",
+      "test": "Email PII + Text",
+      "status": "success",
+      "time": 2.332895040512085
+    },
+    {
+      "category": "Batch",
+      "test": "Mixed Batch Analysis",
+      "status": "success",
+      "time": 7.871747970581055
+    }
+  ]
+}
