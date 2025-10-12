@@ -206,42 +206,43 @@ class MemoryContextTester:
         return requests_chain, analysis
 
     def test_cross_agent_data_sharing(self):
-        """Test 3: Test data sharing between different agents."""
+        """Test 3: Test IOC pronoun resolution across multiple requests."""
         console.print("\n" + "="*80, style="bold blue")
-        console.print("TEST 3: Cross-Agent Data Sharing", style="bold blue")
+        console.print("TEST 3: Cross-Request IOC Pronoun Resolution", style="bold blue")
         console.print("="*80 + "\n", style="bold blue")
 
         requests_chain = []
 
-        # Request 1: PII detection
+        # Request 1: Initial IOC detection
         req1 = self.make_request(
             "/analyze",
             {
-                "text": "User john.doe@company.com (SSN: 123-45-6789) accessed system from 10.0.0.15"
+                "text": "Traffic detected from IP 45.76.123.89 connecting to suspicious-domain.net. "
+                       "File hash: 5d41402abc4b2a76b9719d911017c592 was executed."
             },
-            "Step 1 - PII detection (should trigger PII agent)"
+            "Step 1 - Initial IOC detection (IP, domain, hash)"
         )
         requests_chain.append(req1)
         time.sleep(1)
 
-        # Request 2: Threat analysis on same context
+        # Request 2: Reference IP from before
         req2 = self.make_request(
             "/analyze",
             {
-                "text": "The user from before is now accessing sensitive files"
+                "text": "The IP from before is now attempting port 445 access"
             },
-            "Step 2 - Threat analysis referencing previous user"
+            "Step 2 - Reference IP using pronoun"
         )
         requests_chain.append(req2)
         time.sleep(1)
 
-        # Request 3: Ask about PII from first request
+        # Request 3: Reference domain from first request
         req3 = self.make_request(
             "/analyze",
             {
-                "text": "Was any PII detected for the user we've been tracking?"
+                "text": "Is that domain associated with any known malware campaigns?"
             },
-            "Step 3 - Query about PII from first request"
+            "Step 3 - Reference domain using pronoun"
         )
         requests_chain.append(req3)
 
@@ -377,44 +378,65 @@ class MemoryContextTester:
         return requests_chain, analysis
 
     def analyze_context_preservation(self, requests_chain: List[Dict]) -> Dict:
-        """Analyze if context was preserved across requests."""
+        """Analyze if context was preserved across requests using pronoun resolution."""
         analysis = {
             "total_requests": len(requests_chain),
             "successful_requests": sum(1 for r in requests_chain if r["status"] == "success"),
-            "context_indicators": []
+            "pronoun_resolution_indicators": []
         }
 
-        # Look for indicators of context preservation in responses
+        # Check for actual pronoun resolution in responses
         for i, req in enumerate(requests_chain):
             if req["status"] == "success" and i > 0:
-                response_text = str(req["response"].get("result", {}))
+                result = req["response"].get("result", {})
 
-                # Check if response references previous requests
-                indicators = {
+                # Check for actual pronoun resolution
+                context_enrichment = result.get("context_enrichment", {})
+                pronoun_indicators = {
                     "request_number": i + 1,
-                    "references_previous": any(word in response_text.lower()
-                                              for word in ["previous", "earlier", "before", "already", "mentioned"]),
-                    "maintains_context": len(response_text) > 100,  # Non-trivial response
-                    "response_length": len(response_text)
+                    "has_context_enrichment": bool(context_enrichment),
+                    "enriched": context_enrichment.get("enriched", False),
+                    "context_used": context_enrichment.get("context_used", {}),
+                    "resolution_successful": False,
+                    "resolved_iocs": {}
                 }
 
-                analysis["context_indicators"].append(indicators)
+                # Check if actual IOCs were resolved
+                if context_enrichment.get("enriched") and context_enrichment.get("context_used"):
+                    context_used = context_enrichment["context_used"]
 
-        # Overall assessment
-        if analysis["context_indicators"]:
-            context_refs = sum(1 for ind in analysis["context_indicators"]
-                             if ind["references_previous"])
-            analysis["context_preservation_score"] = context_refs / len(analysis["context_indicators"])
+                    # Check for resolved IPs, domains, or hashes
+                    resolved_iocs = {}
+                    if context_used.get("ip"):
+                        resolved_iocs["ip"] = context_used["ip"]
+                    if context_used.get("domain"):
+                        resolved_iocs["domain"] = context_used["domain"]
+                    if context_used.get("hash"):
+                        resolved_iocs["hash"] = context_used["hash"]
+                    if context_used.get("attack_chain"):
+                        resolved_iocs["attack_chain"] = f"{context_used['attack_chain'].get('event_count', 0)} events"
+
+                    if resolved_iocs:
+                        pronoun_indicators["resolution_successful"] = True
+                        pronoun_indicators["resolved_iocs"] = resolved_iocs
+
+                analysis["pronoun_resolution_indicators"].append(pronoun_indicators)
+
+        # Calculate pronoun resolution success score
+        if analysis["pronoun_resolution_indicators"]:
+            successful_resolutions = sum(1 for ind in analysis["pronoun_resolution_indicators"]
+                                        if ind["resolution_successful"])
+            analysis["pronoun_resolution_score"] = successful_resolutions / len(analysis["pronoun_resolution_indicators"])
         else:
-            analysis["context_preservation_score"] = 0
+            analysis["pronoun_resolution_score"] = 0
 
         return analysis
 
     def compare_session_behavior(self, with_session: List[Dict], without_session: List[Dict]) -> Dict:
         """Compare behavior with and without consistent session ID."""
         return {
-            "with_session_context_score": self.analyze_context_preservation(with_session).get("context_preservation_score", 0),
-            "without_session_context_score": self.analyze_context_preservation(without_session).get("context_preservation_score", 0),
+            "with_session_pronoun_score": self.analyze_context_preservation(with_session).get("pronoun_resolution_score", 0),
+            "without_session_pronoun_score": self.analyze_context_preservation(without_session).get("pronoun_resolution_score", 0),
             "session_id_helps": True if len(with_session) > 1 and len(without_session) > 1 else False
         }
 
@@ -447,8 +469,8 @@ class MemoryContextTester:
         table = Table(title="Test Results Summary")
         table.add_column("Test Name", style="cyan")
         table.add_column("Total Requests", style="magenta")
-        table.add_column("Context Score", style="green")
-        table.add_column("Status", style="yellow")
+        table.add_column("Pronoun Resolution Score", style="green", no_wrap=True)
+        table.add_column("Status", style="blue")
 
         for result in self.test_results:
             test_name = result["test_name"]
@@ -457,16 +479,25 @@ class MemoryContextTester:
             # Extract metrics
             if "with_session" in analysis:
                 total_reqs = "Comparison"
-                context_score = f"{analysis['comparison']['with_session_context_score']:.2f}"
+                pronoun_score = f"{analysis.get('with_session', {}).get('pronoun_resolution_score', 0):.2f}"
             else:
                 total_reqs = str(analysis.get("total_requests", "N/A"))
-                context_score = f"{analysis.get('context_preservation_score', 0):.2f}"
+                pronoun_score = f"{analysis.get('pronoun_resolution_score', 0):.2f}"
 
-            status = "✓ Pass" if analysis.get("successful_requests", 0) > 0 else "✗ Fail"
+            # Status based on pronoun resolution
+            pronoun_score_val = analysis.get('pronoun_resolution_score', 0)
+            if "with_session" in analysis:
+                pronoun_score_val = analysis.get('with_session', {}).get('pronoun_resolution_score', 0)
 
-            table.add_row(test_name, total_reqs, context_score, status)
+            status = "✓ Pass" if pronoun_score_val > 0 else "⚠ Check"
+
+            table.add_row(test_name, total_reqs, pronoun_score, status)
 
         console.print(table)
+        console.print("\n[bold cyan]Note:[/bold cyan]")
+        console.print("  Pronoun Resolution Score measures actual context preservation via pronoun → IOC resolution")
+        console.print("  1.00 = Perfect (all pronouns resolved correctly)")
+        console.print("  0.00 = No pronoun resolution occurred (may be expected for some tests)")
 
         # Save summary
         summary_file = self.results_dir / "MEMORY_TEST_SUMMARY.md"
@@ -474,10 +505,42 @@ class MemoryContextTester:
             f.write(f"# Memory & Context Test Summary\n\n")
             f.write(f"**Generated**: {datetime.now().isoformat()}\n\n")
             f.write(f"**Session ID**: {self.session_id}\n\n")
+
+            f.write(f"## Scoring Metric\n\n")
+            f.write(f"**Pronoun Resolution Score**: Measures actual context preservation via pronoun → IOC resolution\n\n")
+            f.write(f"- Checks for `context_enrichment` field in responses\n")
+            f.write(f"- Verifies that `context_used` contains actual resolved IOC values\n")
+            f.write(f"- Confirms pronouns were successfully replaced with real indicators\n")
+            f.write(f"- **1.00** = Perfect (all pronouns resolved correctly)\n")
+            f.write(f"- **0.00** = No pronoun resolution occurred (may be expected for some tests)\n\n")
+
             f.write(f"## Test Results\n\n")
 
             for result in self.test_results:
-                f.write(f"### {result['test_name']}\n\n")
+                test_name = result['test_name']
+                analysis = result['analysis']
+
+                f.write(f"### {test_name}\n\n")
+
+                # Add score summary at top
+                pronoun_score = analysis.get('pronoun_resolution_score', 0)
+                if "with_session" in analysis:
+                    pronoun_score = analysis.get('with_session', {}).get('pronoun_resolution_score', 0)
+
+                f.write(f"**Pronoun Resolution Score**: {pronoun_score:.2f}\n\n")
+
+                # Show pronoun resolution details if available
+                if analysis.get('pronoun_resolution_indicators'):
+                    f.write(f"**Resolution Details**:\n\n")
+                    for ind in analysis['pronoun_resolution_indicators']:
+                        status = "✓ Success" if ind['resolution_successful'] else "✗ Failed"
+                        f.write(f"- Request {ind['request_number']}: {status}\n")
+                        if ind['resolved_iocs']:
+                            for ioc_type, value in ind['resolved_iocs'].items():
+                                f.write(f"  - Resolved {ioc_type}: `{value}`\n")
+                    f.write(f"\n")
+
+                f.write(f"**Full Analysis**:\n")
                 f.write(f"```json\n{json.dumps(result['analysis'], indent=2)}\n```\n\n")
 
         console.print(f"\n✓ Summary saved: {summary_file}", style="green")

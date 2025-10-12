@@ -1,13 +1,13 @@
 {
-  "timestamp": "2025-10-12T12:10:22.057562",
+  "timestamp": "2025-10-12T12:17:07.318323",
   "test_name": "sequential_ioc_analysis",
-  "session_id": "d40126c7-7c38-4a4b-ad28-aea4a980b27f",
+  "session_id": "849df1ac-cfb4-4fcb-9c70-5654ef64e1b2",
   "requests_chain": [
     {
       "description": "Initial analysis - Extract multiple IOCs",
       "request": {
         "text": "Suspicious activity from 192.168.1.100 connecting to malware-c2.example.com. Also detected traffic to 203.0.113.50 on port 443. File hash: d41d8cd98f00b204e9800998ecf8427e",
-        "session_id": "d40126c7-7c38-4a4b-ad28-aea4a980b27f"
+        "session_id": "849df1ac-cfb4-4fcb-9c70-5654ef64e1b2"
       },
       "response": {
         "status": "success",
@@ -4355,16 +4355,16 @@
           },
           "supervisor_version": "2.0"
         },
-        "processing_time": 0.015587091445922852
+        "processing_time": 0.015375852584838867
       },
-      "response_time": 0.026592016220092773,
+      "response_time": 0.025494098663330078,
       "status": "success"
     },
     {
       "description": "Follow-up - Ask about specific IOC from previous request",
       "request": {
         "text": "Tell me more about the IP address 192.168.1.100 from the previous analysis. What threats are associated with it?",
-        "session_id": "d40126c7-7c38-4a4b-ad28-aea4a980b27f"
+        "session_id": "849df1ac-cfb4-4fcb-9c70-5654ef64e1b2"
       },
       "response": {
         "status": "success",
@@ -6056,16 +6056,16 @@
           },
           "supervisor_version": "2.0"
         },
-        "processing_time": 0.016679048538208008
+        "processing_time": 0.015480995178222656
       },
-      "response_time": 0.019784927368164062,
+      "response_time": 0.018605709075927734,
       "status": "success"
     },
     {
       "description": "Follow-up - Ask about domain from first request",
       "request": {
         "text": "What about the domain malware-c2.example.com? Is it malicious?",
-        "session_id": "d40126c7-7c38-4a4b-ad28-aea4a980b27f"
+        "session_id": "849df1ac-cfb4-4fcb-9c70-5654ef64e1b2"
       },
       "response": {
         "status": "success",
@@ -7414,9 +7414,9 @@
           },
           "supervisor_version": "2.0"
         },
-        "processing_time": 0.011044025421142578
+        "processing_time": 0.010258197784423828
       },
-      "response_time": 0.015522956848144531,
+      "response_time": 0.013102054595947266,
       "status": "success"
     }
   ],

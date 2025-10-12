@@ -1,13 +1,13 @@
 {
-  "timestamp": "2025-10-12T12:10:27.360872",
+  "timestamp": "2025-10-12T12:17:12.447431",
   "test_name": "incremental_threat_investigation",
-  "session_id": "d40126c7-7c38-4a4b-ad28-aea4a980b27f",
+  "session_id": "849df1ac-cfb4-4fcb-9c70-5654ef64e1b2",
   "requests_chain": [
     {
       "description": "Step 1 - Initial suspicious activity detected",
       "request": {
         "text": "Detected failed login from IP 198.51.100.25",
-        "session_id": "d40126c7-7c38-4a4b-ad28-aea4a980b27f"
+        "session_id": "849df1ac-cfb4-4fcb-9c70-5654ef64e1b2"
       },
       "response": {
         "status": "success",
@@ -1482,16 +1482,16 @@
           },
           "supervisor_version": "2.0"
         },
-        "processing_time": 0.008410215377807617
+        "processing_time": 0.008487939834594727
       },
-      "response_time": 0.010829925537109375,
+      "response_time": 0.01093602180480957,
       "status": "success"
     },
     {
       "description": "Step 2 - Escalation - port scanning from same IP",
       "request": {
         "text": "The same IP is now scanning ports 22, 23, 3389",
-        "session_id": "d40126c7-7c38-4a4b-ad28-aea4a980b27f"
+        "session_id": "849df1ac-cfb4-4fcb-9c70-5654ef64e1b2"
       },
       "response": {
         "status": "success",
@@ -1576,16 +1576,16 @@
           },
           "supervisor_version": "2.0"
         },
-        "processing_time": 0.009822845458984375
+        "processing_time": 0.012222051620483398
       },
-      "response_time": 0.013180971145629883,
+      "response_time": 0.015536308288574219,
       "status": "success"
     },
     {
       "description": "Step 3 - Successful compromise from the IP",
       "request": {
         "text": "Successful SSH connection established from that IP",
-        "session_id": "d40126c7-7c38-4a4b-ad28-aea4a980b27f"
+        "session_id": "849df1ac-cfb4-4fcb-9c70-5654ef64e1b2"
       },
       "response": {
         "status": "success",
@@ -1670,16 +1670,16 @@
           },
           "supervisor_version": "2.0"
         },
-        "processing_time": 0.009706974029541016
+        "processing_time": 0.017349958419799805
       },
-      "response_time": 0.013254165649414062,
+      "response_time": 0.021481037139892578,
       "status": "success"
     },
     {
       "description": "Step 4 - Request summary of entire attack chain",
       "request": {
         "text": "Summarize the entire attack chain we've been tracking",
-        "session_id": "d40126c7-7c38-4a4b-ad28-aea4a980b27f"
+        "session_id": "849df1ac-cfb4-4fcb-9c70-5654ef64e1b2"
       },
       "response": {
         "status": "success",
@@ -1873,9 +1873,9 @@
           },
           "supervisor_version": "2.0"
         },
-        "processing_time": 2.2369439601898193
+        "processing_time": 2.044926881790161
       },
-      "response_time": 2.2393558025360107,
+      "response_time": 2.0502920150756836,
       "status": "success"
     }
   ],

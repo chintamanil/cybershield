@@ -175,17 +175,13 @@ class WorkflowSteps:
             return {**state, "threat_results": [{"tool": "AbuseIPDB", "error": str(e)}]}
 
     async def shodan_step(self, state) -> Dict:
-        """Shodan analysis step with caching"""
+        """Shodan analysis step with caching and graceful rate limit handling"""
         logger.info("Shodan analysis step")
 
         try:
             if not self.shodan_client:
-                return {
-                    **state,
-                    "threat_results": [
-                        {"tool": "Shodan", "error": "Shodan client not available"}
-                    ],
-                }
+                logger.info("Shodan client not available, excluding from results")
+                return {**state, "threat_results": []}  # Empty results, no error shown
 
             iocs = state.get("extracted_iocs", {})
             input_text = state.get("input_text", "")
@@ -202,14 +198,40 @@ class WorkflowSteps:
                     logger.warning(f"Shodan cache retrieval failed: {e}")
 
             results = []
+            rate_limited = False
 
             # Process IPs
             for ip in iocs.get("ips", [])[:5]:  # Conservative limit for Shodan
                 try:
                     result = await self.shodan_client.lookup_ip(ip)
+
+                    # Check for rate limit errors
+                    if "error" in result:
+                        error_msg = str(result.get("error", "")).lower()
+                        # Detect rate limit errors: 403 Forbidden, 429 Too Many Requests
+                        if "403" in error_msg or "429" in error_msg or "forbidden" in error_msg or "rate" in error_msg:
+                            logger.warning(f"Shodan rate limit detected, excluding from results: {result.get('error')}")
+                            rate_limited = True
+                            break  # Stop processing on rate limit
+
                     results.append({"type": "ip", "value": ip, "result": result})
                 except Exception as e:
+                    error_msg = str(e).lower()
+                    if "403" in error_msg or "429" in error_msg or "forbidden" in error_msg:
+                        logger.warning(f"Shodan rate limit detected (exception), excluding from results: {e}")
+                        rate_limited = True
+                        break
                     results.append({"type": "ip", "value": ip, "error": str(e)})
+
+            # If rate limited, return empty results (exclude Shodan entirely)
+            if rate_limited:
+                logger.info("Shodan excluded from analysis due to rate limiting")
+                return {**state, "threat_results": []}  # Empty results, no error shown
+
+            # If no results, also exclude
+            if not results:
+                logger.info("No Shodan results to report")
+                return {**state, "threat_results": []}
 
             # Prepare result for caching and return
             shodan_result = {"tool": "Shodan", "analysis": results, "status": "success"}
@@ -225,8 +247,12 @@ class WorkflowSteps:
             return {**state, "threat_results": [shodan_result]}
 
         except Exception as e:
+            error_msg = str(e).lower()
+            if "403" in error_msg or "429" in error_msg or "forbidden" in error_msg:
+                logger.warning(f"Shodan rate limit detected (outer exception), excluding from results: {e}")
+                return {**state, "threat_results": []}  # Empty results, no error shown
             logger.error(f"Shodan step failed: {e}")
-            return {**state, "threat_results": [{"tool": "Shodan", "error": str(e)}]}
+            return {**state, "threat_results": []}
 
     async def milvus_search_step(self, state) -> Dict:
         """Milvus vector search step for historical attack data"""

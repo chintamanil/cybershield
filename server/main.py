@@ -96,8 +96,10 @@ async def parallel_initialization():
     logger.info("Starting parallel component initialization")
 
     # Create all initialization tasks
+    # Note: For Redis, we test connectivity but will create a fresh RedisSTM instance later
+    redis_stm = RedisSTM()
     tasks = {
-        "redis": initialize_component("Redis", RedisSTM()._get_redis()),
+        "redis": initialize_component("Redis", redis_stm._get_redis()),
         "vectorstore": initialize_component("VectorStore", CyberShieldVectorStore("cybersecurity_attacks").connect()),
         "abuseipdb": initialize_component("AbuseIPDB", asyncio.create_task(asyncio.to_thread(AbuseIPDBClient))),
         "shodan": initialize_component("Shodan", asyncio.create_task(asyncio.to_thread(ShodanClient))),
@@ -144,10 +146,11 @@ async def lifespan(app: FastAPI):
         regex_result, rx_error = components.get("regex", (None, None))
 
         # Set up components (prioritize successful ones)
-        if memory_result is None and not memory_error:
-            memory = RedisSTM()
+        # IMPORTANT: Always create a fresh RedisSTM instance (memory_result is just the raw Redis client for connectivity check)
+        if not memory_error:
+            memory = RedisSTM()  # Create fresh wrapper instance
         else:
-            memory = None if memory_error else memory_result
+            memory = None
 
         if vectorstore_result is None and not vs_error:
             vectorstore = CyberShieldVectorStore("cybersecurity_attacks")
@@ -246,11 +249,13 @@ class AnalysisRequest(BaseModel):
     text: str
     use_react_workflow: Optional[bool] = True
     include_vision: Optional[bool] = False
+    session_id: Optional[str] = None  # NEW: For context preservation
 
 
 class BatchAnalysisRequest(BaseModel):
     inputs: list[str]
     use_react_workflow: Optional[bool] = True
+    session_id: Optional[str] = None  # NEW: For context preservation
 
 
 class AnalysisResponse(BaseModel):
@@ -340,8 +345,8 @@ async def analyze_text(request: AnalysisRequest):
         if hasattr(agent, "use_react_workflow"):
             agent.use_react_workflow = request.use_react_workflow
 
-        # Perform analysis with agent
-        result = await agent.analyze(request.text)
+        # Perform analysis with agent (with session_id for context preservation)
+        result = await agent.analyze(request.text, session_id=request.session_id)
 
         # Check if ReAct workflow was used and returned comprehensive results
         react_workflow_used = (
@@ -496,9 +501,10 @@ async def analyze_with_image(
     text: str = Form(...),
     image: UploadFile = File(...),
     use_react_workflow: bool = Form(True),
+    session_id: Optional[str] = Form(None),  # NEW: For context preservation
 ):
     """
-    Analyze text and image content for security risks
+    Analyze text and image content for security risks with optional session context
     """
     try:
         start_time = time.time()
@@ -510,8 +516,8 @@ async def analyze_with_image(
         if hasattr(agent, "use_react_workflow"):
             agent.use_react_workflow = use_react_workflow
 
-        # Perform analysis with image
-        result = await agent.analyze(text, image_data)
+        # Perform analysis with image (with session_id for context preservation)
+        result = await agent.analyze(text, image_data, session_id=session_id)
 
         processing_time = time.time() - start_time
 
@@ -536,7 +542,7 @@ async def analyze_with_image(
 @app.post("/batch-analyze")
 async def batch_analyze(request: BatchAnalysisRequest):
     """
-    Analyze multiple text inputs in batch
+    Analyze multiple text inputs in batch with optional session context
     """
     try:
         start_time = time.time()
@@ -545,8 +551,8 @@ async def batch_analyze(request: BatchAnalysisRequest):
         if hasattr(agent, "use_react_workflow"):
             agent.use_react_workflow = request.use_react_workflow
 
-        # Perform batch analysis
-        results = await agent.analyze_batch(request.inputs)
+        # Perform batch analysis (with session_id for context preservation)
+        results = await agent.analyze_batch(request.inputs, session_id=request.session_id)
 
         processing_time = time.time() - start_time
 

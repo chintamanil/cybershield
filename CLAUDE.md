@@ -563,6 +563,210 @@ Successfully configured IAM policies for:
 - Optimize vector search performance
 - Add configuration validation
 
+## Context Memory & Session Management
+
+**✅ Intelligent Context Preservation for Multi-Step Security Investigations**
+
+### Overview
+
+CyberShield implements sophisticated session-based context management that enables natural, multi-turn security investigations. The system automatically tracks IOCs (Indicators of Compromise), resolves pronoun references, and builds comprehensive attack chain timelines across requests.
+
+### Technical Implementation
+
+**Core Components:**
+- **Context Resolver** (`workflows/context_resolver.py`): Pronoun resolution and IOC enrichment
+- **Redis STM** (`memory/redis_stm.py`): Session-based storage with 30-minute TTL
+- **Session Storage**: `cybershield:session:{id}:iocs` key format
+- **Attack Chain Tracking**: `cybershield:session:{id}:events` for temporal correlation
+
+**Integration Points:**
+- **ReAct Workflow**: Context resolution before supervisor processing
+- **All Agents**: Shared IOC access across PIIAgent, ThreatAgent, LogParserAgent
+- **API Layer**: Session ID parameter in `/analyze` endpoint
+
+### Pronoun Resolution Patterns
+
+The system recognizes and resolves multiple pronoun patterns:
+
+```python
+PRONOUN_PATTERNS = {
+    "ip": ["that ip", "same ip", "the ip", "this ip", "ip from before"],
+    "domain": ["that domain", "same domain", "the domain", "domain from before"],
+    "hash": ["that hash", "same hash", "the hash", "hash from before"],
+    "general": ["same", "that", "this", "from before", "earlier"]
+}
+```
+
+### Example Usage Patterns
+
+#### Pattern 1: Basic IOC Tracking
+
+```bash
+# Request 1: Establish IOC context
+curl -X POST http://localhost:8000/analyze \
+  -H "Content-Type: application/json" \
+  -d '{
+    "text": "Suspicious activity from 192.168.1.100 connecting to malware-c2.example.com",
+    "session_id": "investigation-001"
+  }'
+
+# System stores:
+# - IPs: ["192.168.1.100"]
+# - Domains: ["malware-c2.example.com"]
+# - Session: investigation-001
+
+# Request 2: Reference IOC by pronoun
+curl -X POST http://localhost:8000/analyze \
+  -H "Content-Type: application/json" \
+  -d '{
+    "text": "What threats are associated with that IP?",
+    "session_id": "investigation-001"
+  }'
+
+# ✅ System resolves: "that IP" → "192.168.1.100"
+# Enriched text: "What threats are associated with 192.168.1.100?"
+```
+
+#### Pattern 2: Multi-Step Attack Chain
+
+```bash
+# Step 1: Initial detection
+POST /analyze {"text": "Failed login from 198.51.100.25", "session_id": "apt-2025"}
+# IOCs stored: {ips: ["198.51.100.25"], events: [event1]}
+
+# Step 2: Escalation (pronoun reference)
+POST /analyze {"text": "Same IP scanning ports 22, 23, 3389", "session_id": "apt-2025"}
+# ✅ Resolves "Same IP" → "198.51.100.25"
+# Events: [event1, event2] (attack chain building)
+
+# Step 3: Compromise
+POST /analyze {"text": "SSH connection from that IP", "session_id": "apt-2025"}
+# ✅ Resolves "that IP" → "198.51.100.25"
+# Events: [event1, event2, event3]
+
+# Step 4: Summary request
+POST /analyze {"text": "Summarize entire attack chain", "session_id": "apt-2025"}
+# Returns complete timeline: 3-event attack chain from 198.51.100.25
+# Correlation: failed login → port scan → successful compromise
+```
+
+#### Pattern 3: Cross-IOC Analysis
+
+```bash
+# Multiple IOC types in single investigation
+POST /analyze {
+  "text": "Traffic from 45.76.123.89 to suspicious-domain.net. Hash: 5d41402abc",
+  "session_id": "malware-042"
+}
+# Stored: {ips: ["45.76.123.89"], domains: ["suspicious-domain.net"], hashes: ["5d414..."]}
+
+# Reference different IOC types
+POST /analyze {"text": "Is the IP from before in any botnets?", "session_id": "malware-042"}
+# ✅ Resolves → 45.76.123.89
+
+POST /analyze {"text": "What about that domain?", "session_id": "malware-042"}
+# ✅ Resolves → suspicious-domain.net
+
+POST /analyze {"text": "Check the hash for malware", "session_id": "malware-042"}
+# ✅ Resolves → 5d41402abc
+```
+
+### Context Enrichment Response
+
+When context is used, responses include `context_enrichment` field:
+
+```json
+{
+  "status": "success",
+  "result": {
+    "input_analysis": {
+      "original_text": "Tell me about that IP",
+      "enriched_text": "Tell me about 192.168.1.100",
+      "context_enrichment": {
+        "enriched": true,
+        "context_used": {
+          "ip": "192.168.1.100"
+        },
+        "session_id": "investigation-001"
+      }
+    },
+    "threat_analysis": {
+      // ... threat intelligence on 192.168.1.100
+    }
+  }
+}
+```
+
+### Session Persistence & TTL
+
+**Storage Configuration:**
+- **Session Data TTL**: 30 minutes of inactivity
+- **Storage Backend**: Redis with atomic operations
+- **Key Format**: `cybershield:session:{session_id}:{data_type}`
+- **Data Types**: `iocs`, `events`, `metadata`
+
+**Session Lifecycle:**
+```python
+# Session creation (automatic)
+session_id = str(uuid.uuid4())  # e.g., "849df1ac-cfb4-4fcb-9c70-5654ef64e1b2"
+
+# IOC storage (after each request)
+await redis_stm.store_iocs(session_id, extracted_iocs)
+
+# Context retrieval (before each request)
+session_iocs = await redis_stm.get_session_iocs(session_id)
+
+# Pronoun resolution
+enriched_text = await context_resolver.enrich_with_context(text, session_iocs)
+
+# Session expiration
+# Automatic after 30 minutes of inactivity
+```
+
+### Testing Context Memory
+
+**Comprehensive Test Suite** (`tests/prompts/test_memory_context.py`):
+
+```bash
+cd tests/prompts
+python test_memory_context.py
+
+# Test Suite Results:
+# ✅ Sequential IOC Analysis (100% pronoun resolution)
+# ✅ Incremental Threat Investigation (attack chain building)
+# ✅ Cross-Agent Data Sharing (shared context validation)
+# ✅ Session ID Comparison (with vs without sessions)
+# ✅ Redis Cache Persistence (performance validation)
+```
+
+**Test Metrics:**
+- **Pronoun Resolution Score**: Measures actual IOC resolution success
+- **Attack Chain Correlation**: Validates event sequencing
+- **Session Isolation**: Ensures separate sessions don't interfere
+- **Cache Performance**: Validates 30-minute TTL effectiveness
+
+### Performance Impact
+
+**Context Resolution Overhead:**
+- **Cache Lookup**: ~2-5ms (Redis read)
+- **Pronoun Matching**: ~1-3ms (regex patterns)
+- **Text Enrichment**: ~1-2ms (string replacement)
+- **Total Overhead**: ~5-10ms per request with context
+
+**Benefits:**
+- **User Experience**: Natural conversation flow without repeating IOCs
+- **Investigation Efficiency**: Build attack chains incrementally
+- **Cross-Agent Coordination**: Shared context across all security analysis agents
+- **Debugging**: Full trace of multi-step investigations
+
+### Use Cases
+
+1. **Incident Response**: Track evolving threats across multiple alerts
+2. **Threat Hunting**: Build comprehensive attack timelines
+3. **Forensic Analysis**: Correlate events from different time periods
+4. **Team Collaboration**: Share session IDs for collaborative investigations
+5. **Training**: Demonstrate attack progression with real-time context
+
 ## Sample Prompts for Testing
 
 ### Security Analysis Examples

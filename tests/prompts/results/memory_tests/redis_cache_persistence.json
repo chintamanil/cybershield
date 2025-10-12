@@ -1,13 +1,13 @@
 {
-  "timestamp": "2025-10-12T10:22:31.347231",
+  "timestamp": "2025-10-12T12:17:20.714066",
   "test_name": "redis_cache_persistence",
-  "session_id": "00da04ef-c801-4972-a6b6-b22331d89187",
+  "session_id": "849df1ac-cfb4-4fcb-9c70-5654ef64e1b2",
   "requests_chain": [
     {
       "description": "Request 1 - First analysis (fresh data)",
       "request": {
         "text": "Check IP 1.1.1.1 for threats",
-        "session_id": "00da04ef-c801-4972-a6b6-b22331d89187"
+        "session_id": "849df1ac-cfb4-4fcb-9c70-5654ef64e1b2"
       },
       "response": {
         "status": "success",
@@ -62,6 +62,572 @@
                         "self": "https://www.virustotal.com/api/v3/ip_addresses/1.1.1.1"
                       },
                       "attributes": {
+                        "reputation": 77,
+                        "last_modification_date": 1760294234,
+                        "last_https_certificate": {
+                          "cert_signature": {
+                            "signature_algorithm": "sha256RSA",
+                            "signature": "9c36c4801745f127ad4635a3a78c80945dea3fe1eec0dfe09e1ad1c618232aae043b1150e697d7641059c9a8a2f0ffa5a68e0a3b0464e898c77baedbcfe7d1a3de4b1f5d73eb53c13b279e4eb2c3b6d0d76779c26da86e754e979d76616e98a37c1dfbd8592a5b51f874e989e00b23abf26054a294f46e5b33fc8dd0c564f3d3636c4cca88467c5e4bd5e4e171e3a3bc627e4b5ccffa40cd991f607c2cb97b8ad2fde6b3a3a8eb27e241b2e94417358438c5f9eb7dd5646c19d73d885f1e1d3d6beb9ec422be8aab5a4cf1a9c96bb8fd47dc22a69c316f51266f976b3a088673136af448c8cd72541427185f836b48097755e0b623c76e25684cd9571a0213e6"
+                          },
+                          "extensions": {
+                            "authority_key_identifier": {
+                              "keyid": "748580c066c7df37decfbd2937aa031dbeedcd17"
+                            },
+                            "subject_key_identifier": "2b2f8483a3e669e954c0e5b0b69f1fcdb618afa8",
+                            "subject_alternative_name": [
+                              "cloudflare-dns.com",
+                              "*.cloudflare-dns.com",
+                              "one.one.one.one",
+                              "1.0.0.1",
+                              "1.1.1.1",
+                              "162.159.36.1",
+                              "162.159.46.1",
+                              "2606:4700:4700::1001",
+                              "2606:4700:4700::1111",
+                              "2606:4700:4700::64",
+                              "2606:4700:4700::6400"
+                            ],
+                            "certificate_policies": [
+                              "2.23.140.1.2.2"
+                            ],
+                            "key_usage": [
+                              "digitalSignature",
+                              "keyAgreement"
+                            ],
+                            "extended_key_usage": [
+                              "serverAuth",
+                              "clientAuth"
+                            ],
+                            "crl_distribution_points": [
+                              "http://crl3.digicert.com/DigiCertGlobalG2TLSRSASHA2562020CA1-1.crl",
+                              "http://crl4.digicert.com/DigiCertGlobalG2TLSRSASHA2562020CA1-1.crl"
+                            ],
+                            "ca_information_access": {
+                              "OCSP": "http://ocsp.digicert.com",
+                              "CA Issuers": "http://cacerts.digicert.com/DigiCertGlobalG2TLSRSASHA2562020CA1-1.crt"
+                            },
+                            "CA": false,
+                            "1.3.6.1.4.1.11129.2.4.2": "0482016901670075000e5794bcf3aea93e331b2c9907b3f790df9bc23d713225"
+                          },
+                          "validity": {
+                            "not_after": "2026-01-21 23:59:59",
+                            "not_before": "2025-01-02 00:00:00"
+                          },
+                          "size": 1703,
+                          "version": "V3",
+                          "public_key": {
+                            "algorithm": "EC",
+                            "ec": {
+                              "oid": "secp256r1",
+                              "pub": "3059301306072a8648ce3d020106082a8648ce3d030107034200048080f1decb9302a3407e95b2b9ea4f7fcba332c63c32e360027a828d372607076b402e4e099b1697363fa3f295ee029bd4a1b4b58c942e9146798cea5b86ca86"
+                            }
+                          },
+                          "thumbprint_sha256": "73b8ed5becf1ba6493d2e2215a42dfdc7877e91e311ff5e59fb43d094871e699",
+                          "thumbprint": "3ba7e9f806eb30d2f4e3f905e53f07e9acf08e1e",
+                          "serial_number": "27dc8c5e17294aec9ed3f67728e8a08",
+                          "issuer": {
+                            "C": "US",
+                            "O": "DigiCert Inc",
+                            "CN": "DigiCert Global G2 TLS RSA SHA256 2020 CA1"
+                          },
+                          "subject": {
+                            "C": "US",
+                            "ST": "California",
+                            "L": "San Francisco",
+                            "O": "Cloudflare, Inc.",
+                            "CN": "cloudflare-dns.com"
+                          }
+                        },
+                        "last_analysis_date": 1760288814,
+                        "total_votes": {
+                          "harmless": 133,
+                          "malicious": 36
+                        },
+                        "as_owner": "CLOUDFLARENET",
+                        "network": "1.1.1.0/24",
+                        "whois_date": 1759576395,
+                        "whois": "NetRange: 1.0.0.0 - 1.255.255.255\nCIDR: 1.0.0.0/8\nNetName: APNIC-1\nNetHandle: NET-1-0-0-0-1\nParent: ()\nNetType: Allocated to APNIC\nOriginAS: \nOrganization: Asia Pacific Network Information Centre (APNIC)\nRegDate: \nUpdated: 2010-07-30\nComment: This IP address range is not registered in the ARIN database.\nComment: For details, refer to the APNIC Whois Database via\nComment: WHOIS.APNIC.NET or http://wq.apnic.net/apnic-bin/whois.pl\nComment: ** IMPORTANT NOTE: APNIC is the Regional Internet Registry\nComment: for the Asia Pacific region. APNIC does not operate networks\nComment: using this IP address range and is not able to investigate\nComment: spam or abuse reports relating to these addresses. For more\nComment: help, refer to http://www.apnic.net/apnic-info/whois_search2/abuse-and-spamming\nRef: https://rdap.arin.net/registry/ip/1.0.0.0\nResourceLink: https://apps.db.ripe.net/db-web-ui/query\nResourceLink: whois.apnic.net\nOrgName: Asia Pacific Network Information Centre\nOrgId: APNIC\nAddress: PO Box 3646\nCity: South Brisbane\nStateProv: QLD\nPostalCode: 4101\nCountry: AU\nRegDate: \nUpdated: 2012-01-24\nRef: https://rdap.arin.net/registry/entity/APNIC\nReferralServer: whois://whois.apnic.net\nResourceLink: https://apps.db.ripe.net/db-web-ui/query\nOrgAbuseHandle: AWC12-ARIN\nOrgAbuseName: APNIC Whois Contact\nOrgAbusePhone: +61 7 3858 3188 \nOrgAbuseEmail: search-apnic-not-arin@apnic.net\nOrgAbuseRef: https://rdap.arin.net/registry/entity/AWC12-ARIN\nOrgTechHandle: AWC12-ARIN\nOrgTechName: APNIC Whois Contact\nOrgTechPhone: +61 7 3858 3188 \nOrgTechEmail: search-apnic-not-arin@apnic.net\nOrgTechRef: https://rdap.arin.net/registry/entity/AWC12-ARIN\ninetnum: 1.1.1.0 - 1.1.1.255\nnetname: APNIC-LABS\ndescr: APNIC and Cloudflare DNS Resolver project\ndescr: Routed globally by AS13335/Cloudflare\ndescr: Research prefix for APNIC Labs\ncountry: AU\norg: ORG-ARAD1-AP\nadmin-c: AIC3-AP\ntech-c: AIC3-AP\nabuse-c: AA1412-AP\nstatus: ASSIGNED PORTABLE\nremarks: ---------------\nremarks: All Cloudflare abuse reporting can be done via\nremarks: resolver-abuse@cloudflare.com\nremarks: ---------------\nmnt-by: APNIC-HM\nmnt-routes: MAINT-APNICRANDNET\nmnt-irt: IRT-APNICRANDNET-AU\nlast-modified: 2023-04-26T22:57:58Z\nmnt-lower: MAINT-APNICRANDNET\nsource: APNIC\nirt: IRT-APNICRANDNET-AU\naddress: PO Box 3646\naddress: South Brisbane, QLD 4101\naddress: Australia\ne-mail: helpdesk@apnic.net\nabuse-mailbox: helpdesk@apnic.net\nadmin-c: AR302-AP\ntech-c: AR302-AP\nauth: # Filtered\nremarks: helpdesk@apnic.net was validated on 2021-02-09\nmnt-by: MAINT-APNICRANDNET\nlast-modified: 2025-09-03T02:28:14Z\nsource: APNIC\norganisation: ORG-ARAD1-AP\norg-name: APNIC Research and Development\norg-type: LIR\ncountry: AU\naddress: 6 Cordelia St\nphone: +61-7-38583100\nfax-no: +61-7-38583199\ne-mail: helpdesk@apnic.net\nmnt-ref: APNIC-HM\nmnt-by: APNIC-HM\nlast-modified: 2023-09-05T02:15:19Z\nsource: APNIC\nrole: ABUSE APNICRANDNETAU\ncountry: ZZ\naddress: PO Box 3646\naddress: South Brisbane, QLD 4101\naddress: Australia\nphone: +000000000\ne-mail: helpdesk@apnic.net\nadmin-c: AR302-AP\ntech-c: AR302-AP\nnic-hdl: AA1412-AP\nremarks: Generated from irt object IRT-APNICRANDNET-AU\nremarks: helpdesk@apnic.net was validated on 2021-02-09\nabuse-mailbox: helpdesk@apnic.net\nmnt-by: APNIC-ABUSE\nlast-modified: 2025-05-28T03:31:35Z\nsource: APNIC\nrole: APNICRANDNET Infrastructure Contact\naddress: 6 Cordelia St\n South Brisbane\n QLD 4101\ncountry: AU\nphone: +61 7 3858 3100\ne-mail: research@apnic.net\nadmin-c: AIC3-AP\ntech-c: AIC3-AP\nnic-hdl: AIC3-AP\nmnt-by: MAINT-APNICRANDNET\nlast-modified: 2024-07-18T04:37:37Z\nsource: APNIC\nroute: 1.1.1.0/24\norigin: AS13335\ndescr: APNIC Research and Development\n 6 Cordelia St\nmnt-by: MAINT-APNICRANDNET\nlast-modified: 2023-04-26T02:42:44Z\nsource: APNIC\n",
+                        "last_analysis_stats": {
+                          "malicious": 1,
+                          "suspicious": 0,
+                          "undetected": 30,
+                          "harmless": 64,
+                          "timeout": 0
+                        },
+                        "last_https_certificate_date": 1760289115,
+                        "rdap": {
+                          "object_class_name": "ip network",
+                          "handle": "1.1.1.0 - 1.1.1.255",
+                          "start_address": "1.1.1.0",
+                          "end_address": "1.1.1.255",
+                          "ip_version": "v4",
+                          "name": "APNIC-LABS",
+                          "type": "ASSIGNED PORTABLE",
+                          "country": "AU",
+                          "status": [
+                            "active"
+                          ],
+                          "links": [
+                            {
+                              "href": "https://rdap.apnic.net/ip/1.1.1.0/24",
+                              "rel": "self",
+                              "type": "application/rdap+json",
+                              "value": "https://rdap.apnic.net/ip/1.1.1.1",
+                              "title": "",
+                              "media": "",
+                              "href_lang": []
+                            }
+                          ],
+                          "notices": [
+                            {
+                              "title": "Source",
+                              "description": [
+                                "Objects returned came from source",
+                                "APNIC"
+                              ],
+                              "links": [],
+                              "type": ""
+                            },
+                            {
+                              "title": "Terms and Conditions",
+                              "description": [
+                                "This is the APNIC WHOIS Database query service. The objects are in RDAP format."
+                              ],
+                              "links": [
+                                {
+                                  "href": "http://www.apnic.net/db/dbcopyright.html",
+                                  "rel": "terms-of-service",
+                                  "type": "text/html",
+                                  "value": "https://rdap.apnic.net/ip/1.1.1.1",
+                                  "title": "",
+                                  "media": "",
+                                  "href_lang": []
+                                }
+                              ],
+                              "type": ""
+                            },
+                            {
+                              "title": "Whois Inaccuracy Reporting",
+                              "description": [
+                                "If you see inaccuracies in the results, please visit: "
+                              ],
+                              "links": [
+                                {
+                                  "href": "https://www.apnic.net/manage-ip/using-whois/abuse-and-spamming/invalid-contact-form",
+                                  "rel": "inaccuracy-report",
+                                  "type": "text/html",
+                                  "value": "https://rdap.apnic.net/ip/1.1.1.1",
+                                  "title": "",
+                                  "media": "",
+                                  "href_lang": []
+                                }
+                              ],
+                              "type": ""
+                            }
+                          ],
+                          "events": [
+                            {
+                              "event_action": "registration",
+                              "event_date": "2011-08-10T23:12:35Z",
+                              "event_actor": "",
+                              "links": []
+                            },
+                            {
+                              "event_action": "last changed",
+                              "event_date": "2023-04-26T22:57:58Z",
+                              "event_actor": "",
+                              "links": []
+                            }
+                          ],
+                          "rdap_conformance": [
+                            "history_version_0",
+                            "nro_rdap_profile_0",
+                            "cidr0",
+                            "rdap_level_0"
+                          ],
+                          "entities": [
+                            {
+                              "object_class_name": "entity",
+                              "handle": "AIC3-AP",
+                              "vcard_array": [
+                                {
+                                  "name": "version",
+                                  "type": "text",
+                                  "values": [
+                                    "4.0"
+                                  ],
+                                  "parameters": {}
+                                },
+                                {
+                                  "name": "fn",
+                                  "type": "text",
+                                  "values": [
+                                    "APNICRANDNET Infrastructure Contact"
+                                  ],
+                                  "parameters": {}
+                                },
+                                {
+                                  "name": "kind",
+                                  "type": "text",
+                                  "values": [
+                                    "group"
+                                  ],
+                                  "parameters": {}
+                                },
+                                {
+                                  "name": "adr",
+                                  "parameters": {
+                                    "label": [
+                                      "6 Cordelia St South Brisbane QLD 4101"
+                                    ]
+                                  },
+                                  "type": "text",
+                                  "values": [
+                                    "",
+                                    "",
+                                    "",
+                                    "",
+                                    "",
+                                    "",
+                                    ""
+                                  ]
+                                },
+                                {
+                                  "name": "tel",
+                                  "parameters": {
+                                    "type": [
+                                      "voice"
+                                    ]
+                                  },
+                                  "type": "text",
+                                  "values": [
+                                    "+61 7 3858 3100"
+                                  ]
+                                },
+                                {
+                                  "name": "email",
+                                  "type": "text",
+                                  "values": [
+                                    "research@apnic.net"
+                                  ],
+                                  "parameters": {}
+                                }
+                              ],
+                              "roles": [
+                                "technical",
+                                "administrative"
+                              ],
+                              "links": [
+                                {
+                                  "href": "https://rdap.apnic.net/entity/AIC3-AP",
+                                  "rel": "self",
+                                  "type": "application/rdap+json",
+                                  "value": "https://rdap.apnic.net/ip/1.1.1.1",
+                                  "title": "",
+                                  "media": "",
+                                  "href_lang": []
+                                }
+                              ],
+                              "events": [
+                                {
+                                  "event_action": "registration",
+                                  "event_date": "2023-04-26T00:42:16Z",
+                                  "event_actor": "",
+                                  "links": []
+                                },
+                                {
+                                  "event_action": "last changed",
+                                  "event_date": "2024-07-18T04:37:37Z",
+                                  "event_actor": "",
+                                  "links": []
+                                }
+                              ],
+                              "public_ids": [],
+                              "entities": [],
+                              "remarks": [],
+                              "as_event_actor": [],
+                              "status": [],
+                              "port43": "",
+                              "networks": [],
+                              "autnums": [],
+                              "url": "",
+                              "lang": "",
+                              "rdap_conformance": []
+                            },
+                            {
+                              "object_class_name": "entity",
+                              "handle": "ORG-ARAD1-AP",
+                              "vcard_array": [
+                                {
+                                  "name": "version",
+                                  "type": "text",
+                                  "values": [
+                                    "4.0"
+                                  ],
+                                  "parameters": {}
+                                },
+                                {
+                                  "name": "fn",
+                                  "type": "text",
+                                  "values": [
+                                    "APNIC Research and Development"
+                                  ],
+                                  "parameters": {}
+                                },
+                                {
+                                  "name": "kind",
+                                  "type": "text",
+                                  "values": [
+                                    "org"
+                                  ],
+                                  "parameters": {}
+                                },
+                                {
+                                  "name": "adr",
+                                  "parameters": {
+                                    "label": [
+                                      "6 Cordelia St"
+                                    ]
+                                  },
+                                  "type": "text",
+                                  "values": [
+                                    "",
+                                    "",
+                                    "",
+                                    "",
+                                    "",
+                                    "",
+                                    ""
+                                  ]
+                                },
+                                {
+                                  "name": "tel",
+                                  "parameters": {
+                                    "type": [
+                                      "voice"
+                                    ]
+                                  },
+                                  "type": "text",
+                                  "values": [
+                                    "+61-7-38583100"
+                                  ]
+                                },
+                                {
+                                  "name": "tel",
+                                  "parameters": {
+                                    "type": [
+                                      "fax"
+                                    ]
+                                  },
+                                  "type": "text",
+                                  "values": [
+                                    "+61-7-38583199"
+                                  ]
+                                },
+                                {
+                                  "name": "email",
+                                  "type": "text",
+                                  "values": [
+                                    "helpdesk@apnic.net"
+                                  ],
+                                  "parameters": {}
+                                }
+                              ],
+                              "roles": [
+                                "registrant"
+                              ],
+                              "links": [
+                                {
+                                  "href": "https://rdap.apnic.net/entity/ORG-ARAD1-AP",
+                                  "rel": "self",
+                                  "type": "application/rdap+json",
+                                  "value": "https://rdap.apnic.net/ip/1.1.1.1",
+                                  "title": "",
+                                  "media": "",
+                                  "href_lang": []
+                                }
+                              ],
+                              "events": [
+                                {
+                                  "event_action": "registration",
+                                  "event_date": "2017-08-08T23:21:55Z",
+                                  "event_actor": "",
+                                  "links": []
+                                },
+                                {
+                                  "event_action": "last changed",
+                                  "event_date": "2023-09-05T02:15:19Z",
+                                  "event_actor": "",
+                                  "links": []
+                                }
+                              ],
+                              "public_ids": [],
+                              "entities": [],
+                              "remarks": [],
+                              "as_event_actor": [],
+                              "status": [],
+                              "port43": "",
+                              "networks": [],
+                              "autnums": [],
+                              "url": "",
+                              "lang": "",
+                              "rdap_conformance": []
+                            },
+                            {
+                              "object_class_name": "entity",
+                              "handle": "IRT-APNICRANDNET-AU",
+                              "vcard_array": [
+                                {
+                                  "name": "version",
+                                  "type": "text",
+                                  "values": [
+                                    "4.0"
+                                  ],
+                                  "parameters": {}
+                                },
+                                {
+                                  "name": "fn",
+                                  "type": "text",
+                                  "values": [
+                                    "IRT-APNICRANDNET-AU"
+                                  ],
+                                  "parameters": {}
+                                },
+                                {
+                                  "name": "kind",
+                                  "type": "text",
+                                  "values": [
+                                    "group"
+                                  ],
+                                  "parameters": {}
+                                },
+                                {
+                                  "name": "adr",
+                                  "parameters": {
+                                    "label": [
+                                      "PO Box 3646\nSouth Brisbane, QLD 4101\nAustralia"
+                                    ]
+                                  },
+                                  "type": "text",
+                                  "values": [
+                                    "",
+                                    "",
+                                    "",
+                                    "",
+                                    "",
+                                    "",
+                                    ""
+                                  ]
+                                },
+                                {
+                                  "name": "email",
+                                  "type": "text",
+                                  "values": [
+                                    "helpdesk@apnic.net"
+                                  ],
+                                  "parameters": {}
+                                },
+                                {
+                                  "name": "email",
+                                  "parameters": {
+                                    "pref": [
+                                      "1"
+                                    ]
+                                  },
+                                  "type": "text",
+                                  "values": [
+                                    "helpdesk@apnic.net"
+                                  ]
+                                }
+                              ],
+                              "roles": [
+                                "abuse"
+                              ],
+                              "remarks": [
+                                {
+                                  "title": "remarks",
+                                  "description": [
+                                    "helpdesk@apnic.net was validated on 2021-02-09"
+                                  ],
+                                  "links": [],
+                                  "type": ""
+                                }
+                              ],
+                              "links": [
+                                {
+                                  "href": "https://rdap.apnic.net/entity/IRT-APNICRANDNET-AU",
+                                  "rel": "self",
+                                  "type": "application/rdap+json",
+                                  "value": "https://rdap.apnic.net/ip/1.1.1.1",
+                                  "title": "",
+                                  "media": "",
+                                  "href_lang": []
+                                }
+                              ],
+                              "events": [
+                                {
+                                  "event_action": "registration",
+                                  "event_date": "2011-04-12T17:56:54Z",
+                                  "event_actor": "",
+                                  "links": []
+                                },
+                                {
+                                  "event_action": "last changed",
+                                  "event_date": "2025-09-03T02:28:14Z",
+                                  "event_actor": "",
+                                  "links": []
+                                }
+                              ],
+                              "public_ids": [],
+                              "entities": [],
+                              "as_event_actor": [],
+                              "status": [],
+                              "port43": "",
+                              "networks": [],
+                              "autnums": [],
+                              "url": "",
+                              "lang": "",
+                              "rdap_conformance": []
+                            }
+                          ],
+                          "port43": "whois.apnic.net",
+                          "cidr0_cidrs": [
+                            {
+                              "v4prefix": "1.1.1.0",
+                              "length": 24,
+                              "v6prefix": ""
+                            }
+                          ],
+                          "remarks": [
+                            {
+                              "title": "description",
+                              "description": [
+                                "APNIC and Cloudflare DNS Resolver project",
+                                "Routed globally by AS13335/Cloudflare",
+                                "Research prefix for APNIC Labs"
+                              ],
+                              "links": [],
+                              "type": ""
+                            },
+                            {
+                              "title": "remarks",
+                              "description": [
+                                "---------------",
+                                "All Cloudflare abuse reporting can be done via",
+                                "resolver-abuse@cloudflare.com",
+                                "---------------"
+                              ],
+                              "links": [],
+                              "type": ""
+                            }
+                          ],
+                          "parent_handle": "",
+                          "arin_originas0_originautnums": []
+                        },
+                        "asn": 13335,
+                        "tags": [
+                          "suspicious-udp"
+                        ],
                         "last_analysis_results": {
                           "Acronis": {
                             "method": "blacklist",
@@ -634,573 +1200,7 @@
                             "result": "unrated"
                           }
                         },
-                        "as_owner": "CLOUDFLARENET",
-                        "network": "1.1.1.0/24",
-                        "rdap": {
-                          "object_class_name": "ip network",
-                          "handle": "1.1.1.0 - 1.1.1.255",
-                          "start_address": "1.1.1.0",
-                          "end_address": "1.1.1.255",
-                          "ip_version": "v4",
-                          "name": "APNIC-LABS",
-                          "type": "ASSIGNED PORTABLE",
-                          "country": "AU",
-                          "status": [
-                            "active"
-                          ],
-                          "links": [
-                            {
-                              "href": "https://rdap.apnic.net/ip/1.1.1.0/24",
-                              "rel": "self",
-                              "type": "application/rdap+json",
-                              "value": "https://rdap.apnic.net/ip/1.1.1.1",
-                              "title": "",
-                              "media": "",
-                              "href_lang": []
-                            }
-                          ],
-                          "notices": [
-                            {
-                              "title": "Source",
-                              "description": [
-                                "Objects returned came from source",
-                                "APNIC"
-                              ],
-                              "links": [],
-                              "type": ""
-                            },
-                            {
-                              "title": "Terms and Conditions",
-                              "description": [
-                                "This is the APNIC WHOIS Database query service. The objects are in RDAP format."
-                              ],
-                              "links": [
-                                {
-                                  "href": "http://www.apnic.net/db/dbcopyright.html",
-                                  "rel": "terms-of-service",
-                                  "type": "text/html",
-                                  "value": "https://rdap.apnic.net/ip/1.1.1.1",
-                                  "title": "",
-                                  "media": "",
-                                  "href_lang": []
-                                }
-                              ],
-                              "type": ""
-                            },
-                            {
-                              "title": "Whois Inaccuracy Reporting",
-                              "description": [
-                                "If you see inaccuracies in the results, please visit: "
-                              ],
-                              "links": [
-                                {
-                                  "href": "https://www.apnic.net/manage-ip/using-whois/abuse-and-spamming/invalid-contact-form",
-                                  "rel": "inaccuracy-report",
-                                  "type": "text/html",
-                                  "value": "https://rdap.apnic.net/ip/1.1.1.1",
-                                  "title": "",
-                                  "media": "",
-                                  "href_lang": []
-                                }
-                              ],
-                              "type": ""
-                            }
-                          ],
-                          "events": [
-                            {
-                              "event_action": "registration",
-                              "event_date": "2011-08-10T23:12:35Z",
-                              "event_actor": "",
-                              "links": []
-                            },
-                            {
-                              "event_action": "last changed",
-                              "event_date": "2023-04-26T22:57:58Z",
-                              "event_actor": "",
-                              "links": []
-                            }
-                          ],
-                          "rdap_conformance": [
-                            "history_version_0",
-                            "nro_rdap_profile_0",
-                            "cidr0",
-                            "rdap_level_0"
-                          ],
-                          "entities": [
-                            {
-                              "object_class_name": "entity",
-                              "handle": "AIC3-AP",
-                              "vcard_array": [
-                                {
-                                  "name": "version",
-                                  "type": "text",
-                                  "values": [
-                                    "4.0"
-                                  ],
-                                  "parameters": {}
-                                },
-                                {
-                                  "name": "fn",
-                                  "type": "text",
-                                  "values": [
-                                    "APNICRANDNET Infrastructure Contact"
-                                  ],
-                                  "parameters": {}
-                                },
-                                {
-                                  "name": "kind",
-                                  "type": "text",
-                                  "values": [
-                                    "group"
-                                  ],
-                                  "parameters": {}
-                                },
-                                {
-                                  "name": "adr",
-                                  "parameters": {
-                                    "label": [
-                                      "6 Cordelia St South Brisbane QLD 4101"
-                                    ]
-                                  },
-                                  "type": "text",
-                                  "values": [
-                                    "",
-                                    "",
-                                    "",
-                                    "",
-                                    "",
-                                    "",
-                                    ""
-                                  ]
-                                },
-                                {
-                                  "name": "tel",
-                                  "parameters": {
-                                    "type": [
-                                      "voice"
-                                    ]
-                                  },
-                                  "type": "text",
-                                  "values": [
-                                    "+61 7 3858 3100"
-                                  ]
-                                },
-                                {
-                                  "name": "email",
-                                  "type": "text",
-                                  "values": [
-                                    "research@apnic.net"
-                                  ],
-                                  "parameters": {}
-                                }
-                              ],
-                              "roles": [
-                                "technical",
-                                "administrative"
-                              ],
-                              "links": [
-                                {
-                                  "href": "https://rdap.apnic.net/entity/AIC3-AP",
-                                  "rel": "self",
-                                  "type": "application/rdap+json",
-                                  "value": "https://rdap.apnic.net/ip/1.1.1.1",
-                                  "title": "",
-                                  "media": "",
-                                  "href_lang": []
-                                }
-                              ],
-                              "events": [
-                                {
-                                  "event_action": "registration",
-                                  "event_date": "2023-04-26T00:42:16Z",
-                                  "event_actor": "",
-                                  "links": []
-                                },
-                                {
-                                  "event_action": "last changed",
-                                  "event_date": "2024-07-18T04:37:37Z",
-                                  "event_actor": "",
-                                  "links": []
-                                }
-                              ],
-                              "public_ids": [],
-                              "entities": [],
-                              "remarks": [],
-                              "as_event_actor": [],
-                              "status": [],
-                              "port43": "",
-                              "networks": [],
-                              "autnums": [],
-                              "url": "",
-                              "lang": "",
-                              "rdap_conformance": []
-                            },
-                            {
-                              "object_class_name": "entity",
-                              "handle": "ORG-ARAD1-AP",
-                              "vcard_array": [
-                                {
-                                  "name": "version",
-                                  "type": "text",
-                                  "values": [
-                                    "4.0"
-                                  ],
-                                  "parameters": {}
-                                },
-                                {
-                                  "name": "fn",
-                                  "type": "text",
-                                  "values": [
-                                    "APNIC Research and Development"
-                                  ],
-                                  "parameters": {}
-                                },
-                                {
-                                  "name": "kind",
-                                  "type": "text",
-                                  "values": [
-                                    "org"
-                                  ],
-                                  "parameters": {}
-                                },
-                                {
-                                  "name": "adr",
-                                  "parameters": {
-                                    "label": [
-                                      "6 Cordelia St"
-                                    ]
-                                  },
-                                  "type": "text",
-                                  "values": [
-                                    "",
-                                    "",
-                                    "",
-                                    "",
-                                    "",
-                                    "",
-                                    ""
-                                  ]
-                                },
-                                {
-                                  "name": "tel",
-                                  "parameters": {
-                                    "type": [
-                                      "voice"
-                                    ]
-                                  },
-                                  "type": "text",
-                                  "values": [
-                                    "+61-7-38583100"
-                                  ]
-                                },
-                                {
-                                  "name": "tel",
-                                  "parameters": {
-                                    "type": [
-                                      "fax"
-                                    ]
-                                  },
-                                  "type": "text",
-                                  "values": [
-                                    "+61-7-38583199"
-                                  ]
-                                },
-                                {
-                                  "name": "email",
-                                  "type": "text",
-                                  "values": [
-                                    "helpdesk@apnic.net"
-                                  ],
-                                  "parameters": {}
-                                }
-                              ],
-                              "roles": [
-                                "registrant"
-                              ],
-                              "links": [
-                                {
-                                  "href": "https://rdap.apnic.net/entity/ORG-ARAD1-AP",
-                                  "rel": "self",
-                                  "type": "application/rdap+json",
-                                  "value": "https://rdap.apnic.net/ip/1.1.1.1",
-                                  "title": "",
-                                  "media": "",
-                                  "href_lang": []
-                                }
-                              ],
-                              "events": [
-                                {
-                                  "event_action": "registration",
-                                  "event_date": "2017-08-08T23:21:55Z",
-                                  "event_actor": "",
-                                  "links": []
-                                },
-                                {
-                                  "event_action": "last changed",
-                                  "event_date": "2023-09-05T02:15:19Z",
-                                  "event_actor": "",
-                                  "links": []
-                                }
-                              ],
-                              "public_ids": [],
-                              "entities": [],
-                              "remarks": [],
-                              "as_event_actor": [],
-                              "status": [],
-                              "port43": "",
-                              "networks": [],
-                              "autnums": [],
-                              "url": "",
-                              "lang": "",
-                              "rdap_conformance": []
-                            },
-                            {
-                              "object_class_name": "entity",
-                              "handle": "IRT-APNICRANDNET-AU",
-                              "vcard_array": [
-                                {
-                                  "name": "version",
-                                  "type": "text",
-                                  "values": [
-                                    "4.0"
-                                  ],
-                                  "parameters": {}
-                                },
-                                {
-                                  "name": "fn",
-                                  "type": "text",
-                                  "values": [
-                                    "IRT-APNICRANDNET-AU"
-                                  ],
-                                  "parameters": {}
-                                },
-                                {
-                                  "name": "kind",
-                                  "type": "text",
-                                  "values": [
-                                    "group"
-                                  ],
-                                  "parameters": {}
-                                },
-                                {
-                                  "name": "adr",
-                                  "parameters": {
-                                    "label": [
-                                      "PO Box 3646\nSouth Brisbane, QLD 4101\nAustralia"
-                                    ]
-                                  },
-                                  "type": "text",
-                                  "values": [
-                                    "",
-                                    "",
-                                    "",
-                                    "",
-                                    "",
-                                    "",
-                                    ""
-                                  ]
-                                },
-                                {
-                                  "name": "email",
-                                  "type": "text",
-                                  "values": [
-                                    "helpdesk@apnic.net"
-                                  ],
-                                  "parameters": {}
-                                },
-                                {
-                                  "name": "email",
-                                  "parameters": {
-                                    "pref": [
-                                      "1"
-                                    ]
-                                  },
-                                  "type": "text",
-                                  "values": [
-                                    "helpdesk@apnic.net"
-                                  ]
-                                }
-                              ],
-                              "roles": [
-                                "abuse"
-                              ],
-                              "remarks": [
-                                {
-                                  "title": "remarks",
-                                  "description": [
-                                    "helpdesk@apnic.net was validated on 2021-02-09"
-                                  ],
-                                  "links": [],
-                                  "type": ""
-                                }
-                              ],
-                              "links": [
-                                {
-                                  "href": "https://rdap.apnic.net/entity/IRT-APNICRANDNET-AU",
-                                  "rel": "self",
-                                  "type": "application/rdap+json",
-                                  "value": "https://rdap.apnic.net/ip/1.1.1.1",
-                                  "title": "",
-                                  "media": "",
-                                  "href_lang": []
-                                }
-                              ],
-                              "events": [
-                                {
-                                  "event_action": "registration",
-                                  "event_date": "2011-04-12T17:56:54Z",
-                                  "event_actor": "",
-                                  "links": []
-                                },
-                                {
-                                  "event_action": "last changed",
-                                  "event_date": "2025-09-03T02:28:14Z",
-                                  "event_actor": "",
-                                  "links": []
-                                }
-                              ],
-                              "public_ids": [],
-                              "entities": [],
-                              "as_event_actor": [],
-                              "status": [],
-                              "port43": "",
-                              "networks": [],
-                              "autnums": [],
-                              "url": "",
-                              "lang": "",
-                              "rdap_conformance": []
-                            }
-                          ],
-                          "port43": "whois.apnic.net",
-                          "cidr0_cidrs": [
-                            {
-                              "v4prefix": "1.1.1.0",
-                              "length": 24,
-                              "v6prefix": ""
-                            }
-                          ],
-                          "remarks": [
-                            {
-                              "title": "description",
-                              "description": [
-                                "APNIC and Cloudflare DNS Resolver project",
-                                "Routed globally by AS13335/Cloudflare",
-                                "Research prefix for APNIC Labs"
-                              ],
-                              "links": [],
-                              "type": ""
-                            },
-                            {
-                              "title": "remarks",
-                              "description": [
-                                "---------------",
-                                "All Cloudflare abuse reporting can be done via",
-                                "resolver-abuse@cloudflare.com",
-                                "---------------"
-                              ],
-                              "links": [],
-                              "type": ""
-                            }
-                          ],
-                          "parent_handle": "",
-                          "arin_originas0_originautnums": []
-                        },
-                        "last_https_certificate_date": 1760289115,
-                        "total_votes": {
-                          "harmless": 133,
-                          "malicious": 36
-                        },
-                        "last_analysis_date": 1760288814,
-                        "asn": 13335,
-                        "last_https_certificate": {
-                          "cert_signature": {
-                            "signature_algorithm": "sha256RSA",
-                            "signature": "9c36c4801745f127ad4635a3a78c80945dea3fe1eec0dfe09e1ad1c618232aae043b1150e697d7641059c9a8a2f0ffa5a68e0a3b0464e898c77baedbcfe7d1a3de4b1f5d73eb53c13b279e4eb2c3b6d0d76779c26da86e754e979d76616e98a37c1dfbd8592a5b51f874e989e00b23abf26054a294f46e5b33fc8dd0c564f3d3636c4cca88467c5e4bd5e4e171e3a3bc627e4b5ccffa40cd991f607c2cb97b8ad2fde6b3a3a8eb27e241b2e94417358438c5f9eb7dd5646c19d73d885f1e1d3d6beb9ec422be8aab5a4cf1a9c96bb8fd47dc22a69c316f51266f976b3a088673136af448c8cd72541427185f836b48097755e0b623c76e25684cd9571a0213e6"
-                          },
-                          "extensions": {
-                            "authority_key_identifier": {
-                              "keyid": "748580c066c7df37decfbd2937aa031dbeedcd17"
-                            },
-                            "subject_key_identifier": "2b2f8483a3e669e954c0e5b0b69f1fcdb618afa8",
-                            "subject_alternative_name": [
-                              "cloudflare-dns.com",
-                              "*.cloudflare-dns.com",
-                              "one.one.one.one",
-                              "1.0.0.1",
-                              "1.1.1.1",
-                              "162.159.36.1",
-                              "162.159.46.1",
-                              "2606:4700:4700::1001",
-                              "2606:4700:4700::1111",
-                              "2606:4700:4700::64",
-                              "2606:4700:4700::6400"
-                            ],
-                            "certificate_policies": [
-                              "2.23.140.1.2.2"
-                            ],
-                            "key_usage": [
-                              "digitalSignature",
-                              "keyAgreement"
-                            ],
-                            "extended_key_usage": [
-                              "serverAuth",
-                              "clientAuth"
-                            ],
-                            "crl_distribution_points": [
-                              "http://crl3.digicert.com/DigiCertGlobalG2TLSRSASHA2562020CA1-1.crl",
-                              "http://crl4.digicert.com/DigiCertGlobalG2TLSRSASHA2562020CA1-1.crl"
-                            ],
-                            "ca_information_access": {
-                              "OCSP": "http://ocsp.digicert.com",
-                              "CA Issuers": "http://cacerts.digicert.com/DigiCertGlobalG2TLSRSASHA2562020CA1-1.crt"
-                            },
-                            "CA": false,
-                            "1.3.6.1.4.1.11129.2.4.2": "0482016901670075000e5794bcf3aea93e331b2c9907b3f790df9bc23d713225"
-                          },
-                          "validity": {
-                            "not_after": "2026-01-21 23:59:59",
-                            "not_before": "2025-01-02 00:00:00"
-                          },
-                          "size": 1703,
-                          "version": "V3",
-                          "public_key": {
-                            "algorithm": "EC",
-                            "ec": {
-                              "oid": "secp256r1",
-                              "pub": "3059301306072a8648ce3d020106082a8648ce3d030107034200048080f1decb9302a3407e95b2b9ea4f7fcba332c63c32e360027a828d372607076b402e4e099b1697363fa3f295ee029bd4a1b4b58c942e9146798cea5b86ca86"
-                            }
-                          },
-                          "thumbprint_sha256": "73b8ed5becf1ba6493d2e2215a42dfdc7877e91e311ff5e59fb43d094871e699",
-                          "thumbprint": "3ba7e9f806eb30d2f4e3f905e53f07e9acf08e1e",
-                          "serial_number": "27dc8c5e17294aec9ed3f67728e8a08",
-                          "issuer": {
-                            "C": "US",
-                            "O": "DigiCert Inc",
-                            "CN": "DigiCert Global G2 TLS RSA SHA256 2020 CA1"
-                          },
-                          "subject": {
-                            "C": "US",
-                            "ST": "California",
-                            "L": "San Francisco",
-                            "O": "Cloudflare, Inc.",
-                            "CN": "cloudflare-dns.com"
-                          }
-                        },
-                        "tags": [
-                          "suspicious-udp"
-                        ],
-                        "last_analysis_stats": {
-                          "malicious": 1,
-                          "suspicious": 0,
-                          "undetected": 30,
-                          "harmless": 64,
-                          "timeout": 0
-                        },
-                        "jarm": "27d27d27d00027d00042d43d00041df04c41293ba84f6efe3a613b22f983e6",
-                        "whois_date": 1759576395,
-                        "reputation": 77,
-                        "last_modification_date": 1760289411,
-                        "whois": "NetRange: 1.0.0.0 - 1.255.255.255\nCIDR: 1.0.0.0/8\nNetName: APNIC-1\nNetHandle: NET-1-0-0-0-1\nParent: ()\nNetType: Allocated to APNIC\nOriginAS: \nOrganization: Asia Pacific Network Information Centre (APNIC)\nRegDate: \nUpdated: 2010-07-30\nComment: This IP address range is not registered in the ARIN database.\nComment: For details, refer to the APNIC Whois Database via\nComment: WHOIS.APNIC.NET or http://wq.apnic.net/apnic-bin/whois.pl\nComment: ** IMPORTANT NOTE: APNIC is the Regional Internet Registry\nComment: for the Asia Pacific region. APNIC does not operate networks\nComment: using this IP address range and is not able to investigate\nComment: spam or abuse reports relating to these addresses. For more\nComment: help, refer to http://www.apnic.net/apnic-info/whois_search2/abuse-and-spamming\nRef: https://rdap.arin.net/registry/ip/1.0.0.0\nResourceLink: https://apps.db.ripe.net/db-web-ui/query\nResourceLink: whois.apnic.net\nOrgName: Asia Pacific Network Information Centre\nOrgId: APNIC\nAddress: PO Box 3646\nCity: South Brisbane\nStateProv: QLD\nPostalCode: 4101\nCountry: AU\nRegDate: \nUpdated: 2012-01-24\nRef: https://rdap.arin.net/registry/entity/APNIC\nReferralServer: whois://whois.apnic.net\nResourceLink: https://apps.db.ripe.net/db-web-ui/query\nOrgAbuseHandle: AWC12-ARIN\nOrgAbuseName: APNIC Whois Contact\nOrgAbusePhone: +61 7 3858 3188 \nOrgAbuseEmail: search-apnic-not-arin@apnic.net\nOrgAbuseRef: https://rdap.arin.net/registry/entity/AWC12-ARIN\nOrgTechHandle: AWC12-ARIN\nOrgTechName: APNIC Whois Contact\nOrgTechPhone: +61 7 3858 3188 \nOrgTechEmail: search-apnic-not-arin@apnic.net\nOrgTechRef: https://rdap.arin.net/registry/entity/AWC12-ARIN\ninetnum: 1.1.1.0 - 1.1.1.255\nnetname: APNIC-LABS\ndescr: APNIC and Cloudflare DNS Resolver project\ndescr: Routed globally by AS13335/Cloudflare\ndescr: Research prefix for APNIC Labs\ncountry: AU\norg: ORG-ARAD1-AP\nadmin-c: AIC3-AP\ntech-c: AIC3-AP\nabuse-c: AA1412-AP\nstatus: ASSIGNED PORTABLE\nremarks: ---------------\nremarks: All Cloudflare abuse reporting can be done via\nremarks: resolver-abuse@cloudflare.com\nremarks: ---------------\nmnt-by: APNIC-HM\nmnt-routes: MAINT-APNICRANDNET\nmnt-irt: IRT-APNICRANDNET-AU\nlast-modified: 2023-04-26T22:57:58Z\nmnt-lower: MAINT-APNICRANDNET\nsource: APNIC\nirt: IRT-APNICRANDNET-AU\naddress: PO Box 3646\naddress: South Brisbane, QLD 4101\naddress: Australia\ne-mail: helpdesk@apnic.net\nabuse-mailbox: helpdesk@apnic.net\nadmin-c: AR302-AP\ntech-c: AR302-AP\nauth: # Filtered\nremarks: helpdesk@apnic.net was validated on 2021-02-09\nmnt-by: MAINT-APNICRANDNET\nlast-modified: 2025-09-03T02:28:14Z\nsource: APNIC\norganisation: ORG-ARAD1-AP\norg-name: APNIC Research and Development\norg-type: LIR\ncountry: AU\naddress: 6 Cordelia St\nphone: +61-7-38583100\nfax-no: +61-7-38583199\ne-mail: helpdesk@apnic.net\nmnt-ref: APNIC-HM\nmnt-by: APNIC-HM\nlast-modified: 2023-09-05T02:15:19Z\nsource: APNIC\nrole: ABUSE APNICRANDNETAU\ncountry: ZZ\naddress: PO Box 3646\naddress: South Brisbane, QLD 4101\naddress: Australia\nphone: +000000000\ne-mail: helpdesk@apnic.net\nadmin-c: AR302-AP\ntech-c: AR302-AP\nnic-hdl: AA1412-AP\nremarks: Generated from irt object IRT-APNICRANDNET-AU\nremarks: helpdesk@apnic.net was validated on 2021-02-09\nabuse-mailbox: helpdesk@apnic.net\nmnt-by: APNIC-ABUSE\nlast-modified: 2025-05-28T03:31:35Z\nsource: APNIC\nrole: APNICRANDNET Infrastructure Contact\naddress: 6 Cordelia St\n South Brisbane\n QLD 4101\ncountry: AU\nphone: +61 7 3858 3100\ne-mail: research@apnic.net\nadmin-c: AIC3-AP\ntech-c: AIC3-AP\nnic-hdl: AIC3-AP\nmnt-by: MAINT-APNICRANDNET\nlast-modified: 2024-07-18T04:37:37Z\nsource: APNIC\nroute: 1.1.1.0/24\norigin: AS13335\ndescr: APNIC Research and Development\n 6 Cordelia St\nmnt-by: MAINT-APNICRANDNET\nlast-modified: 2023-04-26T02:42:44Z\nsource: APNIC\n"
+                        "jarm": "27d27d27d00027d00042d43d00041df04c41293ba84f6efe3a613b22f983e6"
                       }
                     }
                   }
@@ -4905,6 +4905,572 @@
                           "self": "https://www.virustotal.com/api/v3/ip_addresses/1.1.1.1"
                         },
                         "attributes": {
+                          "reputation": 77,
+                          "last_modification_date": 1760294234,
+                          "last_https_certificate": {
+                            "cert_signature": {
+                              "signature_algorithm": "sha256RSA",
+                              "signature": "9c36c4801745f127ad4635a3a78c80945dea3fe1eec0dfe09e1ad1c618232aae043b1150e697d7641059c9a8a2f0ffa5a68e0a3b0464e898c77baedbcfe7d1a3de4b1f5d73eb53c13b279e4eb2c3b6d0d76779c26da86e754e979d76616e98a37c1dfbd8592a5b51f874e989e00b23abf26054a294f46e5b33fc8dd0c564f3d3636c4cca88467c5e4bd5e4e171e3a3bc627e4b5ccffa40cd991f607c2cb97b8ad2fde6b3a3a8eb27e241b2e94417358438c5f9eb7dd5646c19d73d885f1e1d3d6beb9ec422be8aab5a4cf1a9c96bb8fd47dc22a69c316f51266f976b3a088673136af448c8cd72541427185f836b48097755e0b623c76e25684cd9571a0213e6"
+                            },
+                            "extensions": {
+                              "authority_key_identifier": {
+                                "keyid": "748580c066c7df37decfbd2937aa031dbeedcd17"
+                              },
+                              "subject_key_identifier": "2b2f8483a3e669e954c0e5b0b69f1fcdb618afa8",
+                              "subject_alternative_name": [
+                                "cloudflare-dns.com",
+                                "*.cloudflare-dns.com",
+                                "one.one.one.one",
+                                "1.0.0.1",
+                                "1.1.1.1",
+                                "162.159.36.1",
+                                "162.159.46.1",
+                                "2606:4700:4700::1001",
+                                "2606:4700:4700::1111",
+                                "2606:4700:4700::64",
+                                "2606:4700:4700::6400"
+                              ],
+                              "certificate_policies": [
+                                "2.23.140.1.2.2"
+                              ],
+                              "key_usage": [
+                                "digitalSignature",
+                                "keyAgreement"
+                              ],
+                              "extended_key_usage": [
+                                "serverAuth",
+                                "clientAuth"
+                              ],
+                              "crl_distribution_points": [
+                                "http://crl3.digicert.com/DigiCertGlobalG2TLSRSASHA2562020CA1-1.crl",
+                                "http://crl4.digicert.com/DigiCertGlobalG2TLSRSASHA2562020CA1-1.crl"
+                              ],
+                              "ca_information_access": {
+                                "OCSP": "http://ocsp.digicert.com",
+                                "CA Issuers": "http://cacerts.digicert.com/DigiCertGlobalG2TLSRSASHA2562020CA1-1.crt"
+                              },
+                              "CA": false,
+                              "1.3.6.1.4.1.11129.2.4.2": "0482016901670075000e5794bcf3aea93e331b2c9907b3f790df9bc23d713225"
+                            },
+                            "validity": {
+                              "not_after": "2026-01-21 23:59:59",
+                              "not_before": "2025-01-02 00:00:00"
+                            },
+                            "size": 1703,
+                            "version": "V3",
+                            "public_key": {
+                              "algorithm": "EC",
+                              "ec": {
+                                "oid": "secp256r1",
+                                "pub": "3059301306072a8648ce3d020106082a8648ce3d030107034200048080f1decb9302a3407e95b2b9ea4f7fcba332c63c32e360027a828d372607076b402e4e099b1697363fa3f295ee029bd4a1b4b58c942e9146798cea5b86ca86"
+                              }
+                            },
+                            "thumbprint_sha256": "73b8ed5becf1ba6493d2e2215a42dfdc7877e91e311ff5e59fb43d094871e699",
+                            "thumbprint": "3ba7e9f806eb30d2f4e3f905e53f07e9acf08e1e",
+                            "serial_number": "27dc8c5e17294aec9ed3f67728e8a08",
+                            "issuer": {
+                              "C": "US",
+                              "O": "DigiCert Inc",
+                              "CN": "DigiCert Global G2 TLS RSA SHA256 2020 CA1"
+                            },
+                            "subject": {
+                              "C": "US",
+                              "ST": "California",
+                              "L": "San Francisco",
+                              "O": "Cloudflare, Inc.",
+                              "CN": "cloudflare-dns.com"
+                            }
+                          },
+                          "last_analysis_date": 1760288814,
+                          "total_votes": {
+                            "harmless": 133,
+                            "malicious": 36
+                          },
+                          "as_owner": "CLOUDFLARENET",
+                          "network": "1.1.1.0/24",
+                          "whois_date": 1759576395,
+                          "whois": "NetRange: 1.0.0.0 - 1.255.255.255\nCIDR: 1.0.0.0/8\nNetName: APNIC-1\nNetHandle: NET-1-0-0-0-1\nParent: ()\nNetType: Allocated to APNIC\nOriginAS: \nOrganization: Asia Pacific Network Information Centre (APNIC)\nRegDate: \nUpdated: 2010-07-30\nComment: This IP address range is not registered in the ARIN database.\nComment: For details, refer to the APNIC Whois Database via\nComment: WHOIS.APNIC.NET or http://wq.apnic.net/apnic-bin/whois.pl\nComment: ** IMPORTANT NOTE: APNIC is the Regional Internet Registry\nComment: for the Asia Pacific region. APNIC does not operate networks\nComment: using this IP address range and is not able to investigate\nComment: spam or abuse reports relating to these addresses. For more\nComment: help, refer to http://www.apnic.net/apnic-info/whois_search2/abuse-and-spamming\nRef: https://rdap.arin.net/registry/ip/1.0.0.0\nResourceLink: https://apps.db.ripe.net/db-web-ui/query\nResourceLink: whois.apnic.net\nOrgName: Asia Pacific Network Information Centre\nOrgId: APNIC\nAddress: PO Box 3646\nCity: South Brisbane\nStateProv: QLD\nPostalCode: 4101\nCountry: AU\nRegDate: \nUpdated: 2012-01-24\nRef: https://rdap.arin.net/registry/entity/APNIC\nReferralServer: whois://whois.apnic.net\nResourceLink: https://apps.db.ripe.net/db-web-ui/query\nOrgAbuseHandle: AWC12-ARIN\nOrgAbuseName: APNIC Whois Contact\nOrgAbusePhone: +61 7 3858 3188 \nOrgAbuseEmail: search-apnic-not-arin@apnic.net\nOrgAbuseRef: https://rdap.arin.net/registry/entity/AWC12-ARIN\nOrgTechHandle: AWC12-ARIN\nOrgTechName: APNIC Whois Contact\nOrgTechPhone: +61 7 3858 3188 \nOrgTechEmail: search-apnic-not-arin@apnic.net\nOrgTechRef: https://rdap.arin.net/registry/entity/AWC12-ARIN\ninetnum: 1.1.1.0 - 1.1.1.255\nnetname: APNIC-LABS\ndescr: APNIC and Cloudflare DNS Resolver project\ndescr: Routed globally by AS13335/Cloudflare\ndescr: Research prefix for APNIC Labs\ncountry: AU\norg: ORG-ARAD1-AP\nadmin-c: AIC3-AP\ntech-c: AIC3-AP\nabuse-c: AA1412-AP\nstatus: ASSIGNED PORTABLE\nremarks: ---------------\nremarks: All Cloudflare abuse reporting can be done via\nremarks: resolver-abuse@cloudflare.com\nremarks: ---------------\nmnt-by: APNIC-HM\nmnt-routes: MAINT-APNICRANDNET\nmnt-irt: IRT-APNICRANDNET-AU\nlast-modified: 2023-04-26T22:57:58Z\nmnt-lower: MAINT-APNICRANDNET\nsource: APNIC\nirt: IRT-APNICRANDNET-AU\naddress: PO Box 3646\naddress: South Brisbane, QLD 4101\naddress: Australia\ne-mail: helpdesk@apnic.net\nabuse-mailbox: helpdesk@apnic.net\nadmin-c: AR302-AP\ntech-c: AR302-AP\nauth: # Filtered\nremarks: helpdesk@apnic.net was validated on 2021-02-09\nmnt-by: MAINT-APNICRANDNET\nlast-modified: 2025-09-03T02:28:14Z\nsource: APNIC\norganisation: ORG-ARAD1-AP\norg-name: APNIC Research and Development\norg-type: LIR\ncountry: AU\naddress: 6 Cordelia St\nphone: +61-7-38583100\nfax-no: +61-7-38583199\ne-mail: helpdesk@apnic.net\nmnt-ref: APNIC-HM\nmnt-by: APNIC-HM\nlast-modified: 2023-09-05T02:15:19Z\nsource: APNIC\nrole: ABUSE APNICRANDNETAU\ncountry: ZZ\naddress: PO Box 3646\naddress: South Brisbane, QLD 4101\naddress: Australia\nphone: +000000000\ne-mail: helpdesk@apnic.net\nadmin-c: AR302-AP\ntech-c: AR302-AP\nnic-hdl: AA1412-AP\nremarks: Generated from irt object IRT-APNICRANDNET-AU\nremarks: helpdesk@apnic.net was validated on 2021-02-09\nabuse-mailbox: helpdesk@apnic.net\nmnt-by: APNIC-ABUSE\nlast-modified: 2025-05-28T03:31:35Z\nsource: APNIC\nrole: APNICRANDNET Infrastructure Contact\naddress: 6 Cordelia St\n South Brisbane\n QLD 4101\ncountry: AU\nphone: +61 7 3858 3100\ne-mail: research@apnic.net\nadmin-c: AIC3-AP\ntech-c: AIC3-AP\nnic-hdl: AIC3-AP\nmnt-by: MAINT-APNICRANDNET\nlast-modified: 2024-07-18T04:37:37Z\nsource: APNIC\nroute: 1.1.1.0/24\norigin: AS13335\ndescr: APNIC Research and Development\n 6 Cordelia St\nmnt-by: MAINT-APNICRANDNET\nlast-modified: 2023-04-26T02:42:44Z\nsource: APNIC\n",
+                          "last_analysis_stats": {
+                            "malicious": 1,
+                            "suspicious": 0,
+                            "undetected": 30,
+                            "harmless": 64,
+                            "timeout": 0
+                          },
+                          "last_https_certificate_date": 1760289115,
+                          "rdap": {
+                            "object_class_name": "ip network",
+                            "handle": "1.1.1.0 - 1.1.1.255",
+                            "start_address": "1.1.1.0",
+                            "end_address": "1.1.1.255",
+                            "ip_version": "v4",
+                            "name": "APNIC-LABS",
+                            "type": "ASSIGNED PORTABLE",
+                            "country": "AU",
+                            "status": [
+                              "active"
+                            ],
+                            "links": [
+                              {
+                                "href": "https://rdap.apnic.net/ip/1.1.1.0/24",
+                                "rel": "self",
+                                "type": "application/rdap+json",
+                                "value": "https://rdap.apnic.net/ip/1.1.1.1",
+                                "title": "",
+                                "media": "",
+                                "href_lang": []
+                              }
+                            ],
+                            "notices": [
+                              {
+                                "title": "Source",
+                                "description": [
+                                  "Objects returned came from source",
+                                  "APNIC"
+                                ],
+                                "links": [],
+                                "type": ""
+                              },
+                              {
+                                "title": "Terms and Conditions",
+                                "description": [
+                                  "This is the APNIC WHOIS Database query service. The objects are in RDAP format."
+                                ],
+                                "links": [
+                                  {
+                                    "href": "http://www.apnic.net/db/dbcopyright.html",
+                                    "rel": "terms-of-service",
+                                    "type": "text/html",
+                                    "value": "https://rdap.apnic.net/ip/1.1.1.1",
+                                    "title": "",
+                                    "media": "",
+                                    "href_lang": []
+                                  }
+                                ],
+                                "type": ""
+                              },
+                              {
+                                "title": "Whois Inaccuracy Reporting",
+                                "description": [
+                                  "If you see inaccuracies in the results, please visit: "
+                                ],
+                                "links": [
+                                  {
+                                    "href": "https://www.apnic.net/manage-ip/using-whois/abuse-and-spamming/invalid-contact-form",
+                                    "rel": "inaccuracy-report",
+                                    "type": "text/html",
+                                    "value": "https://rdap.apnic.net/ip/1.1.1.1",
+                                    "title": "",
+                                    "media": "",
+                                    "href_lang": []
+                                  }
+                                ],
+                                "type": ""
+                              }
+                            ],
+                            "events": [
+                              {
+                                "event_action": "registration",
+                                "event_date": "2011-08-10T23:12:35Z",
+                                "event_actor": "",
+                                "links": []
+                              },
+                              {
+                                "event_action": "last changed",
+                                "event_date": "2023-04-26T22:57:58Z",
+                                "event_actor": "",
+                                "links": []
+                              }
+                            ],
+                            "rdap_conformance": [
+                              "history_version_0",
+                              "nro_rdap_profile_0",
+                              "cidr0",
+                              "rdap_level_0"
+                            ],
+                            "entities": [
+                              {
+                                "object_class_name": "entity",
+                                "handle": "AIC3-AP",
+                                "vcard_array": [
+                                  {
+                                    "name": "version",
+                                    "type": "text",
+                                    "values": [
+                                      "4.0"
+                                    ],
+                                    "parameters": {}
+                                  },
+                                  {
+                                    "name": "fn",
+                                    "type": "text",
+                                    "values": [
+                                      "APNICRANDNET Infrastructure Contact"
+                                    ],
+                                    "parameters": {}
+                                  },
+                                  {
+                                    "name": "kind",
+                                    "type": "text",
+                                    "values": [
+                                      "group"
+                                    ],
+                                    "parameters": {}
+                                  },
+                                  {
+                                    "name": "adr",
+                                    "parameters": {
+                                      "label": [
+                                        "6 Cordelia St South Brisbane QLD 4101"
+                                      ]
+                                    },
+                                    "type": "text",
+                                    "values": [
+                                      "",
+                                      "",
+                                      "",
+                                      "",
+                                      "",
+                                      "",
+                                      ""
+                                    ]
+                                  },
+                                  {
+                                    "name": "tel",
+                                    "parameters": {
+                                      "type": [
+                                        "voice"
+                                      ]
+                                    },
+                                    "type": "text",
+                                    "values": [
+                                      "+61 7 3858 3100"
+                                    ]
+                                  },
+                                  {
+                                    "name": "email",
+                                    "type": "text",
+                                    "values": [
+                                      "research@apnic.net"
+                                    ],
+                                    "parameters": {}
+                                  }
+                                ],
+                                "roles": [
+                                  "technical",
+                                  "administrative"
+                                ],
+                                "links": [
+                                  {
+                                    "href": "https://rdap.apnic.net/entity/AIC3-AP",
+                                    "rel": "self",
+                                    "type": "application/rdap+json",
+                                    "value": "https://rdap.apnic.net/ip/1.1.1.1",
+                                    "title": "",
+                                    "media": "",
+                                    "href_lang": []
+                                  }
+                                ],
+                                "events": [
+                                  {
+                                    "event_action": "registration",
+                                    "event_date": "2023-04-26T00:42:16Z",
+                                    "event_actor": "",
+                                    "links": []
+                                  },
+                                  {
+                                    "event_action": "last changed",
+                                    "event_date": "2024-07-18T04:37:37Z",
+                                    "event_actor": "",
+                                    "links": []
+                                  }
+                                ],
+                                "public_ids": [],
+                                "entities": [],
+                                "remarks": [],
+                                "as_event_actor": [],
+                                "status": [],
+                                "port43": "",
+                                "networks": [],
+                                "autnums": [],
+                                "url": "",
+                                "lang": "",
+                                "rdap_conformance": []
+                              },
+                              {
+                                "object_class_name": "entity",
+                                "handle": "ORG-ARAD1-AP",
+                                "vcard_array": [
+                                  {
+                                    "name": "version",
+                                    "type": "text",
+                                    "values": [
+                                      "4.0"
+                                    ],
+                                    "parameters": {}
+                                  },
+                                  {
+                                    "name": "fn",
+                                    "type": "text",
+                                    "values": [
+                                      "APNIC Research and Development"
+                                    ],
+                                    "parameters": {}
+                                  },
+                                  {
+                                    "name": "kind",
+                                    "type": "text",
+                                    "values": [
+                                      "org"
+                                    ],
+                                    "parameters": {}
+                                  },
+                                  {
+                                    "name": "adr",
+                                    "parameters": {
+                                      "label": [
+                                        "6 Cordelia St"
+                                      ]
+                                    },
+                                    "type": "text",
+                                    "values": [
+                                      "",
+                                      "",
+                                      "",
+                                      "",
+                                      "",
+                                      "",
+                                      ""
+                                    ]
+                                  },
+                                  {
+                                    "name": "tel",
+                                    "parameters": {
+                                      "type": [
+                                        "voice"
+                                      ]
+                                    },
+                                    "type": "text",
+                                    "values": [
+                                      "+61-7-38583100"
+                                    ]
+                                  },
+                                  {
+                                    "name": "tel",
+                                    "parameters": {
+                                      "type": [
+                                        "fax"
+                                      ]
+                                    },
+                                    "type": "text",
+                                    "values": [
+                                      "+61-7-38583199"
+                                    ]
+                                  },
+                                  {
+                                    "name": "email",
+                                    "type": "text",
+                                    "values": [
+                                      "helpdesk@apnic.net"
+                                    ],
+                                    "parameters": {}
+                                  }
+                                ],
+                                "roles": [
+                                  "registrant"
+                                ],
+                                "links": [
+                                  {
+                                    "href": "https://rdap.apnic.net/entity/ORG-ARAD1-AP",
+                                    "rel": "self",
+                                    "type": "application/rdap+json",
+                                    "value": "https://rdap.apnic.net/ip/1.1.1.1",
+                                    "title": "",
+                                    "media": "",
+                                    "href_lang": []
+                                  }
+                                ],
+                                "events": [
+                                  {
+                                    "event_action": "registration",
+                                    "event_date": "2017-08-08T23:21:55Z",
+                                    "event_actor": "",
+                                    "links": []
+                                  },
+                                  {
+                                    "event_action": "last changed",
+                                    "event_date": "2023-09-05T02:15:19Z",
+                                    "event_actor": "",
+                                    "links": []
+                                  }
+                                ],
+                                "public_ids": [],
+                                "entities": [],
+                                "remarks": [],
+                                "as_event_actor": [],
+                                "status": [],
+                                "port43": "",
+                                "networks": [],
+                                "autnums": [],
+                                "url": "",
+                                "lang": "",
+                                "rdap_conformance": []
+                              },
+                              {
+                                "object_class_name": "entity",
+                                "handle": "IRT-APNICRANDNET-AU",
+                                "vcard_array": [
+                                  {
+                                    "name": "version",
+                                    "type": "text",
+                                    "values": [
+                                      "4.0"
+                                    ],
+                                    "parameters": {}
+                                  },
+                                  {
+                                    "name": "fn",
+                                    "type": "text",
+                                    "values": [
+                                      "IRT-APNICRANDNET-AU"
+                                    ],
+                                    "parameters": {}
+                                  },
+                                  {
+                                    "name": "kind",
+                                    "type": "text",
+                                    "values": [
+                                      "group"
+                                    ],
+                                    "parameters": {}
+                                  },
+                                  {
+                                    "name": "adr",
+                                    "parameters": {
+                                      "label": [
+                                        "PO Box 3646\nSouth Brisbane, QLD 4101\nAustralia"
+                                      ]
+                                    },
+                                    "type": "text",
+                                    "values": [
+                                      "",
+                                      "",
+                                      "",
+                                      "",
+                                      "",
+                                      "",
+                                      ""
+                                    ]
+                                  },
+                                  {
+                                    "name": "email",
+                                    "type": "text",
+                                    "values": [
+                                      "helpdesk@apnic.net"
+                                    ],
+                                    "parameters": {}
+                                  },
+                                  {
+                                    "name": "email",
+                                    "parameters": {
+                                      "pref": [
+                                        "1"
+                                      ]
+                                    },
+                                    "type": "text",
+                                    "values": [
+                                      "helpdesk@apnic.net"
+                                    ]
+                                  }
+                                ],
+                                "roles": [
+                                  "abuse"
+                                ],
+                                "remarks": [
+                                  {
+                                    "title": "remarks",
+                                    "description": [
+                                      "helpdesk@apnic.net was validated on 2021-02-09"
+                                    ],
+                                    "links": [],
+                                    "type": ""
+                                  }
+                                ],
+                                "links": [
+                                  {
+                                    "href": "https://rdap.apnic.net/entity/IRT-APNICRANDNET-AU",
+                                    "rel": "self",
+                                    "type": "application/rdap+json",
+                                    "value": "https://rdap.apnic.net/ip/1.1.1.1",
+                                    "title": "",
+                                    "media": "",
+                                    "href_lang": []
+                                  }
+                                ],
+                                "events": [
+                                  {
+                                    "event_action": "registration",
+                                    "event_date": "2011-04-12T17:56:54Z",
+                                    "event_actor": "",
+                                    "links": []
+                                  },
+                                  {
+                                    "event_action": "last changed",
+                                    "event_date": "2025-09-03T02:28:14Z",
+                                    "event_actor": "",
+                                    "links": []
+                                  }
+                                ],
+                                "public_ids": [],
+                                "entities": [],
+                                "as_event_actor": [],
+                                "status": [],
+                                "port43": "",
+                                "networks": [],
+                                "autnums": [],
+                                "url": "",
+                                "lang": "",
+                                "rdap_conformance": []
+                              }
+                            ],
+                            "port43": "whois.apnic.net",
+                            "cidr0_cidrs": [
+                              {
+                                "v4prefix": "1.1.1.0",
+                                "length": 24,
+                                "v6prefix": ""
+                              }
+                            ],
+                            "remarks": [
+                              {
+                                "title": "description",
+                                "description": [
+                                  "APNIC and Cloudflare DNS Resolver project",
+                                  "Routed globally by AS13335/Cloudflare",
+                                  "Research prefix for APNIC Labs"
+                                ],
+                                "links": [],
+                                "type": ""
+                              },
+                              {
+                                "title": "remarks",
+                                "description": [
+                                  "---------------",
+                                  "All Cloudflare abuse reporting can be done via",
+                                  "resolver-abuse@cloudflare.com",
+                                  "---------------"
+                                ],
+                                "links": [],
+                                "type": ""
+                              }
+                            ],
+                            "parent_handle": "",
+                            "arin_originas0_originautnums": []
+                          },
+                          "asn": 13335,
+                          "tags": [
+                            "suspicious-udp"
+                          ],
                           "last_analysis_results": {
                             "Acronis": {
                               "method": "blacklist",
@@ -5477,573 +6043,7 @@
                               "result": "unrated"
                             }
                           },
-                          "as_owner": "CLOUDFLARENET",
-                          "network": "1.1.1.0/24",
-                          "rdap": {
-                            "object_class_name": "ip network",
-                            "handle": "1.1.1.0 - 1.1.1.255",
-                            "start_address": "1.1.1.0",
-                            "end_address": "1.1.1.255",
-                            "ip_version": "v4",
-                            "name": "APNIC-LABS",
-                            "type": "ASSIGNED PORTABLE",
-                            "country": "AU",
-                            "status": [
-                              "active"
-                            ],
-                            "links": [
-                              {
-                                "href": "https://rdap.apnic.net/ip/1.1.1.0/24",
-                                "rel": "self",
-                                "type": "application/rdap+json",
-                                "value": "https://rdap.apnic.net/ip/1.1.1.1",
-                                "title": "",
-                                "media": "",
-                                "href_lang": []
-                              }
-                            ],
-                            "notices": [
-                              {
-                                "title": "Source",
-                                "description": [
-                                  "Objects returned came from source",
-                                  "APNIC"
-                                ],
-                                "links": [],
-                                "type": ""
-                              },
-                              {
-                                "title": "Terms and Conditions",
-                                "description": [
-                                  "This is the APNIC WHOIS Database query service. The objects are in RDAP format."
-                                ],
-                                "links": [
-                                  {
-                                    "href": "http://www.apnic.net/db/dbcopyright.html",
-                                    "rel": "terms-of-service",
-                                    "type": "text/html",
-                                    "value": "https://rdap.apnic.net/ip/1.1.1.1",
-                                    "title": "",
-                                    "media": "",
-                                    "href_lang": []
-                                  }
-                                ],
-                                "type": ""
-                              },
-                              {
-                                "title": "Whois Inaccuracy Reporting",
-                                "description": [
-                                  "If you see inaccuracies in the results, please visit: "
-                                ],
-                                "links": [
-                                  {
-                                    "href": "https://www.apnic.net/manage-ip/using-whois/abuse-and-spamming/invalid-contact-form",
-                                    "rel": "inaccuracy-report",
-                                    "type": "text/html",
-                                    "value": "https://rdap.apnic.net/ip/1.1.1.1",
-                                    "title": "",
-                                    "media": "",
-                                    "href_lang": []
-                                  }
-                                ],
-                                "type": ""
-                              }
-                            ],
-                            "events": [
-                              {
-                                "event_action": "registration",
-                                "event_date": "2011-08-10T23:12:35Z",
-                                "event_actor": "",
-                                "links": []
-                              },
-                              {
-                                "event_action": "last changed",
-                                "event_date": "2023-04-26T22:57:58Z",
-                                "event_actor": "",
-                                "links": []
-                              }
-                            ],
-                            "rdap_conformance": [
-                              "history_version_0",
-                              "nro_rdap_profile_0",
-                              "cidr0",
-                              "rdap_level_0"
-                            ],
-                            "entities": [
-                              {
-                                "object_class_name": "entity",
-                                "handle": "AIC3-AP",
-                                "vcard_array": [
-                                  {
-                                    "name": "version",
-                                    "type": "text",
-                                    "values": [
-                                      "4.0"
-                                    ],
-                                    "parameters": {}
-                                  },
-                                  {
-                                    "name": "fn",
-                                    "type": "text",
-                                    "values": [
-                                      "APNICRANDNET Infrastructure Contact"
-                                    ],
-                                    "parameters": {}
-                                  },
-                                  {
-                                    "name": "kind",
-                                    "type": "text",
-                                    "values": [
-                                      "group"
-                                    ],
-                                    "parameters": {}
-                                  },
-                                  {
-                                    "name": "adr",
-                                    "parameters": {
-                                      "label": [
-                                        "6 Cordelia St South Brisbane QLD 4101"
-                                      ]
-                                    },
-                                    "type": "text",
-                                    "values": [
-                                      "",
-                                      "",
-                                      "",
-                                      "",
-                                      "",
-                                      "",
-                                      ""
-                                    ]
-                                  },
-                                  {
-                                    "name": "tel",
-                                    "parameters": {
-                                      "type": [
-                                        "voice"
-                                      ]
-                                    },
-                                    "type": "text",
-                                    "values": [
-                                      "+61 7 3858 3100"
-                                    ]
-                                  },
-                                  {
-                                    "name": "email",
-                                    "type": "text",
-                                    "values": [
-                                      "research@apnic.net"
-                                    ],
-                                    "parameters": {}
-                                  }
-                                ],
-                                "roles": [
-                                  "technical",
-                                  "administrative"
-                                ],
-                                "links": [
-                                  {
-                                    "href": "https://rdap.apnic.net/entity/AIC3-AP",
-                                    "rel": "self",
-                                    "type": "application/rdap+json",
-                                    "value": "https://rdap.apnic.net/ip/1.1.1.1",
-                                    "title": "",
-                                    "media": "",
-                                    "href_lang": []
-                                  }
-                                ],
-                                "events": [
-                                  {
-                                    "event_action": "registration",
-                                    "event_date": "2023-04-26T00:42:16Z",
-                                    "event_actor": "",
-                                    "links": []
-                                  },
-                                  {
-                                    "event_action": "last changed",
-                                    "event_date": "2024-07-18T04:37:37Z",
-                                    "event_actor": "",
-                                    "links": []
-                                  }
-                                ],
-                                "public_ids": [],
-                                "entities": [],
-                                "remarks": [],
-                                "as_event_actor": [],
-                                "status": [],
-                                "port43": "",
-                                "networks": [],
-                                "autnums": [],
-                                "url": "",
-                                "lang": "",
-                                "rdap_conformance": []
-                              },
-                              {
-                                "object_class_name": "entity",
-                                "handle": "ORG-ARAD1-AP",
-                                "vcard_array": [
-                                  {
-                                    "name": "version",
-                                    "type": "text",
-                                    "values": [
-                                      "4.0"
-                                    ],
-                                    "parameters": {}
-                                  },
-                                  {
-                                    "name": "fn",
-                                    "type": "text",
-                                    "values": [
-                                      "APNIC Research and Development"
-                                    ],
-                                    "parameters": {}
-                                  },
-                                  {
-                                    "name": "kind",
-                                    "type": "text",
-                                    "values": [
-                                      "org"
-                                    ],
-                                    "parameters": {}
-                                  },
-                                  {
-                                    "name": "adr",
-                                    "parameters": {
-                                      "label": [
-                                        "6 Cordelia St"
-                                      ]
-                                    },
-                                    "type": "text",
-                                    "values": [
-                                      "",
-                                      "",
-                                      "",
-                                      "",
-                                      "",
-                                      "",
-                                      ""
-                                    ]
-                                  },
-                                  {
-                                    "name": "tel",
-                                    "parameters": {
-                                      "type": [
-                                        "voice"
-                                      ]
-                                    },
-                                    "type": "text",
-                                    "values": [
-                                      "+61-7-38583100"
-                                    ]
-                                  },
-                                  {
-                                    "name": "tel",
-                                    "parameters": {
-                                      "type": [
-                                        "fax"
-                                      ]
-                                    },
-                                    "type": "text",
-                                    "values": [
-                                      "+61-7-38583199"
-                                    ]
-                                  },
-                                  {
-                                    "name": "email",
-                                    "type": "text",
-                                    "values": [
-                                      "helpdesk@apnic.net"
-                                    ],
-                                    "parameters": {}
-                                  }
-                                ],
-                                "roles": [
-                                  "registrant"
-                                ],
-                                "links": [
-                                  {
-                                    "href": "https://rdap.apnic.net/entity/ORG-ARAD1-AP",
-                                    "rel": "self",
-                                    "type": "application/rdap+json",
-                                    "value": "https://rdap.apnic.net/ip/1.1.1.1",
-                                    "title": "",
-                                    "media": "",
-                                    "href_lang": []
-                                  }
-                                ],
-                                "events": [
-                                  {
-                                    "event_action": "registration",
-                                    "event_date": "2017-08-08T23:21:55Z",
-                                    "event_actor": "",
-                                    "links": []
-                                  },
-                                  {
-                                    "event_action": "last changed",
-                                    "event_date": "2023-09-05T02:15:19Z",
-                                    "event_actor": "",
-                                    "links": []
-                                  }
-                                ],
-                                "public_ids": [],
-                                "entities": [],
-                                "remarks": [],
-                                "as_event_actor": [],
-                                "status": [],
-                                "port43": "",
-                                "networks": [],
-                                "autnums": [],
-                                "url": "",
-                                "lang": "",
-                                "rdap_conformance": []
-                              },
-                              {
-                                "object_class_name": "entity",
-                                "handle": "IRT-APNICRANDNET-AU",
-                                "vcard_array": [
-                                  {
-                                    "name": "version",
-                                    "type": "text",
-                                    "values": [
-                                      "4.0"
-                                    ],
-                                    "parameters": {}
-                                  },
-                                  {
-                                    "name": "fn",
-                                    "type": "text",
-                                    "values": [
-                                      "IRT-APNICRANDNET-AU"
-                                    ],
-                                    "parameters": {}
-                                  },
-                                  {
-                                    "name": "kind",
-                                    "type": "text",
-                                    "values": [
-                                      "group"
-                                    ],
-                                    "parameters": {}
-                                  },
-                                  {
-                                    "name": "adr",
-                                    "parameters": {
-                                      "label": [
-                                        "PO Box 3646\nSouth Brisbane, QLD 4101\nAustralia"
-                                      ]
-                                    },
-                                    "type": "text",
-                                    "values": [
-                                      "",
-                                      "",
-                                      "",
-                                      "",
-                                      "",
-                                      "",
-                                      ""
-                                    ]
-                                  },
-                                  {
-                                    "name": "email",
-                                    "type": "text",
-                                    "values": [
-                                      "helpdesk@apnic.net"
-                                    ],
-                                    "parameters": {}
-                                  },
-                                  {
-                                    "name": "email",
-                                    "parameters": {
-                                      "pref": [
-                                        "1"
-                                      ]
-                                    },
-                                    "type": "text",
-                                    "values": [
-                                      "helpdesk@apnic.net"
-                                    ]
-                                  }
-                                ],
-                                "roles": [
-                                  "abuse"
-                                ],
-                                "remarks": [
-                                  {
-                                    "title": "remarks",
-                                    "description": [
-                                      "helpdesk@apnic.net was validated on 2021-02-09"
-                                    ],
-                                    "links": [],
-                                    "type": ""
-                                  }
-                                ],
-                                "links": [
-                                  {
-                                    "href": "https://rdap.apnic.net/entity/IRT-APNICRANDNET-AU",
-                                    "rel": "self",
-                                    "type": "application/rdap+json",
-                                    "value": "https://rdap.apnic.net/ip/1.1.1.1",
-                                    "title": "",
-                                    "media": "",
-                                    "href_lang": []
-                                  }
-                                ],
-                                "events": [
-                                  {
-                                    "event_action": "registration",
-                                    "event_date": "2011-04-12T17:56:54Z",
-                                    "event_actor": "",
-                                    "links": []
-                                  },
-                                  {
-                                    "event_action": "last changed",
-                                    "event_date": "2025-09-03T02:28:14Z",
-                                    "event_actor": "",
-                                    "links": []
-                                  }
-                                ],
-                                "public_ids": [],
-                                "entities": [],
-                                "as_event_actor": [],
-                                "status": [],
-                                "port43": "",
-                                "networks": [],
-                                "autnums": [],
-                                "url": "",
-                                "lang": "",
-                                "rdap_conformance": []
-                              }
-                            ],
-                            "port43": "whois.apnic.net",
-                            "cidr0_cidrs": [
-                              {
-                                "v4prefix": "1.1.1.0",
-                                "length": 24,
-                                "v6prefix": ""
-                              }
-                            ],
-                            "remarks": [
-                              {
-                                "title": "description",
-                                "description": [
-                                  "APNIC and Cloudflare DNS Resolver project",
-                                  "Routed globally by AS13335/Cloudflare",
-                                  "Research prefix for APNIC Labs"
-                                ],
-                                "links": [],
-                                "type": ""
-                              },
-                              {
-                                "title": "remarks",
-                                "description": [
-                                  "---------------",
-                                  "All Cloudflare abuse reporting can be done via",
-                                  "resolver-abuse@cloudflare.com",
-                                  "---------------"
-                                ],
-                                "links": [],
-                                "type": ""
-                              }
-                            ],
-                            "parent_handle": "",
-                            "arin_originas0_originautnums": []
-                          },
-                          "last_https_certificate_date": 1760289115,
-                          "total_votes": {
-                            "harmless": 133,
-                            "malicious": 36
-                          },
-                          "last_analysis_date": 1760288814,
-                          "asn": 13335,
-                          "last_https_certificate": {
-                            "cert_signature": {
-                              "signature_algorithm": "sha256RSA",
-                              "signature": "9c36c4801745f127ad4635a3a78c80945dea3fe1eec0dfe09e1ad1c618232aae043b1150e697d7641059c9a8a2f0ffa5a68e0a3b0464e898c77baedbcfe7d1a3de4b1f5d73eb53c13b279e4eb2c3b6d0d76779c26da86e754e979d76616e98a37c1dfbd8592a5b51f874e989e00b23abf26054a294f46e5b33fc8dd0c564f3d3636c4cca88467c5e4bd5e4e171e3a3bc627e4b5ccffa40cd991f607c2cb97b8ad2fde6b3a3a8eb27e241b2e94417358438c5f9eb7dd5646c19d73d885f1e1d3d6beb9ec422be8aab5a4cf1a9c96bb8fd47dc22a69c316f51266f976b3a088673136af448c8cd72541427185f836b48097755e0b623c76e25684cd9571a0213e6"
-                            },
-                            "extensions": {
-                              "authority_key_identifier": {
-                                "keyid": "748580c066c7df37decfbd2937aa031dbeedcd17"
-                              },
-                              "subject_key_identifier": "2b2f8483a3e669e954c0e5b0b69f1fcdb618afa8",
-                              "subject_alternative_name": [
-                                "cloudflare-dns.com",
-                                "*.cloudflare-dns.com",
-                                "one.one.one.one",
-                                "1.0.0.1",
-                                "1.1.1.1",
-                                "162.159.36.1",
-                                "162.159.46.1",
-                                "2606:4700:4700::1001",
-                                "2606:4700:4700::1111",
-                                "2606:4700:4700::64",
-                                "2606:4700:4700::6400"
-                              ],
-                              "certificate_policies": [
-                                "2.23.140.1.2.2"
-                              ],
-                              "key_usage": [
-                                "digitalSignature",
-                                "keyAgreement"
-                              ],
-                              "extended_key_usage": [
-                                "serverAuth",
-                                "clientAuth"
-                              ],
-                              "crl_distribution_points": [
-                                "http://crl3.digicert.com/DigiCertGlobalG2TLSRSASHA2562020CA1-1.crl",
-                                "http://crl4.digicert.com/DigiCertGlobalG2TLSRSASHA2562020CA1-1.crl"
-                              ],
-                              "ca_information_access": {
-                                "OCSP": "http://ocsp.digicert.com",
-                                "CA Issuers": "http://cacerts.digicert.com/DigiCertGlobalG2TLSRSASHA2562020CA1-1.crt"
-                              },
-                              "CA": false,
-                              "1.3.6.1.4.1.11129.2.4.2": "0482016901670075000e5794bcf3aea93e331b2c9907b3f790df9bc23d713225"
-                            },
-                            "validity": {
-                              "not_after": "2026-01-21 23:59:59",
-                              "not_before": "2025-01-02 00:00:00"
-                            },
-                            "size": 1703,
-                            "version": "V3",
-                            "public_key": {
-                              "algorithm": "EC",
-                              "ec": {
-                                "oid": "secp256r1",
-                                "pub": "3059301306072a8648ce3d020106082a8648ce3d030107034200048080f1decb9302a3407e95b2b9ea4f7fcba332c63c32e360027a828d372607076b402e4e099b1697363fa3f295ee029bd4a1b4b58c942e9146798cea5b86ca86"
-                              }
-                            },
-                            "thumbprint_sha256": "73b8ed5becf1ba6493d2e2215a42dfdc7877e91e311ff5e59fb43d094871e699",
-                            "thumbprint": "3ba7e9f806eb30d2f4e3f905e53f07e9acf08e1e",
-                            "serial_number": "27dc8c5e17294aec9ed3f67728e8a08",
-                            "issuer": {
-                              "C": "US",
-                              "O": "DigiCert Inc",
-                              "CN": "DigiCert Global G2 TLS RSA SHA256 2020 CA1"
-                            },
-                            "subject": {
-                              "C": "US",
-                              "ST": "California",
-                              "L": "San Francisco",
-                              "O": "Cloudflare, Inc.",
-                              "CN": "cloudflare-dns.com"
-                            }
-                          },
-                          "tags": [
-                            "suspicious-udp"
-                          ],
-                          "last_analysis_stats": {
-                            "malicious": 1,
-                            "suspicious": 0,
-                            "undetected": 30,
-                            "harmless": 64,
-                            "timeout": 0
-                          },
-                          "jarm": "27d27d27d00027d00042d43d00041df04c41293ba84f6efe3a613b22f983e6",
-                          "whois_date": 1759576395,
-                          "reputation": 77,
-                          "last_modification_date": 1760289411,
-                          "whois": "NetRange: 1.0.0.0 - 1.255.255.255\nCIDR: 1.0.0.0/8\nNetName: APNIC-1\nNetHandle: NET-1-0-0-0-1\nParent: ()\nNetType: Allocated to APNIC\nOriginAS: \nOrganization: Asia Pacific Network Information Centre (APNIC)\nRegDate: \nUpdated: 2010-07-30\nComment: This IP address range is not registered in the ARIN database.\nComment: For details, refer to the APNIC Whois Database via\nComment: WHOIS.APNIC.NET or http://wq.apnic.net/apnic-bin/whois.pl\nComment: ** IMPORTANT NOTE: APNIC is the Regional Internet Registry\nComment: for the Asia Pacific region. APNIC does not operate networks\nComment: using this IP address range and is not able to investigate\nComment: spam or abuse reports relating to these addresses. For more\nComment: help, refer to http://www.apnic.net/apnic-info/whois_search2/abuse-and-spamming\nRef: https://rdap.arin.net/registry/ip/1.0.0.0\nResourceLink: https://apps.db.ripe.net/db-web-ui/query\nResourceLink: whois.apnic.net\nOrgName: Asia Pacific Network Information Centre\nOrgId: APNIC\nAddress: PO Box 3646\nCity: South Brisbane\nStateProv: QLD\nPostalCode: 4101\nCountry: AU\nRegDate: \nUpdated: 2012-01-24\nRef: https://rdap.arin.net/registry/entity/APNIC\nReferralServer: whois://whois.apnic.net\nResourceLink: https://apps.db.ripe.net/db-web-ui/query\nOrgAbuseHandle: AWC12-ARIN\nOrgAbuseName: APNIC Whois Contact\nOrgAbusePhone: +61 7 3858 3188 \nOrgAbuseEmail: search-apnic-not-arin@apnic.net\nOrgAbuseRef: https://rdap.arin.net/registry/entity/AWC12-ARIN\nOrgTechHandle: AWC12-ARIN\nOrgTechName: APNIC Whois Contact\nOrgTechPhone: +61 7 3858 3188 \nOrgTechEmail: search-apnic-not-arin@apnic.net\nOrgTechRef: https://rdap.arin.net/registry/entity/AWC12-ARIN\ninetnum: 1.1.1.0 - 1.1.1.255\nnetname: APNIC-LABS\ndescr: APNIC and Cloudflare DNS Resolver project\ndescr: Routed globally by AS13335/Cloudflare\ndescr: Research prefix for APNIC Labs\ncountry: AU\norg: ORG-ARAD1-AP\nadmin-c: AIC3-AP\ntech-c: AIC3-AP\nabuse-c: AA1412-AP\nstatus: ASSIGNED PORTABLE\nremarks: ---------------\nremarks: All Cloudflare abuse reporting can be done via\nremarks: resolver-abuse@cloudflare.com\nremarks: ---------------\nmnt-by: APNIC-HM\nmnt-routes: MAINT-APNICRANDNET\nmnt-irt: IRT-APNICRANDNET-AU\nlast-modified: 2023-04-26T22:57:58Z\nmnt-lower: MAINT-APNICRANDNET\nsource: APNIC\nirt: IRT-APNICRANDNET-AU\naddress: PO Box 3646\naddress: South Brisbane, QLD 4101\naddress: Australia\ne-mail: helpdesk@apnic.net\nabuse-mailbox: helpdesk@apnic.net\nadmin-c: AR302-AP\ntech-c: AR302-AP\nauth: # Filtered\nremarks: helpdesk@apnic.net was validated on 2021-02-09\nmnt-by: MAINT-APNICRANDNET\nlast-modified: 2025-09-03T02:28:14Z\nsource: APNIC\norganisation: ORG-ARAD1-AP\norg-name: APNIC Research and Development\norg-type: LIR\ncountry: AU\naddress: 6 Cordelia St\nphone: +61-7-38583100\nfax-no: +61-7-38583199\ne-mail: helpdesk@apnic.net\nmnt-ref: APNIC-HM\nmnt-by: APNIC-HM\nlast-modified: 2023-09-05T02:15:19Z\nsource: APNIC\nrole: ABUSE APNICRANDNETAU\ncountry: ZZ\naddress: PO Box 3646\naddress: South Brisbane, QLD 4101\naddress: Australia\nphone: +000000000\ne-mail: helpdesk@apnic.net\nadmin-c: AR302-AP\ntech-c: AR302-AP\nnic-hdl: AA1412-AP\nremarks: Generated from irt object IRT-APNICRANDNET-AU\nremarks: helpdesk@apnic.net was validated on 2021-02-09\nabuse-mailbox: helpdesk@apnic.net\nmnt-by: APNIC-ABUSE\nlast-modified: 2025-05-28T03:31:35Z\nsource: APNIC\nrole: APNICRANDNET Infrastructure Contact\naddress: 6 Cordelia St\n South Brisbane\n QLD 4101\ncountry: AU\nphone: +61 7 3858 3100\ne-mail: research@apnic.net\nadmin-c: AIC3-AP\ntech-c: AIC3-AP\nnic-hdl: AIC3-AP\nmnt-by: MAINT-APNICRANDNET\nlast-modified: 2024-07-18T04:37:37Z\nsource: APNIC\nroute: 1.1.1.0/24\norigin: AS13335\ndescr: APNIC Research and Development\n 6 Cordelia St\nmnt-by: MAINT-APNICRANDNET\nlast-modified: 2023-04-26T02:42:44Z\nsource: APNIC\n"
+                          "jarm": "27d27d27d00027d00042d43d00041df04c41293ba84f6efe3a613b22f983e6"
                         }
                       }
                     }
@@ -9756,16 +9756,16 @@
           },
           "supervisor_version": "2.0"
         },
-        "processing_time": 3.847079038619995
+        "processing_time": 0.018725872039794922
       },
-      "response_time": 3.856647253036499,
+      "response_time": 0.028115272521972656,
       "status": "success"
     },
     {
       "description": "Request 2 - Same query (should use cache)",
       "request": {
         "text": "Check IP 1.1.1.1 for threats",
-        "session_id": "00da04ef-c801-4972-a6b6-b22331d89187"
+        "session_id": "849df1ac-cfb4-4fcb-9c70-5654ef64e1b2"
       },
       "response": {
         "status": "success",
@@ -9820,9 +9820,8 @@
                         "self": "https://www.virustotal.com/api/v3/ip_addresses/1.1.1.1"
                       },
                       "attributes": {
-                        "network": "1.1.1.0/24",
-                        "as_owner": "CLOUDFLARENET",
-                        "last_analysis_date": 1760288814,
+                        "reputation": 77,
+                        "last_modification_date": 1760294234,
                         "last_https_certificate": {
                           "cert_signature": {
                             "signature_algorithm": "sha256RSA",
@@ -9897,7 +9896,15 @@
                             "CN": "cloudflare-dns.com"
                           }
                         },
-                        "reputation": 77,
+                        "last_analysis_date": 1760288814,
+                        "total_votes": {
+                          "harmless": 133,
+                          "malicious": 36
+                        },
+                        "as_owner": "CLOUDFLARENET",
+                        "network": "1.1.1.0/24",
+                        "whois_date": 1759576395,
+                        "whois": "NetRange: 1.0.0.0 - 1.255.255.255\nCIDR: 1.0.0.0/8\nNetName: APNIC-1\nNetHandle: NET-1-0-0-0-1\nParent: ()\nNetType: Allocated to APNIC\nOriginAS: \nOrganization: Asia Pacific Network Information Centre (APNIC)\nRegDate: \nUpdated: 2010-07-30\nComment: This IP address range is not registered in the ARIN database.\nComment: For details, refer to the APNIC Whois Database via\nComment: WHOIS.APNIC.NET or http://wq.apnic.net/apnic-bin/whois.pl\nComment: ** IMPORTANT NOTE: APNIC is the Regional Internet Registry\nComment: for the Asia Pacific region. APNIC does not operate networks\nComment: using this IP address range and is not able to investigate\nComment: spam or abuse reports relating to these addresses. For more\nComment: help, refer to http://www.apnic.net/apnic-info/whois_search2/abuse-and-spamming\nRef: https://rdap.arin.net/registry/ip/1.0.0.0\nResourceLink: https://apps.db.ripe.net/db-web-ui/query\nResourceLink: whois.apnic.net\nOrgName: Asia Pacific Network Information Centre\nOrgId: APNIC\nAddress: PO Box 3646\nCity: South Brisbane\nStateProv: QLD\nPostalCode: 4101\nCountry: AU\nRegDate: \nUpdated: 2012-01-24\nRef: https://rdap.arin.net/registry/entity/APNIC\nReferralServer: whois://whois.apnic.net\nResourceLink: https://apps.db.ripe.net/db-web-ui/query\nOrgAbuseHandle: AWC12-ARIN\nOrgAbuseName: APNIC Whois Contact\nOrgAbusePhone: +61 7 3858 3188 \nOrgAbuseEmail: search-apnic-not-arin@apnic.net\nOrgAbuseRef: https://rdap.arin.net/registry/entity/AWC12-ARIN\nOrgTechHandle: AWC12-ARIN\nOrgTechName: APNIC Whois Contact\nOrgTechPhone: +61 7 3858 3188 \nOrgTechEmail: search-apnic-not-arin@apnic.net\nOrgTechRef: https://rdap.arin.net/registry/entity/AWC12-ARIN\ninetnum: 1.1.1.0 - 1.1.1.255\nnetname: APNIC-LABS\ndescr: APNIC and Cloudflare DNS Resolver project\ndescr: Routed globally by AS13335/Cloudflare\ndescr: Research prefix for APNIC Labs\ncountry: AU\norg: ORG-ARAD1-AP\nadmin-c: AIC3-AP\ntech-c: AIC3-AP\nabuse-c: AA1412-AP\nstatus: ASSIGNED PORTABLE\nremarks: ---------------\nremarks: All Cloudflare abuse reporting can be done via\nremarks: resolver-abuse@cloudflare.com\nremarks: ---------------\nmnt-by: APNIC-HM\nmnt-routes: MAINT-APNICRANDNET\nmnt-irt: IRT-APNICRANDNET-AU\nlast-modified: 2023-04-26T22:57:58Z\nmnt-lower: MAINT-APNICRANDNET\nsource: APNIC\nirt: IRT-APNICRANDNET-AU\naddress: PO Box 3646\naddress: South Brisbane, QLD 4101\naddress: Australia\ne-mail: helpdesk@apnic.net\nabuse-mailbox: helpdesk@apnic.net\nadmin-c: AR302-AP\ntech-c: AR302-AP\nauth: # Filtered\nremarks: helpdesk@apnic.net was validated on 2021-02-09\nmnt-by: MAINT-APNICRANDNET\nlast-modified: 2025-09-03T02:28:14Z\nsource: APNIC\norganisation: ORG-ARAD1-AP\norg-name: APNIC Research and Development\norg-type: LIR\ncountry: AU\naddress: 6 Cordelia St\nphone: +61-7-38583100\nfax-no: +61-7-38583199\ne-mail: helpdesk@apnic.net\nmnt-ref: APNIC-HM\nmnt-by: APNIC-HM\nlast-modified: 2023-09-05T02:15:19Z\nsource: APNIC\nrole: ABUSE APNICRANDNETAU\ncountry: ZZ\naddress: PO Box 3646\naddress: South Brisbane, QLD 4101\naddress: Australia\nphone: +000000000\ne-mail: helpdesk@apnic.net\nadmin-c: AR302-AP\ntech-c: AR302-AP\nnic-hdl: AA1412-AP\nremarks: Generated from irt object IRT-APNICRANDNET-AU\nremarks: helpdesk@apnic.net was validated on 2021-02-09\nabuse-mailbox: helpdesk@apnic.net\nmnt-by: APNIC-ABUSE\nlast-modified: 2025-05-28T03:31:35Z\nsource: APNIC\nrole: APNICRANDNET Infrastructure Contact\naddress: 6 Cordelia St\n South Brisbane\n QLD 4101\ncountry: AU\nphone: +61 7 3858 3100\ne-mail: research@apnic.net\nadmin-c: AIC3-AP\ntech-c: AIC3-AP\nnic-hdl: AIC3-AP\nmnt-by: MAINT-APNICRANDNET\nlast-modified: 2024-07-18T04:37:37Z\nsource: APNIC\nroute: 1.1.1.0/24\norigin: AS13335\ndescr: APNIC Research and Development\n 6 Cordelia St\nmnt-by: MAINT-APNICRANDNET\nlast-modified: 2023-04-26T02:42:44Z\nsource: APNIC\n",
                         "last_analysis_stats": {
                           "malicious": 1,
                           "suspicious": 0,
@@ -9905,14 +9912,7 @@
                           "harmless": 64,
                           "timeout": 0
                         },
-                        "whois": "NetRange: 1.0.0.0 - 1.255.255.255\nCIDR: 1.0.0.0/8\nNetName: APNIC-1\nNetHandle: NET-1-0-0-0-1\nParent: ()\nNetType: Allocated to APNIC\nOriginAS: \nOrganization: Asia Pacific Network Information Centre (APNIC)\nRegDate: \nUpdated: 2010-07-30\nComment: This IP address range is not registered in the ARIN database.\nComment: For details, refer to the APNIC Whois Database via\nComment: WHOIS.APNIC.NET or http://wq.apnic.net/apnic-bin/whois.pl\nComment: ** IMPORTANT NOTE: APNIC is the Regional Internet Registry\nComment: for the Asia Pacific region. APNIC does not operate networks\nComment: using this IP address range and is not able to investigate\nComment: spam or abuse reports relating to these addresses. For more\nComment: help, refer to http://www.apnic.net/apnic-info/whois_search2/abuse-and-spamming\nRef: https://rdap.arin.net/registry/ip/1.0.0.0\nResourceLink: https://apps.db.ripe.net/db-web-ui/query\nResourceLink: whois.apnic.net\nOrgName: Asia Pacific Network Information Centre\nOrgId: APNIC\nAddress: PO Box 3646\nCity: South Brisbane\nStateProv: QLD\nPostalCode: 4101\nCountry: AU\nRegDate: \nUpdated: 2012-01-24\nRef: https://rdap.arin.net/registry/entity/APNIC\nReferralServer: whois://whois.apnic.net\nResourceLink: https://apps.db.ripe.net/db-web-ui/query\nOrgAbuseHandle: AWC12-ARIN\nOrgAbuseName: APNIC Whois Contact\nOrgAbusePhone: +61 7 3858 3188 \nOrgAbuseEmail: search-apnic-not-arin@apnic.net\nOrgAbuseRef: https://rdap.arin.net/registry/entity/AWC12-ARIN\nOrgTechHandle: AWC12-ARIN\nOrgTechName: APNIC Whois Contact\nOrgTechPhone: +61 7 3858 3188 \nOrgTechEmail: search-apnic-not-arin@apnic.net\nOrgTechRef: https://rdap.arin.net/registry/entity/AWC12-ARIN\ninetnum: 1.1.1.0 - 1.1.1.255\nnetname: APNIC-LABS\ndescr: APNIC and Cloudflare DNS Resolver project\ndescr: Routed globally by AS13335/Cloudflare\ndescr: Research prefix for APNIC Labs\ncountry: AU\norg: ORG-ARAD1-AP\nadmin-c: AIC3-AP\ntech-c: AIC3-AP\nabuse-c: AA1412-AP\nstatus: ASSIGNED PORTABLE\nremarks: ---------------\nremarks: All Cloudflare abuse reporting can be done via\nremarks: resolver-abuse@cloudflare.com\nremarks: ---------------\nmnt-by: APNIC-HM\nmnt-routes: MAINT-APNICRANDNET\nmnt-irt: IRT-APNICRANDNET-AU\nlast-modified: 2023-04-26T22:57:58Z\nmnt-lower: MAINT-APNICRANDNET\nsource: APNIC\nirt: IRT-APNICRANDNET-AU\naddress: PO Box 3646\naddress: South Brisbane, QLD 4101\naddress: Australia\ne-mail: helpdesk@apnic.net\nabuse-mailbox: helpdesk@apnic.net\nadmin-c: AR302-AP\ntech-c: AR302-AP\nauth: # Filtered\nremarks: helpdesk@apnic.net was validated on 2021-02-09\nmnt-by: MAINT-APNICRANDNET\nlast-modified: 2025-09-03T02:28:14Z\nsource: APNIC\norganisation: ORG-ARAD1-AP\norg-name: APNIC Research and Development\norg-type: LIR\ncountry: AU\naddress: 6 Cordelia St\nphone: +61-7-38583100\nfax-no: +61-7-38583199\ne-mail: helpdesk@apnic.net\nmnt-ref: APNIC-HM\nmnt-by: APNIC-HM\nlast-modified: 2023-09-05T02:15:19Z\nsource: APNIC\nrole: ABUSE APNICRANDNETAU\ncountry: ZZ\naddress: PO Box 3646\naddress: South Brisbane, QLD 4101\naddress: Australia\nphone: +000000000\ne-mail: helpdesk@apnic.net\nadmin-c: AR302-AP\ntech-c: AR302-AP\nnic-hdl: AA1412-AP\nremarks: Generated from irt object IRT-APNICRANDNET-AU\nremarks: helpdesk@apnic.net was validated on 2021-02-09\nabuse-mailbox: helpdesk@apnic.net\nmnt-by: APNIC-ABUSE\nlast-modified: 2025-05-28T03:31:35Z\nsource: APNIC\nrole: APNICRANDNET Infrastructure Contact\naddress: 6 Cordelia St\n South Brisbane\n QLD 4101\ncountry: AU\nphone: +61 7 3858 3100\ne-mail: research@apnic.net\nadmin-c: AIC3-AP\ntech-c: AIC3-AP\nnic-hdl: AIC3-AP\nmnt-by: MAINT-APNICRANDNET\nlast-modified: 2024-07-18T04:37:37Z\nsource: APNIC\nroute: 1.1.1.0/24\norigin: AS13335\ndescr: APNIC Research and Development\n 6 Cordelia St\nmnt-by: MAINT-APNICRANDNET\nlast-modified: 2023-04-26T02:42:44Z\nsource: APNIC\n",
-                        "asn": 13335,
-                        "tags": [
-                          "suspicious-udp"
-                        ],
-                        "jarm": "27d27d27d00027d00042d43d00041df04c41293ba84f6efe3a613b22f983e6",
-                        "last_modification_date": 1760289737,
-                        "whois_date": 1759576395,
+                        "last_https_certificate_date": 1760289115,
                         "rdap": {
                           "object_class_name": "ip network",
                           "handle": "1.1.1.0 - 1.1.1.255",
@@ -10382,10 +10382,10 @@
                           "parent_handle": "",
                           "arin_originas0_originautnums": []
                         },
-                        "total_votes": {
-                          "harmless": 133,
-                          "malicious": 36
-                        },
+                        "asn": 13335,
+                        "tags": [
+                          "suspicious-udp"
+                        ],
                         "last_analysis_results": {
                           "Acronis": {
                             "method": "blacklist",
@@ -10958,7 +10958,7 @@
                             "result": "unrated"
                           }
                         },
-                        "last_https_certificate_date": 1760289115
+                        "jarm": "27d27d27d00027d00042d43d00041df04c41293ba84f6efe3a613b22f983e6"
                       }
                     }
                   }
@@ -14663,9 +14663,8 @@
                           "self": "https://www.virustotal.com/api/v3/ip_addresses/1.1.1.1"
                         },
                         "attributes": {
-                          "network": "1.1.1.0/24",
-                          "as_owner": "CLOUDFLARENET",
-                          "last_analysis_date": 1760288814,
+                          "reputation": 77,
+                          "last_modification_date": 1760294234,
                           "last_https_certificate": {
                             "cert_signature": {
                               "signature_algorithm": "sha256RSA",
@@ -14740,7 +14739,15 @@
                               "CN": "cloudflare-dns.com"
                             }
                           },
-                          "reputation": 77,
+                          "last_analysis_date": 1760288814,
+                          "total_votes": {
+                            "harmless": 133,
+                            "malicious": 36
+                          },
+                          "as_owner": "CLOUDFLARENET",
+                          "network": "1.1.1.0/24",
+                          "whois_date": 1759576395,
+                          "whois": "NetRange: 1.0.0.0 - 1.255.255.255\nCIDR: 1.0.0.0/8\nNetName: APNIC-1\nNetHandle: NET-1-0-0-0-1\nParent: ()\nNetType: Allocated to APNIC\nOriginAS: \nOrganization: Asia Pacific Network Information Centre (APNIC)\nRegDate: \nUpdated: 2010-07-30\nComment: This IP address range is not registered in the ARIN database.\nComment: For details, refer to the APNIC Whois Database via\nComment: WHOIS.APNIC.NET or http://wq.apnic.net/apnic-bin/whois.pl\nComment: ** IMPORTANT NOTE: APNIC is the Regional Internet Registry\nComment: for the Asia Pacific region. APNIC does not operate networks\nComment: using this IP address range and is not able to investigate\nComment: spam or abuse reports relating to these addresses. For more\nComment: help, refer to http://www.apnic.net/apnic-info/whois_search2/abuse-and-spamming\nRef: https://rdap.arin.net/registry/ip/1.0.0.0\nResourceLink: https://apps.db.ripe.net/db-web-ui/query\nResourceLink: whois.apnic.net\nOrgName: Asia Pacific Network Information Centre\nOrgId: APNIC\nAddress: PO Box 3646\nCity: South Brisbane\nStateProv: QLD\nPostalCode: 4101\nCountry: AU\nRegDate: \nUpdated: 2012-01-24\nRef: https://rdap.arin.net/registry/entity/APNIC\nReferralServer: whois://whois.apnic.net\nResourceLink: https://apps.db.ripe.net/db-web-ui/query\nOrgAbuseHandle: AWC12-ARIN\nOrgAbuseName: APNIC Whois Contact\nOrgAbusePhone: +61 7 3858 3188 \nOrgAbuseEmail: search-apnic-not-arin@apnic.net\nOrgAbuseRef: https://rdap.arin.net/registry/entity/AWC12-ARIN\nOrgTechHandle: AWC12-ARIN\nOrgTechName: APNIC Whois Contact\nOrgTechPhone: +61 7 3858 3188 \nOrgTechEmail: search-apnic-not-arin@apnic.net\nOrgTechRef: https://rdap.arin.net/registry/entity/AWC12-ARIN\ninetnum: 1.1.1.0 - 1.1.1.255\nnetname: APNIC-LABS\ndescr: APNIC and Cloudflare DNS Resolver project\ndescr: Routed globally by AS13335/Cloudflare\ndescr: Research prefix for APNIC Labs\ncountry: AU\norg: ORG-ARAD1-AP\nadmin-c: AIC3-AP\ntech-c: AIC3-AP\nabuse-c: AA1412-AP\nstatus: ASSIGNED PORTABLE\nremarks: ---------------\nremarks: All Cloudflare abuse reporting can be done via\nremarks: resolver-abuse@cloudflare.com\nremarks: ---------------\nmnt-by: APNIC-HM\nmnt-routes: MAINT-APNICRANDNET\nmnt-irt: IRT-APNICRANDNET-AU\nlast-modified: 2023-04-26T22:57:58Z\nmnt-lower: MAINT-APNICRANDNET\nsource: APNIC\nirt: IRT-APNICRANDNET-AU\naddress: PO Box 3646\naddress: South Brisbane, QLD 4101\naddress: Australia\ne-mail: helpdesk@apnic.net\nabuse-mailbox: helpdesk@apnic.net\nadmin-c: AR302-AP\ntech-c: AR302-AP\nauth: # Filtered\nremarks: helpdesk@apnic.net was validated on 2021-02-09\nmnt-by: MAINT-APNICRANDNET\nlast-modified: 2025-09-03T02:28:14Z\nsource: APNIC\norganisation: ORG-ARAD1-AP\norg-name: APNIC Research and Development\norg-type: LIR\ncountry: AU\naddress: 6 Cordelia St\nphone: +61-7-38583100\nfax-no: +61-7-38583199\ne-mail: helpdesk@apnic.net\nmnt-ref: APNIC-HM\nmnt-by: APNIC-HM\nlast-modified: 2023-09-05T02:15:19Z\nsource: APNIC\nrole: ABUSE APNICRANDNETAU\ncountry: ZZ\naddress: PO Box 3646\naddress: South Brisbane, QLD 4101\naddress: Australia\nphone: +000000000\ne-mail: helpdesk@apnic.net\nadmin-c: AR302-AP\ntech-c: AR302-AP\nnic-hdl: AA1412-AP\nremarks: Generated from irt object IRT-APNICRANDNET-AU\nremarks: helpdesk@apnic.net was validated on 2021-02-09\nabuse-mailbox: helpdesk@apnic.net\nmnt-by: APNIC-ABUSE\nlast-modified: 2025-05-28T03:31:35Z\nsource: APNIC\nrole: APNICRANDNET Infrastructure Contact\naddress: 6 Cordelia St\n South Brisbane\n QLD 4101\ncountry: AU\nphone: +61 7 3858 3100\ne-mail: research@apnic.net\nadmin-c: AIC3-AP\ntech-c: AIC3-AP\nnic-hdl: AIC3-AP\nmnt-by: MAINT-APNICRANDNET\nlast-modified: 2024-07-18T04:37:37Z\nsource: APNIC\nroute: 1.1.1.0/24\norigin: AS13335\ndescr: APNIC Research and Development\n 6 Cordelia St\nmnt-by: MAINT-APNICRANDNET\nlast-modified: 2023-04-26T02:42:44Z\nsource: APNIC\n",
                           "last_analysis_stats": {
                             "malicious": 1,
                             "suspicious": 0,
@@ -14748,14 +14755,7 @@
                             "harmless": 64,
                             "timeout": 0
                           },
-                          "whois": "NetRange: 1.0.0.0 - 1.255.255.255\nCIDR: 1.0.0.0/8\nNetName: APNIC-1\nNetHandle: NET-1-0-0-0-1\nParent: ()\nNetType: Allocated to APNIC\nOriginAS: \nOrganization: Asia Pacific Network Information Centre (APNIC)\nRegDate: \nUpdated: 2010-07-30\nComment: This IP address range is not registered in the ARIN database.\nComment: For details, refer to the APNIC Whois Database via\nComment: WHOIS.APNIC.NET or http://wq.apnic.net/apnic-bin/whois.pl\nComment: ** IMPORTANT NOTE: APNIC is the Regional Internet Registry\nComment: for the Asia Pacific region. APNIC does not operate networks\nComment: using this IP address range and is not able to investigate\nComment: spam or abuse reports relating to these addresses. For more\nComment: help, refer to http://www.apnic.net/apnic-info/whois_search2/abuse-and-spamming\nRef: https://rdap.arin.net/registry/ip/1.0.0.0\nResourceLink: https://apps.db.ripe.net/db-web-ui/query\nResourceLink: whois.apnic.net\nOrgName: Asia Pacific Network Information Centre\nOrgId: APNIC\nAddress: PO Box 3646\nCity: South Brisbane\nStateProv: QLD\nPostalCode: 4101\nCountry: AU\nRegDate: \nUpdated: 2012-01-24\nRef: https://rdap.arin.net/registry/entity/APNIC\nReferralServer: whois://whois.apnic.net\nResourceLink: https://apps.db.ripe.net/db-web-ui/query\nOrgAbuseHandle: AWC12-ARIN\nOrgAbuseName: APNIC Whois Contact\nOrgAbusePhone: +61 7 3858 3188 \nOrgAbuseEmail: search-apnic-not-arin@apnic.net\nOrgAbuseRef: https://rdap.arin.net/registry/entity/AWC12-ARIN\nOrgTechHandle: AWC12-ARIN\nOrgTechName: APNIC Whois Contact\nOrgTechPhone: +61 7 3858 3188 \nOrgTechEmail: search-apnic-not-arin@apnic.net\nOrgTechRef: https://rdap.arin.net/registry/entity/AWC12-ARIN\ninetnum: 1.1.1.0 - 1.1.1.255\nnetname: APNIC-LABS\ndescr: APNIC and Cloudflare DNS Resolver project\ndescr: Routed globally by AS13335/Cloudflare\ndescr: Research prefix for APNIC Labs\ncountry: AU\norg: ORG-ARAD1-AP\nadmin-c: AIC3-AP\ntech-c: AIC3-AP\nabuse-c: AA1412-AP\nstatus: ASSIGNED PORTABLE\nremarks: ---------------\nremarks: All Cloudflare abuse reporting can be done via\nremarks: resolver-abuse@cloudflare.com\nremarks: ---------------\nmnt-by: APNIC-HM\nmnt-routes: MAINT-APNICRANDNET\nmnt-irt: IRT-APNICRANDNET-AU\nlast-modified: 2023-04-26T22:57:58Z\nmnt-lower: MAINT-APNICRANDNET\nsource: APNIC\nirt: IRT-APNICRANDNET-AU\naddress: PO Box 3646\naddress: South Brisbane, QLD 4101\naddress: Australia\ne-mail: helpdesk@apnic.net\nabuse-mailbox: helpdesk@apnic.net\nadmin-c: AR302-AP\ntech-c: AR302-AP\nauth: # Filtered\nremarks: helpdesk@apnic.net was validated on 2021-02-09\nmnt-by: MAINT-APNICRANDNET\nlast-modified: 2025-09-03T02:28:14Z\nsource: APNIC\norganisation: ORG-ARAD1-AP\norg-name: APNIC Research and Development\norg-type: LIR\ncountry: AU\naddress: 6 Cordelia St\nphone: +61-7-38583100\nfax-no: +61-7-38583199\ne-mail: helpdesk@apnic.net\nmnt-ref: APNIC-HM\nmnt-by: APNIC-HM\nlast-modified: 2023-09-05T02:15:19Z\nsource: APNIC\nrole: ABUSE APNICRANDNETAU\ncountry: ZZ\naddress: PO Box 3646\naddress: South Brisbane, QLD 4101\naddress: Australia\nphone: +000000000\ne-mail: helpdesk@apnic.net\nadmin-c: AR302-AP\ntech-c: AR302-AP\nnic-hdl: AA1412-AP\nremarks: Generated from irt object IRT-APNICRANDNET-AU\nremarks: helpdesk@apnic.net was validated on 2021-02-09\nabuse-mailbox: helpdesk@apnic.net\nmnt-by: APNIC-ABUSE\nlast-modified: 2025-05-28T03:31:35Z\nsource: APNIC\nrole: APNICRANDNET Infrastructure Contact\naddress: 6 Cordelia St\n South Brisbane\n QLD 4101\ncountry: AU\nphone: +61 7 3858 3100\ne-mail: research@apnic.net\nadmin-c: AIC3-AP\ntech-c: AIC3-AP\nnic-hdl: AIC3-AP\nmnt-by: MAINT-APNICRANDNET\nlast-modified: 2024-07-18T04:37:37Z\nsource: APNIC\nroute: 1.1.1.0/24\norigin: AS13335\ndescr: APNIC Research and Development\n 6 Cordelia St\nmnt-by: MAINT-APNICRANDNET\nlast-modified: 2023-04-26T02:42:44Z\nsource: APNIC\n",
-                          "asn": 13335,
-                          "tags": [
-                            "suspicious-udp"
-                          ],
-                          "jarm": "27d27d27d00027d00042d43d00041df04c41293ba84f6efe3a613b22f983e6",
-                          "last_modification_date": 1760289737,
-                          "whois_date": 1759576395,
+                          "last_https_certificate_date": 1760289115,
                           "rdap": {
                             "object_class_name": "ip network",
                             "handle": "1.1.1.0 - 1.1.1.255",
@@ -15225,10 +15225,10 @@
                             "parent_handle": "",
                             "arin_originas0_originautnums": []
                           },
-                          "total_votes": {
-                            "harmless": 133,
-                            "malicious": 36
-                          },
+                          "asn": 13335,
+                          "tags": [
+                            "suspicious-udp"
+                          ],
                           "last_analysis_results": {
                             "Acronis": {
                               "method": "blacklist",
@@ -15801,7 +15801,7 @@
                               "result": "unrated"
                             }
                           },
-                          "last_https_certificate_date": 1760289115
+                          "jarm": "27d27d27d00027d00042d43d00041df04c41293ba84f6efe3a613b22f983e6"
                         }
                       }
                     }
@@ -19514,16 +19514,16 @@
           },
           "supervisor_version": "2.0"
         },
-        "processing_time": 3.948698043823242
+        "processing_time": 0.02555537223815918
       },
-      "response_time": 3.958508014678955,
+      "response_time": 0.03699302673339844,
       "status": "success"
     },
     {
       "description": "Request 3 - Different wording, same IOC",
       "request": {
         "text": "Analyze IP address 1.1.1.1",
-        "session_id": "00da04ef-c801-4972-a6b6-b22331d89187"
+        "session_id": "849df1ac-cfb4-4fcb-9c70-5654ef64e1b2"
       },
       "response": {
         "status": "success",
@@ -19578,103 +19578,6 @@
                         "self": "https://www.virustotal.com/api/v3/ip_addresses/1.1.1.1"
                       },
                       "attributes": {
-                        "as_owner": "CLOUDFLARENET",
-                        "last_analysis_date": 1760288814,
-                        "last_https_certificate": {
-                          "cert_signature": {
-                            "signature_algorithm": "sha256RSA",
-                            "signature": "9c36c4801745f127ad4635a3a78c80945dea3fe1eec0dfe09e1ad1c618232aae043b1150e697d7641059c9a8a2f0ffa5a68e0a3b0464e898c77baedbcfe7d1a3de4b1f5d73eb53c13b279e4eb2c3b6d0d76779c26da86e754e979d76616e98a37c1dfbd8592a5b51f874e989e00b23abf26054a294f46e5b33fc8dd0c564f3d3636c4cca88467c5e4bd5e4e171e3a3bc627e4b5ccffa40cd991f607c2cb97b8ad2fde6b3a3a8eb27e241b2e94417358438c5f9eb7dd5646c19d73d885f1e1d3d6beb9ec422be8aab5a4cf1a9c96bb8fd47dc22a69c316f51266f976b3a088673136af448c8cd72541427185f836b48097755e0b623c76e25684cd9571a0213e6"
-                          },
-                          "extensions": {
-                            "authority_key_identifier": {
-                              "keyid": "748580c066c7df37decfbd2937aa031dbeedcd17"
-                            },
-                            "subject_key_identifier": "2b2f8483a3e669e954c0e5b0b69f1fcdb618afa8",
-                            "subject_alternative_name": [
-                              "cloudflare-dns.com",
-                              "*.cloudflare-dns.com",
-                              "one.one.one.one",
-                              "1.0.0.1",
-                              "1.1.1.1",
-                              "162.159.36.1",
-                              "162.159.46.1",
-                              "2606:4700:4700::1001",
-                              "2606:4700:4700::1111",
-                              "2606:4700:4700::64",
-                              "2606:4700:4700::6400"
-                            ],
-                            "certificate_policies": [
-                              "2.23.140.1.2.2"
-                            ],
-                            "key_usage": [
-                              "digitalSignature",
-                              "keyAgreement"
-                            ],
-                            "extended_key_usage": [
-                              "serverAuth",
-                              "clientAuth"
-                            ],
-                            "crl_distribution_points": [
-                              "http://crl3.digicert.com/DigiCertGlobalG2TLSRSASHA2562020CA1-1.crl",
-                              "http://crl4.digicert.com/DigiCertGlobalG2TLSRSASHA2562020CA1-1.crl"
-                            ],
-                            "ca_information_access": {
-                              "OCSP": "http://ocsp.digicert.com",
-                              "CA Issuers": "http://cacerts.digicert.com/DigiCertGlobalG2TLSRSASHA2562020CA1-1.crt"
-                            },
-                            "CA": false,
-                            "1.3.6.1.4.1.11129.2.4.2": "0482016901670075000e5794bcf3aea93e331b2c9907b3f790df9bc23d713225"
-                          },
-                          "validity": {
-                            "not_after": "2026-01-21 23:59:59",
-                            "not_before": "2025-01-02 00:00:00"
-                          },
-                          "size": 1703,
-                          "version": "V3",
-                          "public_key": {
-                            "algorithm": "EC",
-                            "ec": {
-                              "oid": "secp256r1",
-                              "pub": "3059301306072a8648ce3d020106082a8648ce3d030107034200048080f1decb9302a3407e95b2b9ea4f7fcba332c63c32e360027a828d372607076b402e4e099b1697363fa3f295ee029bd4a1b4b58c942e9146798cea5b86ca86"
-                            }
-                          },
-                          "thumbprint_sha256": "73b8ed5becf1ba6493d2e2215a42dfdc7877e91e311ff5e59fb43d094871e699",
-                          "thumbprint": "3ba7e9f806eb30d2f4e3f905e53f07e9acf08e1e",
-                          "serial_number": "27dc8c5e17294aec9ed3f67728e8a08",
-                          "issuer": {
-                            "C": "US",
-                            "O": "DigiCert Inc",
-                            "CN": "DigiCert Global G2 TLS RSA SHA256 2020 CA1"
-                          },
-                          "subject": {
-                            "C": "US",
-                            "ST": "California",
-                            "L": "San Francisco",
-                            "O": "Cloudflare, Inc.",
-                            "CN": "cloudflare-dns.com"
-                          }
-                        },
-                        "tags": [
-                          "suspicious-udp"
-                        ],
-                        "whois": "NetRange: 1.0.0.0 - 1.255.255.255\nCIDR: 1.0.0.0/8\nNetName: APNIC-1\nNetHandle: NET-1-0-0-0-1\nParent: ()\nNetType: Allocated to APNIC\nOriginAS: \nOrganization: Asia Pacific Network Information Centre (APNIC)\nRegDate: \nUpdated: 2010-07-30\nComment: This IP address range is not registered in the ARIN database.\nComment: For details, refer to the APNIC Whois Database via\nComment: WHOIS.APNIC.NET or http://wq.apnic.net/apnic-bin/whois.pl\nComment: ** IMPORTANT NOTE: APNIC is the Regional Internet Registry\nComment: for the Asia Pacific region. APNIC does not operate networks\nComment: using this IP address range and is not able to investigate\nComment: spam or abuse reports relating to these addresses. For more\nComment: help, refer to http://www.apnic.net/apnic-info/whois_search2/abuse-and-spamming\nRef: https://rdap.arin.net/registry/ip/1.0.0.0\nResourceLink: https://apps.db.ripe.net/db-web-ui/query\nResourceLink: whois.apnic.net\nOrgName: Asia Pacific Network Information Centre\nOrgId: APNIC\nAddress: PO Box 3646\nCity: South Brisbane\nStateProv: QLD\nPostalCode: 4101\nCountry: AU\nRegDate: \nUpdated: 2012-01-24\nRef: https://rdap.arin.net/registry/entity/APNIC\nReferralServer: whois://whois.apnic.net\nResourceLink: https://apps.db.ripe.net/db-web-ui/query\nOrgAbuseHandle: AWC12-ARIN\nOrgAbuseName: APNIC Whois Contact\nOrgAbusePhone: +61 7 3858 3188 \nOrgAbuseEmail: search-apnic-not-arin@apnic.net\nOrgAbuseRef: https://rdap.arin.net/registry/entity/AWC12-ARIN\nOrgTechHandle: AWC12-ARIN\nOrgTechName: APNIC Whois Contact\nOrgTechPhone: +61 7 3858 3188 \nOrgTechEmail: search-apnic-not-arin@apnic.net\nOrgTechRef: https://rdap.arin.net/registry/entity/AWC12-ARIN\ninetnum: 1.1.1.0 - 1.1.1.255\nnetname: APNIC-LABS\ndescr: APNIC and Cloudflare DNS Resolver project\ndescr: Routed globally by AS13335/Cloudflare\ndescr: Research prefix for APNIC Labs\ncountry: AU\norg: ORG-ARAD1-AP\nadmin-c: AIC3-AP\ntech-c: AIC3-AP\nabuse-c: AA1412-AP\nstatus: ASSIGNED PORTABLE\nremarks: ---------------\nremarks: All Cloudflare abuse reporting can be done via\nremarks: resolver-abuse@cloudflare.com\nremarks: ---------------\nmnt-by: APNIC-HM\nmnt-routes: MAINT-APNICRANDNET\nmnt-irt: IRT-APNICRANDNET-AU\nlast-modified: 2023-04-26T22:57:58Z\nmnt-lower: MAINT-APNICRANDNET\nsource: APNIC\nirt: IRT-APNICRANDNET-AU\naddress: PO Box 3646\naddress: South Brisbane, QLD 4101\naddress: Australia\ne-mail: helpdesk@apnic.net\nabuse-mailbox: helpdesk@apnic.net\nadmin-c: AR302-AP\ntech-c: AR302-AP\nauth: # Filtered\nremarks: helpdesk@apnic.net was validated on 2021-02-09\nmnt-by: MAINT-APNICRANDNET\nlast-modified: 2025-09-03T02:28:14Z\nsource: APNIC\norganisation: ORG-ARAD1-AP\norg-name: APNIC Research and Development\norg-type: LIR\ncountry: AU\naddress: 6 Cordelia St\nphone: +61-7-38583100\nfax-no: +61-7-38583199\ne-mail: helpdesk@apnic.net\nmnt-ref: APNIC-HM\nmnt-by: APNIC-HM\nlast-modified: 2023-09-05T02:15:19Z\nsource: APNIC\nrole: ABUSE APNICRANDNETAU\ncountry: ZZ\naddress: PO Box 3646\naddress: South Brisbane, QLD 4101\naddress: Australia\nphone: +000000000\ne-mail: helpdesk@apnic.net\nadmin-c: AR302-AP\ntech-c: AR302-AP\nnic-hdl: AA1412-AP\nremarks: Generated from irt object IRT-APNICRANDNET-AU\nremarks: helpdesk@apnic.net was validated on 2021-02-09\nabuse-mailbox: helpdesk@apnic.net\nmnt-by: APNIC-ABUSE\nlast-modified: 2025-05-28T03:31:35Z\nsource: APNIC\nrole: APNICRANDNET Infrastructure Contact\naddress: 6 Cordelia St\n South Brisbane\n QLD 4101\ncountry: AU\nphone: +61 7 3858 3100\ne-mail: research@apnic.net\nadmin-c: AIC3-AP\ntech-c: AIC3-AP\nnic-hdl: AIC3-AP\nmnt-by: MAINT-APNICRANDNET\nlast-modified: 2024-07-18T04:37:37Z\nsource: APNIC\nroute: 1.1.1.0/24\norigin: AS13335\ndescr: APNIC Research and Development\n 6 Cordelia St\nmnt-by: MAINT-APNICRANDNET\nlast-modified: 2023-04-26T02:42:44Z\nsource: APNIC\n",
-                        "network": "1.1.1.0/24",
-                        "last_analysis_stats": {
-                          "malicious": 1,
-                          "suspicious": 0,
-                          "undetected": 30,
-                          "harmless": 64,
-                          "timeout": 0
-                        },
-                        "total_votes": {
-                          "harmless": 133,
-                          "malicious": 36
-                        },
-                        "last_modification_date": 1760289737,
-                        "reputation": 77,
-                        "asn": 13335,
-                        "jarm": "27d27d27d00027d00042d43d00041df04c41293ba84f6efe3a613b22f983e6",
-                        "whois_date": 1759576395,
                         "rdap": {
                           "object_class_name": "ip network",
                           "handle": "1.1.1.0 - 1.1.1.255",
@@ -20144,7 +20047,104 @@
                           "parent_handle": "",
                           "arin_originas0_originautnums": []
                         },
+                        "jarm": "27d27d27d00027d00042d43d00041df04c41293ba84f6efe3a613b22f983e6",
+                        "tags": [
+                          "suspicious-udp"
+                        ],
+                        "last_analysis_date": 1760288814,
+                        "total_votes": {
+                          "harmless": 133,
+                          "malicious": 36
+                        },
+                        "last_analysis_stats": {
+                          "malicious": 1,
+                          "suspicious": 0,
+                          "undetected": 30,
+                          "harmless": 64,
+                          "timeout": 0
+                        },
+                        "whois": "NetRange: 1.0.0.0 - 1.255.255.255\nCIDR: 1.0.0.0/8\nNetName: APNIC-1\nNetHandle: NET-1-0-0-0-1\nParent: ()\nNetType: Allocated to APNIC\nOriginAS: \nOrganization: Asia Pacific Network Information Centre (APNIC)\nRegDate: \nUpdated: 2010-07-30\nComment: This IP address range is not registered in the ARIN database.\nComment: For details, refer to the APNIC Whois Database via\nComment: WHOIS.APNIC.NET or http://wq.apnic.net/apnic-bin/whois.pl\nComment: ** IMPORTANT NOTE: APNIC is the Regional Internet Registry\nComment: for the Asia Pacific region. APNIC does not operate networks\nComment: using this IP address range and is not able to investigate\nComment: spam or abuse reports relating to these addresses. For more\nComment: help, refer to http://www.apnic.net/apnic-info/whois_search2/abuse-and-spamming\nRef: https://rdap.arin.net/registry/ip/1.0.0.0\nResourceLink: https://apps.db.ripe.net/db-web-ui/query\nResourceLink: whois.apnic.net\nOrgName: Asia Pacific Network Information Centre\nOrgId: APNIC\nAddress: PO Box 3646\nCity: South Brisbane\nStateProv: QLD\nPostalCode: 4101\nCountry: AU\nRegDate: \nUpdated: 2012-01-24\nRef: https://rdap.arin.net/registry/entity/APNIC\nReferralServer: whois://whois.apnic.net\nResourceLink: https://apps.db.ripe.net/db-web-ui/query\nOrgAbuseHandle: AWC12-ARIN\nOrgAbuseName: APNIC Whois Contact\nOrgAbusePhone: +61 7 3858 3188 \nOrgAbuseEmail: search-apnic-not-arin@apnic.net\nOrgAbuseRef: https://rdap.arin.net/registry/entity/AWC12-ARIN\nOrgTechHandle: AWC12-ARIN\nOrgTechName: APNIC Whois Contact\nOrgTechPhone: +61 7 3858 3188 \nOrgTechEmail: search-apnic-not-arin@apnic.net\nOrgTechRef: https://rdap.arin.net/registry/entity/AWC12-ARIN\ninetnum: 1.1.1.0 - 1.1.1.255\nnetname: APNIC-LABS\ndescr: APNIC and Cloudflare DNS Resolver project\ndescr: Routed globally by AS13335/Cloudflare\ndescr: Research prefix for APNIC Labs\ncountry: AU\norg: ORG-ARAD1-AP\nadmin-c: AIC3-AP\ntech-c: AIC3-AP\nabuse-c: AA1412-AP\nstatus: ASSIGNED PORTABLE\nremarks: ---------------\nremarks: All Cloudflare abuse reporting can be done via\nremarks: resolver-abuse@cloudflare.com\nremarks: ---------------\nmnt-by: APNIC-HM\nmnt-routes: MAINT-APNICRANDNET\nmnt-irt: IRT-APNICRANDNET-AU\nlast-modified: 2023-04-26T22:57:58Z\nmnt-lower: MAINT-APNICRANDNET\nsource: APNIC\nirt: IRT-APNICRANDNET-AU\naddress: PO Box 3646\naddress: South Brisbane, QLD 4101\naddress: Australia\ne-mail: helpdesk@apnic.net\nabuse-mailbox: helpdesk@apnic.net\nadmin-c: AR302-AP\ntech-c: AR302-AP\nauth: # Filtered\nremarks: helpdesk@apnic.net was validated on 2021-02-09\nmnt-by: MAINT-APNICRANDNET\nlast-modified: 2025-09-03T02:28:14Z\nsource: APNIC\norganisation: ORG-ARAD1-AP\norg-name: APNIC Research and Development\norg-type: LIR\ncountry: AU\naddress: 6 Cordelia St\nphone: +61-7-38583100\nfax-no: +61-7-38583199\ne-mail: helpdesk@apnic.net\nmnt-ref: APNIC-HM\nmnt-by: APNIC-HM\nlast-modified: 2023-09-05T02:15:19Z\nsource: APNIC\nrole: ABUSE APNICRANDNETAU\ncountry: ZZ\naddress: PO Box 3646\naddress: South Brisbane, QLD 4101\naddress: Australia\nphone: +000000000\ne-mail: helpdesk@apnic.net\nadmin-c: AR302-AP\ntech-c: AR302-AP\nnic-hdl: AA1412-AP\nremarks: Generated from irt object IRT-APNICRANDNET-AU\nremarks: helpdesk@apnic.net was validated on 2021-02-09\nabuse-mailbox: helpdesk@apnic.net\nmnt-by: APNIC-ABUSE\nlast-modified: 2025-05-28T03:31:35Z\nsource: APNIC\nrole: APNICRANDNET Infrastructure Contact\naddress: 6 Cordelia St\n South Brisbane\n QLD 4101\ncountry: AU\nphone: +61 7 3858 3100\ne-mail: research@apnic.net\nadmin-c: AIC3-AP\ntech-c: AIC3-AP\nnic-hdl: AIC3-AP\nmnt-by: MAINT-APNICRANDNET\nlast-modified: 2024-07-18T04:37:37Z\nsource: APNIC\nroute: 1.1.1.0/24\norigin: AS13335\ndescr: APNIC Research and Development\n 6 Cordelia St\nmnt-by: MAINT-APNICRANDNET\nlast-modified: 2023-04-26T02:42:44Z\nsource: APNIC\n",
+                        "last_https_certificate": {
+                          "cert_signature": {
+                            "signature_algorithm": "sha256RSA",
+                            "signature": "9c36c4801745f127ad4635a3a78c80945dea3fe1eec0dfe09e1ad1c618232aae043b1150e697d7641059c9a8a2f0ffa5a68e0a3b0464e898c77baedbcfe7d1a3de4b1f5d73eb53c13b279e4eb2c3b6d0d76779c26da86e754e979d76616e98a37c1dfbd8592a5b51f874e989e00b23abf26054a294f46e5b33fc8dd0c564f3d3636c4cca88467c5e4bd5e4e171e3a3bc627e4b5ccffa40cd991f607c2cb97b8ad2fde6b3a3a8eb27e241b2e94417358438c5f9eb7dd5646c19d73d885f1e1d3d6beb9ec422be8aab5a4cf1a9c96bb8fd47dc22a69c316f51266f976b3a088673136af448c8cd72541427185f836b48097755e0b623c76e25684cd9571a0213e6"
+                          },
+                          "extensions": {
+                            "authority_key_identifier": {
+                              "keyid": "748580c066c7df37decfbd2937aa031dbeedcd17"
+                            },
+                            "subject_key_identifier": "2b2f8483a3e669e954c0e5b0b69f1fcdb618afa8",
+                            "subject_alternative_name": [
+                              "cloudflare-dns.com",
+                              "*.cloudflare-dns.com",
+                              "one.one.one.one",
+                              "1.0.0.1",
+                              "1.1.1.1",
+                              "162.159.36.1",
+                              "162.159.46.1",
+                              "2606:4700:4700::1001",
+                              "2606:4700:4700::1111",
+                              "2606:4700:4700::64",
+                              "2606:4700:4700::6400"
+                            ],
+                            "certificate_policies": [
+                              "2.23.140.1.2.2"
+                            ],
+                            "key_usage": [
+                              "digitalSignature",
+                              "keyAgreement"
+                            ],
+                            "extended_key_usage": [
+                              "serverAuth",
+                              "clientAuth"
+                            ],
+                            "crl_distribution_points": [
+                              "http://crl3.digicert.com/DigiCertGlobalG2TLSRSASHA2562020CA1-1.crl",
+                              "http://crl4.digicert.com/DigiCertGlobalG2TLSRSASHA2562020CA1-1.crl"
+                            ],
+                            "ca_information_access": {
+                              "OCSP": "http://ocsp.digicert.com",
+                              "CA Issuers": "http://cacerts.digicert.com/DigiCertGlobalG2TLSRSASHA2562020CA1-1.crt"
+                            },
+                            "CA": false,
+                            "1.3.6.1.4.1.11129.2.4.2": "0482016901670075000e5794bcf3aea93e331b2c9907b3f790df9bc23d713225"
+                          },
+                          "validity": {
+                            "not_after": "2026-01-21 23:59:59",
+                            "not_before": "2025-01-02 00:00:00"
+                          },
+                          "size": 1703,
+                          "version": "V3",
+                          "public_key": {
+                            "algorithm": "EC",
+                            "ec": {
+                              "oid": "secp256r1",
+                              "pub": "3059301306072a8648ce3d020106082a8648ce3d030107034200048080f1decb9302a3407e95b2b9ea4f7fcba332c63c32e360027a828d372607076b402e4e099b1697363fa3f295ee029bd4a1b4b58c942e9146798cea5b86ca86"
+                            }
+                          },
+                          "thumbprint_sha256": "73b8ed5becf1ba6493d2e2215a42dfdc7877e91e311ff5e59fb43d094871e699",
+                          "thumbprint": "3ba7e9f806eb30d2f4e3f905e53f07e9acf08e1e",
+                          "serial_number": "27dc8c5e17294aec9ed3f67728e8a08",
+                          "issuer": {
+                            "C": "US",
+                            "O": "DigiCert Inc",
+                            "CN": "DigiCert Global G2 TLS RSA SHA256 2020 CA1"
+                          },
+                          "subject": {
+                            "C": "US",
+                            "ST": "California",
+                            "L": "San Francisco",
+                            "O": "Cloudflare, Inc.",
+                            "CN": "cloudflare-dns.com"
+                          }
+                        },
+                        "asn": 13335,
+                        "network": "1.1.1.0/24",
+                        "last_modification_date": 1760294234,
+                        "as_owner": "CLOUDFLARENET",
+                        "whois_date": 1759576395,
                         "last_https_certificate_date": 1760289115,
+                        "reputation": 77,
                         "last_analysis_results": {
                           "Acronis": {
                             "method": "blacklist",
@@ -24421,103 +24421,6 @@
                           "self": "https://www.virustotal.com/api/v3/ip_addresses/1.1.1.1"
                         },
                         "attributes": {
-                          "as_owner": "CLOUDFLARENET",
-                          "last_analysis_date": 1760288814,
-                          "last_https_certificate": {
-                            "cert_signature": {
-                              "signature_algorithm": "sha256RSA",
-                              "signature": "9c36c4801745f127ad4635a3a78c80945dea3fe1eec0dfe09e1ad1c618232aae043b1150e697d7641059c9a8a2f0ffa5a68e0a3b0464e898c77baedbcfe7d1a3de4b1f5d73eb53c13b279e4eb2c3b6d0d76779c26da86e754e979d76616e98a37c1dfbd8592a5b51f874e989e00b23abf26054a294f46e5b33fc8dd0c564f3d3636c4cca88467c5e4bd5e4e171e3a3bc627e4b5ccffa40cd991f607c2cb97b8ad2fde6b3a3a8eb27e241b2e94417358438c5f9eb7dd5646c19d73d885f1e1d3d6beb9ec422be8aab5a4cf1a9c96bb8fd47dc22a69c316f51266f976b3a088673136af448c8cd72541427185f836b48097755e0b623c76e25684cd9571a0213e6"
-                            },
-                            "extensions": {
-                              "authority_key_identifier": {
-                                "keyid": "748580c066c7df37decfbd2937aa031dbeedcd17"
-                              },
-                              "subject_key_identifier": "2b2f8483a3e669e954c0e5b0b69f1fcdb618afa8",
-                              "subject_alternative_name": [
-                                "cloudflare-dns.com",
-                                "*.cloudflare-dns.com",
-                                "one.one.one.one",
-                                "1.0.0.1",
-                                "1.1.1.1",
-                                "162.159.36.1",
-                                "162.159.46.1",
-                                "2606:4700:4700::1001",
-                                "2606:4700:4700::1111",
-                                "2606:4700:4700::64",
-                                "2606:4700:4700::6400"
-                              ],
-                              "certificate_policies": [
-                                "2.23.140.1.2.2"
-                              ],
-                              "key_usage": [
-                                "digitalSignature",
-                                "keyAgreement"
-                              ],
-                              "extended_key_usage": [
-                                "serverAuth",
-                                "clientAuth"
-                              ],
-                              "crl_distribution_points": [
-                                "http://crl3.digicert.com/DigiCertGlobalG2TLSRSASHA2562020CA1-1.crl",
-                                "http://crl4.digicert.com/DigiCertGlobalG2TLSRSASHA2562020CA1-1.crl"
-                              ],
-                              "ca_information_access": {
-                                "OCSP": "http://ocsp.digicert.com",
-                                "CA Issuers": "http://cacerts.digicert.com/DigiCertGlobalG2TLSRSASHA2562020CA1-1.crt"
-                              },
-                              "CA": false,
-                              "1.3.6.1.4.1.11129.2.4.2": "0482016901670075000e5794bcf3aea93e331b2c9907b3f790df9bc23d713225"
-                            },
-                            "validity": {
-                              "not_after": "2026-01-21 23:59:59",
-                              "not_before": "2025-01-02 00:00:00"
-                            },
-                            "size": 1703,
-                            "version": "V3",
-                            "public_key": {
-                              "algorithm": "EC",
-                              "ec": {
-                                "oid": "secp256r1",
-                                "pub": "3059301306072a8648ce3d020106082a8648ce3d030107034200048080f1decb9302a3407e95b2b9ea4f7fcba332c63c32e360027a828d372607076b402e4e099b1697363fa3f295ee029bd4a1b4b58c942e9146798cea5b86ca86"
-                              }
-                            },
-                            "thumbprint_sha256": "73b8ed5becf1ba6493d2e2215a42dfdc7877e91e311ff5e59fb43d094871e699",
-                            "thumbprint": "3ba7e9f806eb30d2f4e3f905e53f07e9acf08e1e",
-                            "serial_number": "27dc8c5e17294aec9ed3f67728e8a08",
-                            "issuer": {
-                              "C": "US",
-                              "O": "DigiCert Inc",
-                              "CN": "DigiCert Global G2 TLS RSA SHA256 2020 CA1"
-                            },
-                            "subject": {
-                              "C": "US",
-                              "ST": "California",
-                              "L": "San Francisco",
-                              "O": "Cloudflare, Inc.",
-                              "CN": "cloudflare-dns.com"
-                            }
-                          },
-                          "tags": [
-                            "suspicious-udp"
-                          ],
-                          "whois": "NetRange: 1.0.0.0 - 1.255.255.255\nCIDR: 1.0.0.0/8\nNetName: APNIC-1\nNetHandle: NET-1-0-0-0-1\nParent: ()\nNetType: Allocated to APNIC\nOriginAS: \nOrganization: Asia Pacific Network Information Centre (APNIC)\nRegDate: \nUpdated: 2010-07-30\nComment: This IP address range is not registered in the ARIN database.\nComment: For details, refer to the APNIC Whois Database via\nComment: WHOIS.APNIC.NET or http://wq.apnic.net/apnic-bin/whois.pl\nComment: ** IMPORTANT NOTE: APNIC is the Regional Internet Registry\nComment: for the Asia Pacific region. APNIC does not operate networks\nComment: using this IP address range and is not able to investigate\nComment: spam or abuse reports relating to these addresses. For more\nComment: help, refer to http://www.apnic.net/apnic-info/whois_search2/abuse-and-spamming\nRef: https://rdap.arin.net/registry/ip/1.0.0.0\nResourceLink: https://apps.db.ripe.net/db-web-ui/query\nResourceLink: whois.apnic.net\nOrgName: Asia Pacific Network Information Centre\nOrgId: APNIC\nAddress: PO Box 3646\nCity: South Brisbane\nStateProv: QLD\nPostalCode: 4101\nCountry: AU\nRegDate: \nUpdated: 2012-01-24\nRef: https://rdap.arin.net/registry/entity/APNIC\nReferralServer: whois://whois.apnic.net\nResourceLink: https://apps.db.ripe.net/db-web-ui/query\nOrgAbuseHandle: AWC12-ARIN\nOrgAbuseName: APNIC Whois Contact\nOrgAbusePhone: +61 7 3858 3188 \nOrgAbuseEmail: search-apnic-not-arin@apnic.net\nOrgAbuseRef: https://rdap.arin.net/registry/entity/AWC12-ARIN\nOrgTechHandle: AWC12-ARIN\nOrgTechName: APNIC Whois Contact\nOrgTechPhone: +61 7 3858 3188 \nOrgTechEmail: search-apnic-not-arin@apnic.net\nOrgTechRef: https://rdap.arin.net/registry/entity/AWC12-ARIN\ninetnum: 1.1.1.0 - 1.1.1.255\nnetname: APNIC-LABS\ndescr: APNIC and Cloudflare DNS Resolver project\ndescr: Routed globally by AS13335/Cloudflare\ndescr: Research prefix for APNIC Labs\ncountry: AU\norg: ORG-ARAD1-AP\nadmin-c: AIC3-AP\ntech-c: AIC3-AP\nabuse-c: AA1412-AP\nstatus: ASSIGNED PORTABLE\nremarks: ---------------\nremarks: All Cloudflare abuse reporting can be done via\nremarks: resolver-abuse@cloudflare.com\nremarks: ---------------\nmnt-by: APNIC-HM\nmnt-routes: MAINT-APNICRANDNET\nmnt-irt: IRT-APNICRANDNET-AU\nlast-modified: 2023-04-26T22:57:58Z\nmnt-lower: MAINT-APNICRANDNET\nsource: APNIC\nirt: IRT-APNICRANDNET-AU\naddress: PO Box 3646\naddress: South Brisbane, QLD 4101\naddress: Australia\ne-mail: helpdesk@apnic.net\nabuse-mailbox: helpdesk@apnic.net\nadmin-c: AR302-AP\ntech-c: AR302-AP\nauth: # Filtered\nremarks: helpdesk@apnic.net was validated on 2021-02-09\nmnt-by: MAINT-APNICRANDNET\nlast-modified: 2025-09-03T02:28:14Z\nsource: APNIC\norganisation: ORG-ARAD1-AP\norg-name: APNIC Research and Development\norg-type: LIR\ncountry: AU\naddress: 6 Cordelia St\nphone: +61-7-38583100\nfax-no: +61-7-38583199\ne-mail: helpdesk@apnic.net\nmnt-ref: APNIC-HM\nmnt-by: APNIC-HM\nlast-modified: 2023-09-05T02:15:19Z\nsource: APNIC\nrole: ABUSE APNICRANDNETAU\ncountry: ZZ\naddress: PO Box 3646\naddress: South Brisbane, QLD 4101\naddress: Australia\nphone: +000000000\ne-mail: helpdesk@apnic.net\nadmin-c: AR302-AP\ntech-c: AR302-AP\nnic-hdl: AA1412-AP\nremarks: Generated from irt object IRT-APNICRANDNET-AU\nremarks: helpdesk@apnic.net was validated on 2021-02-09\nabuse-mailbox: helpdesk@apnic.net\nmnt-by: APNIC-ABUSE\nlast-modified: 2025-05-28T03:31:35Z\nsource: APNIC\nrole: APNICRANDNET Infrastructure Contact\naddress: 6 Cordelia St\n South Brisbane\n QLD 4101\ncountry: AU\nphone: +61 7 3858 3100\ne-mail: research@apnic.net\nadmin-c: AIC3-AP\ntech-c: AIC3-AP\nnic-hdl: AIC3-AP\nmnt-by: MAINT-APNICRANDNET\nlast-modified: 2024-07-18T04:37:37Z\nsource: APNIC\nroute: 1.1.1.0/24\norigin: AS13335\ndescr: APNIC Research and Development\n 6 Cordelia St\nmnt-by: MAINT-APNICRANDNET\nlast-modified: 2023-04-26T02:42:44Z\nsource: APNIC\n",
-                          "network": "1.1.1.0/24",
-                          "last_analysis_stats": {
-                            "malicious": 1,
-                            "suspicious": 0,
-                            "undetected": 30,
-                            "harmless": 64,
-                            "timeout": 0
-                          },
-                          "total_votes": {
-                            "harmless": 133,
-                            "malicious": 36
-                          },
-                          "last_modification_date": 1760289737,
-                          "reputation": 77,
-                          "asn": 13335,
-                          "jarm": "27d27d27d00027d00042d43d00041df04c41293ba84f6efe3a613b22f983e6",
-                          "whois_date": 1759576395,
                           "rdap": {
                             "object_class_name": "ip network",
                             "handle": "1.1.1.0 - 1.1.1.255",
@@ -24987,7 +24890,104 @@
                             "parent_handle": "",
                             "arin_originas0_originautnums": []
                           },
+                          "jarm": "27d27d27d00027d00042d43d00041df04c41293ba84f6efe3a613b22f983e6",
+                          "tags": [
+                            "suspicious-udp"
+                          ],
+                          "last_analysis_date": 1760288814,
+                          "total_votes": {
+                            "harmless": 133,
+                            "malicious": 36
+                          },
+                          "last_analysis_stats": {
+                            "malicious": 1,
+                            "suspicious": 0,
+                            "undetected": 30,
+                            "harmless": 64,
+                            "timeout": 0
+                          },
+                          "whois": "NetRange: 1.0.0.0 - 1.255.255.255\nCIDR: 1.0.0.0/8\nNetName: APNIC-1\nNetHandle: NET-1-0-0-0-1\nParent: ()\nNetType: Allocated to APNIC\nOriginAS: \nOrganization: Asia Pacific Network Information Centre (APNIC)\nRegDate: \nUpdated: 2010-07-30\nComment: This IP address range is not registered in the ARIN database.\nComment: For details, refer to the APNIC Whois Database via\nComment: WHOIS.APNIC.NET or http://wq.apnic.net/apnic-bin/whois.pl\nComment: ** IMPORTANT NOTE: APNIC is the Regional Internet Registry\nComment: for the Asia Pacific region. APNIC does not operate networks\nComment: using this IP address range and is not able to investigate\nComment: spam or abuse reports relating to these addresses. For more\nComment: help, refer to http://www.apnic.net/apnic-info/whois_search2/abuse-and-spamming\nRef: https://rdap.arin.net/registry/ip/1.0.0.0\nResourceLink: https://apps.db.ripe.net/db-web-ui/query\nResourceLink: whois.apnic.net\nOrgName: Asia Pacific Network Information Centre\nOrgId: APNIC\nAddress: PO Box 3646\nCity: South Brisbane\nStateProv: QLD\nPostalCode: 4101\nCountry: AU\nRegDate: \nUpdated: 2012-01-24\nRef: https://rdap.arin.net/registry/entity/APNIC\nReferralServer: whois://whois.apnic.net\nResourceLink: https://apps.db.ripe.net/db-web-ui/query\nOrgAbuseHandle: AWC12-ARIN\nOrgAbuseName: APNIC Whois Contact\nOrgAbusePhone: +61 7 3858 3188 \nOrgAbuseEmail: search-apnic-not-arin@apnic.net\nOrgAbuseRef: https://rdap.arin.net/registry/entity/AWC12-ARIN\nOrgTechHandle: AWC12-ARIN\nOrgTechName: APNIC Whois Contact\nOrgTechPhone: +61 7 3858 3188 \nOrgTechEmail: search-apnic-not-arin@apnic.net\nOrgTechRef: https://rdap.arin.net/registry/entity/AWC12-ARIN\ninetnum: 1.1.1.0 - 1.1.1.255\nnetname: APNIC-LABS\ndescr: APNIC and Cloudflare DNS Resolver project\ndescr: Routed globally by AS13335/Cloudflare\ndescr: Research prefix for APNIC Labs\ncountry: AU\norg: ORG-ARAD1-AP\nadmin-c: AIC3-AP\ntech-c: AIC3-AP\nabuse-c: AA1412-AP\nstatus: ASSIGNED PORTABLE\nremarks: ---------------\nremarks: All Cloudflare abuse reporting can be done via\nremarks: resolver-abuse@cloudflare.com\nremarks: ---------------\nmnt-by: APNIC-HM\nmnt-routes: MAINT-APNICRANDNET\nmnt-irt: IRT-APNICRANDNET-AU\nlast-modified: 2023-04-26T22:57:58Z\nmnt-lower: MAINT-APNICRANDNET\nsource: APNIC\nirt: IRT-APNICRANDNET-AU\naddress: PO Box 3646\naddress: South Brisbane, QLD 4101\naddress: Australia\ne-mail: helpdesk@apnic.net\nabuse-mailbox: helpdesk@apnic.net\nadmin-c: AR302-AP\ntech-c: AR302-AP\nauth: # Filtered\nremarks: helpdesk@apnic.net was validated on 2021-02-09\nmnt-by: MAINT-APNICRANDNET\nlast-modified: 2025-09-03T02:28:14Z\nsource: APNIC\norganisation: ORG-ARAD1-AP\norg-name: APNIC Research and Development\norg-type: LIR\ncountry: AU\naddress: 6 Cordelia St\nphone: +61-7-38583100\nfax-no: +61-7-38583199\ne-mail: helpdesk@apnic.net\nmnt-ref: APNIC-HM\nmnt-by: APNIC-HM\nlast-modified: 2023-09-05T02:15:19Z\nsource: APNIC\nrole: ABUSE APNICRANDNETAU\ncountry: ZZ\naddress: PO Box 3646\naddress: South Brisbane, QLD 4101\naddress: Australia\nphone: +000000000\ne-mail: helpdesk@apnic.net\nadmin-c: AR302-AP\ntech-c: AR302-AP\nnic-hdl: AA1412-AP\nremarks: Generated from irt object IRT-APNICRANDNET-AU\nremarks: helpdesk@apnic.net was validated on 2021-02-09\nabuse-mailbox: helpdesk@apnic.net\nmnt-by: APNIC-ABUSE\nlast-modified: 2025-05-28T03:31:35Z\nsource: APNIC\nrole: APNICRANDNET Infrastructure Contact\naddress: 6 Cordelia St\n South Brisbane\n QLD 4101\ncountry: AU\nphone: +61 7 3858 3100\ne-mail: research@apnic.net\nadmin-c: AIC3-AP\ntech-c: AIC3-AP\nnic-hdl: AIC3-AP\nmnt-by: MAINT-APNICRANDNET\nlast-modified: 2024-07-18T04:37:37Z\nsource: APNIC\nroute: 1.1.1.0/24\norigin: AS13335\ndescr: APNIC Research and Development\n 6 Cordelia St\nmnt-by: MAINT-APNICRANDNET\nlast-modified: 2023-04-26T02:42:44Z\nsource: APNIC\n",
+                          "last_https_certificate": {
+                            "cert_signature": {
+                              "signature_algorithm": "sha256RSA",
+                              "signature": "9c36c4801745f127ad4635a3a78c80945dea3fe1eec0dfe09e1ad1c618232aae043b1150e697d7641059c9a8a2f0ffa5a68e0a3b0464e898c77baedbcfe7d1a3de4b1f5d73eb53c13b279e4eb2c3b6d0d76779c26da86e754e979d76616e98a37c1dfbd8592a5b51f874e989e00b23abf26054a294f46e5b33fc8dd0c564f3d3636c4cca88467c5e4bd5e4e171e3a3bc627e4b5ccffa40cd991f607c2cb97b8ad2fde6b3a3a8eb27e241b2e94417358438c5f9eb7dd5646c19d73d885f1e1d3d6beb9ec422be8aab5a4cf1a9c96bb8fd47dc22a69c316f51266f976b3a088673136af448c8cd72541427185f836b48097755e0b623c76e25684cd9571a0213e6"
+                            },
+                            "extensions": {
+                              "authority_key_identifier": {
+                                "keyid": "748580c066c7df37decfbd2937aa031dbeedcd17"
+                              },
+                              "subject_key_identifier": "2b2f8483a3e669e954c0e5b0b69f1fcdb618afa8",
+                              "subject_alternative_name": [
+                                "cloudflare-dns.com",
+                                "*.cloudflare-dns.com",
+                                "one.one.one.one",
+                                "1.0.0.1",
+                                "1.1.1.1",
+                                "162.159.36.1",
+                                "162.159.46.1",
+                                "2606:4700:4700::1001",
+                                "2606:4700:4700::1111",
+                                "2606:4700:4700::64",
+                                "2606:4700:4700::6400"
+                              ],
+                              "certificate_policies": [
+                                "2.23.140.1.2.2"
+                              ],
+                              "key_usage": [
+                                "digitalSignature",
+                                "keyAgreement"
+                              ],
+                              "extended_key_usage": [
+                                "serverAuth",
+                                "clientAuth"
+                              ],
+                              "crl_distribution_points": [
+                                "http://crl3.digicert.com/DigiCertGlobalG2TLSRSASHA2562020CA1-1.crl",
+                                "http://crl4.digicert.com/DigiCertGlobalG2TLSRSASHA2562020CA1-1.crl"
+                              ],
+                              "ca_information_access": {
+                                "OCSP": "http://ocsp.digicert.com",
+                                "CA Issuers": "http://cacerts.digicert.com/DigiCertGlobalG2TLSRSASHA2562020CA1-1.crt"
+                              },
+                              "CA": false,
+                              "1.3.6.1.4.1.11129.2.4.2": "0482016901670075000e5794bcf3aea93e331b2c9907b3f790df9bc23d713225"
+                            },
+                            "validity": {
+                              "not_after": "2026-01-21 23:59:59",
+                              "not_before": "2025-01-02 00:00:00"
+                            },
+                            "size": 1703,
+                            "version": "V3",
+                            "public_key": {
+                              "algorithm": "EC",
+                              "ec": {
+                                "oid": "secp256r1",
+                                "pub": "3059301306072a8648ce3d020106082a8648ce3d030107034200048080f1decb9302a3407e95b2b9ea4f7fcba332c63c32e360027a828d372607076b402e4e099b1697363fa3f295ee029bd4a1b4b58c942e9146798cea5b86ca86"
+                              }
+                            },
+                            "thumbprint_sha256": "73b8ed5becf1ba6493d2e2215a42dfdc7877e91e311ff5e59fb43d094871e699",
+                            "thumbprint": "3ba7e9f806eb30d2f4e3f905e53f07e9acf08e1e",
+                            "serial_number": "27dc8c5e17294aec9ed3f67728e8a08",
+                            "issuer": {
+                              "C": "US",
+                              "O": "DigiCert Inc",
+                              "CN": "DigiCert Global G2 TLS RSA SHA256 2020 CA1"
+                            },
+                            "subject": {
+                              "C": "US",
+                              "ST": "California",
+                              "L": "San Francisco",
+                              "O": "Cloudflare, Inc.",
+                              "CN": "cloudflare-dns.com"
+                            }
+                          },
+                          "asn": 13335,
+                          "network": "1.1.1.0/24",
+                          "last_modification_date": 1760294234,
+                          "as_owner": "CLOUDFLARENET",
+                          "whois_date": 1759576395,
                           "last_https_certificate_date": 1760289115,
+                          "reputation": 77,
                           "last_analysis_results": {
                             "Acronis": {
                               "method": "blacklist",
@@ -29272,27 +29272,27 @@
           },
           "supervisor_version": "2.0"
         },
-        "processing_time": 3.8379387855529785
+        "processing_time": 0.019166946411132812
       },
-      "response_time": 3.8481030464172363,
+      "response_time": 0.02895379066467285,
       "status": "success"
     }
   ],
   "analysis": {
     "cache_effectiveness": {
-      "first_request_time": 3.856647253036499,
-      "subsequent_avg_time": 3.9033055305480957,
+      "first_request_time": 0.028115272521972656,
+      "subsequent_avg_time": 0.032973408699035645,
       "cache_likely_used": false,
       "all_response_times": [
-        3.856647253036499,
-        3.958508014678955,
-        3.8481030464172363
+        0.028115272521972656,
+        0.03699302673339844,
+        0.02895379066467285
       ]
     },
     "response_time_comparison": {
-      "first_request": 3.856647253036499,
-      "cached_request": 3.958508014678955,
-      "speedup_percentage": -2.641173925415575
+      "first_request": 0.028115272521972656,
+      "cached_request": 0.03699302673339844,
+      "speedup_percentage": -31.57626946168719
     }
   }
 }

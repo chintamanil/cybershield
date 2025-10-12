@@ -162,12 +162,48 @@ def dynamic_tool_results_reducer(
     return new if new is not None else existing
 
 
+# NEW: Context preservation reducers
+def session_id_reducer(existing: Optional[str], new: Optional[str]) -> Optional[str]:
+    """Reducer to handle session_id - keep first one"""
+    return existing if existing else new
+
+
+def original_input_text_reducer(existing: Optional[str], new: Optional[str]) -> Optional[str]:
+    """Reducer to preserve original user input before enrichment"""
+    return existing if existing else new
+
+
+def context_enrichment_reducer(existing: Optional[Dict], new: Optional[Dict]) -> Optional[Dict]:
+    """Reducer to handle context enrichment metadata"""
+    return new if new is not None else existing
+
+
+def previous_iocs_reducer(existing: Optional[Dict], new: Optional[Dict]) -> Optional[Dict]:
+    """Reducer to handle previous IOCs from session"""
+    return new if new is not None else existing
+
+
+def session_history_reducer(existing: Optional[List[Dict]], new: Optional[List[Dict]]) -> Optional[List[Dict]]:
+    """Reducer to handle session history - append mode"""
+    if not existing:
+        return new
+    if not new:
+        return existing
+    return existing + new
+
+
 class CyberShieldState(TypedDict):
     """State schema for CyberShield ReAct workflow"""
 
     messages: Annotated[List[Any], messages_reducer]
     input_text: Annotated[str, input_text_reducer]
     input_image: Annotated[Optional[bytes], input_image_reducer]
+    # NEW: Session management fields for context preservation
+    session_id: Annotated[Optional[str], session_id_reducer]
+    original_input_text: Annotated[Optional[str], original_input_text_reducer]
+    context_enrichment: Annotated[Optional[Dict], context_enrichment_reducer]
+    previous_iocs: Annotated[Optional[Dict], previous_iocs_reducer]
+    session_history: Annotated[Optional[List[Dict]], session_history_reducer]
     pii_masked_text: Annotated[Optional[str], pii_masked_text_reducer]
     pii_mapping: Annotated[Optional[Dict], pii_mapping_reducer]
     extracted_iocs: Annotated[Optional[Dict], extracted_iocs_reducer]
@@ -220,6 +256,7 @@ class CyberShieldReActAgent:
         from agents.threat_agent import ThreatAgent
         from agents.vision_agent import VisionAgent
         from tools.regex_checker import RegexChecker
+        from workflows.context_resolver import ContextResolver
 
         self.pii_agent = PIIAgent(memory)
         self.log_parser = LogParserAgent()
@@ -240,6 +277,13 @@ class CyberShieldReActAgent:
         # Initialize LLM (auto-detects OpenAI vs Bedrock based on environment) - lazy loaded
         create_llm = _get_llm_factory()
         self.llm = create_llm(model=llm_model, temperature=0)
+
+        # NEW: Initialize ContextResolver for context preservation (after LLM)
+        self.context_resolver = ContextResolver(memory=memory, llm_client=self.llm)
+
+        # NEW: Initialize SessionStorage for context persistence
+        from memory.session_storage import SessionStorage
+        self.session_storage = SessionStorage(memory=memory, postgres_client=None)
 
         # Initialize workflow steps helper - lazy loaded
         WorkflowStepsClass = _get_workflow_steps()
@@ -264,6 +308,88 @@ class CyberShieldReActAgent:
         text_hash = hashlib.md5(input_text.encode()).hexdigest()[:16]
         return f"cybershield:{operation}:{text_hash}"
 
+    async def _context_resolve_step(self, state: CyberShieldState) -> CyberShieldState:
+        """Context resolution step - resolve pronouns and enrich input with session context"""
+        logger.info("Context resolution step started")
+
+        try:
+            session_id = state.get("session_id")
+            input_text = state.get("input_text", "")
+
+            # Store original input before any enrichment
+            state["original_input_text"] = input_text
+
+            # Skip context resolution if no session_id
+            if not session_id:
+                logger.debug("No session_id provided, skipping context resolution")
+                # Still extract IOCs even without session_id for first-time storage
+                import re
+                ips = re.findall(r"\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b", input_text)
+                domains = re.findall(r"\b[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b", input_text)
+                hashes = re.findall(r"\b[a-fA-F0-9]{32,}\b", input_text)
+
+                if ips or domains or hashes:
+                    state["extracted_iocs"] = {
+                        "ips": list(set(ips)),
+                        "domains": list(set(domains)),
+                        "hashes": list(set(hashes)),
+                    }
+                    logger.debug(f"Extracted IOCs without session: ips={len(ips)}, domains={len(domains)}, hashes={len(hashes)}")
+
+                return state
+
+            # Resolve context references and enrich input
+            enriched_text, context_metadata = await self.context_resolver.resolve_and_enrich(
+                input_text, session_id
+            )
+
+            # Update state with enriched text if it changed
+            if enriched_text != input_text:
+                state["input_text"] = enriched_text
+                state["context_enrichment"] = context_metadata
+                logger.info(
+                    "Context resolved and input enriched",
+                    original_length=len(input_text),
+                    enriched_length=len(enriched_text),
+                    context_used=context_metadata.get("context_used", {}),
+                )
+
+                # Extract IOCs from ENRICHED text (after pronoun resolution)
+                import re
+                ips = re.findall(r"\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b", enriched_text)
+                domains = re.findall(r"\b[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b", enriched_text)
+                hashes = re.findall(r"\b[a-fA-F0-9]{32,}\b", enriched_text)
+
+                if ips or domains or hashes:
+                    state["extracted_iocs"] = {
+                        "ips": list(set(ips)),
+                        "domains": list(set(domains)),
+                        "hashes": list(set(hashes)),
+                    }
+                    logger.info(f"Extracted IOCs from enriched text: ips={len(ips)}, domains={len(domains)}, hashes={len(hashes)}")
+            else:
+                logger.debug("No context enrichment applied")
+                # Extract IOCs from original text even if no enrichment
+                import re
+                ips = re.findall(r"\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b", input_text)
+                domains = re.findall(r"\b[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b", input_text)
+                hashes = re.findall(r"\b[a-fA-F0-9]{32,}\b", input_text)
+
+                if ips or domains or hashes:
+                    state["extracted_iocs"] = {
+                        "ips": list(set(ips)),
+                        "domains": list(set(domains)),
+                        "hashes": list(set(hashes)),
+                    }
+                    logger.debug(f"Extracted IOCs from original text: ips={len(ips)}, domains={len(domains)}, hashes={len(hashes)}")
+
+            return state
+
+        except Exception as e:
+            logger.error(f"Context resolution failed: {e}", exc_info=True)
+            # Continue without context enrichment on error
+            return state
+
     def _create_workflow(self):
         """Create the hybrid LangGraph workflow using proper fan-out/fan-in pattern"""
         # Ensure LangGraph components are available
@@ -271,6 +397,7 @@ class CyberShieldReActAgent:
         builder = StateGraph(CyberShieldState)
 
         # Add nodes
+        builder.add_node("ContextResolve", self._context_resolve_step)  # NEW: Context resolution first
         builder.add_node("Supervisor", self._supervisor_step)
         builder.add_node("ThreatIntel", self._threat_intel_step)
         builder.add_node("VirusScanner", self._virustotal_step)
@@ -280,9 +407,13 @@ class CyberShieldReActAgent:
         builder.add_node("RegexChecker", self._regex_checker_step)
         builder.add_node("ToolExecutorNode", self._dynamic_tool_executor)
         builder.add_node("synthesize", self._synthesize_step)
+        builder.add_node("StoreContext", self._store_context_step)  # NEW: Context storage after synthesis
 
-        # Set entry point
-        builder.set_entry_point("Supervisor")
+        # NEW: Set entry point to context resolution
+        builder.set_entry_point("ContextResolve")
+
+        # NEW: Context resolution always goes to Supervisor
+        builder.add_edge("ContextResolve", "Supervisor")
 
         # Main routing from supervisor
         builder.add_conditional_edges(
@@ -305,8 +436,11 @@ class CyberShieldReActAgent:
         # Dynamic tool executor for LLM-chosen tools using asyncio.gather
         builder.add_edge("ToolExecutorNode", "synthesize")
 
-        # End at synthesis
-        builder.add_edge("synthesize", END)
+        # NEW: Route to context storage after synthesis
+        builder.add_edge("synthesize", "StoreContext")
+
+        # NEW: End after context storage
+        builder.add_edge("StoreContext", END)
 
         return builder.compile()
 
@@ -716,6 +850,62 @@ If no threat intelligence tools are needed, respond with: []"""
         state["final_report"] = final_report
         return state
 
+    async def _store_context_step(self, state: CyberShieldState) -> CyberShieldState:
+        """Store context step - persist IOCs and analysis for session continuity"""
+        logger.info("Context storage step started")
+
+        try:
+            session_id = state.get("session_id")
+
+            # Skip storage if no session_id
+            if not session_id:
+                logger.debug("No session_id provided, skipping context storage")
+                return state
+
+            final_report = state.get("final_report", {})
+            extracted_iocs = state.get("extracted_iocs", {})
+
+            # Store IOCs for future reference
+            if extracted_iocs:
+                success = await self.session_storage.store_iocs(
+                    session_id=session_id,
+                    iocs=extracted_iocs,
+                    merge=True  # Merge with existing IOCs
+                )
+
+                if success:
+                    logger.info(
+                        "Stored IOCs for session",
+                        session_id=session_id,
+                        ioc_count=sum(len(v) if isinstance(v, list) else 0
+                                     for v in extracted_iocs.values())
+                    )
+
+            # Store analysis event in history
+            if final_report:
+                success = await self.session_storage.store_analysis_event(
+                    session_id=session_id,
+                    analysis_result=final_report
+                )
+
+                if success:
+                    logger.info("Stored analysis event in session history", session_id=session_id)
+
+            # Store PII mapping if available
+            pii_mapping = state.get("pii_mapping")
+            if pii_mapping:
+                await self.session_storage.store_pii_mapping(
+                    session_id=session_id,
+                    pii_mapping=pii_mapping
+                )
+
+            return state
+
+        except Exception as e:
+            logger.error(f"Context storage failed: {e}", exc_info=True)
+            # Continue without failing the workflow
+            return state
+
     async def _generate_final_report(self, state: CyberShieldState) -> Dict[str, Any]:
         """Generate comprehensive final analysis report compatible with frontend"""
         try:
@@ -756,6 +946,9 @@ If no threat intelligence tools are needed, respond with: []"""
                 "performance_gain": "60-80% API cost reduction with caching",
             }
 
+            # Get context enrichment metadata if available
+            context_enrichment = state.get("context_enrichment")
+
             # Compile comprehensive final report
             final_report = {
                 "input_analysis": {
@@ -781,6 +974,10 @@ If no threat intelligence tools are needed, respond with: []"""
                     ),
                 },
             }
+
+            # Add context enrichment if available
+            if context_enrichment:
+                final_report["context_enrichment"] = context_enrichment
 
             # Add vision analysis if image was processed
             if has_image:
@@ -1091,14 +1288,15 @@ If no threat intelligence tools are needed, respond with: []"""
         return recommendations
 
     async def process(
-        self, user_input: str, image_data: Optional[bytes] = None
+        self, user_input: str, image_data: Optional[bytes] = None, session_id: Optional[str] = None
     ) -> Dict[str, Any]:
-        """Main processing method with caching"""
+        """Main processing method with caching and context preservation"""
         try:
             logger.info(
                 "Starting ReAct workflow",
                 has_image=image_data is not None,
                 input_length=len(user_input),
+                has_session=bool(session_id),
             )
 
             # Create initial state
@@ -1106,6 +1304,13 @@ If no threat intelligence tools are needed, respond with: []"""
                 "input_text": user_input,
                 "input_image": image_data,
                 "messages": [],
+                # NEW: Session management fields
+                "session_id": session_id,
+                "original_input_text": None,
+                "context_enrichment": None,
+                "previous_iocs": None,
+                "session_history": None,
+                # Existing fields
                 "pii_masked_text": None,
                 "pii_mapping": None,
                 "extracted_iocs": None,
