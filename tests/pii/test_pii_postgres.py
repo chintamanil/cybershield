@@ -4,6 +4,7 @@ Test PII system with PostgreSQL integration
 """
 
 import logging
+import asyncio
 from agents.pii_agent import PIIAgent
 import os
 
@@ -12,7 +13,7 @@ logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO"))
 logger = logging.getLogger(__name__)
 
 
-def test_pii_with_postgres():
+async def test_pii_with_postgres():
     """Test PII system with PostgreSQL backend"""
 
     print("🛡️ Testing CyberShield PII System with PostgreSQL")
@@ -28,7 +29,7 @@ def test_pii_with_postgres():
 
     # Start session and mask PII
     session_id = pii_agent.start_session()
-    masked_text, mapping = pii_agent.mask_pii(test_text, session_id)
+    masked_text, mapping = await pii_agent.mask_pii(test_text, session_id)
 
     print(f"🎭 Masked: {masked_text}")
     print(f"📋 Found {len(mapping)} PII items:")
@@ -43,11 +44,14 @@ def test_pii_with_postgres():
         print(f"  {token} -> {original}")
 
     # Test unmasking
-    unmasked = pii_agent.unmask_text(masked_text, session_id)
+    unmasked = await pii_agent.unmask_text(masked_text, session_id)
     print(f"\n🔓 Unmasked: {unmasked}")
 
     # End session
-    pii_agent.end_session(session_id)
+    if asyncio.iscoroutinefunction(pii_agent.end_session):
+        await pii_agent.end_session(session_id)
+    else:
+        pii_agent.end_session(session_id)
 
     print(f"\n✅ Test completed successfully!")
     print(f"📊 Session ID: {session_id}")
@@ -55,4 +59,4 @@ def test_pii_with_postgres():
 
 
 if __name__ == "__main__":
-    test_pii_with_postgres()
+    asyncio.run(test_pii_with_postgres())

@@ -33,7 +33,7 @@ class TestMilvusClient(unittest.TestCase):
         mock_connections,
     ):
         """Test initializing Milvus with new collection creation"""
-        # Mock that collection doesn't exist
+        # Mock that neither collection exists - will create new one
         mock_utility.has_collection.return_value = False
 
         # Mock field schemas
@@ -47,6 +47,8 @@ class TestMilvusClient(unittest.TestCase):
 
         # Mock collection creation
         mock_collection = Mock()
+        mock_collection.name = "log_vectors"
+        mock_collection.num_entities = 0
         mock_collection_class.return_value = mock_collection
 
         # Call the function
@@ -55,8 +57,10 @@ class TestMilvusClient(unittest.TestCase):
         # Verify connections
         mock_connections.connect.assert_called_once_with(host="localhost", port="19530")
 
-        # Verify collection existence check
-        mock_utility.has_collection.assert_called_once_with("log_vectors")
+        # Verify collection existence checks (checks cybersecurity_attacks first, then log_vectors)
+        assert mock_utility.has_collection.call_count == 2
+        mock_utility.has_collection.assert_any_call("cybersecurity_attacks")
+        mock_utility.has_collection.assert_any_call("log_vectors")
 
         # Verify field schema creation
         self.assertEqual(mock_field_schema.call_count, 2)
@@ -86,23 +90,35 @@ class TestMilvusClient(unittest.TestCase):
 
     @patch("vectorstore.milvus_client.connections")
     @patch("vectorstore.milvus_client.utility")
-    def test_init_milvus_existing_collection(self, mock_utility, mock_connections):
-        """Test initializing Milvus when collection already exists"""
-        # Mock that collection exists
-        mock_utility.has_collection.return_value = True
+    @patch("vectorstore.milvus_client.Collection")
+    def test_init_milvus_existing_collection(self, mock_collection_class, mock_utility, mock_connections):
+        """Test initializing Milvus when cybersecurity_attacks collection exists"""
+        # Mock that cybersecurity_attacks collection exists
+        def has_collection_side_effect(name):
+            return name == "cybersecurity_attacks"
+
+        mock_utility.has_collection.side_effect = has_collection_side_effect
+
+        # Mock collection
+        mock_collection = Mock()
+        mock_collection.name = "cybersecurity_attacks"
+        mock_collection.num_entities = 100
+        mock_collection_class.return_value = mock_collection
 
         # Call the function
-        init_milvus()
+        result = init_milvus()
 
         # Verify connections
         mock_connections.connect.assert_called_once_with(host="localhost", port="19530")
 
-        # Verify collection existence check
-        mock_utility.has_collection.assert_called_once_with("log_vectors")
+        # Verify it checked for cybersecurity_attacks first
+        mock_utility.has_collection.assert_called_with("cybersecurity_attacks")
 
-        # Verify no collection creation occurs
-        with patch("vectorstore.milvus_client.Collection") as mock_collection:
-            mock_collection.assert_not_called()
+        # Verify it loaded the existing collection
+        mock_collection_class.assert_called_once_with("cybersecurity_attacks")
+
+        # Verify it returned the collection
+        self.assertEqual(result.name, "cybersecurity_attacks")
 
     @patch("vectorstore.milvus_client.connections")
     def test_init_milvus_connection_error(self, mock_connections):
@@ -182,27 +198,33 @@ class TestMilvusUtilities(unittest.TestCase):
 
     def test_collection_name_validation(self):
         """Test collection name validation"""
-        # The current implementation uses a hardcoded collection name
-        # This test verifies the expected collection name is used
-        expected_collection_name = "log_vectors"
+        # The implementation checks cybersecurity_attacks first, then log_vectors
 
         with (
             patch("vectorstore.milvus_client.connections"),
             patch("vectorstore.milvus_client.utility") as mock_utility,
-            patch("vectorstore.milvus_client.Collection"),
+            patch("vectorstore.milvus_client.Collection") as mock_collection,
             patch("vectorstore.milvus_client.CollectionSchema"),
             patch("vectorstore.milvus_client.FieldSchema"),
         ):
+            # Mock cybersecurity_attacks collection exists
+            def has_collection_side_effect(name):
+                return name == "cybersecurity_attacks"
 
-            mock_utility.has_collection.return_value = True
+            mock_utility.has_collection.side_effect = has_collection_side_effect
+
+            # Mock collection
+            mock_coll = Mock()
+            mock_coll.name = "cybersecurity_attacks"
+            mock_coll.num_entities = 100
+            mock_collection.return_value = mock_coll
 
             from vectorstore.milvus_client import init_milvus
 
             init_milvus()
 
-            mock_utility.has_collection.assert_called_once_with(
-                expected_collection_name
-            )
+            # Verify it checked for cybersecurity_attacks
+            mock_utility.has_collection.assert_called_with("cybersecurity_attacks")
 
     def test_schema_description(self):
         """Test schema description is correctly set"""
@@ -232,10 +254,21 @@ class TestMilvusConnectionParameters(unittest.TestCase):
     """Test cases for Milvus connection parameters"""
 
     @patch("vectorstore.milvus_client.connections")
-    def test_default_connection_parameters(self, mock_connections):
+    @patch("vectorstore.milvus_client.Collection")
+    def test_default_connection_parameters(self, mock_collection, mock_connections):
         """Test default connection parameters are used"""
         with patch("vectorstore.milvus_client.utility") as mock_utility:
-            mock_utility.has_collection.return_value = True
+            # Mock cybersecurity_attacks collection exists
+            def has_collection_side_effect(name):
+                return name == "cybersecurity_attacks"
+
+            mock_utility.has_collection.side_effect = has_collection_side_effect
+
+            # Mock collection
+            mock_coll = Mock()
+            mock_coll.name = "cybersecurity_attacks"
+            mock_coll.num_entities = 100
+            mock_collection.return_value = mock_coll
 
             from vectorstore.milvus_client import init_milvus
 

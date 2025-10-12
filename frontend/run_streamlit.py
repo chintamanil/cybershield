@@ -57,13 +57,24 @@ def install_requirements():
 
 def run_streamlit():
     """Run the Streamlit application"""
-    app_file = Path(__file__).parent / "streamlit_app.py"
+    # Check if user wants original backup version
+    use_original = "--original" in sys.argv
+
+    if use_original:
+        app_file = Path(__file__).parent / "streamlit_app_original_backup.py"
+        if not app_file.exists():
+            print("❌ Original backup not found. Using current version.")
+            app_file = Path(__file__).parent / "streamlit_app.py"
+        else:
+            print("ℹ️ Using original backup version")
+    else:
+        app_file = Path(__file__).parent / "streamlit_app.py"
 
     if not app_file.exists():
         print(f"❌ Streamlit app file not found: {app_file}")
         return False
 
-    print("🚀 Starting CyberShield Streamlit Frontend...")
+    print(f"🚀 Starting CyberShield Streamlit Frontend...")
 
     # Set environment variables
     os.environ["STREAMLIT_SERVER_PORT"] = "8501"
@@ -100,6 +111,26 @@ def main():
     """Main function"""
     print("🛡️ CyberShield Streamlit Frontend Launcher")
     print("=" * 50)
+
+    # Show help if requested
+    if "--help" in sys.argv or "-h" in sys.argv:
+        print("""
+Usage: python run_streamlit.py [OPTIONS]
+
+Options:
+  --install              Install requirements before running
+  --setup                Same as --install
+  --no-backend-check     Skip FastAPI backend connectivity check
+  --original             Use original streamlit_app.py (default: refactored)
+  --help, -h             Show this help message
+
+Examples:
+  python run_streamlit.py                    # Run refactored version
+  python run_streamlit.py --original         # Run original version
+  python run_streamlit.py --install          # Install deps and run
+  python run_streamlit.py --no-backend-check # Skip backend check
+        """)
+        sys.exit(0)
 
     # Check if we should install requirements
     if "--install" in sys.argv or "--setup" in sys.argv:

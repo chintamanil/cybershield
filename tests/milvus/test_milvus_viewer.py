@@ -6,7 +6,7 @@ Tests for Milvus data viewers
 import unittest
 import sys
 import os
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, MagicMock, patch
 
 # Add parent directory to path for imports
 sys.path.append(
@@ -409,12 +409,18 @@ class TestInteractiveMilvusViewer(unittest.TestCase):
         mock_collection.query.return_value = stats_data
         self.viewer.collection = mock_collection
 
-        with patch("pandas.DataFrame") as mock_df:
-            mock_df.return_value.value_counts.return_value.to_dict.return_value = {
+        with patch("pandas.DataFrame") as mock_df_class:
+            # Create mock DataFrame instance with MagicMock to support __getitem__
+            mock_df_instance = MagicMock()
+            mock_series = MagicMock()
+            mock_series.to_dict.return_value = {
                 "DDoS": 2,
                 "Malware": 1,
                 "Intrusion": 1,
             }
+            # Mock the chain: DataFrame()[column].value_counts().to_dict()
+            mock_df_instance.__getitem__.return_value.value_counts.return_value = mock_series
+            mock_df_class.return_value = mock_df_instance
 
             stats = self.viewer.get_attack_type_stats()
 
@@ -434,12 +440,18 @@ class TestInteractiveMilvusViewer(unittest.TestCase):
         mock_collection.query.return_value = severity_data
         self.viewer.collection = mock_collection
 
-        with patch("pandas.DataFrame") as mock_df:
-            mock_df.return_value.value_counts.return_value.to_dict.return_value = {
+        with patch("pandas.DataFrame") as mock_df_class:
+            # Create mock DataFrame instance with MagicMock to support __getitem__
+            mock_df_instance = MagicMock()
+            mock_series = MagicMock()
+            mock_series.to_dict.return_value = {
                 "High": 2,
                 "Medium": 1,
                 "Low": 1,
             }
+            # Mock the chain: DataFrame()[column].value_counts().to_dict()
+            mock_df_instance.__getitem__.return_value.value_counts.return_value = mock_series
+            mock_df_class.return_value = mock_df_instance
 
             stats = self.viewer.get_severity_stats()
 

@@ -1,1 +1,1 @@
-"""Frontend UI components for CyberShield Streamlit application."""
+"""Reusable UI components for CyberShield frontend."""
