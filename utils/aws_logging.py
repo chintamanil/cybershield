@@ -1,8 +1,10 @@
 # AWS CloudWatch logging integration
-import boto3
 import json
 import time
-from typing import Dict, Any
+from typing import Any
+
+import boto3
+
 from utils.environment_config import config
 from utils.logging_config import get_security_logger
 
@@ -29,7 +31,7 @@ class CloudWatchHandler:
         except Exception as e:
             logger.error(f"Failed to create log group: {e}")
 
-    def log_security_event(self, event_type: str, data: Dict[str, Any]):
+    def log_security_event(self, event_type: str, data: dict[str, Any]):
         """Log security events to CloudWatch"""
         if not config.detector.is_aws():
             return

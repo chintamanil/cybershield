@@ -1,20 +1,20 @@
 """Single text analysis page."""
 
 import streamlit as st
-import pandas as pd
-
-from lib.api_client import make_api_request
-from components.session_components import (
-    render_session_management,
-    render_request_history,
-    track_session_id,
-    save_request_to_history,
-    display_context_enrichment,
-)
 from components.result_display import display_analysis_results
+from components.session_components import (
+    display_context_enrichment,
+    render_request_history,
+    render_session_management,
+    save_request_to_history,
+    track_session_id,
+)
+from lib.api_client import make_api_request
 
 
-def render_single_analysis_page(use_react_workflow: bool, enable_concurrent: bool, show_metrics: bool):
+def render_single_analysis_page(
+    use_react_workflow: bool, enable_concurrent: bool, show_metrics: bool
+):
     """Render the single text analysis page.
 
     Args:
@@ -23,17 +23,14 @@ def render_single_analysis_page(use_react_workflow: bool, enable_concurrent: boo
         show_metrics: Whether to show performance metrics
     """
     st.markdown("## Text Analysis")
-    st.markdown(
-        "Analyze text for security threats, PII, and indicators of compromise."
-    )
+    st.markdown("Analyze text for security threats, PII, and indicators of compromise.")
     st.info(
         "💡 **Tip**: For IP investigations, the system will automatically search historical attack data using the vector database when ReAct workflow is enabled."
     )
 
     # Session Management
     session_id = render_session_management(
-        session_key="session_id_main",
-        default_prefix="session"
+        session_key="session_id_main", default_prefix="session"
     )
 
     # Previous Request History (if session_id exists)
@@ -57,8 +54,12 @@ def render_single_analysis_page(use_react_workflow: bool, enable_concurrent: boo
                 if history:
                     last_request = history[-1]
                     if last_request.get("text"):
-                        combined_input = f"Previous: {last_request['text']}\n\nCurrent: {text_input}"
-                        st.caption(f"Combined input length: {len(combined_input)} characters")
+                        combined_input = (
+                            f"Previous: {last_request['text']}\n\nCurrent: {text_input}"
+                        )
+                        st.caption(
+                            f"Combined input length: {len(combined_input)} characters"
+                        )
 
     col1, col2 = st.columns([2, 1])
     with col1:
@@ -78,11 +79,18 @@ def render_single_analysis_page(use_react_workflow: bool, enable_concurrent: boo
             if session_id and "request_history" in st.session_state:
                 if session_id in st.session_state.request_history:
                     history = st.session_state.request_history[session_id]
-                    if st.session_state.get(f"include_previous_checkbox_{session_id}", False) and history:
+                    if (
+                        st.session_state.get(
+                            f"include_previous_checkbox_{session_id}", False
+                        )
+                        and history
+                    ):
                         last_request = history[-1]
                         if last_request.get("text"):
                             actual_input = f"Previous context: {last_request['text']}\n\nCurrent query: {text_input}"
-                            st.info(f"📎 Including previous request in analysis ({len(last_request['text'])} chars)")
+                            st.info(
+                                f"📎 Including previous request in analysis ({len(last_request['text'])} chars)"
+                            )
 
             # Build request payload
             request_data = {
@@ -113,7 +121,9 @@ def render_single_analysis_page(use_react_workflow: bool, enable_concurrent: boo
                             extracted_iocs = ioc_data.get("extracted_iocs", {})
                             for ioc_type, ioc_list in extracted_iocs.items():
                                 if ioc_list:
-                                    iocs_found.extend([str(ioc) for ioc in ioc_list[:2]])  # First 2 of each type
+                                    iocs_found.extend(
+                                        [str(ioc) for ioc in ioc_list[:2]]
+                                    )  # First 2 of each type
 
                     # Save to history
                     save_request_to_history(session_id, text_input, iocs_found)

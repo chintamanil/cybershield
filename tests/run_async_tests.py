@@ -4,12 +4,12 @@ Comprehensive async test runner for CyberShield
 Supports both mocked tests and real API integration tests
 """
 
+import argparse
+import asyncio
+import logging
 import os
 import sys
-import asyncio
 import unittest
-import argparse
-import logging
 from pathlib import Path
 
 # Add parent directory to path for imports
@@ -54,9 +54,11 @@ def run_mock_tests():
     # Add async test modules
     try:
         from tests.tools.test_virustotal_async import (
-            TestVirusTotalClientAsync,
             TestAsyncConvenienceFunctions as VTAsyncConvenienceFunctions,
+        )
+        from tests.tools.test_virustotal_async import (
             TestAsyncErrorHandling,
+            TestVirusTotalClientAsync,
         )
 
         test_suite.addTests(
@@ -72,8 +74,10 @@ def run_mock_tests():
 
     try:
         from tests.tools.test_shodan_async import (
-            TestShodanClientAsync,
             TestAsyncConvenienceFunctions as ShodanAsyncConvenienceFunctions,
+        )
+        from tests.tools.test_shodan_async import (
+            TestShodanClientAsync,
         )
 
         test_suite.addTests(test_loader.loadTestsFromTestCase(TestShodanClientAsync))
@@ -87,6 +91,8 @@ def run_mock_tests():
     try:
         from tests.tools.test_abuseipdb_async import (
             TestAbuseIPDBClientAsync,
+        )
+        from tests.tools.test_abuseipdb_async import (
             TestAsyncConvenienceFunctions as AbuseIPDBAsyncConvenienceFunctions,
         )
 
@@ -212,7 +218,7 @@ async def run_manual_concurrent_test():
 
     # Check results
     success = True
-    for i, (service, result) in enumerate(zip([task[0] for task in tasks], results)):
+    for i, (service, result) in enumerate(zip([task[0] for task in tasks], results, strict=False)):
         if isinstance(result, Exception):
             logger.error(f"  ❌ {service}: {result}")
             success = False
@@ -275,7 +281,7 @@ def main():
         logger.info("🎉 All tests passed!")
         if missing_keys:
             logger.info(
-                f"💡 To run integration tests, set these environment variables:"
+                "💡 To run integration tests, set these environment variables:"
             )
             for key in missing_keys:
                 logger.info(f"   export {key}=your_api_key_here")

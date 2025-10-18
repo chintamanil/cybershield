@@ -1,9 +1,10 @@
 # Async Redis-based short-term memory for session context
-import redis.asyncio as aioredis
 import json
 import logging
 import os
-from typing import Any, Optional, Dict
+from typing import Any
+
+import redis.asyncio as aioredis
 
 logger = logging.getLogger(__name__)
 
@@ -60,7 +61,7 @@ class RedisSTM:
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         await self.close()
 
-    async def get(self, key: str) -> Optional[Any]:
+    async def get(self, key: str) -> Any | None:
         """Get value from Redis asynchronously"""
         try:
             redis = await self._get_redis()
@@ -76,9 +77,11 @@ class RedisSTM:
             logger.error(f"Error getting key {key}: {e}")
             return None
 
-    async def set(self, key: str, value: Any, ttl: Optional[int] = None, ex: Optional[int] = None) -> bool:
+    async def set(
+        self, key: str, value: Any, ttl: int | None = None, ex: int | None = None
+    ) -> bool:
         """Set value in Redis with optional TTL asynchronously
-        
+
         Args:
             key: Redis key
             value: Value to store
@@ -119,7 +122,7 @@ class RedisSTM:
             logger.error(f"Error checking key {key}: {e}")
             return False
 
-    async def get_all(self, pattern: str = "*") -> Dict[str, Any]:
+    async def get_all(self, pattern: str = "*") -> dict[str, Any]:
         """Get all keys matching pattern asynchronously"""
         try:
             redis = await self._get_redis()

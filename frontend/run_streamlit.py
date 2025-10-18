@@ -4,11 +4,12 @@ CyberShield Streamlit Application Runner
 """
 
 import os
-import sys
 import subprocess
+import sys
 import time
-import requests
 from pathlib import Path
+
+import requests
 
 
 def check_fastapi_backend(
@@ -74,7 +75,7 @@ def run_streamlit():
         print(f"❌ Streamlit app file not found: {app_file}")
         return False
 
-    print(f"🚀 Starting CyberShield Streamlit Frontend...")
+    print("🚀 Starting CyberShield Streamlit Frontend...")
 
     # Set environment variables
     os.environ["STREAMLIT_SERVER_PORT"] = "8501"
@@ -114,7 +115,8 @@ def main():
 
     # Show help if requested
     if "--help" in sys.argv or "-h" in sys.argv:
-        print("""
+        print(
+            """
 Usage: python run_streamlit.py [OPTIONS]
 
 Options:
@@ -129,7 +131,8 @@ Examples:
   python run_streamlit.py --original         # Run original version
   python run_streamlit.py --install          # Install deps and run
   python run_streamlit.py --no-backend-check # Skip backend check
-        """)
+        """
+        )
         sys.exit(0)
 
     # Check if we should install requirements

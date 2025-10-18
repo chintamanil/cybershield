@@ -1,13 +1,12 @@
 """Display components for vector database analysis results."""
 
-from typing import Dict
 
-import streamlit as st
 import pandas as pd
 import plotly.express as px
+import streamlit as st
 
 
-def display_vector_analysis(vector_data: Dict):
+def display_vector_analysis(vector_data: dict):
     """Display vector search analysis results."""
     st.markdown(
         '<div class="section-header">Vector Database Analysis</div>',
@@ -63,7 +62,7 @@ def display_vector_analysis(vector_data: Dict):
                         ):  # Show first 10 matches
                             records_data.append(
                                 {
-                                    "Record ID": match.get("id", f"record_{i+1}"),
+                                    "Record ID": match.get("id", f"record_{i + 1}"),
                                     "Timestamp": match.get("timestamp", "Unknown"),
                                     "Source IP": match.get("source_ip", "N/A"),
                                     "Dest IP": match.get("dest_ip", "N/A"),

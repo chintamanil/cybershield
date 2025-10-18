@@ -2,10 +2,10 @@
 Async tests for VirusTotal tool
 """
 
-import unittest
-import sys
-import os
 import asyncio
+import os
+import sys
+import unittest
 from unittest.mock import AsyncMock, patch
 
 # Add parent directory to path for imports
@@ -13,7 +13,7 @@ sys.path.append(
     os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 )
 
-from tools.virustotal import VirusTotalClient, lookup_ip, lookup_domain, lookup_hash
+from tools.virustotal import VirusTotalClient, lookup_domain, lookup_hash, lookup_ip
 
 
 class TestVirusTotalClientAsync(unittest.IsolatedAsyncioTestCase):

@@ -3,12 +3,13 @@ Shodan API Integration Tool
 Provides comprehensive network reconnaissance and device information
 """
 
-import os
-import logging
 import asyncio
-from typing import Dict, Any, Optional, List
-import aiohttp
 import ipaddress
+import logging
+import os
+from typing import Any
+
+import aiohttp
 
 logger = logging.getLogger(__name__)
 
@@ -16,7 +17,7 @@ logger = logging.getLogger(__name__)
 class ShodanClient:
     """Async Shodan API client with comprehensive functionality"""
 
-    def __init__(self, api_key: Optional[str] = None):
+    def __init__(self, api_key: str | None = None):
         """
         Initialize Shodan client
 
@@ -51,7 +52,7 @@ class ShodanClient:
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         await self.close()
 
-    async def _make_request(self, endpoint: str, **kwargs) -> Dict[str, Any]:
+    async def _make_request(self, endpoint: str, **kwargs) -> dict[str, Any]:
         """
         Make authenticated async request to Shodan API
 
@@ -75,7 +76,6 @@ class ShodanClient:
 
         try:
             async with session.get(url=url, **kwargs) as response:
-
                 # Handle rate limiting
                 if response.status == 429:
                     retry_after = int(response.headers.get("Retry-After", 60))
@@ -93,7 +93,7 @@ class ShodanClient:
             logger.error(f"Unexpected error in Shodan request: {e}")
             return {"error": f"Unexpected error: {e}"}
 
-    async def lookup_ip(self, ip_address: str) -> Dict[str, Any]:
+    async def lookup_ip(self, ip_address: str) -> dict[str, Any]:
         """
         Lookup IP address information
 
@@ -137,8 +137,8 @@ class ShodanClient:
         }
 
     async def search(
-        self, query: str, facets: Optional[List[str]] = None
-    ) -> Dict[str, Any]:
+        self, query: str, facets: list[str] | None = None
+    ) -> dict[str, Any]:
         """
         Search Shodan database
 
@@ -188,7 +188,7 @@ class ShodanClient:
             "raw_response": response,
         }
 
-    async def get_host_count(self, query: str) -> Dict[str, Any]:
+    async def get_host_count(self, query: str) -> dict[str, Any]:
         """
         Get count of hosts matching query
 
@@ -214,8 +214,8 @@ class ShodanClient:
         }
 
     async def search_facets(
-        self, query: str = "", facets: Optional[List[str]] = None
-    ) -> Dict[str, Any]:
+        self, query: str = "", facets: list[str] | None = None
+    ) -> dict[str, Any]:
         """
         Get facet information for search query
 
@@ -247,7 +247,7 @@ class ShodanClient:
             "raw_response": response,
         }
 
-    async def get_protocols(self) -> Dict[str, Any]:
+    async def get_protocols(self) -> dict[str, Any]:
         """
         Get list of protocols that Shodan crawls
 
@@ -267,7 +267,7 @@ class ShodanClient:
             "raw_response": response,
         }
 
-    async def get_ports(self) -> Dict[str, Any]:
+    async def get_ports(self) -> dict[str, Any]:
         """
         Get list of ports that Shodan crawls
 
@@ -287,7 +287,7 @@ class ShodanClient:
             "raw_response": response,
         }
 
-    async def get_account_info(self) -> Dict[str, Any]:
+    async def get_account_info(self) -> dict[str, Any]:
         """
         Get account information
 
@@ -309,7 +309,7 @@ class ShodanClient:
             "raw_response": response,
         }
 
-    def _extract_services(self, data: List[Dict]) -> List[Dict]:
+    def _extract_services(self, data: list[dict]) -> list[dict]:
         """Extract service information from host data"""
         services = []
 
@@ -328,7 +328,7 @@ class ShodanClient:
 
         return services
 
-    def _extract_vulnerabilities(self, vulns: List[str]) -> List[Dict]:
+    def _extract_vulnerabilities(self, vulns: list[str]) -> list[dict]:
         """Extract vulnerability information"""
         return [{"cve": vuln} for vuln in vulns]
 
@@ -342,34 +342,34 @@ class ShodanClient:
 
 
 # Legacy function for backward compatibility
-async def lookup_shodan(ip: str) -> Dict[str, Any]:
+async def lookup_shodan(ip: str) -> dict[str, Any]:
     """Legacy async function for IP lookup"""
     async with ShodanClient() as client:
         return await client.lookup_ip(ip)
 
 
 # Convenience functions
-async def lookup_ip(ip_address: str) -> Dict[str, Any]:
+async def lookup_ip(ip_address: str) -> dict[str, Any]:
     """Async lookup IP address"""
     async with ShodanClient() as client:
         return await client.lookup_ip(ip_address)
 
 
 async def search_shodan(
-    query: str, facets: Optional[List[str]] = None
-) -> Dict[str, Any]:
+    query: str, facets: list[str] | None = None
+) -> dict[str, Any]:
     """Async search Shodan"""
     async with ShodanClient() as client:
         return await client.search(query, facets)
 
 
-async def get_host_count(query: str) -> Dict[str, Any]:
+async def get_host_count(query: str) -> dict[str, Any]:
     """Async get host count for query"""
     async with ShodanClient() as client:
         return await client.get_host_count(query)
 
 
-async def get_account_info() -> Dict[str, Any]:
+async def get_account_info() -> dict[str, Any]:
     """Async get account information"""
     async with ShodanClient() as client:
         return await client.get_account_info()

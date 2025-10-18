@@ -63,7 +63,7 @@ spacy>=3.7.0
 Pillow>=10.0.0
 numpy<2.0.0,>=1.24.0
 transformers>=4.35.0
-torch>=2.0.0
+torch>=2.0.0,<2.3.0  # Pin to version with Intel Mac support
 
 # Security APIs (for tools)
 # Note: These require API keys in .env file

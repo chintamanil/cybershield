@@ -3,20 +3,22 @@
 Interactive Milvus Data Viewer
 """
 
-import sys
 import os
+import sys
+
 import pandas as pd
-from typing import List, Dict
 
 # Add the project root to the path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 try:
-    from pymilvus import connections, Collection, utility
+    from pymilvus import Collection, connections, utility
+
     PYMILVUS_AVAILABLE = True
 except ImportError:
     PYMILVUS_AVAILABLE = False
     print("pymilvus not available. Install with: pip install pymilvus")
+
 
 class InteractiveMilvusViewer:
     def __init__(self, collection_name: str = "cybersecurity_attacks"):
@@ -56,16 +58,9 @@ class InteractiveMilvusViewer:
         """Get total number of records"""
         try:
             # Use a simple query to get count
-            results = self.collection.query(
-                expr="",
-                output_fields=["id"],
-                limit=1
-            )
+            results = self.collection.query(expr="", output_fields=["id"], limit=1)
             # Get actual count by querying all IDs
-            all_ids = self.collection.query(
-                expr="",
-                output_fields=["id"]
-            )
+            all_ids = self.collection.query(expr="", output_fields=["id"])
             return len(all_ids)
         except Exception as e:
             print(f"❌ Failed to get count: {e}")
@@ -77,10 +72,16 @@ class InteractiveMilvusViewer:
             results = self.collection.query(
                 expr=f"attack_type == '{attack_type}'",
                 output_fields=[
-                    "id", "timestamp", "source_ip", "dest_ip", "protocol",
-                    "attack_type", "severity_level", "full_context"
+                    "id",
+                    "timestamp",
+                    "source_ip",
+                    "dest_ip",
+                    "protocol",
+                    "attack_type",
+                    "severity_level",
+                    "full_context",
                 ],
-                limit=limit
+                limit=limit,
             )
             return results
         except Exception as e:
@@ -93,10 +94,16 @@ class InteractiveMilvusViewer:
             results = self.collection.query(
                 expr=f"severity_level == '{severity}'",
                 output_fields=[
-                    "id", "timestamp", "source_ip", "dest_ip", "protocol",
-                    "attack_type", "severity_level", "full_context"
+                    "id",
+                    "timestamp",
+                    "source_ip",
+                    "dest_ip",
+                    "protocol",
+                    "attack_type",
+                    "severity_level",
+                    "full_context",
                 ],
-                limit=limit
+                limit=limit,
             )
             return results
         except Exception as e:
@@ -109,10 +116,16 @@ class InteractiveMilvusViewer:
             results = self.collection.query(
                 expr=f"protocol == '{protocol}'",
                 output_fields=[
-                    "id", "timestamp", "source_ip", "dest_ip", "protocol",
-                    "attack_type", "severity_level", "full_context"
+                    "id",
+                    "timestamp",
+                    "source_ip",
+                    "dest_ip",
+                    "protocol",
+                    "attack_type",
+                    "severity_level",
+                    "full_context",
                 ],
-                limit=limit
+                limit=limit,
             )
             return results
         except Exception as e:
@@ -125,10 +138,16 @@ class InteractiveMilvusViewer:
             results = self.collection.query(
                 expr=f"source_ip == '{ip}' or dest_ip == '{ip}'",
                 output_fields=[
-                    "id", "timestamp", "source_ip", "dest_ip", "protocol",
-                    "attack_type", "severity_level", "full_context"
+                    "id",
+                    "timestamp",
+                    "source_ip",
+                    "dest_ip",
+                    "protocol",
+                    "attack_type",
+                    "severity_level",
+                    "full_context",
                 ],
-                limit=limit
+                limit=limit,
             )
             return results
         except Exception as e:
@@ -142,14 +161,14 @@ class InteractiveMilvusViewer:
             results = self.collection.query(
                 expr="",
                 output_fields=["attack_type"],
-                limit=10000  # Get a large sample
+                limit=10000,  # Get a large sample
             )
 
             if not results:
                 return {}
 
             df = pd.DataFrame(results)
-            return df['attack_type'].value_counts().to_dict()
+            return df["attack_type"].value_counts().to_dict()
         except Exception as e:
             print(f"❌ Failed to get attack type stats: {e}")
             return {}
@@ -158,21 +177,19 @@ class InteractiveMilvusViewer:
         """Get statistics by severity level"""
         try:
             results = self.collection.query(
-                expr="",
-                output_fields=["severity_level"],
-                limit=10000
+                expr="", output_fields=["severity_level"], limit=10000
             )
 
             if not results:
                 return {}
 
             df = pd.DataFrame(results)
-            return df['severity_level'].value_counts().to_dict()
+            return df["severity_level"].value_counts().to_dict()
         except Exception as e:
             print(f"❌ Failed to get severity stats: {e}")
             return {}
 
-    def display_results(self, results: List[Dict], title: str = "Query Results"):
+    def display_results(self, results: list[dict], title: str = "Query Results"):
         """Display query results in a formatted way"""
         if not results:
             print(f"❌ No results found for {title}")
@@ -182,7 +199,7 @@ class InteractiveMilvusViewer:
         print("=" * 80)
 
         for i, record in enumerate(results[:5]):  # Show first 5 records
-            print(f"\n--- Record {i+1} ---")
+            print(f"\n--- Record {i + 1} ---")
             print(f"ID: {record['id']}")
             print(f"Timestamp: {record['timestamp']}")
             print(f"Source: {record['source_ip']} -> Dest: {record['dest_ip']}")
@@ -193,6 +210,7 @@ class InteractiveMilvusViewer:
 
         if len(results) > 5:
             print(f"\n... and {len(results) - 5} more records")
+
 
 def main():
     """Interactive main function"""
@@ -214,7 +232,7 @@ def main():
     print(f"\n📊 Total records in collection: {total_count}")
 
     while True:
-        print(f"\n🔍 Available Options:")
+        print("\n🔍 Available Options:")
         print("1. View attack type statistics")
         print("2. View severity level statistics")
         print("3. Query by attack type")
@@ -228,21 +246,25 @@ def main():
 
         if choice == "1":
             stats = viewer.get_attack_type_stats()
-            print(f"\n📊 Attack Type Statistics:")
+            print("\n📊 Attack Type Statistics:")
             for attack_type, count in stats.items():
                 print(f"   {attack_type}: {count}")
 
         elif choice == "2":
             stats = viewer.get_severity_stats()
-            print(f"\n📊 Severity Level Statistics:")
+            print("\n📊 Severity Level Statistics:")
             for severity, count in stats.items():
                 print(f"   {severity}: {count}")
 
         elif choice == "3":
-            attack_type = input("Enter attack type (e.g., DDoS, Malware, Intrusion): ").strip()
+            attack_type = input(
+                "Enter attack type (e.g., DDoS, Malware, Intrusion): "
+            ).strip()
             if attack_type:
                 results = viewer.query_by_attack_type(attack_type)
-                viewer.display_results(results, f"Records with attack type '{attack_type}'")
+                viewer.display_results(
+                    results, f"Records with attack type '{attack_type}'"
+                )
 
         elif choice == "4":
             severity = input("Enter severity level (High, Medium, Low): ").strip()
@@ -271,13 +293,25 @@ def main():
                 results = viewer.collection.query(
                     expr="",
                     output_fields=[
-                        "id", "timestamp", "source_ip", "dest_ip", "source_port",
-                        "dest_port", "protocol", "attack_type", "attack_signature",
-                        "severity_level", "action_taken", "anomaly_score",
-                        "malware_indicators", "geo_location", "user_info",
-                        "log_source", "full_context"
+                        "id",
+                        "timestamp",
+                        "source_ip",
+                        "dest_ip",
+                        "source_port",
+                        "dest_port",
+                        "protocol",
+                        "attack_type",
+                        "attack_signature",
+                        "severity_level",
+                        "action_taken",
+                        "anomaly_score",
+                        "malware_indicators",
+                        "geo_location",
+                        "user_info",
+                        "log_source",
+                        "full_context",
                     ],
-                    limit=limit
+                    limit=limit,
                 )
 
                 if results:
@@ -296,6 +330,7 @@ def main():
 
         else:
             print("❌ Invalid choice. Please enter a number between 1-8.")
+
 
 if __name__ == "__main__":
     main()

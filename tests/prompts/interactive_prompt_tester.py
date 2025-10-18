@@ -12,22 +12,19 @@ Features:
 """
 
 import json
-import os
 import sys
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import requests
 from rich.console import Console
-from rich.markdown import Markdown
 from rich.panel import Panel
 from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.prompt import Confirm, Prompt
 from rich.syntax import Syntax
 from rich.table import Table
-
 
 BASE_URL = "http://localhost:8000"
 TIMEOUT = 60
@@ -45,10 +42,10 @@ class PromptTester:
         self.results_dir = Path(__file__).parent / "results"
         self.results_dir.mkdir(exist_ok=True)
 
-        self.prompts_data: Dict[str, Any] = {}
+        self.prompts_data: dict[str, Any] = {}
         self.load_prompts()
 
-        self.benchmark_history: List[Dict[str, Any]] = []
+        self.benchmark_history: list[dict[str, Any]] = []
 
     def load_prompts(self):
         """Load prompts from JSON file."""
@@ -68,14 +65,10 @@ class PromptTester:
         try:
             response = requests.get(f"{BASE_URL}/health", timeout=5)
             if response.status_code == 200:
-                console.print(
-                    f"[green]✓ Server is running at {BASE_URL}[/green]"
-                )
+                console.print(f"[green]✓ Server is running at {BASE_URL}[/green]")
                 return True
         except requests.exceptions.ConnectionError:
-            console.print(
-                f"[red]✗ Server is not running at {BASE_URL}[/red]"
-            )
+            console.print(f"[red]✗ Server is not running at {BASE_URL}[/red]")
             console.print("[yellow]Please start the server with: cybershield[/yellow]")
             return False
 
@@ -111,7 +104,9 @@ class PromptTester:
 
         console.print(table)
 
-    def select_prompt_from_category(self, category_key: str) -> Optional[Dict[str, Any]]:
+    def select_prompt_from_category(
+        self, category_key: str
+    ) -> dict[str, Any] | None:
         """Select a specific prompt from a category."""
         if category_key not in self.prompts_data:
             console.print(f"[red]Category {category_key} not found[/red]")
@@ -131,7 +126,7 @@ class PromptTester:
 
     def call_analyze_endpoint(
         self, text: str, measure_time: bool = True
-    ) -> tuple[Optional[Dict[str, Any]], float]:
+    ) -> tuple[dict[str, Any] | None, float]:
         """Call the /analyze endpoint and return response with timing."""
         start_time = time.time()
 
@@ -163,8 +158,8 @@ class PromptTester:
             return None, elapsed_time
 
     def call_image_analysis_endpoint(
-        self, image_path: Path, text: Optional[str] = None
-    ) -> tuple[Optional[Dict[str, Any]], float]:
+        self, image_path: Path, text: str | None = None
+    ) -> tuple[dict[str, Any] | None, float]:
         """Call image analysis endpoint."""
         start_time = time.time()
 
@@ -211,7 +206,7 @@ class PromptTester:
 
     def display_result(
         self,
-        result: Dict[str, Any],
+        result: dict[str, Any],
         elapsed_time: float,
         prompt_name: str = "Analysis",
     ):
@@ -230,7 +225,7 @@ class PromptTester:
         # Extract key insights
         self.display_key_insights(result)
 
-    def display_key_insights(self, result: Dict[str, Any]):
+    def display_key_insights(self, result: dict[str, Any]):
         """Extract and display key insights from the result."""
         insights_table = Table(title="Key Insights", show_header=True)
         insights_table.add_column("Category", style="cyan")
@@ -246,7 +241,9 @@ class PromptTester:
             insights_table.add_row("PII Detection", "🔒 Sensitive data identified")
 
         if "ip" in result_str or "domain" in result_str:
-            insights_table.add_row("IOC Extraction", "🔍 Indicators of Compromise found")
+            insights_table.add_row(
+                "IOC Extraction", "🔍 Indicators of Compromise found"
+            )
 
         if "bitcoin" in result_str or "wallet" in result_str:
             insights_table.add_row(
@@ -260,7 +257,7 @@ class PromptTester:
         self,
         prompt_name: str,
         prompt_text: str,
-        result: Dict[str, Any],
+        result: dict[str, Any],
         elapsed_time: float,
     ):
         """Save test result to file."""
@@ -365,7 +362,10 @@ class PromptTester:
 
             if Confirm.ask("Save this result?"):
                 self.save_result(
-                    f"image_{selected_image.stem}", str(selected_image), result, elapsed_time
+                    f"image_{selected_image.stem}",
+                    str(selected_image),
+                    result,
+                    elapsed_time,
                 )
 
     def run_multimodal_analysis(self):
@@ -420,7 +420,9 @@ class PromptTester:
 
         num_runs = int(Prompt.ask("Number of test runs", default="3"))
 
-        console.print(f"\n[bold]Running {num_runs} tests to measure caching...[/bold]\n")
+        console.print(
+            f"\n[bold]Running {num_runs} tests to measure caching...[/bold]\n"
+        )
 
         times = []
         for i in range(num_runs):
@@ -435,9 +437,7 @@ class PromptTester:
                     console.print("  [dim](First request - no cache)[/dim]")
                 else:
                     improvement = ((times[0] - elapsed_time) / times[0]) * 100
-                    console.print(
-                        f"  [green]Cache speedup: {improvement:.1f}%[/green]"
-                    )
+                    console.print(f"  [green]Cache speedup: {improvement:.1f}%[/green]")
 
         # Display benchmark summary
         if times:
@@ -448,7 +448,9 @@ class PromptTester:
 
             summary_table.add_row("First Request", f"{times[0]:.3f}s")
             if len(times) > 1:
-                summary_table.add_row("Avg Cached", f"{sum(times[1:]) / len(times[1:]):.3f}s")
+                summary_table.add_row(
+                    "Avg Cached", f"{sum(times[1:]) / len(times[1:]):.3f}s"
+                )
                 speedup = ((times[0] - min(times[1:])) / times[0]) * 100
                 summary_table.add_row("Cache Speedup", f"{speedup:.1f}%")
 
@@ -480,7 +482,7 @@ class PromptTester:
 
         # Calculate statistics
         times = [e["time"] for e in self.benchmark_history]
-        console.print(f"\n[bold]Statistics:[/bold]")
+        console.print("\n[bold]Statistics:[/bold]")
         console.print(f"  Total tests: {len(times)}")
         console.print(f"  Avg time: {sum(times) / len(times):.3f}s")
         console.print(f"  Min time: {min(times):.3f}s")

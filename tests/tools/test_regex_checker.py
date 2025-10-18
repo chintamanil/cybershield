@@ -2,9 +2,9 @@
 Tests for regex checker tool
 """
 
-import unittest
-import sys
 import os
+import sys
+import unittest
 
 # Add parent directory to path for imports
 sys.path.append(
@@ -13,11 +13,11 @@ sys.path.append(
 
 from tools.regex_checker import (
     RegexChecker,
+    analyze_url,
     extract_iocs,
-    validate_ip,
     validate_domain,
     validate_hash,
-    analyze_url,
+    validate_ip,
 )
 
 

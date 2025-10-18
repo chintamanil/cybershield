@@ -1,23 +1,23 @@
 # FastAPI server with Vision AI and ReAct workflow support - Async Version
-from fastapi import FastAPI, File, UploadFile, Request, HTTPException, Form
-from fastapi.responses import JSONResponse
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from typing import Optional, Dict, Any
 import asyncio
-import time
 import os
+import time
 from contextlib import asynccontextmanager
+from typing import Any
+
 from dotenv import load_dotenv
+from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from pydantic import BaseModel
 
 # CRITICAL: Load .env files FIRST before any other imports
 # This ensures environment variables are available for all subsequent imports
 load_dotenv(".env.local", override=True)  # Local overrides
-load_dotenv(".env", override=True)        # Main config file (CHANGED: override=True)
+load_dotenv(".env", override=True)  # Main config file (CHANGED: override=True)
 
 # Load environment-specific configuration AFTER env vars are loaded
 from utils.environment_config import config
-from utils.service_factory import services
 
 # Load environment-specific .env files
 if not config.detector.is_local():
@@ -26,16 +26,16 @@ if not config.detector.is_local():
 # Import our agents and components
 from agents.supervisor import SupervisorAgent
 from memory.redis_stm import RedisSTM
-from vectorstore.milvus_client import CyberShieldVectorStore
 
 # Import the new tool classes
 from tools.abuseipdb import AbuseIPDBClient
+from tools.regex_checker import RegexChecker
 from tools.shodan import ShodanClient
 from tools.virustotal import VirusTotalClient
-from tools.regex_checker import RegexChecker
 
 # Configure structured logging
-from utils.logging_config import setup_from_env, get_logger
+from utils.logging_config import get_logger, setup_from_env
+from vectorstore.milvus_client import CyberShieldVectorStore
 
 # Setup logging from environment
 setup_from_env()
@@ -84,12 +84,17 @@ async def initialize_component(name: str, coro):
     try:
         result = await coro
         duration = time.time() - start_time
-        logger.info(f"{name} initialized", duration_ms=f"{duration*1000:.1f}")
+        logger.info(f"{name} initialized", duration_ms=f"{duration * 1000:.1f}")
         return result, None
     except Exception as e:
         duration = time.time() - start_time
-        logger.error(f"{name} initialization failed", error=str(e), duration_ms=f"{duration*1000:.1f}")
+        logger.error(
+            f"{name} initialization failed",
+            error=str(e),
+            duration_ms=f"{duration * 1000:.1f}",
+        )
         return None, e
+
 
 async def parallel_initialization():
     """Initialize all components in parallel for faster startup"""
@@ -100,11 +105,21 @@ async def parallel_initialization():
     redis_stm = RedisSTM()
     tasks = {
         "redis": initialize_component("Redis", redis_stm._get_redis()),
-        "vectorstore": initialize_component("VectorStore", CyberShieldVectorStore("cybersecurity_attacks").connect()),
-        "abuseipdb": initialize_component("AbuseIPDB", asyncio.create_task(asyncio.to_thread(AbuseIPDBClient))),
-        "shodan": initialize_component("Shodan", asyncio.create_task(asyncio.to_thread(ShodanClient))),
-        "virustotal": initialize_component("VirusTotal", asyncio.create_task(asyncio.to_thread(VirusTotalClient))),
-        "regex": initialize_component("RegexChecker", asyncio.create_task(asyncio.to_thread(RegexChecker))),
+        "vectorstore": initialize_component(
+            "VectorStore", CyberShieldVectorStore("cybersecurity_attacks").connect()
+        ),
+        "abuseipdb": initialize_component(
+            "AbuseIPDB", asyncio.create_task(asyncio.to_thread(AbuseIPDBClient))
+        ),
+        "shodan": initialize_component(
+            "Shodan", asyncio.create_task(asyncio.to_thread(ShodanClient))
+        ),
+        "virustotal": initialize_component(
+            "VirusTotal", asyncio.create_task(asyncio.to_thread(VirusTotalClient))
+        ),
+        "regex": initialize_component(
+            "RegexChecker", asyncio.create_task(asyncio.to_thread(RegexChecker))
+        ),
     }
 
     # Execute all initialization tasks concurrently
@@ -113,7 +128,7 @@ async def parallel_initialization():
     # Process results
     components = {}
     errors = []
-    for (name, task), result in zip(tasks.items(), results):
+    for (name, task), result in zip(tasks.items(), results, strict=False):
         if isinstance(result, Exception):
             errors.append(f"{name}: {result}")
             components[name] = (None, result)
@@ -125,11 +140,19 @@ async def parallel_initialization():
 
     return components
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Optimized async startup and shutdown for FastAPI app"""
     # Startup
-    global memory, vectorstore, agent, abuseipdb_client, shodan_client, virustotal_client, regex_checker
+    global \
+        memory, \
+        vectorstore, \
+        agent, \
+        abuseipdb_client, \
+        shodan_client, \
+        virustotal_client, \
+        regex_checker
 
     startup_start = time.time()
 
@@ -158,10 +181,42 @@ async def lifespan(app: FastAPI):
             vectorstore = None if vs_error else vectorstore_result
 
         # Handle client results properly - they return (result, error) tuples
-        abuseipdb_client = None if ab_error else (abuseipdb_result if isinstance(abuseipdb_result, tuple) and abuseipdb_result[0] else AbuseIPDBClient())
-        shodan_client = None if sh_error else (shodan_result if isinstance(shodan_result, tuple) and shodan_result[0] else ShodanClient())
-        virustotal_client = None if vt_error else (virustotal_result if isinstance(virustotal_result, tuple) and virustotal_result[0] else VirusTotalClient())
-        regex_checker = None if rx_error else (regex_result if isinstance(regex_result, tuple) and regex_result[0] else RegexChecker())
+        abuseipdb_client = (
+            None
+            if ab_error
+            else (
+                abuseipdb_result
+                if isinstance(abuseipdb_result, tuple) and abuseipdb_result[0]
+                else AbuseIPDBClient()
+            )
+        )
+        shodan_client = (
+            None
+            if sh_error
+            else (
+                shodan_result
+                if isinstance(shodan_result, tuple) and shodan_result[0]
+                else ShodanClient()
+            )
+        )
+        virustotal_client = (
+            None
+            if vt_error
+            else (
+                virustotal_result
+                if isinstance(virustotal_result, tuple) and virustotal_result[0]
+                else VirusTotalClient()
+            )
+        )
+        regex_checker = (
+            None
+            if rx_error
+            else (
+                regex_result
+                if isinstance(regex_result, tuple) and regex_result[0]
+                else RegexChecker()
+            )
+        )
 
         # Initialize SupervisorAgent with available components
         logger.info("Initializing SupervisorAgent with available components")
@@ -175,7 +230,7 @@ async def lifespan(app: FastAPI):
         )
 
         # Initialize agent clients if available
-        if hasattr(agent, 'initialize_clients'):
+        if hasattr(agent, "initialize_clients"):
             try:
                 await agent.initialize_clients()
                 logger.info("SupervisorAgent clients initialized")
@@ -183,14 +238,20 @@ async def lifespan(app: FastAPI):
                 logger.warning("Agent client initialization failed", error=str(e))
 
         startup_duration = time.time() - startup_start
-        successful_components = sum(1 for name, (result, error) in components.items() if not error)
+        successful_components = sum(
+            1 for name, (result, error) in components.items() if not error
+        )
         total_components = len(components)
 
         logger.info(
             "CyberShield startup complete",
-            startup_time_ms=f"{startup_duration*1000:.1f}",
+            startup_time_ms=f"{startup_duration * 1000:.1f}",
             components_ready=f"{successful_components}/{total_components}",
-            react_enabled=agent.react_agent is not None if hasattr(agent, 'react_agent') else False
+            react_enabled=(
+                agent.react_agent is not None
+                if hasattr(agent, "react_agent")
+                else False
+            ),
         )
     except Exception as e:
         logger.error(
@@ -247,25 +308,25 @@ app.add_middleware(
 # Pydantic models for request/response
 class AnalysisRequest(BaseModel):
     text: str
-    use_react_workflow: Optional[bool] = True
-    include_vision: Optional[bool] = False
-    session_id: Optional[str] = None  # NEW: For context preservation
+    use_react_workflow: bool | None = True
+    include_vision: bool | None = False
+    session_id: str | None = None  # NEW: For context preservation
 
 
 class BatchAnalysisRequest(BaseModel):
     inputs: list[str]
-    use_react_workflow: Optional[bool] = True
-    session_id: Optional[str] = None  # NEW: For context preservation
+    use_react_workflow: bool | None = True
+    session_id: str | None = None  # NEW: For context preservation
 
 
 class AnalysisResponse(BaseModel):
     status: str
-    result: Dict[str, Any]
-    processing_time: Optional[float] = None
+    result: dict[str, Any]
+    processing_time: float | None = None
 
 
 # Helper functions for safe async API calls
-async def _safe_abuseipdb_check(ip: str) -> Dict[str, Any]:
+async def _safe_abuseipdb_check(ip: str) -> dict[str, Any]:
     """Safely perform AbuseIPDB check with error handling"""
     try:
         result = await abuseipdb_client.check_ip(ip)
@@ -275,7 +336,7 @@ async def _safe_abuseipdb_check(ip: str) -> Dict[str, Any]:
         return {"abuseipdb": {"error": str(e)}}
 
 
-async def _safe_shodan_lookup(ip: str) -> Dict[str, Any]:
+async def _safe_shodan_lookup(ip: str) -> dict[str, Any]:
     """Safely perform Shodan lookup with error handling"""
     try:
         result = await shodan_client.lookup_ip(ip)
@@ -285,7 +346,7 @@ async def _safe_shodan_lookup(ip: str) -> Dict[str, Any]:
         return {"shodan": {"error": str(e)}}
 
 
-async def _safe_virustotal_lookup(ip: str) -> Dict[str, Any]:
+async def _safe_virustotal_lookup(ip: str) -> dict[str, Any]:
     """Safely perform VirusTotal IP lookup with error handling"""
     try:
         result = await virustotal_client.lookup_ip(ip)
@@ -295,7 +356,7 @@ async def _safe_virustotal_lookup(ip: str) -> Dict[str, Any]:
         return {"virustotal": {"error": str(e)}}
 
 
-async def _safe_domain_lookup(domain: str) -> Dict[str, Any]:
+async def _safe_domain_lookup(domain: str) -> dict[str, Any]:
     """Safely perform VirusTotal domain lookup with error handling"""
     try:
         result = await virustotal_client.lookup_domain(domain)
@@ -305,7 +366,7 @@ async def _safe_domain_lookup(domain: str) -> Dict[str, Any]:
         return {domain: {"error": str(e)}}
 
 
-async def _safe_hash_lookup(hash_value: str) -> Dict[str, Any]:
+async def _safe_hash_lookup(hash_value: str) -> dict[str, Any]:
     """Safely perform VirusTotal hash lookup with error handling"""
     try:
         result = await virustotal_client.lookup_file_hash(hash_value)
@@ -501,7 +562,7 @@ async def analyze_with_image(
     text: str = Form(...),
     image: UploadFile = File(...),
     use_react_workflow: bool = Form(True),
-    session_id: Optional[str] = Form(None),  # NEW: For context preservation
+    session_id: str | None = Form(None),  # NEW: For context preservation
 ):
     """
     Analyze text and image content for security risks with optional session context
@@ -552,7 +613,9 @@ async def batch_analyze(request: BatchAnalysisRequest):
             agent.use_react_workflow = request.use_react_workflow
 
         # Perform batch analysis (with session_id for context preservation)
-        results = await agent.analyze_batch(request.inputs, session_id=request.session_id)
+        results = await agent.analyze_batch(
+            request.inputs, session_id=request.session_id
+        )
 
         processing_time = time.time() - start_time
 

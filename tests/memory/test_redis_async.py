@@ -2,10 +2,10 @@
 Async tests for Redis STM (Short-Term Memory)
 """
 
-import unittest
-import sys
-import os
 import asyncio
+import os
+import sys
+import unittest
 from unittest.mock import AsyncMock, patch
 
 # Add parent directory to path for imports
@@ -172,7 +172,9 @@ class TestRedisSTMAsync(unittest.IsolatedAsyncioTestCase):
 
     async def test_connection_error_handling(self):
         """Test connection error handling"""
-        with patch("redis.asyncio.from_url", side_effect=Exception("Connection failed")):
+        with patch(
+            "redis.asyncio.from_url", side_effect=Exception("Connection failed")
+        ):
             redis_stm = RedisSTM()
 
             # All operations should return safe defaults when connection fails

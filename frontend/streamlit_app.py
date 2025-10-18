@@ -4,10 +4,11 @@ CyberShield Streamlit Frontend - Refactored
 A comprehensive UI for the CyberShield AI Security System with modular architecture
 """
 
-import streamlit as st
-import pandas as pd
-from PIL import Image
 import uuid
+
+import pandas as pd
+import streamlit as st
+from PIL import Image
 
 # Configure page
 st.set_page_config(
@@ -18,16 +19,16 @@ st.set_page_config(
 )
 
 # Import modular components
-from config import FASTAPI_URL, USE_AWS_BACKEND
-from lib.api_client import make_api_request
 from components.result_display import display_analysis_results
 from components.session_components import (
-    render_session_management,
-    render_request_history,
-    track_session_id,
-    save_request_to_history,
     display_context_enrichment,
+    render_request_history,
+    render_session_management,
+    save_request_to_history,
+    track_session_id,
 )
+from config import FASTAPI_URL, USE_AWS_BACKEND
+from lib.api_client import make_api_request
 
 # Custom CSS
 st.markdown(
@@ -167,7 +168,9 @@ def display_system_status(status: dict):
                 st.write(f"Shodan: {'✅' if tools.get('shodan') else '❌'}")
             with col2:
                 st.write(f"VirusTotal: {'✅' if tools.get('virustotal') else '❌'}")
-                st.write(f"Regex Checker: {'✅' if tools.get('regex_checker') else '❌'}")
+                st.write(
+                    f"Regex Checker: {'✅' if tools.get('regex_checker') else '❌'}"
+                )
 
         # Vector Database Status
         if "agents" in status:
@@ -211,7 +214,9 @@ def render_single_analysis_tab():
 
     col1, col2 = st.columns([2, 1])
     with col1:
-        analyze_btn = st.button("🔍 Analyze Text", type="primary", use_container_width=True)
+        analyze_btn = st.button(
+            "🔍 Analyze Text", type="primary", use_container_width=True
+        )
     with col2:
         clear_btn = st.button("🗑️ Clear", use_container_width=True)
 
@@ -239,7 +244,9 @@ def process_text_analysis(text_input: str, session_id: str, include_previous: bo
                     last_request = history[-1]
                     if last_request.get("text"):
                         actual_input = f"Previous context: {last_request['text']}\n\nCurrent query: {text_input}"
-                        st.info(f"📎 Including previous request in analysis ({len(last_request['text'])} chars)")
+                        st.info(
+                            f"📎 Including previous request in analysis ({len(last_request['text'])} chars)"
+                        )
 
         # Build request payload
         request_data = {
@@ -320,7 +327,9 @@ def render_batch_analysis_tab():
     input_method = st.radio("Input Method:", ["Manual Entry", "Upload File"])
     inputs = get_batch_inputs(input_method)
 
-    if inputs and st.button("🔍 Analyze Batch", type="primary", use_container_width=True):
+    if inputs and st.button(
+        "🔍 Analyze Batch", type="primary", use_container_width=True
+    ):
         process_batch_analysis(inputs, batch_session_id)
 
 
@@ -351,6 +360,7 @@ def process_uploaded_file(uploaded_file) -> list:
     """Process uploaded file and extract inputs"""
     try:
         import io
+
         content = uploaded_file.read().decode("utf-8")
         if uploaded_file.type == "text/csv":
             df = pd.read_csv(io.StringIO(content))
@@ -387,7 +397,9 @@ def process_batch_analysis(inputs: list, batch_session_id: str):
 
         if result:
             st.success("✅ Batch analysis completed!")
-            st.info(f"⏱️ Processing time: {result.get('processing_time', 0):.2f} seconds")
+            st.info(
+                f"⏱️ Processing time: {result.get('processing_time', 0):.2f} seconds"
+            )
 
             if "results" in result:
                 display_batch_results(result["results"])
@@ -427,7 +439,9 @@ def display_batch_results(results_data: list):
 def render_image_analysis_tab():
     """Render image analysis tab"""
     st.markdown("## Image Analysis")
-    st.markdown("Analyze images for security risks, extract text, and detect sensitive content.")
+    st.markdown(
+        "Analyze images for security risks, extract text, and detect sensitive content."
+    )
 
     # Session Management
     st.markdown("### 🧠 Session Management")
@@ -531,9 +545,14 @@ def render_ioc_extraction_tool():
     st.markdown("### 🔍 IOC Extraction")
     ioc_text = st.text_area("Text for IOC extraction:", height=150, key="ioc_text")
 
-    if st.button("Extract IOCs", use_container_width=True, key="extract_iocs") and ioc_text:
+    if (
+        st.button("Extract IOCs", use_container_width=True, key="extract_iocs")
+        and ioc_text
+    ):
         with st.spinner("Extracting IOCs..."):
-            result = make_api_request("/tools/regex/extract", "POST", {"text": ioc_text})
+            result = make_api_request(
+                "/tools/regex/extract", "POST", {"text": ioc_text}
+            )
             if result:
                 st.json(result)
 
@@ -543,9 +562,14 @@ def render_shodan_lookup_tool():
     st.markdown("### 🌐 Shodan Lookup")
     shodan_ip = st.text_input("IP for Shodan lookup:", key="shodan_ip")
 
-    if st.button("Lookup with Shodan", use_container_width=True, key="shodan_lookup") and shodan_ip:
+    if (
+        st.button("Lookup with Shodan", use_container_width=True, key="shodan_lookup")
+        and shodan_ip
+    ):
         with st.spinner("Querying Shodan..."):
-            result = make_api_request("/tools/shodan/lookup", "POST", {"ip_address": shodan_ip})
+            result = make_api_request(
+                "/tools/shodan/lookup", "POST", {"ip_address": shodan_ip}
+            )
             if result:
                 st.json(result)
 
@@ -555,7 +579,10 @@ def render_hash_analysis_tool():
     st.markdown("### 🔒 Hash Analysis")
     hash_input = st.text_input("File hash (MD5/SHA1/SHA256):", key="hash_input")
 
-    if st.button("Analyze Hash", use_container_width=True, key="analyze_hash") and hash_input:
+    if (
+        st.button("Analyze Hash", use_container_width=True, key="analyze_hash")
+        and hash_input
+    ):
         with st.spinner("Analyzing hash..."):
             result = make_api_request(
                 "/tools/virustotal/lookup",
@@ -570,7 +597,9 @@ def render_pattern_validation_tool():
     """Render pattern validation tool"""
     st.markdown("### ✅ Pattern Validation")
     validation_text = st.text_input("Text to validate:", key="validation_text")
-    pattern_type = st.selectbox("Pattern type:", ["ip", "domain", "hash", "url"], key="pattern_type")
+    pattern_type = st.selectbox(
+        "Pattern type:", ["ip", "domain", "hash", "url"], key="pattern_type"
+    )
 
     if (
         st.button("Validate Pattern", use_container_width=True, key="validate_pattern")

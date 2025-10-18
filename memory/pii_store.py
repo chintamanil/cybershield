@@ -1,12 +1,12 @@
 # Secure PII Mapping Store with Redis cache and PostgreSQL history
+import hashlib
 import json
 import logging
-import hashlib
 import os
 from datetime import datetime, timedelta
-from typing import Dict, Optional
-import redis
+
 import psycopg2
+import redis
 
 logger = logging.getLogger(__name__)
 
@@ -150,7 +150,7 @@ class PIISecureStore:
             self.pg_conn.rollback()
 
     def start_session(
-        self, session_id: str, ttl_hours: int = 24, metadata: Dict = None
+        self, session_id: str, ttl_hours: int = 24, metadata: dict = {}
     ):
         """Start a new PII session"""
         try:
@@ -218,7 +218,9 @@ class PIISecureStore:
                     "created_at": datetime.now().isoformat(),
                 }
                 self.redis_cache.setex(
-                    cache_key, 3600, json.dumps(mapping_data)  # 1 hour cache
+                    cache_key,
+                    3600,
+                    json.dumps(mapping_data),  # 1 hour cache
                 )
 
             # Store in PostgreSQL
@@ -250,7 +252,7 @@ class PIISecureStore:
             logger.error(f"Failed to store PII mapping: {e}")
             return False
 
-    def get_mapping(self, mask_token: str) -> Optional[str]:
+    def get_mapping(self, mask_token: str) -> str | None:
         """Retrieve original value for mask token"""
         if not self.session_id:
             return None
@@ -284,7 +286,7 @@ class PIISecureStore:
             logger.error(f"Failed to retrieve PII mapping: {e}")
             return None
 
-    def get_session_mappings(self) -> Dict[str, str]:
+    def get_session_mappings(self) -> dict[str, str]:
         """Get all mappings for current session"""
         if not self.session_id:
             return {}

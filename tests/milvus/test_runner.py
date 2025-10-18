@@ -3,9 +3,9 @@
 Test runner for all Milvus-related tests
 """
 
-import unittest
-import sys
 import os
+import sys
+import unittest
 
 # Add parent directory to path for imports
 sys.path.append(
@@ -13,23 +13,23 @@ sys.path.append(
 )
 
 # Import all test modules
-from tests.milvus.test_milvus_viewer import (
-    TestMilvusDataViewer,
-    TestInteractiveMilvusViewer,
-    TestMilvusIntegration,
-)
 from tests.milvus.test_milvus_client import (
     TestMilvusClient,
-    TestMilvusDataTypes,
-    TestMilvusUtilities,
     TestMilvusConnectionParameters,
+    TestMilvusDataTypes,
     TestMilvusErrorScenarios,
     TestMilvusImportValidation,
+    TestMilvusUtilities,
 )
 from tests.milvus.test_milvus_ingestion import (
+    TestMilvusDataPreprocessing,
     TestMilvusIngestion,
     TestMilvusIngestionIntegration,
-    TestMilvusDataPreprocessing,
+)
+from tests.milvus.test_milvus_viewer import (
+    TestInteractiveMilvusViewer,
+    TestMilvusDataViewer,
+    TestMilvusIntegration,
 )
 
 
@@ -102,12 +102,12 @@ def run_tests(verbosity=2):
     print(f"⏭️ Skipped: {len(result.skipped) if hasattr(result, 'skipped') else 0}")
 
     if result.failures:
-        print(f"\n❌ Failed Tests:")
+        print("\n❌ Failed Tests:")
         for test, traceback in result.failures:
             print(f"  - {test}")
 
     if result.errors:
-        print(f"\n💥 Error Tests:")
+        print("\n💥 Error Tests:")
         for test, traceback in result.errors:
             print(f"  - {test}")
 
@@ -127,7 +127,7 @@ def run_tests(verbosity=2):
         print("\n🎉 All tests passed successfully!")
         return True
     else:
-        print(f"\n⚠️ Some tests failed. Please review the results above.")
+        print("\n⚠️ Some tests failed. Please review the results above.")
         return False
 
 

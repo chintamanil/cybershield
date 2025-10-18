@@ -1,9 +1,10 @@
 # Application initializer with environment-aware setup
 import asyncio
-from typing import Dict, Any
+from typing import Any
+
 from utils.environment_config import config
-from utils.service_factory import services
 from utils.logging_config import get_security_logger
+from utils.service_factory import services
 
 logger = get_security_logger("app_initializer")
 
@@ -15,7 +16,7 @@ class ApplicationInitializer:
         self.environment = config.detector.environment
         self.services_initialized = False
 
-    async def initialize_services(self) -> Dict[str, Any]:
+    async def initialize_services(self) -> dict[str, Any]:
         """Initialize all services based on current environment"""
         logger.info(f"Initializing services for {self.environment} environment")
 
@@ -43,7 +44,7 @@ class ApplicationInitializer:
                 "status": "success",
                 "version": version,
             }
-            logger.info(f"PostgreSQL initialized successfully")
+            logger.info("PostgreSQL initialized successfully")
         except Exception as e:
             initialization_results["postgres"] = {"status": "error", "error": str(e)}
             logger.error(f"PostgreSQL initialization failed: {e}")
@@ -105,7 +106,7 @@ class ApplicationInitializer:
 
         return initialization_results
 
-    def get_health_status(self) -> Dict[str, Any]:
+    def get_health_status(self) -> dict[str, Any]:
         """Get current health status of all services"""
         if not self.services_initialized:
             return {"status": "not_initialized"}
@@ -121,7 +122,7 @@ class ApplicationInitializer:
 
         return health_status
 
-    def get_environment_info(self) -> Dict[str, Any]:
+    def get_environment_info(self) -> dict[str, Any]:
         """Get information about current environment configuration"""
         return {
             "environment": self.environment,

@@ -2,19 +2,38 @@
 # Simplified AWS CDK Infrastructure for CyberShield
 
 from aws_cdk import (
-    App, Stack, Environment,
+    App,
+    Duration,
+    Environment,
+    RemovalPolicy,
+    Stack,
+)
+from aws_cdk import (
     aws_ec2 as ec2,
+)
+from aws_cdk import (
     aws_ecs as ecs,
+)
+from aws_cdk import (
     aws_ecs_patterns as ecs_patterns,
+)
+from aws_cdk import (
     aws_elasticache as elasticache,
-    aws_rds as rds,
-    aws_secretsmanager as secretsmanager,
-    aws_ssm as ssm,
-    aws_s3 as s3,
-    aws_logs as logs,
+)
+from aws_cdk import (
     aws_kms as kms,
-    aws_iam as iam,
-    Duration, RemovalPolicy
+)
+from aws_cdk import (
+    aws_logs as logs,
+)
+from aws_cdk import (
+    aws_rds as rds,
+)
+from aws_cdk import (
+    aws_s3 as s3,
+)
+from aws_cdk import (
+    aws_secretsmanager as secretsmanager,
 )
 from constructs import Construct
 
@@ -27,40 +46,41 @@ class CyberShieldStack(Stack):
 
         # Create VPC
         self.vpc = ec2.Vpc(
-            self, "CyberShieldVPC",
+            self,
+            "CyberShieldVPC",
             max_azs=2,
             nat_gateways=1,
             enable_dns_hostnames=True,
             enable_dns_support=True,
             subnet_configuration=[
                 ec2.SubnetConfiguration(
-                    name="Public",
-                    subnet_type=ec2.SubnetType.PUBLIC,
-                    cidr_mask=24
+                    name="Public", subnet_type=ec2.SubnetType.PUBLIC, cidr_mask=24
                 ),
                 ec2.SubnetConfiguration(
                     name="Private",
                     subnet_type=ec2.SubnetType.PRIVATE_WITH_EGRESS,
-                    cidr_mask=24
+                    cidr_mask=24,
                 ),
                 ec2.SubnetConfiguration(
                     name="Database",
                     subnet_type=ec2.SubnetType.PRIVATE_ISOLATED,
-                    cidr_mask=24
-                )
-            ]
+                    cidr_mask=24,
+                ),
+            ],
         )
 
         # Create KMS key for encryption
         self.kms_key = kms.Key(
-            self, "CyberShieldKey",
+            self,
+            "CyberShieldKey",
             description="CyberShield encryption key",
-            enable_key_rotation=True
+            enable_key_rotation=True,
         )
 
         # Create S3 bucket for data storage
         self.s3_bucket = s3.Bucket(
-            self, "CyberShieldDataBucket",
+            self,
+            "CyberShieldDataBucket",
             encryption=s3.BucketEncryption.KMS,
             encryption_key=self.kms_key,
             versioned=True,
@@ -72,41 +92,44 @@ class CyberShieldStack(Stack):
                     transitions=[
                         s3.Transition(
                             storage_class=s3.StorageClass.INFREQUENT_ACCESS,
-                            transition_after=Duration.days(30)
+                            transition_after=Duration.days(30),
                         ),
                         s3.Transition(
                             storage_class=s3.StorageClass.GLACIER,
-                            transition_after=Duration.days(90)
-                        )
-                    ]
+                            transition_after=Duration.days(90),
+                        ),
+                    ],
                 )
-            ]
+            ],
         )
 
         # Create Secrets Manager secrets
         self.api_keys_secret = secretsmanager.Secret(
-            self, "CyberShieldAPIKeys",
+            self,
+            "CyberShieldAPIKeys",
             description="API keys for external security services",
             generate_secret_string=secretsmanager.SecretStringGenerator(
                 secret_string_template='{"virustotal":"REPLACE_ME", "shodan":"REPLACE_ME", "abuseipdb":"REPLACE_ME", "openai":"REPLACE_ME"}',
-                generate_string_key="placeholder"
-            )
+                generate_string_key="placeholder",
+            ),
         )
 
         self.rds_credentials = secretsmanager.Secret(
-            self, "CyberShieldRDSCredentials",
+            self,
+            "CyberShieldRDSCredentials",
             description="RDS database credentials",
             generate_secret_string=secretsmanager.SecretStringGenerator(
                 secret_string_template='{"username": "cybershield"}',
                 generate_string_key="password",
-                exclude_characters=' %+~`#$&*()|[]{}:;<>?!\'/@"\\',
-                password_length=32
-            )
+                exclude_characters=" %+~`#$&*()|[]{}:;<>?!'/@\"\\",
+                password_length=32,
+            ),
         )
 
         # Create RDS PostgreSQL
         self.database = rds.DatabaseInstance(
-            self, "CyberShieldDB",
+            self,
+            "CyberShieldDB",
             engine=rds.DatabaseInstanceEngine.postgres(
                 version=rds.PostgresEngineVersion.VER_15_4
             ),
@@ -124,75 +147,81 @@ class CyberShieldStack(Stack):
             storage_encrypted=True,
             storage_encryption_key=self.kms_key,
             monitoring_interval=Duration.minutes(5),
-            cloudwatch_logs_exports=["postgresql"]
+            cloudwatch_logs_exports=["postgresql"],
         )
 
         # Create ElastiCache Redis
         redis_subnet_group = elasticache.CfnSubnetGroup(
-            self, "RedisSubnetGroup",
+            self,
+            "RedisSubnetGroup",
             description="Subnet group for Redis",
-            subnet_ids=[subnet.subnet_id for subnet in self.vpc.private_subnets]
+            subnet_ids=[subnet.subnet_id for subnet in self.vpc.private_subnets],
         )
 
         # Create security group for Redis
         redis_sg = ec2.SecurityGroup(
-            self, "RedisSecurityGroup",
+            self,
+            "RedisSecurityGroup",
             vpc=self.vpc,
             description="Security group for Redis cluster",
-            allow_all_outbound=False
+            allow_all_outbound=False,
         )
 
         self.redis_cluster = elasticache.CfnCacheCluster(
-            self, "CyberShieldRedis",
+            self,
+            "CyberShieldRedis",
             engine="redis",
             cache_node_type="cache.t3.micro",
             num_cache_nodes=1,
             cache_subnet_group_name=redis_subnet_group.ref,
-            vpc_security_group_ids=[redis_sg.security_group_id]
+            vpc_security_group_ids=[redis_sg.security_group_id],
         )
 
         # Create ECS Cluster
         self.ecs_cluster = ecs.Cluster(
-            self, "CyberShieldCluster",
-            vpc=self.vpc,
-            container_insights=True
+            self, "CyberShieldCluster", vpc=self.vpc, container_insights=True
         )
 
         # Create CloudWatch Log Group
         self.log_group = logs.LogGroup(
-            self, "CyberShieldLogs",
+            self,
+            "CyberShieldLogs",
             log_group_name="/aws/cybershield/application",
             retention=logs.RetentionDays.ONE_MONTH,
-            encryption_key=self.kms_key
+            encryption_key=self.kms_key,
         )
 
         # Create ECS Service
         self.ecs_service = ecs_patterns.ApplicationLoadBalancedFargateService(
-            self, "CyberShieldService",
+            self,
+            "CyberShieldService",
             cluster=self.ecs_cluster,
             memory_limit_mib=2048,
             cpu=1024,
             desired_count=1,  # Start with 1 for cost optimization
             task_image_options=ecs_patterns.ApplicationLoadBalancedTaskImageOptions(
-                image=ecs.ContainerImage.from_asset("..", file="deployment/Dockerfile.aws"),
+                image=ecs.ContainerImage.from_asset(
+                    "..", file="deployment/Dockerfile.aws"
+                ),
                 container_port=8000,
                 environment={
                     "CYBERSHIELD_ENV": "aws",
                     "AWS_DEFAULT_REGION": self.region,
                     "RDS_ENDPOINT": self.database.instance_endpoint.hostname,
                     "ELASTICACHE_ENDPOINT": self.redis_cluster.attr_redis_endpoint_address,
-                    "S3_BUCKET": self.s3_bucket.bucket_name
+                    "S3_BUCKET": self.s3_bucket.bucket_name,
                 },
                 secrets={
                     "API_KEYS": ecs.Secret.from_secrets_manager(self.api_keys_secret),
-                    "DB_CREDENTIALS": ecs.Secret.from_secrets_manager(self.rds_credentials)
+                    "DB_CREDENTIALS": ecs.Secret.from_secrets_manager(
+                        self.rds_credentials
+                    ),
                 },
                 log_driver=ecs.LogDrivers.aws_logs(
-                    stream_prefix="cybershield",
-                    log_group=self.log_group
-                )
+                    stream_prefix="cybershield", log_group=self.log_group
+                ),
             ),
-            public_load_balancer=True
+            public_load_balancer=True,
         )
 
         # Configure health checks
@@ -200,14 +229,18 @@ class CyberShieldStack(Stack):
             path="/health",
             healthy_http_codes="200",
             interval=Duration.seconds(30),
-            timeout=Duration.seconds(10)
+            timeout=Duration.seconds(10),
         )
 
         # Allow Redis access from ECS
         redis_sg.add_ingress_rule(
-            peer=ec2.Peer.security_group_id(self.ecs_service.service.connections.security_groups[0].security_group_id),
+            peer=ec2.Peer.security_group_id(
+                self.ecs_service.service.connections.security_groups[
+                    0
+                ].security_group_id
+            ),
             connection=ec2.Port.tcp(6379),
-            description="Allow Redis access from ECS"
+            description="Allow Redis access from ECS",
         )
 
         # Grant permissions to ECS task
@@ -234,29 +267,33 @@ class CyberShieldStack(Stack):
     def _create_outputs(self):
         """Create CloudFormation outputs"""
         from aws_cdk import CfnOutput
-        
+
         CfnOutput(
-            self, "LoadBalancerDNS",
+            self,
+            "LoadBalancerDNS",
             value=self.ecs_service.load_balancer.load_balancer_dns_name,
-            description="Application Load Balancer DNS"
+            description="Application Load Balancer DNS",
         )
-        
+
         CfnOutput(
-            self, "DatabaseEndpoint",
+            self,
+            "DatabaseEndpoint",
             value=self.database.instance_endpoint.hostname,
-            description="RDS PostgreSQL endpoint"
+            description="RDS PostgreSQL endpoint",
         )
-        
+
         CfnOutput(
-            self, "RedisEndpoint",
+            self,
+            "RedisEndpoint",
             value=self.redis_cluster.attr_redis_endpoint_address,
-            description="ElastiCache Redis endpoint"
+            description="ElastiCache Redis endpoint",
         )
-        
+
         CfnOutput(
-            self, "S3Bucket",
+            self,
+            "S3Bucket",
             value=self.s3_bucket.bucket_name,
-            description="S3 data bucket name"
+            description="S3 data bucket name",
         )
 
 
@@ -264,11 +301,7 @@ class CyberShieldStack(Stack):
 app = App()
 
 CyberShieldStack(
-    app, "CyberShieldStack",
-    env=Environment(
-        account="840656856721",
-        region="us-east-1"
-    )
+    app, "CyberShieldStack", env=Environment(account="840656856721", region="us-east-1")
 )
 
 app.synth()

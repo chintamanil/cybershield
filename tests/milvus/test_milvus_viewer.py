@@ -3,18 +3,18 @@
 Tests for Milvus data viewers
 """
 
-import unittest
-import sys
 import os
-from unittest.mock import Mock, MagicMock, patch
+import sys
+import unittest
+from unittest.mock import MagicMock, Mock, patch
 
 # Add parent directory to path for imports
 sys.path.append(
     os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 )
 
-from data.milivus_view.view_milvus_data import MilvusDataViewer
 from data.milivus_view.interactive_milvus_viewer import InteractiveMilvusViewer
+from data.milivus_view.view_milvus_data import MilvusDataViewer
 
 
 class TestMilvusDataViewer(unittest.TestCase):
@@ -419,7 +419,9 @@ class TestInteractiveMilvusViewer(unittest.TestCase):
                 "Intrusion": 1,
             }
             # Mock the chain: DataFrame()[column].value_counts().to_dict()
-            mock_df_instance.__getitem__.return_value.value_counts.return_value = mock_series
+            mock_df_instance.__getitem__.return_value.value_counts.return_value = (
+                mock_series
+            )
             mock_df_class.return_value = mock_df_instance
 
             stats = self.viewer.get_attack_type_stats()
@@ -450,7 +452,9 @@ class TestInteractiveMilvusViewer(unittest.TestCase):
                 "Low": 1,
             }
             # Mock the chain: DataFrame()[column].value_counts().to_dict()
-            mock_df_instance.__getitem__.return_value.value_counts.return_value = mock_series
+            mock_df_instance.__getitem__.return_value.value_counts.return_value = (
+                mock_series
+            )
             mock_df_class.return_value = mock_df_instance
 
             stats = self.viewer.get_severity_stats()

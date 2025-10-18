@@ -13,13 +13,12 @@ import statistics
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 import requests
 from rich.console import Console
-from rich.progress import Progress, track
+from rich.progress import track
 from rich.table import Table
-
 
 BASE_URL = "http://localhost:8000"
 TIMEOUT = 60
@@ -49,9 +48,7 @@ class BenchmarkTester:
             response = requests.get(f"{BASE_URL}/health", timeout=5)
             return response.status_code == 200
         except requests.exceptions.ConnectionError:
-            console.print(
-                f"[red]Error: Server not running at {BASE_URL}[/red]"
-            )
+            console.print(f"[red]Error: Server not running at {BASE_URL}[/red]")
             return False
 
     def call_api(self, text: str) -> tuple[bool, float]:
@@ -73,7 +70,7 @@ class BenchmarkTester:
             elapsed_time = time.time() - start_time
             return False, elapsed_time
 
-    def test_single_request(self, prompt: str, iterations: int = 3) -> Dict[str, Any]:
+    def test_single_request(self, prompt: str, iterations: int = 3) -> dict[str, Any]:
         """Test a single prompt multiple times to measure caching."""
         console.print(f"\n[cyan]Testing prompt:[/cyan] [dim]{prompt[:60]}...[/dim]")
 
@@ -132,11 +129,9 @@ class BenchmarkTester:
 
         return result
 
-    def run_comprehensive_benchmark(self, iterations: int = 3) -> List[Dict[str, Any]]:
+    def run_comprehensive_benchmark(self, iterations: int = 3) -> list[dict[str, Any]]:
         """Run benchmark tests on all test prompts."""
-        console.print(
-            "[bold cyan]Running Comprehensive Benchmark Tests[/bold cyan]\n"
-        )
+        console.print("[bold cyan]Running Comprehensive Benchmark Tests[/bold cyan]\n")
         console.print(f"Test prompts: {len(self.test_prompts)}")
         console.print(f"Iterations per prompt: {iterations}\n")
 
@@ -148,7 +143,7 @@ class BenchmarkTester:
 
         return results
 
-    def display_summary(self, results: List[Dict[str, Any]]):
+    def display_summary(self, results: list[dict[str, Any]]):
         """Display benchmark summary."""
         console.print("\n[bold green]Benchmark Summary[/bold green]\n")
 
@@ -163,7 +158,11 @@ class BenchmarkTester:
             if not result.get("success"):
                 continue
 
-            prompt_preview = result["prompt"][:37] + "..." if len(result["prompt"]) > 40 else result["prompt"]
+            prompt_preview = (
+                result["prompt"][:37] + "..."
+                if len(result["prompt"]) > 40
+                else result["prompt"]
+            )
             first = f"{result['first_request_time']:.3f}"
 
             if "avg_cached_time" in result:
@@ -205,13 +204,11 @@ class BenchmarkTester:
             stats_table.add_row(
                 "Avg Cache Speedup", f"{statistics.mean(all_speedups):.1f}%"
             )
-            stats_table.add_row(
-                "Best Speedup", f"{max(all_speedups):.1f}%"
-            )
+            stats_table.add_row("Best Speedup", f"{max(all_speedups):.1f}%")
 
         console.print(stats_table)
 
-    def save_results(self, results: List[Dict[str, Any]]):
+    def save_results(self, results: list[dict[str, Any]]):
         """Save benchmark results to file."""
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"benchmark_results_{timestamp}.json"
@@ -228,7 +225,7 @@ class BenchmarkTester:
 
         console.print(f"\n[green]✓ Results saved to {filepath}[/green]")
 
-    def compare_with_baseline(self, results: List[Dict[str, Any]]):
+    def compare_with_baseline(self, results: list[dict[str, Any]]):
         """Compare current results with baseline (if exists)."""
         baseline_file = self.results_dir / "benchmark_baseline.json"
 
@@ -255,7 +252,7 @@ class BenchmarkTester:
 
         baseline_results = baseline_data["results"]
 
-        console.print(f"\n[bold]Comparison with Baseline[/bold]")
+        console.print("\n[bold]Comparison with Baseline[/bold]")
         console.print(f"[dim]Baseline from: {baseline_data['timestamp']}[/dim]\n")
 
         comparison_table = Table(show_header=True, title="Performance Comparison")
@@ -302,9 +299,7 @@ class BenchmarkTester:
         if not self.check_server():
             return
 
-        console.print(
-            "[bold cyan]CyberShield Benchmark & Caching Tests[/bold cyan]\n"
-        )
+        console.print("[bold cyan]CyberShield Benchmark & Caching Tests[/bold cyan]\n")
 
         # Ask for number of iterations
         iterations = 3

@@ -3,11 +3,13 @@ AbuseIPDB API Integration Tool
 Provides IP reputation and abuse reporting capabilities
 """
 
-import os
 import asyncio
-from typing import Dict, Any, Optional, List
-import aiohttp
 import ipaddress
+import os
+from typing import Any
+
+import aiohttp
+
 from utils.logging_config import get_security_logger
 
 logger = get_security_logger("abuseipdb")
@@ -16,7 +18,7 @@ logger = get_security_logger("abuseipdb")
 class AbuseIPDBClient:
     """Async AbuseIPDB API client with comprehensive functionality"""
 
-    def __init__(self, api_key: Optional[str] = None):
+    def __init__(self, api_key: str | None = None):
         """
         Initialize AbuseIPDB client
 
@@ -51,7 +53,7 @@ class AbuseIPDBClient:
 
     async def _make_request(
         self, endpoint: str, method: str = "GET", **kwargs
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Make authenticated async request to AbuseIPDB API
 
@@ -75,7 +77,6 @@ class AbuseIPDBClient:
             async with session.request(
                 method=method, url=url, headers=headers, **kwargs
             ) as response:
-
                 # Handle rate limiting
                 if response.status == 429:
                     retry_after = int(response.headers.get("Retry-After", 60))
@@ -95,7 +96,7 @@ class AbuseIPDBClient:
 
     async def check_ip(
         self, ip_address: str, max_age_days: int = 90, verbose: bool = False
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Check IP address reputation
 
@@ -163,7 +164,7 @@ class AbuseIPDBClient:
 
     async def check_subnet(
         self, network: str, max_age_days: int = 90
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Check subnet reputation
 
@@ -198,8 +199,8 @@ class AbuseIPDBClient:
         }
 
     async def report_ip(
-        self, ip_address: str, categories: List[int], comment: str = ""
-    ) -> Dict[str, Any]:
+        self, ip_address: str, categories: list[int], comment: str = ""
+    ) -> dict[str, Any]:
         """
         Report an IP address for abuse
 
@@ -241,7 +242,7 @@ class AbuseIPDBClient:
 
     async def get_blacklist(
         self, confidence_minimum: int = 75, limit: int = 10000
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Get blacklisted IP addresses
 
@@ -292,7 +293,7 @@ class AbuseIPDBClient:
             "raw_response": response,
         }
 
-    async def clear_address(self, ip_address: str) -> Dict[str, Any]:
+    async def clear_address(self, ip_address: str) -> dict[str, Any]:
         """
         Clear your own IP address from reports (if you reported it by mistake)
 
@@ -316,7 +317,7 @@ class AbuseIPDBClient:
 
         return {"ip_address": ip_address, "success": True, "raw_response": response}
 
-    def get_categories(self) -> Dict[str, Any]:
+    def get_categories(self) -> dict[str, Any]:
         """
         Get list of available report categories
 
@@ -362,7 +363,7 @@ class AbuseIPDBClient:
 
 
 # Legacy function for backward compatibility
-async def lookup_abuseipdb(ip: str) -> Dict[str, Any]:
+async def lookup_abuseipdb(ip: str) -> dict[str, Any]:
     """Legacy async function for IP lookup"""
     async with AbuseIPDBClient() as client:
         return await client.check_ip(ip)
@@ -371,21 +372,21 @@ async def lookup_abuseipdb(ip: str) -> Dict[str, Any]:
 # Convenience functions
 async def check_ip(
     ip_address: str, max_age_days: int = 90, verbose: bool = False
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Async check IP reputation"""
     async with AbuseIPDBClient() as client:
         return await client.check_ip(ip_address, max_age_days, verbose)
 
 
-async def check_subnet(network: str, max_age_days: int = 90) -> Dict[str, Any]:
+async def check_subnet(network: str, max_age_days: int = 90) -> dict[str, Any]:
     """Async check subnet reputation"""
     async with AbuseIPDBClient() as client:
         return await client.check_subnet(network, max_age_days)
 
 
 async def report_ip(
-    ip_address: str, categories: List[int], comment: str = ""
-) -> Dict[str, Any]:
+    ip_address: str, categories: list[int], comment: str = ""
+) -> dict[str, Any]:
     """Async report IP for abuse"""
     async with AbuseIPDBClient() as client:
         return await client.report_ip(ip_address, categories, comment)
@@ -393,13 +394,13 @@ async def report_ip(
 
 async def get_blacklist(
     confidence_minimum: int = 75, limit: int = 10000
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Async get blacklisted IPs"""
     async with AbuseIPDBClient() as client:
         return await client.get_blacklist(confidence_minimum, limit)
 
 
-def get_categories() -> Dict[str, Any]:
+def get_categories() -> dict[str, Any]:
     """Get abuse categories (no async needed - static data)"""
     client = AbuseIPDBClient()
     return client.get_categories()

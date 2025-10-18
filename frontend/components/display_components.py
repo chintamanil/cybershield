@@ -1,13 +1,11 @@
 """Display components for analysis results."""
 
-from typing import Dict, Any
 
-import streamlit as st
 import pandas as pd
-import plotly.express as px
+import streamlit as st
 
 
-def display_pii_analysis(pii_data: Dict):
+def display_pii_analysis(pii_data: dict):
     """Display PII analysis results."""
     st.markdown(
         '<div class="section-header">PII Detection Results</div>',
@@ -45,7 +43,7 @@ def display_pii_analysis(pii_data: Dict):
         st.success("✅ No PII detected in the input")
 
 
-def display_ioc_analysis(ioc_data: Dict):
+def display_ioc_analysis(ioc_data: dict):
     """Display IOC analysis results."""
     st.markdown(
         '<div class="section-header">Indicators of Compromise (IOCs)</div>',
@@ -84,7 +82,7 @@ def display_ioc_analysis(ioc_data: Dict):
         st.json(ioc_data["ocr_iocs"])
 
 
-def display_threat_analysis(threat_data: Dict):
+def display_threat_analysis(threat_data: dict):
     """Display threat analysis results."""
     st.markdown(
         '<div class="section-header">Threat Intelligence Analysis</div>',
@@ -121,7 +119,7 @@ def display_threat_analysis(threat_data: Dict):
                 st.json(threat)
 
 
-def display_vision_analysis(vision_data: Dict):
+def display_vision_analysis(vision_data: dict):
     """Display vision analysis results."""
     st.markdown(
         '<div class="section-header">Vision AI Analysis</div>', unsafe_allow_html=True

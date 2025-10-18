@@ -3,8 +3,9 @@ Session Storage for CyberShield
 Manages session-based context storage in Redis and PostgreSQL.
 """
 
-from typing import Dict, List, Optional, Any
 from datetime import datetime
+from typing import Any
+
 from utils.logging_config import get_logger
 
 logger = get_logger(__name__, component="session_storage")
@@ -34,7 +35,7 @@ class SessionStorage:
         self.default_ttl = 1800  # 30 minutes
 
     async def store_iocs(
-        self, session_id: str, iocs: Dict[str, List[str]], merge: bool = True
+        self, session_id: str, iocs: dict[str, list[str]], merge: bool = True
     ) -> bool:
         """
         Store IOCs for a session in Redis.
@@ -76,12 +77,10 @@ class SessionStorage:
             return True
 
         except Exception as e:
-            logger.error(
-                "Failed to store IOCs", error=str(e), session_id=session_id
-            )
+            logger.error("Failed to store IOCs", error=str(e), session_id=session_id)
             return False
 
-    async def get_iocs(self, session_id: str) -> Optional[Dict[str, List[str]]]:
+    async def get_iocs(self, session_id: str) -> dict[str, list[str]] | None:
         """
         Retrieve IOCs for a session from Redis.
 
@@ -110,13 +109,11 @@ class SessionStorage:
             return iocs
 
         except Exception as e:
-            logger.error(
-                "Failed to retrieve IOCs", error=str(e), session_id=session_id
-            )
+            logger.error("Failed to retrieve IOCs", error=str(e), session_id=session_id)
             return None
 
     async def store_analysis_event(
-        self, session_id: str, analysis_result: Dict[str, Any]
+        self, session_id: str, analysis_result: dict[str, Any]
     ) -> bool:
         """
         Store an analysis event in session history.
@@ -178,7 +175,7 @@ class SessionStorage:
 
     async def get_session_history(
         self, session_id: str, limit: int = 10
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """
         Retrieve session history from Redis.
 
@@ -216,7 +213,7 @@ class SessionStorage:
             return []
 
     async def store_pii_mapping(
-        self, session_id: str, pii_mapping: Dict[str, str]
+        self, session_id: str, pii_mapping: dict[str, str]
     ) -> bool:
         """
         Store PII mapping for a session (masked values).
@@ -249,7 +246,7 @@ class SessionStorage:
             )
             return False
 
-    async def get_pii_mapping(self, session_id: str) -> Optional[Dict[str, str]]:
+    async def get_pii_mapping(self, session_id: str) -> dict[str, str] | None:
         """
         Retrieve PII mapping for a session.
 
@@ -300,15 +297,13 @@ class SessionStorage:
             return True
 
         except Exception as e:
-            logger.error(
-                "Failed to clear session", error=str(e), session_id=session_id
-            )
+            logger.error("Failed to clear session", error=str(e), session_id=session_id)
             return False
 
     # PostgreSQL methods (optional for Phase 6)
 
     async def persist_to_postgres(
-        self, session_id: str, analysis_result: Dict[str, Any]
+        self, session_id: str, analysis_result: dict[str, Any]
     ) -> bool:
         """
         Persist analysis to PostgreSQL for long-term storage.
@@ -331,8 +326,8 @@ class SessionStorage:
     # Helper methods
 
     def _merge_iocs(
-        self, existing: Dict[str, List[str]], new: Dict[str, List[str]]
-    ) -> Dict[str, List[str]]:
+        self, existing: dict[str, list[str]], new: dict[str, list[str]]
+    ) -> dict[str, list[str]]:
         """
         Merge new IOCs with existing ones, removing duplicates while preserving order.
 
@@ -347,13 +342,15 @@ class SessionStorage:
                 combined = merged[ioc_type] + values
                 seen = set()
                 # Deduplicate while maintaining order: keep first occurrence
-                merged[ioc_type] = [x for x in combined if not (x in seen or seen.add(x))]
+                merged[ioc_type] = [
+                    x for x in combined if not (x in seen or seen.add(x))
+                ]
             else:
                 merged[ioc_type] = values
 
         return merged
 
-    def _extract_threat_summary(self, threat_analysis: Dict) -> Dict[str, int]:
+    def _extract_threat_summary(self, threat_analysis: dict) -> dict[str, int]:
         """Extract threat count summary from analysis."""
         return {
             "high_risk": threat_analysis.get("high_risk_count", 0),
@@ -362,7 +359,7 @@ class SessionStorage:
             "total": threat_analysis.get("total_analyzed", 0),
         }
 
-    def _calculate_risk_level(self, analysis_result: Dict) -> str:
+    def _calculate_risk_level(self, analysis_result: dict) -> str:
         """Calculate overall risk level for the analysis."""
         threat_analysis = analysis_result.get("threat_analysis", {})
         high_risk = threat_analysis.get("high_risk_count", 0)
@@ -375,7 +372,7 @@ class SessionStorage:
         else:
             return "low"
 
-    def _generate_entry_summary(self, analysis_result: Dict) -> str:
+    def _generate_entry_summary(self, analysis_result: dict) -> str:
         """Generate a brief summary of the analysis."""
         ioc_analysis = analysis_result.get("ioc_analysis", {})
         threat_analysis = analysis_result.get("threat_analysis", {})

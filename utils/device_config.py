@@ -3,9 +3,9 @@ Device configuration for optimal performance on Apple Silicon and other platform
 Automatically detects and configures the best available compute device.
 """
 
+import json
 import os
 import sys
-import json
 from pathlib import Path
 
 # Global cache for device configuration
@@ -18,36 +18,37 @@ def _load_cached_config():
     global _device_config_cache
     if _device_config_cache is not None:
         return _device_config_cache
-        
+
     if _cache_file.exists():
         try:
-            with open(_cache_file, 'r') as f:
+            with open(_cache_file) as f:
                 cached_data = json.load(f)
             # Validate cache is recent (within 24 hours)
             import time
-            if time.time() - cached_data.get('timestamp', 0) < 86400:
-                _device_config_cache = cached_data['config']
+
+            if time.time() - cached_data.get("timestamp", 0) < 86400:
+                _device_config_cache = cached_data["config"]
                 return _device_config_cache
-        except (json.JSONDecodeError, KeyError, IOError):
+        except (OSError, json.JSONDecodeError, KeyError):
             pass
     return None
+
 
 def _save_config_cache(config):
     """Save device configuration to cache"""
     global _device_config_cache
     _device_config_cache = config
-    
+
     try:
         _cache_file.parent.mkdir(parents=True, exist_ok=True)
         import time
-        cache_data = {
-            'config': config,
-            'timestamp': time.time()
-        }
-        with open(_cache_file, 'w') as f:
+
+        cache_data = {"config": config, "timestamp": time.time()}
+        with open(_cache_file, "w") as f:
             json.dump(cache_data, f)
-    except IOError:
+    except OSError:
         pass  # Cache write failure is non-critical
+
 
 def get_optimal_device() -> str:
     """
@@ -60,8 +61,8 @@ def get_optimal_device() -> str:
     # Check cache first
     cached_config = _load_cached_config()
     if cached_config:
-        return cached_config.get('device', 'cpu')
-    
+        return cached_config.get("device", "cpu")
+
     try:
         import torch
 
@@ -77,9 +78,9 @@ def get_optimal_device() -> str:
         else:
             print("💻 Using CPU computation (no GPU acceleration available)")
             device = "cpu"
-            
+
         # Cache the result for future use
-        config = {'device': device}
+        config = {"device": device}
         _save_config_cache(config)
         return device
 
@@ -177,9 +178,9 @@ def create_performance_config() -> dict:
     """
     # Check cache first for complete config
     cached_config = _load_cached_config()
-    if cached_config and 'batch_size' in cached_config:
+    if cached_config and "batch_size" in cached_config:
         return cached_config
-    
+
     device = get_optimal_device()
 
     config = {

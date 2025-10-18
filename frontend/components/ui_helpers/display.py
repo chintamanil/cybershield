@@ -1,10 +1,8 @@
 """UI display helper functions for consistent UI elements."""
 
-from typing import Dict, List, Optional, Union
 
 import streamlit as st
-
-from config import RISK_COLORS, IOC_ICONS
+from config import IOC_ICONS, RISK_COLORS
 
 
 class UIHelpers:
@@ -13,9 +11,9 @@ class UIHelpers:
     @staticmethod
     def display_metric_card(
         title: str,
-        value: Union[str, int, float],
-        delta: Optional[str] = None,
-        help_text: Optional[str] = None,
+        value: str | int | float,
+        delta: str | None = None,
+        help_text: str | None = None,
     ):
         """Display a metric card.
 
@@ -68,7 +66,7 @@ class UIHelpers:
             st.info(f"{icon} {risk_level.title()} Risk")
 
     @staticmethod
-    def display_ioc_list(iocs: Dict[str, List], max_items: int = 10):
+    def display_ioc_list(iocs: dict[str, list], max_items: int = 10):
         """Display IOC list with icons.
 
         Args:
@@ -104,7 +102,7 @@ class UIHelpers:
             st.progress(progress, text=f"{text}: {current}/{total}")
 
     @staticmethod
-    def display_json_expandable(data: Dict, title: str = "Details"):
+    def display_json_expandable(data: dict, title: str = "Details"):
         """Display JSON data in expandable section.
 
         Args:

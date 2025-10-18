@@ -3,12 +3,13 @@ VirusTotal API Integration Tool
 Provides comprehensive malware analysis and threat intelligence
 """
 
-import os
-import logging
 import asyncio
-from typing import Dict, Any, Optional
-import aiohttp
 import ipaddress
+import logging
+import os
+from typing import Any
+
+import aiohttp
 
 logger = logging.getLogger(__name__)
 
@@ -16,7 +17,7 @@ logger = logging.getLogger(__name__)
 class VirusTotalClient:
     """Async VirusTotal API client with comprehensive functionality"""
 
-    def __init__(self, api_key: Optional[str] = None):
+    def __init__(self, api_key: str | None = None):
         """
         Initialize VirusTotal client
 
@@ -53,7 +54,7 @@ class VirusTotalClient:
 
     async def _make_request(
         self, endpoint: str, method: str = "GET", **kwargs
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Make authenticated async request to VirusTotal API
 
@@ -77,7 +78,6 @@ class VirusTotalClient:
             async with session.request(
                 method=method, url=url, headers=headers, **kwargs
             ) as response:
-
                 # Handle rate limiting
                 if response.status == 429:
                     retry_after = int(response.headers.get("Retry-After", 60))
@@ -89,12 +89,14 @@ class VirusTotalClient:
                 if response.status == 401:
                     logger.error("VirusTotal API authentication failed - check API key")
                     return {"error": "Authentication failed - invalid API key"}
-                
+
                 # Handle forbidden errors
                 if response.status == 403:
-                    logger.error("VirusTotal API access forbidden - check API permissions")
+                    logger.error(
+                        "VirusTotal API access forbidden - check API permissions"
+                    )
                     return {"error": "Access forbidden - insufficient API permissions"}
-                
+
                 # Handle not found errors gracefully
                 if response.status == 404:
                     logger.debug(f"Resource not found: {url}")
@@ -103,7 +105,9 @@ class VirusTotalClient:
                 # Check for other error statuses before trying to parse JSON
                 if response.status >= 400:
                     error_text = await response.text()
-                    logger.error(f"VirusTotal API error {response.status}: {error_text}")
+                    logger.error(
+                        f"VirusTotal API error {response.status}: {error_text}"
+                    )
                     return {"error": f"API error {response.status}: {error_text}"}
 
                 return await response.json()
@@ -115,7 +119,7 @@ class VirusTotalClient:
             logger.error(f"Unexpected error in VirusTotal request: {e}")
             return {"error": f"Unexpected error: {e}"}
 
-    async def lookup_ip(self, ip_address: str) -> Dict[str, Any]:
+    async def lookup_ip(self, ip_address: str) -> dict[str, Any]:
         """
         Lookup IP address information
 
@@ -160,7 +164,7 @@ class VirusTotalClient:
             "raw_response": response,
         }
 
-    async def lookup_domain(self, domain: str) -> Dict[str, Any]:
+    async def lookup_domain(self, domain: str) -> dict[str, Any]:
         """
         Lookup domain information
 
@@ -204,7 +208,7 @@ class VirusTotalClient:
             "raw_response": response,
         }
 
-    async def lookup_file_hash(self, file_hash: str) -> Dict[str, Any]:
+    async def lookup_file_hash(self, file_hash: str) -> dict[str, Any]:
         """
         Lookup file hash information
 
@@ -250,7 +254,7 @@ class VirusTotalClient:
             "raw_response": response,
         }
 
-    async def search(self, query: str) -> Dict[str, Any]:
+    async def search(self, query: str) -> dict[str, Any]:
         """
         Search VirusTotal intelligence
 
@@ -312,32 +316,32 @@ class VirusTotalClient:
 
 
 # Legacy function for backward compatibility
-async def lookup_virustotal(ip: str) -> Dict[str, Any]:
+async def lookup_virustotal(ip: str) -> dict[str, Any]:
     """Legacy async function for IP lookup"""
     async with VirusTotalClient() as client:
         return await client.lookup_ip(ip)
 
 
 # Convenience functions
-async def lookup_ip(ip_address: str) -> Dict[str, Any]:
+async def lookup_ip(ip_address: str) -> dict[str, Any]:
     """Async lookup IP address"""
     async with VirusTotalClient() as client:
         return await client.lookup_ip(ip_address)
 
 
-async def lookup_domain(domain: str) -> Dict[str, Any]:
+async def lookup_domain(domain: str) -> dict[str, Any]:
     """Async lookup domain"""
     async with VirusTotalClient() as client:
         return await client.lookup_domain(domain)
 
 
-async def lookup_hash(file_hash: str) -> Dict[str, Any]:
+async def lookup_hash(file_hash: str) -> dict[str, Any]:
     """Async lookup file hash"""
     async with VirusTotalClient() as client:
         return await client.lookup_file_hash(file_hash)
 
 
-async def search_vt(query: str) -> Dict[str, Any]:
+async def search_vt(query: str) -> dict[str, Any]:
     """Async search VirusTotal"""
     async with VirusTotalClient() as client:
         return await client.search(query)

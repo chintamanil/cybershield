@@ -5,7 +5,8 @@ Tests various components to demonstrate the performance improvements.
 """
 
 import time
-from utils.device_config import optimize_for_cybershield, create_performance_config
+
+from utils.device_config import create_performance_config, optimize_for_cybershield
 from utils.logging_config import get_security_logger
 
 logger = get_security_logger("performance_test")
@@ -81,10 +82,10 @@ def benchmark_vision_processing():
     print("🧪 Benchmarking vision processing...")
 
     try:
-        import torch
-        from transformers import pipeline
         import numpy as np
+        import torch
         from PIL import Image
+        from transformers import pipeline
 
         config = create_performance_config()
         device = config["torch_device"]
@@ -126,7 +127,7 @@ def benchmark_vision_processing():
         batch_time = time.time() - start_time
 
         print(
-            f"  📊 Batch (5 images): {batch_time:.3f}s ({5/batch_time:.1f} images/sec)"
+            f"  📊 Batch (5 images): {batch_time:.3f}s ({5 / batch_time:.1f} images/sec)"
         )
 
         return {
@@ -186,7 +187,7 @@ def main():
     device = optimize_for_cybershield()
     config = create_performance_config()
 
-    print(f"\n🍎 Platform: Mac M4 with Apple Silicon")
+    print("\n🍎 Platform: Mac M4 with Apple Silicon")
     print(f"🔧 Device: {device.upper()}")
     print(f"⚙️ Batch Size: {config['batch_size']}")
     print(f"🎯 Precision: {config['precision']}")
@@ -216,12 +217,12 @@ def main():
         ioc_throughput = cybershield_results["ioc_extraction"]["throughput"]
         print(f"🔍 IOC Extraction: {ioc_throughput:.1f} logs/sec")
 
-    print(f"\n✅ Mac M4 Optimizations Active!")
-    print(f"🚀 Expected performance improvements:")
-    print(f"   • 2-5x faster than CPU-only processing")
-    print(f"   • Optimized memory usage with half precision")
-    print(f"   • Better parallel processing utilization")
-    print(f"   • MPS acceleration for PyTorch operations")
+    print("\n✅ Mac M4 Optimizations Active!")
+    print("🚀 Expected performance improvements:")
+    print("   • 2-5x faster than CPU-only processing")
+    print("   • Optimized memory usage with half precision")
+    print("   • Better parallel processing utilization")
+    print("   • MPS acceleration for PyTorch operations")
 
 
 if __name__ == "__main__":

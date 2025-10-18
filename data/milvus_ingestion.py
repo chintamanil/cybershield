@@ -4,38 +4,53 @@ Milvus Data Ingestion Pipeline for CyberShield
 Converts cybersecurity attack data to vector embeddings and stores in Milvus
 """
 
-import pandas as pd
-import numpy as np
-from typing import List, Dict, Any
-import json
 import hashlib
-import sys
+import json
 import os
+import sys
+from typing import Any
+
+import numpy as np
+import pandas as pd
 
 # Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Configure structured logging and device optimization
-from utils.logging_config import get_security_logger
 from utils.device_config import create_performance_config
+from utils.logging_config import get_security_logger
 
 logger = get_security_logger("milvus_ingestion")
 
 # Try to import optional dependencies
 try:
     from sentence_transformers import SentenceTransformer
+
     SENTENCE_TRANSFORMERS_AVAILABLE = True
 except ImportError:
     SENTENCE_TRANSFORMERS_AVAILABLE = False
     SentenceTransformer = None
-    logger.warning("sentence-transformers not available. Install with: pip install sentence-transformers")
-    logger.info("Note: PyTorch may not be available for Python 3.13. Using fallback embeddings.")
+    logger.warning(
+        "sentence-transformers not available. Install with: pip install sentence-transformers"
+    )
+    logger.info(
+        "Note: PyTorch may not be available for Python 3.13. Using fallback embeddings."
+    )
 
 try:
-    from pymilvus import connections, Collection, FieldSchema, CollectionSchema, DataType, utility
+    from pymilvus import (
+        Collection,
+        CollectionSchema,
+        DataType,
+        FieldSchema,
+        connections,
+        utility,
+    )
+
     PYMILVUS_AVAILABLE = True
 except ImportError:
     PYMILVUS_AVAILABLE = False
+
 
 class CyberSecurityDataProcessor:
     """Process and vectorize cybersecurity attack data for Milvus storage"""
@@ -54,40 +69,48 @@ class CyberSecurityDataProcessor:
 
         # Get optimal device configuration for Mac M4
         self.perf_config = create_performance_config()
-        
+
         # Initialize embedding model if available
         if SENTENCE_TRANSFORMERS_AVAILABLE:
             try:
                 device = self.perf_config["sentence_transformers_device"]
-                
-                logger.info("Initializing embedding model with optimization", 
-                           model=model_name,
-                           device=device,
-                           batch_size=self.perf_config["batch_size"],
-                           precision=self.perf_config["precision"])
-                
+
+                logger.info(
+                    "Initializing embedding model with optimization",
+                    model=model_name,
+                    device=device,
+                    batch_size=self.perf_config["batch_size"],
+                    precision=self.perf_config["precision"],
+                )
+
                 # Initialize with optimal settings for Mac M4
                 self.embedding_model = SentenceTransformer(model_name, device=device)
-                
+
                 # Enable half precision for better performance on Apple Silicon
-                if device == "mps" and hasattr(self.embedding_model, '_modules'):
+                if device == "mps" and hasattr(self.embedding_model, "_modules"):
                     try:
                         self.embedding_model.half()
                         logger.info("Enabled half precision for Apple Silicon MPS")
                     except:
-                        logger.info("Using full precision (half precision not supported)")
-                
+                        logger.info(
+                            "Using full precision (half precision not supported)"
+                        )
+
                 self.dimension = self.embedding_model.get_sentence_embedding_dimension()
-                logger.info("Embedding model initialized successfully", 
-                           model=model_name, 
-                           dimension=self.dimension, 
-                           device=device,
-                           optimized_for="Mac_M4")
+                logger.info(
+                    "Embedding model initialized successfully",
+                    model=model_name,
+                    dimension=self.dimension,
+                    device=device,
+                    optimized_for="Mac_M4",
+                )
             except Exception as e:
                 logger.warning(f"Failed to initialize embedding model: {e}")
                 logger.info("Will use fallback text processing without embeddings")
         else:
-            logger.warning("sentence-transformers not available, will use fallback embeddings")
+            logger.warning(
+                "sentence-transformers not available, will use fallback embeddings"
+            )
             logger.info("To install: pip install sentence-transformers")
 
     def preprocess_data(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -100,41 +123,58 @@ class CyberSecurityDataProcessor:
         Returns:
             Cleaned DataFrame
         """
-        logger.info("Starting data preprocessing", data_source="cybersecurity_attacks.csv")
+        logger.info(
+            "Starting data preprocessing", data_source="cybersecurity_attacks.csv"
+        )
 
         # Create a copy to avoid modifying original
         processed_df = df.copy()
 
         # Clean column names
-        processed_df.columns = [col.strip().replace(' ', '_').lower() for col in processed_df.columns]
+        processed_df.columns = [
+            col.strip().replace(" ", "_").lower() for col in processed_df.columns
+        ]
 
         # Handle missing values
-        processed_df = processed_df.fillna('')
+        processed_df = processed_df.fillna("")
 
         # Parse timestamp
-        if 'timestamp' in processed_df.columns:
-            processed_df['timestamp'] = pd.to_datetime(processed_df['timestamp'], errors='coerce')
+        if "timestamp" in processed_df.columns:
+            processed_df["timestamp"] = pd.to_datetime(
+                processed_df["timestamp"], errors="coerce"
+            )
 
         # Clean IP addresses
-        ip_columns = ['source_ip_address', 'destination_ip_address']
+        ip_columns = ["source_ip_address", "destination_ip_address"]
         for col in ip_columns:
             if col in processed_df.columns:
                 processed_df[col] = processed_df[col].astype(str).str.strip()
 
         # Clean numeric columns
-        numeric_columns = ['source_port', 'destination_port', 'packet_length', 'anomaly_scores']
+        numeric_columns = [
+            "source_port",
+            "destination_port",
+            "packet_length",
+            "anomaly_scores",
+        ]
         for col in numeric_columns:
             if col in processed_df.columns:
-                processed_df[col] = pd.to_numeric(processed_df[col], errors='coerce').fillna(0)
+                processed_df[col] = pd.to_numeric(
+                    processed_df[col], errors="coerce"
+                ).fillna(0)
 
         # Create composite text fields for embeddings
-        processed_df['attack_description'] = self._create_attack_description(processed_df)
-        processed_df['network_context'] = self._create_network_context(processed_df)
-        processed_df['full_context'] = self._create_full_context(processed_df)
+        processed_df["attack_description"] = self._create_attack_description(
+            processed_df
+        )
+        processed_df["network_context"] = self._create_network_context(processed_df)
+        processed_df["full_context"] = self._create_full_context(processed_df)
 
-        logger.info("Data preprocessing completed", 
-                   records_processed=len(processed_df),
-                   original_count=len(df))
+        logger.info(
+            "Data preprocessing completed",
+            records_processed=len(processed_df),
+            original_count=len(df),
+        )
         return processed_df
 
     def _create_attack_description(self, df: pd.DataFrame) -> pd.Series:
@@ -145,25 +185,25 @@ class CyberSecurityDataProcessor:
             parts = []
 
             # Attack information
-            if 'attack_type' in row and row['attack_type']:
+            if "attack_type" in row and row["attack_type"]:
                 parts.append(f"Attack Type: {row['attack_type']}")
 
-            if 'attack_signature' in row and row['attack_signature']:
+            if "attack_signature" in row and row["attack_signature"]:
                 parts.append(f"Signature: {row['attack_signature']}")
 
-            if 'severity_level' in row and row['severity_level']:
+            if "severity_level" in row and row["severity_level"]:
                 parts.append(f"Severity: {row['severity_level']}")
 
             # Payload and malware info
-            if 'payload_data' in row and row['payload_data']:
-                payload = str(row['payload_data'])[:200]  # Limit length
+            if "payload_data" in row and row["payload_data"]:
+                payload = str(row["payload_data"])[:200]  # Limit length
                 parts.append(f"Payload: {payload}")
 
-            if 'malware_indicators' in row and row['malware_indicators']:
+            if "malware_indicators" in row and row["malware_indicators"]:
                 parts.append(f"Malware: {row['malware_indicators']}")
 
             # Alerts
-            if 'alerts/warnings' in row and row['alerts/warnings']:
+            if "alerts/warnings" in row and row["alerts/warnings"]:
                 parts.append(f"Alert: {row['alerts/warnings']}")
 
             descriptions.append(" | ".join(parts))
@@ -178,22 +218,22 @@ class CyberSecurityDataProcessor:
             parts = []
 
             # Network information
-            if 'source_ip_address' in row and row['source_ip_address']:
+            if "source_ip_address" in row and row["source_ip_address"]:
                 parts.append(f"Source: {row['source_ip_address']}")
 
-            if 'destination_ip_address' in row and row['destination_ip_address']:
+            if "destination_ip_address" in row and row["destination_ip_address"]:
                 parts.append(f"Destination: {row['destination_ip_address']}")
 
-            if 'protocol' in row and row['protocol']:
+            if "protocol" in row and row["protocol"]:
                 parts.append(f"Protocol: {row['protocol']}")
 
-            if 'traffic_type' in row and row['traffic_type']:
+            if "traffic_type" in row and row["traffic_type"]:
                 parts.append(f"Traffic: {row['traffic_type']}")
 
-            if 'network_segment' in row and row['network_segment']:
+            if "network_segment" in row and row["network_segment"]:
                 parts.append(f"Segment: {row['network_segment']}")
 
-            if 'geo-location_data' in row and row['geo-location_data']:
+            if "geo-location_data" in row and row["geo-location_data"]:
                 parts.append(f"Location: {row['geo-location_data']}")
 
             contexts.append(" | ".join(parts))
@@ -205,29 +245,31 @@ class CyberSecurityDataProcessor:
         full_contexts = []
 
         for i, row in df.iterrows():
-            attack_desc = row.get('attack_description', '')
-            network_ctx = row.get('network_context', '')
+            attack_desc = row.get("attack_description", "")
+            network_ctx = row.get("network_context", "")
 
             # Additional context
             additional_parts = []
 
-            if 'action_taken' in row and row['action_taken']:
+            if "action_taken" in row and row["action_taken"]:
                 additional_parts.append(f"Action: {row['action_taken']}")
 
-            if 'user_information' in row and row['user_information']:
+            if "user_information" in row and row["user_information"]:
                 additional_parts.append(f"User: {row['user_information']}")
 
-            if 'log_source' in row and row['log_source']:
+            if "log_source" in row and row["log_source"]:
                 additional_parts.append(f"Source: {row['log_source']}")
 
             additional_ctx = " | ".join(additional_parts)
 
-            full_context = " || ".join(filter(None, [attack_desc, network_ctx, additional_ctx]))
+            full_context = " || ".join(
+                filter(None, [attack_desc, network_ctx, additional_ctx])
+            )
             full_contexts.append(full_context)
 
         return pd.Series(full_contexts)
 
-    def create_embeddings(self, texts: List[str], batch_size: int = None) -> np.ndarray:
+    def create_embeddings(self, texts: list[str], batch_size: int = None) -> np.ndarray:
         """
         Create embeddings for text data with optimal batch size for Mac M4
 
@@ -241,7 +283,7 @@ class CyberSecurityDataProcessor:
         if not texts:
             logger.info("Empty text list, returning empty embeddings array")
             return np.zeros((0, self.dimension))
-        
+
         if not self.embedding_model:
             logger.warning("No embedding model available, using zero vectors")
             return np.zeros((len(texts), self.dimension))
@@ -250,36 +292,42 @@ class CyberSecurityDataProcessor:
         if batch_size is None:
             batch_size = self.perf_config["batch_size"]
 
-        logger.info("Creating embeddings with optimization", 
-                   text_count=len(texts),
-                   batch_size=batch_size,
-                   device=self.perf_config["torch_device"],
-                   precision=self.perf_config["precision"])
+        logger.info(
+            "Creating embeddings with optimization",
+            text_count=len(texts),
+            batch_size=batch_size,
+            device=self.perf_config["torch_device"],
+            precision=self.perf_config["precision"],
+        )
 
         # Process in batches to avoid memory issues
         all_embeddings = []
 
         for i in range(0, len(texts), batch_size):
-            batch_texts = texts[i:i + batch_size]
-            
+            batch_texts = texts[i : i + batch_size]
+
             # Use optimized encoding settings for Mac M4
             batch_embeddings = self.embedding_model.encode(
-                batch_texts, 
+                batch_texts,
                 show_progress_bar=False,
                 convert_to_numpy=True,
                 normalize_embeddings=True,  # Better for similarity search
-                batch_size=min(batch_size, len(batch_texts))  # Ensure we don't exceed batch
+                batch_size=min(
+                    batch_size, len(batch_texts)
+                ),  # Ensure we don't exceed batch
             )
             all_embeddings.append(batch_embeddings)
-            
+
             if (i + batch_size) % (batch_size * 10) == 0:  # Log every 10 batches
                 logger.info(f"Processed {i + batch_size}/{len(texts)} texts")
 
         embeddings = np.vstack(all_embeddings)
-        logger.info("Embedding creation completed", 
-                   shape=embeddings.shape,
-                   dtype=embeddings.dtype,
-                   device=self.perf_config["torch_device"])
+        logger.info(
+            "Embedding creation completed",
+            shape=embeddings.shape,
+            dtype=embeddings.dtype,
+            device=self.perf_config["torch_device"],
+        )
         return embeddings
 
     def create_milvus_collection(self, force_recreate: bool = False):
@@ -309,7 +357,9 @@ class CyberSecurityDataProcessor:
 
             # Define schema
             fields = [
-                FieldSchema(name="id", dtype=DataType.VARCHAR, max_length=64, is_primary=True),
+                FieldSchema(
+                    name="id", dtype=DataType.VARCHAR, max_length=64, is_primary=True
+                ),
                 FieldSchema(name="timestamp", dtype=DataType.VARCHAR, max_length=32),
                 FieldSchema(name="source_ip", dtype=DataType.VARCHAR, max_length=45),
                 FieldSchema(name="dest_ip", dtype=DataType.VARCHAR, max_length=45),
@@ -317,26 +367,40 @@ class CyberSecurityDataProcessor:
                 FieldSchema(name="dest_port", dtype=DataType.INT64),
                 FieldSchema(name="protocol", dtype=DataType.VARCHAR, max_length=16),
                 FieldSchema(name="attack_type", dtype=DataType.VARCHAR, max_length=64),
-                FieldSchema(name="attack_signature", dtype=DataType.VARCHAR, max_length=128),
-                FieldSchema(name="severity_level", dtype=DataType.VARCHAR, max_length=16),
+                FieldSchema(
+                    name="attack_signature", dtype=DataType.VARCHAR, max_length=128
+                ),
+                FieldSchema(
+                    name="severity_level", dtype=DataType.VARCHAR, max_length=16
+                ),
                 FieldSchema(name="action_taken", dtype=DataType.VARCHAR, max_length=32),
                 FieldSchema(name="anomaly_score", dtype=DataType.FLOAT),
-                FieldSchema(name="malware_indicators", dtype=DataType.VARCHAR, max_length=128),
-                FieldSchema(name="geo_location", dtype=DataType.VARCHAR, max_length=128),
+                FieldSchema(
+                    name="malware_indicators", dtype=DataType.VARCHAR, max_length=128
+                ),
+                FieldSchema(
+                    name="geo_location", dtype=DataType.VARCHAR, max_length=128
+                ),
                 FieldSchema(name="user_info", dtype=DataType.VARCHAR, max_length=128),
                 FieldSchema(name="log_source", dtype=DataType.VARCHAR, max_length=32),
-                FieldSchema(name="full_context", dtype=DataType.VARCHAR, max_length=2048),
-                FieldSchema(name="embedding", dtype=DataType.FLOAT_VECTOR, dim=self.dimension)
+                FieldSchema(
+                    name="full_context", dtype=DataType.VARCHAR, max_length=2048
+                ),
+                FieldSchema(
+                    name="embedding", dtype=DataType.FLOAT_VECTOR, dim=self.dimension
+                ),
             ]
 
-            schema = CollectionSchema(fields, f"CyberShield cybersecurity attacks collection")
+            schema = CollectionSchema(
+                fields, "CyberShield cybersecurity attacks collection"
+            )
             collection = Collection(self.collection_name, schema)
 
             # Create index for vector field
             index_params = {
                 "metric_type": "IP",  # Inner Product
                 "index_type": "IVF_FLAT",
-                "params": {"nlist": 1024}
+                "params": {"nlist": 1024},
             }
             collection.create_index("embedding", index_params)
 
@@ -351,15 +415,15 @@ class CyberSecurityDataProcessor:
         """Generate unique ID for each record"""
         # Create ID from key fields
         key_parts = [
-            str(row.get('timestamp', '')),
-            str(row.get('source_ip_address', '')),
-            str(row.get('destination_ip_address', '')),
-            str(row.get('attack_type', ''))
+            str(row.get("timestamp", "")),
+            str(row.get("source_ip_address", "")),
+            str(row.get("destination_ip_address", "")),
+            str(row.get("attack_type", "")),
         ]
         key_string = "_".join(key_parts)
         return hashlib.md5(key_string.encode()).hexdigest()[:16]
 
-    def prepare_milvus_data(self, df: pd.DataFrame) -> Dict[str, List]:
+    def prepare_milvus_data(self, df: pd.DataFrame) -> dict[str, list]:
         """
         Prepare data for Milvus insertion
 
@@ -372,28 +436,32 @@ class CyberSecurityDataProcessor:
         logger.info("Preparing data for Milvus insertion...")
 
         # Get context texts for embeddings (handle empty DataFrames)
-        if len(df) == 0 or 'full_context' not in df.columns:
+        if len(df) == 0 or "full_context" not in df.columns:
             context_texts = []
         else:
-            context_texts = df['full_context'].tolist()
-        
+            context_texts = df["full_context"].tolist()
+
         # Create embeddings
         embeddings = self.create_embeddings(context_texts)
 
         # Helper function to safely convert to list with proper handling
-        def safe_convert(series, dtype=str, default=''):
+        def safe_convert(series, dtype=str, default=""):
             try:
                 if dtype == int:
-                    return [int(x) if pd.notna(x) and x != '' else 0 for x in series]
+                    return [int(x) if pd.notna(x) and x != "" else 0 for x in series]
                 elif dtype == float:
-                    return [float(x) if pd.notna(x) and x != '' else 0.0 for x in series]
+                    return [
+                        float(x) if pd.notna(x) and x != "" else 0.0 for x in series
+                    ]
                 else:
-                    return [str(x) if pd.notna(x) and x != '' else default for x in series]
+                    return [
+                        str(x) if pd.notna(x) and x != "" else default for x in series
+                    ]
             except Exception as e:
                 logger.warning(f"Error converting series to {dtype}: {e}")
                 return [default] * len(series)
-        
-        def get_column(column_names, dtype=str, default=''):
+
+        def get_column(column_names, dtype=str, default=""):
             """Get column data with fallback options"""
             for col in column_names:
                 if col in df.columns:
@@ -403,23 +471,25 @@ class CyberSecurityDataProcessor:
         # Prepare data dictionary with proper type handling and flexible column names
         data = {
             "id": [self.generate_record_id(row) for _, row in df.iterrows()],
-            "timestamp": get_column(['timestamp'], str, ''),
-            "source_ip": get_column(['source_ip_address', 'source_ip'], str, ''),
-            "dest_ip": get_column(['destination_ip_address', 'dest_ip'], str, ''),
-            "source_port": get_column(['source_port'], int, 0),
-            "dest_port": get_column(['destination_port', 'dest_port'], int, 0),
-            "protocol": get_column(['protocol'], str, ''),
-            "attack_type": get_column(['attack_type'], str, ''),
-            "attack_signature": get_column(['attack_signature'], str, ''),
-            "severity_level": get_column(['severity_level'], str, ''),
-            "action_taken": get_column(['action_taken'], str, ''),
-            "anomaly_score": get_column(['anomaly_scores', 'anomaly_score'], float, 0.0),
-            "malware_indicators": get_column(['malware_indicators'], str, ''),
-            "geo_location": get_column(['geo-location_data', 'geo_location'], str, ''),
-            "user_info": get_column(['user_information', 'user_info'], str, ''),
-            "log_source": get_column(['log_source'], str, ''),
-            "full_context": get_column(['full_context'], str, ''),
-            "embeddings": embeddings.tolist()
+            "timestamp": get_column(["timestamp"], str, ""),
+            "source_ip": get_column(["source_ip_address", "source_ip"], str, ""),
+            "dest_ip": get_column(["destination_ip_address", "dest_ip"], str, ""),
+            "source_port": get_column(["source_port"], int, 0),
+            "dest_port": get_column(["destination_port", "dest_port"], int, 0),
+            "protocol": get_column(["protocol"], str, ""),
+            "attack_type": get_column(["attack_type"], str, ""),
+            "attack_signature": get_column(["attack_signature"], str, ""),
+            "severity_level": get_column(["severity_level"], str, ""),
+            "action_taken": get_column(["action_taken"], str, ""),
+            "anomaly_score": get_column(
+                ["anomaly_scores", "anomaly_score"], float, 0.0
+            ),
+            "malware_indicators": get_column(["malware_indicators"], str, ""),
+            "geo_location": get_column(["geo-location_data", "geo_location"], str, ""),
+            "user_info": get_column(["user_information", "user_info"], str, ""),
+            "log_source": get_column(["log_source"], str, ""),
+            "full_context": get_column(["full_context"], str, ""),
+            "embeddings": embeddings.tolist(),
         }
 
         # Validate data lengths
@@ -432,8 +502,9 @@ class CyberSecurityDataProcessor:
         logger.info(f"Data field lengths: {lengths}")
         return data
 
-    def insert_data_batch(self, collection: Any, data: Dict[str, List],
-                         batch_size: int = 1000) -> int:
+    def insert_data_batch(
+        self, collection: Any, data: dict[str, list], batch_size: int = 1000
+    ) -> int:
         """
         Insert data into Milvus collection in batches
 
@@ -445,7 +516,7 @@ class CyberSecurityDataProcessor:
         Returns:
             Total number of inserted records
         """
-        total_records = len(data['id'])
+        total_records = len(data["id"])
         inserted_count = 0
 
         logger.info(f"Inserting {total_records} records in batches of {batch_size}")
@@ -462,7 +533,7 @@ class CyberSecurityDataProcessor:
                 # Insert batch - use the newer Milvus API format
                 # Convert the batch data to the format expected by Milvus
                 insert_data = []
-                for j in range(len(batch_data['id'])):
+                for j in range(len(batch_data["id"])):
                     record = {}
                     for field, values in batch_data.items():
                         if j < len(values):
@@ -490,6 +561,7 @@ class CyberSecurityDataProcessor:
         collection.flush()
         logger.info(f"Successfully inserted {inserted_count} records")
         return inserted_count
+
 
 def main():
     """Main function to run the data ingestion pipeline"""
@@ -524,15 +596,20 @@ def main():
         logger.info("Milvus not available - saving processed data to JSON file")
         # Save processed data to JSON for later ingestion
         output_file = "data/processed_cybersecurity_data.json"
-        sample_data = {k: v[:10] for k, v in milvus_data.items()}  # Save first 10 records as sample
-        with open(output_file, 'w') as f:
+        sample_data = {
+            k: v[:10] for k, v in milvus_data.items()
+        }  # Save first 10 records as sample
+        with open(output_file, "w") as f:
             json.dump(sample_data, f, indent=2, default=str)
         logger.info(f"Sample processed data saved to {output_file}")
         logger.info(f"Total records processed: {len(milvus_data['id'])}")
         inserted_count = 0
 
     logger.info(f"Data ingestion complete! Inserted {inserted_count} records")
-    logger.info(f"Collection '{processor.collection_name}' is ready for similarity search")
+    logger.info(
+        f"Collection '{processor.collection_name}' is ready for similarity search"
+    )
+
 
 if __name__ == "__main__":
     main()

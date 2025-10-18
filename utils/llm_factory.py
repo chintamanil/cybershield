@@ -1,8 +1,9 @@
 # LLM Factory for OpenAI and Bedrock integration
 import os
-from typing import Optional, Any
-from utils.logging_config import get_security_logger
+from typing import Any
+
 from utils.environment_config import config
+from utils.logging_config import get_security_logger
 
 logger = get_security_logger("llm_factory")
 
@@ -53,8 +54,8 @@ def create_llm(model: str = None, temperature: float = 0) -> Any:
 def create_bedrock_llm(model: str, temperature: float) -> Any:
     """Create Bedrock LLM client using LangChain"""
     try:
-        from langchain_aws import ChatBedrock
         import boto3
+        from langchain_aws import ChatBedrock
 
         # Get AWS session with proper region
         session = boto3.Session(region_name=os.getenv("AWS_REGION", "us-east-1"))

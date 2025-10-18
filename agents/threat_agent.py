@@ -1,11 +1,12 @@
 # ThreatAgent calls Shodan, AbuseIPDB, VirusTotal tools with async support
 import asyncio
-from typing import Dict, List, Any
-from tools.shodan import ShodanClient
+from typing import Any
+
 from tools.abuseipdb import AbuseIPDBClient
+from tools.shodan import ShodanClient
 from tools.virustotal import VirusTotalClient
-from utils.logging_config import get_security_logger
 from utils.device_config import create_performance_config
+from utils.logging_config import get_security_logger
 
 logger = get_security_logger("threat_agent")
 
@@ -50,7 +51,7 @@ class ThreatAgent:
         if self.virustotal_client:
             await self.virustotal_client.close()
 
-    async def evaluate(self, iocs: Dict[str, List[str]]) -> List[Dict[str, Any]]:
+    async def evaluate(self, iocs: dict[str, list[str]]) -> list[dict[str, Any]]:
         """Evaluate IOCs using multiple threat intelligence sources concurrently"""
         logger.debug(
             f"ThreatAgent.evaluate called with iocs type: {type(iocs)}, value: {iocs}"
@@ -116,7 +117,7 @@ class ThreatAgent:
         )
         return results
 
-    async def _evaluate_ip(self, ip: str) -> Dict[str, Any]:
+    async def _evaluate_ip(self, ip: str) -> dict[str, Any]:
         """Evaluate a single IP address using all available sources"""
         cache_key = f"threat_intel:{ip}"
 
@@ -191,7 +192,7 @@ class ThreatAgent:
 
         return result
 
-    async def _evaluate_domain(self, domain: str) -> Dict[str, Any]:
+    async def _evaluate_domain(self, domain: str) -> dict[str, Any]:
         """Evaluate a domain using VirusTotal"""
         cache_key = f"threat_intel:domain:{domain}"
 
@@ -229,7 +230,7 @@ class ThreatAgent:
 
         return result
 
-    async def _evaluate_hash(self, hash_value: str) -> Dict[str, Any]:
+    async def _evaluate_hash(self, hash_value: str) -> dict[str, Any]:
         """Evaluate a file hash using VirusTotal"""
         cache_key = f"threat_intel:hash:{hash_value}"
 
@@ -269,7 +270,7 @@ class ThreatAgent:
 
         return result
 
-    async def _safe_lookup(self, source: str, lookup_func, ioc: str) -> Dict[str, Any]:
+    async def _safe_lookup(self, source: str, lookup_func, ioc: str) -> dict[str, Any]:
         """Safely perform a lookup with error handling"""
         try:
             data = await lookup_func(ioc)

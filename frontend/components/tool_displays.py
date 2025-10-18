@@ -1,13 +1,11 @@
 """Display components for security tool results."""
 
-from typing import Dict
 
-import streamlit as st
-import pandas as pd
 import plotly.express as px
+import streamlit as st
 
 
-def display_shodan_results(shodan_data: Dict):
+def display_shodan_results(shodan_data: dict):
     """Display Shodan lookup results."""
     if "error" in shodan_data:
         st.error(f"Shodan Error: {shodan_data['error']}")
@@ -28,7 +26,7 @@ def display_shodan_results(shodan_data: Dict):
         st.write(f"**Open Ports:** {', '.join(map(str, shodan_data['ports'][:10]))}")
 
 
-def display_abuseipdb_results(abuseipdb_data: Dict):
+def display_abuseipdb_results(abuseipdb_data: dict):
     """Display AbuseIPDB lookup results."""
     if "error" in abuseipdb_data:
         st.error(f"AbuseIPDB Error: {abuseipdb_data['error']}")
@@ -49,7 +47,7 @@ def display_abuseipdb_results(abuseipdb_data: Dict):
         st.info(f"Usage Type: {abuseipdb_data['usage_type']}")
 
 
-def display_virustotal_results(vt_data: Dict):
+def display_virustotal_results(vt_data: dict):
     """Display VirusTotal lookup results."""
     if "error" in vt_data:
         st.error(f"VirusTotal Error: {vt_data['error']}")
@@ -74,7 +72,7 @@ def display_virustotal_results(vt_data: Dict):
         st.write(f"**Reputation Score:** {color} {rep}")
 
 
-def display_vector_search_tool_results(vector_result: Dict):
+def display_vector_search_tool_results(vector_result: dict):
     """Display vector search tool results from ReAct workflow."""
     st.markdown("### 🗃️ Historical Attack Database Search")
 
@@ -123,7 +121,7 @@ def display_vector_search_tool_results(vector_result: Dict):
             st.info(f"✅ **{ip}**: No historical attack records found")
 
 
-def display_tool_analysis(tool_data: Dict):
+def display_tool_analysis(tool_data: dict):
     """Display tool analysis results with concurrent execution metrics."""
     st.markdown(
         '<div class="section-header">Security Tool Analysis</div>',
@@ -212,7 +210,6 @@ def display_tool_analysis(tool_data: Dict):
 
         for ip, results in threat_intel.items():
             with st.expander(f"IP Analysis: {ip}"):
-
                 # AbuseIPDB Results
                 if "abuseipdb" in results:
                     adb_data = results["abuseipdb"]

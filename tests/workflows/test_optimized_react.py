@@ -5,8 +5,9 @@ Test script to verify ReAct workflow optimization - should use fewer OpenAI API 
 
 import asyncio
 import time
-from workflows.react_workflow import create_cybershield_workflow
+
 from utils.logging_config import get_security_logger
+from workflows.react_workflow import create_cybershield_workflow
 
 logger = get_security_logger("react_optimization_test")
 
@@ -29,8 +30,8 @@ async def test_optimized_workflow():
     test_input = "Investigate IP 203.0.113.1 for potential malicious activity and determine risk level"
 
     print(f"📝 Input: {test_input}")
-    print(f"🎯 Expected: Single OpenAI call + tool executions + synthesis")
-    print(f"⚡ Goal: Minimize API calls for better performance")
+    print("🎯 Expected: Single OpenAI call + tool executions + synthesis")
+    print("⚡ Goal: Minimize API calls for better performance")
 
     start_time = time.time()
 
@@ -82,18 +83,18 @@ async def compare_efficiency():
     for improvement in improvements:
         print(f"  {improvement}")
 
-    print(f"\n📈 Before optimization:")
-    print(f"  • Agent step → OpenAI call")
-    print(f"  • Tool step → Execute tools")
-    print(f"  • Agent step → Another OpenAI call")
-    print(f"  • (Repeat loop)")
-    print(f"  • Result: Multiple unnecessary API calls")
+    print("\n📈 Before optimization:")
+    print("  • Agent step → OpenAI call")
+    print("  • Tool step → Execute tools")
+    print("  • Agent step → Another OpenAI call")
+    print("  • (Repeat loop)")
+    print("  • Result: Multiple unnecessary API calls")
 
-    print(f"\n🎯 After optimization:")
-    print(f"  • Agent step → Single comprehensive OpenAI call")
-    print(f"  • Tool step → Execute all identified tools")
-    print(f"  • Synthesize → Direct to final result")
-    print(f"  • Result: Minimal API calls, maximum efficiency")
+    print("\n🎯 After optimization:")
+    print("  • Agent step → Single comprehensive OpenAI call")
+    print("  • Tool step → Execute all identified tools")
+    print("  • Synthesize → Direct to final result")
+    print("  • Result: Minimal API calls, maximum efficiency")
 
 
 if __name__ == "__main__":

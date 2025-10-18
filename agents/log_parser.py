@@ -1,8 +1,9 @@
 # LogParserAgent extracts IOCs from structured and unstructured logs
-import re
 import json
-from typing import Dict, List, Any
+import re
 from datetime import datetime
+from typing import Any
+
 from utils.logging_config import get_security_logger
 
 logger = get_security_logger("log_parser")
@@ -53,7 +54,7 @@ class LogParserAgent:
             "syslog": r"^(\w+\s+\d+\s+\d+:\d+:\d+)\s+(\w+)\s+([^:]+):\s+(.*)$",
         }
 
-    async def extract_iocs(self, text: str) -> Dict[str, List[str]]:
+    async def extract_iocs(self, text: str) -> dict[str, list[str]]:
         """
         Extract IOCs from text using comprehensive patterns with memory caching
 
@@ -128,7 +129,7 @@ class LogParserAgent:
         )
         return iocs
 
-    def _extract_structured_iocs(self, text: str) -> Dict[str, List[str]]:
+    def _extract_structured_iocs(self, text: str) -> dict[str, list[str]]:
         """Extract IOCs from structured log formats"""
         structured_iocs = {}
 
@@ -163,7 +164,7 @@ class LogParserAgent:
 
         return structured_iocs
 
-    def _extract_from_json(self, json_data: Dict) -> Dict[str, List[str]]:
+    def _extract_from_json(self, json_data: dict) -> dict[str, list[str]]:
         """Extract IOCs from JSON structure"""
         iocs = {}
 
@@ -188,7 +189,7 @@ class LogParserAgent:
         extract_from_dict(json_data)
         return iocs
 
-    def _cleanup_iocs(self, iocs: Dict[str, List[str]]) -> Dict[str, List[str]]:
+    def _cleanup_iocs(self, iocs: dict[str, list[str]]) -> dict[str, list[str]]:
         """Clean up and validate extracted IOCs"""
         cleaned = {}
 
@@ -251,7 +252,7 @@ class LogParserAgent:
         else:
             return "unstructured"
 
-    async def extract_with_context(self, text: str) -> Dict[str, Any]:
+    async def extract_with_context(self, text: str) -> dict[str, Any]:
         """Extract IOCs with additional context"""
         iocs = await self.extract_iocs(text)
         log_format = self.parse_log_format(text)
@@ -267,7 +268,7 @@ class LogParserAgent:
             },
         }
 
-    async def get_session_iocs(self) -> Dict[str, List[str]]:
+    async def get_session_iocs(self) -> dict[str, list[str]]:
         """
         Retrieve all cached IOCs for the current session
 
@@ -291,7 +292,7 @@ class LogParserAgent:
 
         return {}
 
-    async def store_session_iocs(self, iocs: Dict[str, List[str]]) -> None:
+    async def store_session_iocs(self, iocs: dict[str, list[str]]) -> None:
         """
         Store IOCs at session level for cross-agent sharing
 

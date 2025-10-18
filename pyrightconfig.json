@@ -1,0 +1,4 @@
+{
+  "typeCheckingMode": "strict",
+  "ignore": ["**/__pycache__", ".venv/**", ".git/**"]
+}

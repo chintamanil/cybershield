@@ -4,8 +4,9 @@ Resolves pronoun references and enriches input text with session context.
 """
 
 import re
-from typing import Dict, List, Optional, Tuple, Any
 from datetime import datetime
+from typing import Any
+
 from utils.logging_config import get_logger
 
 logger = get_logger(__name__, component="context_resolver")
@@ -66,8 +67,8 @@ class ContextResolver:
         }
 
     async def resolve_and_enrich(
-        self, input_text: str, session_id: Optional[str] = None
-    ) -> Tuple[str, Dict[str, Any]]:
+        self, input_text: str, session_id: str | None = None
+    ) -> tuple[str, dict[str, Any]]:
         """
         Main method to resolve context references and enrich input.
 
@@ -152,7 +153,7 @@ class ContextResolver:
 
         return enriched_text, context_metadata
 
-    def _detect_context_references(self, text: str) -> List[str]:
+    def _detect_context_references(self, text: str) -> list[str]:
         """
         Detect if input text contains context references.
 
@@ -173,7 +174,7 @@ class ContextResolver:
 
         return detected
 
-    async def _fetch_session_context(self, session_id: str) -> Optional[Dict[str, Any]]:
+    async def _fetch_session_context(self, session_id: str) -> dict[str, Any] | None:
         """
         Fetch session context from Redis.
 
@@ -220,8 +221,8 @@ class ContextResolver:
             return None
 
     def _resolve_pronouns(
-        self, text: str, session_context: Dict[str, Any], reference_types: List[str]
-    ) -> Tuple[str, Dict[str, Any]]:
+        self, text: str, session_context: dict[str, Any], reference_types: list[str]
+    ) -> tuple[str, dict[str, Any]]:
         """
         Resolve pronoun references using pattern matching.
 
@@ -313,8 +314,8 @@ class ContextResolver:
         return enriched_text, context_used
 
     async def _use_llm_resolution(
-        self, text: str, session_context: Dict[str, Any]
-    ) -> Tuple[str, Dict[str, Any]]:
+        self, text: str, session_context: dict[str, Any]
+    ) -> tuple[str, dict[str, Any]]:
         """
         Use LLM for complex context resolution (fallback).
 
@@ -366,7 +367,7 @@ Return only the resolved query text, nothing else."""
 
         return text, {}
 
-    async def _call_llm(self, prompt: str) -> Optional[str]:
+    async def _call_llm(self, prompt: str) -> str | None:
         """
         Call LLM with the given prompt.
 

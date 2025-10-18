@@ -5,13 +5,11 @@ Requires the server to be running on localhost:8000.
 """
 
 import json
-import time
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 import pytest
 import requests
-
 
 BASE_URL = "http://localhost:8000"
 TIMEOUT = 60  # seconds
@@ -51,7 +49,7 @@ class TestAnalyzeEndpoint:
         with open(data_file) as f:
             return json.load(f)
 
-    def _call_analyze_endpoint(self, text: str) -> Dict[str, Any]:
+    def _call_analyze_endpoint(self, text: str) -> dict[str, Any]:
         """Call the /analyze endpoint and return the response."""
         response = requests.post(
             f"{BASE_URL}/analyze",
@@ -87,9 +85,9 @@ class TestAnalyzeEndpoint:
         response_str = json.dumps(result).lower()
 
         # Should detect IP addresses
-        assert (
-            "ip" in response_str or "address" in response_str
-        ), "Should detect IP addresses"
+        assert "ip" in response_str or "address" in response_str, (
+            "Should detect IP addresses"
+        )
 
     def test_pii_detection_ssn_credit_card(self, prompts_data):
         """Test PII detection with SSN and credit card."""
@@ -131,7 +129,8 @@ class TestAnalyzeEndpoint:
 
         response_str = json.dumps(result).lower()
         assert any(
-            keyword in response_str for keyword in ["malware", "c2", "command", "bitcoin"]
+            keyword in response_str
+            for keyword in ["malware", "c2", "command", "bitcoin"]
         ), "Should detect malware indicators"
 
     def test_apt_lateral_movement(self, prompts_data):
@@ -193,7 +192,9 @@ class TestImageAnalysisEndpoint:
             pytest.skip("Test image not found")
 
         with open(image_path, "rb") as f:
-            files = {"image": ("security_logs.png", f, "image/png")}  # Changed to "image"
+            files = {
+                "image": ("security_logs.png", f, "image/png")
+            }  # Changed to "image"
             response = requests.post(
                 f"{BASE_URL}/upload-image", files=files, timeout=TIMEOUT
             )
@@ -292,14 +293,17 @@ class TestMultimodalAnalysis:
             )
 
         # Should process both text and image
-        assert response.status_code == 200, f"Multimodal analysis failed: {response.text}"
+        assert response.status_code == 200, (
+            f"Multimodal analysis failed: {response.text}"
+        )
         result = response.json()
         assert result is not None
 
         # Should contain analysis from both sources
         response_str = json.dumps(result).lower()
         assert any(
-            keyword in response_str for keyword in ["image", "text", "analysis", "threat"]
+            keyword in response_str
+            for keyword in ["image", "text", "analysis", "threat"]
         ), "Should analyze both text and image"
 
 
@@ -344,7 +348,9 @@ class TestToolEndpoints:
 
     def test_regex_extract_endpoint(self):
         """Test the regex IOC extraction endpoint."""
-        test_text = "Suspicious IP 203.0.113.42 with hash d41d8cd98f00b204e9800998ecf8427e"
+        test_text = (
+            "Suspicious IP 203.0.113.42 with hash d41d8cd98f00b204e9800998ecf8427e"
+        )
 
         response = requests.post(
             f"{BASE_URL}/tools/regex/extract",
@@ -356,7 +362,9 @@ class TestToolEndpoints:
         result = response.json()
 
         # Should extract IOCs (API returns ipv4, md5, sha256, etc.)
-        assert "ipv4" in result or "md5" in result or len(result) > 0, "Should return extracted IOCs"
+        assert "ipv4" in result or "md5" in result or len(result) > 0, (
+            "Should return extracted IOCs"
+        )
 
     def test_regex_validate_endpoint(self):
         """Test the regex validation endpoint."""
@@ -368,7 +376,9 @@ class TestToolEndpoints:
 
         assert response.status_code == 200, "Validation should work"
         result = response.json()
-        assert "valid" in result or "is_valid" in result or isinstance(result, dict), "Should return validation result"
+        assert "valid" in result or "is_valid" in result or isinstance(result, dict), (
+            "Should return validation result"
+        )
 
 
 if __name__ == "__main__":

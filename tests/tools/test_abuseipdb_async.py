@@ -2,10 +2,10 @@
 Async tests for AbuseIPDB tool
 """
 
-import unittest
-import sys
-import os
 import asyncio
+import os
+import sys
+import unittest
 from unittest.mock import AsyncMock, patch
 
 # Add parent directory to path for imports

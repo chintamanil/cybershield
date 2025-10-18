@@ -1,8 +1,8 @@
 """Generate test images for CyberShield sample prompts testing."""
 
-from PIL import Image, ImageDraw, ImageFont
-import os
 from pathlib import Path
+
+from PIL import Image, ImageDraw, ImageFont
 
 
 def create_security_logs_screenshot():
@@ -90,7 +90,9 @@ def create_email_pii_screenshot():
     draw.text((20, 20), "SecureMail Pro - Inbox", fill=(255, 255, 255), font=title_font)
 
     # Email container
-    draw.rectangle([(20, 80), (980, 680)], fill=(255, 255, 255), outline=(200, 200, 200))
+    draw.rectangle(
+        [(20, 80), (980, 680)], fill=(255, 255, 255), outline=(200, 200, 200)
+    )
 
     # Email metadata
     draw.text((40, 100), "From:", fill=(100, 100, 100), font=bold_font)
@@ -175,14 +177,17 @@ def create_security_dashboard():
     # Top header
     draw.rectangle([(0, 0), (1400, 80)], fill=(40, 40, 60))
     draw.text(
-        (40, 25), "CyberShield Security Dashboard", fill=(255, 255, 255), font=title_font
+        (40, 25),
+        "CyberShield Security Dashboard",
+        fill=(255, 255, 255),
+        font=title_font,
     )
-    draw.text(
-        (1150, 30), "Status: ACTIVE", fill=(100, 255, 100), font=header_font
-    )
+    draw.text((1150, 30), "Status: ACTIVE", fill=(100, 255, 100), font=header_font)
 
     # Critical Alerts Panel
-    draw.rectangle([(20, 100), (680, 420)], fill=(255, 250, 250), outline=(255, 0, 0), width=3)
+    draw.rectangle(
+        [(20, 100), (680, 420)], fill=(255, 250, 250), outline=(255, 0, 0), width=3
+    )
     draw.rectangle([(20, 100), (680, 140)], fill=(255, 100, 100))
     draw.text((30, 110), "CRITICAL ALERTS (3)", fill=(255, 255, 255), font=header_font)
 
@@ -209,7 +214,9 @@ def create_security_dashboard():
         y += 20
 
     # Network Activity Panel
-    draw.rectangle([(720, 100), (1380, 420)], fill=(250, 255, 250), outline=(0, 150, 0), width=2)
+    draw.rectangle(
+        [(720, 100), (1380, 420)], fill=(250, 255, 250), outline=(0, 150, 0), width=2
+    )
     draw.rectangle([(720, 100), (1380, 140)], fill=(100, 180, 100))
     draw.text((730, 110), "NETWORK ACTIVITY", fill=(255, 255, 255), font=header_font)
 
@@ -235,9 +242,13 @@ def create_security_dashboard():
         y += 20
 
     # IOC Summary Panel
-    draw.rectangle([(20, 440), (680, 880)], fill=(250, 250, 255), outline=(100, 100, 200), width=2)
+    draw.rectangle(
+        [(20, 440), (680, 880)], fill=(250, 250, 255), outline=(100, 100, 200), width=2
+    )
     draw.rectangle([(20, 440), (680, 480)], fill=(100, 100, 200))
-    draw.text((30, 450), "INDICATORS OF COMPROMISE", fill=(255, 255, 255), font=header_font)
+    draw.text(
+        (30, 450), "INDICATORS OF COMPROMISE", fill=(255, 255, 255), font=header_font
+    )
 
     ioc_data = [
         "IP Addresses (8):",
@@ -267,7 +278,9 @@ def create_security_dashboard():
         y += 20
 
     # System Status Panel
-    draw.rectangle([(720, 440), (1380, 880)], fill=(255, 255, 250), outline=(200, 150, 0), width=2)
+    draw.rectangle(
+        [(720, 440), (1380, 880)], fill=(255, 255, 250), outline=(200, 150, 0), width=2
+    )
     draw.rectangle([(720, 440), (1380, 480)], fill=(200, 150, 0))
     draw.text((730, 450), "SYSTEM STATUS", fill=(255, 255, 255), font=header_font)
 

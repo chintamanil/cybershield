@@ -3,9 +3,9 @@
 Tests for Milvus client functionality
 """
 
-import unittest
-import sys
 import os
+import sys
+import unittest
 from unittest.mock import Mock, patch
 
 # Add parent directory to path for imports
@@ -91,8 +91,11 @@ class TestMilvusClient(unittest.TestCase):
     @patch("vectorstore.milvus_client.connections")
     @patch("vectorstore.milvus_client.utility")
     @patch("vectorstore.milvus_client.Collection")
-    def test_init_milvus_existing_collection(self, mock_collection_class, mock_utility, mock_connections):
+    def test_init_milvus_existing_collection(
+        self, mock_collection_class, mock_utility, mock_connections
+    ):
         """Test initializing Milvus when cybersecurity_attacks collection exists"""
+
         # Mock that cybersecurity_attacks collection exists
         def has_collection_side_effect(name):
             return name == "cybersecurity_attacks"
@@ -169,7 +172,6 @@ class TestMilvusDataTypes(unittest.TestCase):
             patch("vectorstore.milvus_client.CollectionSchema"),
             patch("vectorstore.milvus_client.FieldSchema") as mock_field_schema,
         ):
-
             mock_utility.has_collection.return_value = False
 
             init_milvus()
@@ -237,7 +239,6 @@ class TestMilvusUtilities(unittest.TestCase):
             patch("vectorstore.milvus_client.CollectionSchema") as mock_schema,
             patch("vectorstore.milvus_client.FieldSchema"),
         ):
-
             mock_utility.has_collection.return_value = False
 
             from vectorstore.milvus_client import init_milvus
@@ -290,7 +291,6 @@ class TestMilvusConnectionParameters(unittest.TestCase):
             patch("vectorstore.milvus_client.CollectionSchema"),
             patch("vectorstore.milvus_client.FieldSchema") as mock_field_schema,
         ):
-
             mock_utility.has_collection.return_value = False
 
             from vectorstore.milvus_client import init_milvus

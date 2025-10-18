@@ -1,8 +1,7 @@
 # Environment configuration for dual local/AWS deployment
 import os
-import boto3
-from typing import Dict, Any, Optional
 from dataclasses import dataclass
+
 from utils.logging_config import get_security_logger
 
 logger = get_security_logger("environment_config")
@@ -15,8 +14,8 @@ class DatabaseConfig:
     host: str
     port: int
     database: str
-    username: Optional[str] = None
-    password: Optional[str] = None
+    username: str | None = None
+    password: str | None = None
     ssl_mode: str = "prefer"
 
 
@@ -47,8 +46,8 @@ class LLMConfig:
 
     provider: str  # "openai" or "bedrock"
     model_name: str
-    api_key: Optional[str] = None
-    region: Optional[str] = None
+    api_key: str | None = None
+    region: str | None = None
 
 
 class EnvironmentDetector:
@@ -196,7 +195,7 @@ class EnvironmentConfig:
             region=os.getenv("AWS_REGION", "us-east-1"),
         )
 
-    def get_api_keys(self) -> Dict[str, str]:
+    def get_api_keys(self) -> dict[str, str]:
         """Get API keys based on environment"""
         if self.detector.is_local():
             return {
@@ -209,13 +208,14 @@ class EnvironmentConfig:
             # Load from AWS Secrets Manager
             return self._get_aws_secrets()
 
-    def _get_aws_secrets(self) -> Dict[str, str]:
+    def _get_aws_secrets(self) -> dict[str, str]:
         """Load secrets from AWS Secrets Manager and Parameter Store"""
         secrets = {}
 
         try:
-            import boto3
             import json
+
+            import boto3
 
             # Load from Secrets Manager
             secrets_client = boto3.client("secretsmanager")

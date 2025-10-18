@@ -4,11 +4,7 @@ This module tests the session management features in the Streamlit frontend,
 including session ID generation, request history tracking, and context memory UI.
 """
 
-import json
 import uuid
-from pathlib import Path
-from typing import Dict, List
-from unittest.mock import MagicMock, patch
 
 import pandas as pd
 import pytest
@@ -72,14 +68,19 @@ class TestRequestHistory:
         request_history[session_id] = []
 
         # Add a request
-        request_history[session_id].append({
-            "text": "Suspicious activity from 192.168.1.100",
-            "iocs_found": ["192.168.1.100"],
-            "timestamp": pd.Timestamp.now().isoformat()
-        })
+        request_history[session_id].append(
+            {
+                "text": "Suspicious activity from 192.168.1.100",
+                "iocs_found": ["192.168.1.100"],
+                "timestamp": pd.Timestamp.now().isoformat(),
+            }
+        )
 
         assert len(request_history[session_id]) == 1
-        assert request_history[session_id][0]["text"] == "Suspicious activity from 192.168.1.100"
+        assert (
+            request_history[session_id][0]["text"]
+            == "Suspicious activity from 192.168.1.100"
+        )
         assert "192.168.1.100" in request_history[session_id][0]["iocs_found"]
 
     def test_multiple_requests_in_session(self):
@@ -92,14 +93,13 @@ class TestRequestHistory:
         requests = [
             {"text": "IP 192.168.1.100 detected", "iocs_found": ["192.168.1.100"]},
             {"text": "Tell me about that IP", "iocs_found": []},
-            {"text": "Check threat score", "iocs_found": []}
+            {"text": "Check threat score", "iocs_found": []},
         ]
 
         for req in requests:
-            request_history[session_id].append({
-                **req,
-                "timestamp": pd.Timestamp.now().isoformat()
-            })
+            request_history[session_id].append(
+                {**req, "timestamp": pd.Timestamp.now().isoformat()}
+            )
 
         assert len(request_history[session_id]) == 3
         assert request_history[session_id][0]["text"] == "IP 192.168.1.100 detected"
@@ -114,10 +114,18 @@ class TestRequestHistory:
         session_2 = "session-002"
 
         request_history[session_1] = [
-            {"text": "Request 1 for session 1", "iocs_found": [], "timestamp": pd.Timestamp.now().isoformat()}
+            {
+                "text": "Request 1 for session 1",
+                "iocs_found": [],
+                "timestamp": pd.Timestamp.now().isoformat(),
+            }
         ]
         request_history[session_2] = [
-            {"text": "Request 1 for session 2", "iocs_found": [], "timestamp": pd.Timestamp.now().isoformat()}
+            {
+                "text": "Request 1 for session 2",
+                "iocs_found": [],
+                "timestamp": pd.Timestamp.now().isoformat(),
+            }
         ]
 
         assert len(request_history) == 2
@@ -132,7 +140,7 @@ class TestRequestHistory:
                     "extracted_iocs": {
                         "ipv4": ["192.168.1.100", "10.0.0.1"],
                         "domain": ["malware-c2.example.com"],
-                        "md5": ["d41d8cd98f00b204e9800998ecf8427e"]
+                        "md5": ["d41d8cd98f00b204e9800998ecf8427e"],
                     }
                 }
             }
@@ -167,10 +175,10 @@ class TestContextEnrichment:
                     "enriched": True,
                     "context_used": {
                         "ip": "192.168.1.100",
-                        "domain": "malware-c2.example.com"
+                        "domain": "malware-c2.example.com",
                     },
                     "session_age": "2m 30s",
-                    "session_events": 3
+                    "session_events": 3,
                 }
             }
         }
@@ -189,12 +197,12 @@ class TestContextEnrichment:
             "result": {
                 "input_analysis": {
                     "original_text": "Tell me about that IP",
-                    "enriched_text": "Tell me about 192.168.1.100"
+                    "enriched_text": "Tell me about 192.168.1.100",
                 },
                 "context_enrichment": {
                     "enriched": True,
-                    "context_used": {"ip": "192.168.1.100"}
-                }
+                    "context_used": {"ip": "192.168.1.100"},
+                },
             }
         }
 
@@ -215,7 +223,9 @@ class TestIncludePreviousRequest:
         current_text = "Tell me about that IP"
 
         # Simulate the combination logic
-        combined_text = f"Previous context: {previous_text}\n\nCurrent query: {current_text}"
+        combined_text = (
+            f"Previous context: {previous_text}\n\nCurrent query: {current_text}"
+        )
 
         assert "Previous context:" in combined_text
         assert "Current query:" in combined_text
@@ -227,10 +237,14 @@ class TestIncludePreviousRequest:
         previous_text = "IP 192.168.1.100 connecting to malware-c2.example.com detected"
         current_text = "What is the threat score?"
 
-        combined_text = f"Previous context: {previous_text}\n\nCurrent query: {current_text}"
+        combined_text = (
+            f"Previous context: {previous_text}\n\nCurrent query: {current_text}"
+        )
 
         assert len(combined_text) > len(current_text)
-        assert len(combined_text) == len(previous_text) + len(current_text) + len("\n\nCurrent query: ") + len("Previous context: ")
+        assert len(combined_text) == len(previous_text) + len(current_text) + len(
+            "\n\nCurrent query: "
+        ) + len("Previous context: ")
 
     def test_include_previous_disabled(self):
         """Test that current input is used when include_previous is disabled."""
@@ -321,7 +335,7 @@ class TestSessionManagementUI:
         placeholders = {
             "main": "e.g., investigation-001",
             "batch": "e.g., batch-investigation-001",
-            "image": "e.g., image-investigation-001"
+            "image": "e.g., image-investigation-001",
         }
 
         for key, placeholder in placeholders.items():
@@ -339,7 +353,9 @@ class TestSessionManagementUI:
 
     def test_session_disabled_message(self):
         """Test session disabled info message."""
-        message = "ℹ️ Enter a session ID to enable context memory across multiple analyses."
+        message = (
+            "ℹ️ Enter a session ID to enable context memory across multiple analyses."
+        )
 
         assert "ℹ️" in message or "ℹ" in message
         assert "session id" in message.lower()  # Fixed: lowercase comparison
@@ -354,7 +370,7 @@ class TestContextMemoryExamples:
         example = {
             "request_1": "Suspicious activity from 192.168.1.100",
             "request_2": "Tell me more about that IP",
-            "resolution": "that IP → 192.168.1.100"
+            "resolution": "that IP → 192.168.1.100",
         }
 
         assert "192.168.1.100" in example["request_1"]
@@ -367,7 +383,7 @@ class TestContextMemoryExamples:
             "request_1": "IP 185.220.101.42 connecting to bitcoin-miner.ru",
             "request_2": "Check if same IP tried other ports",
             "request_3": "What's the threat score for that IP?",
-            "resolution": "Tracks both IP and domain"
+            "resolution": "Tracks both IP and domain",
         }
 
         assert "185.220.101.42" in example["request_1"]
@@ -380,7 +396,7 @@ class TestContextMemoryExamples:
         example = {
             "request_1": "Email from suspicious@temp.com with hash d41d8cd98f00b204e9800998ecf8427e",
             "request_2": "Is that email known malicious and does the hash match malware?",
-            "resolution": "Resolves both email and hash"
+            "resolution": "Resolves both email and hash",
         }
 
         assert "suspicious@temp.com" in example["request_1"]
@@ -404,7 +420,11 @@ class TestRequestHistoryDisplay:
         """Test that history shows last 5 requests."""
         request_history = {
             "session-001": [
-                {"text": f"Request {i}", "iocs_found": [], "timestamp": pd.Timestamp.now().isoformat()}
+                {
+                    "text": f"Request {i}",
+                    "iocs_found": [],
+                    "timestamp": pd.Timestamp.now().isoformat(),
+                }
                 for i in range(10)
             ]
         }
@@ -422,7 +442,7 @@ class TestRequestHistoryDisplay:
         request = {
             "text": "Suspicious activity",
             "iocs_found": ["192.168.1.100", "10.0.0.1", "203.0.113.42", "8.8.8.8"],
-            "timestamp": pd.Timestamp.now().isoformat()
+            "timestamp": pd.Timestamp.now().isoformat(),
         }
 
         # Show first 3 IOCs
@@ -515,7 +535,9 @@ class TestPreviousSessionIDReuse:
     def test_checkbox_label_shows_count(self):
         """Test that checkbox label shows session count."""
         previous_session_ids = ["session-001", "session-002", "session-003"]
-        checkbox_label = f"📋 Reuse previous session ID ({len(previous_session_ids)} available)"
+        checkbox_label = (
+            f"📋 Reuse previous session ID ({len(previous_session_ids)} available)"
+        )
 
         assert "3 available" in checkbox_label
         assert "📋" in checkbox_label

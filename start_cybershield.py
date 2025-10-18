@@ -4,11 +4,11 @@ CyberShield System Launcher
 Starts both FastAPI backend and Streamlit frontend
 """
 
-import sys
-import subprocess
-import time
 import signal
+import subprocess
+import sys
 import threading
+import time
 from pathlib import Path
 
 
@@ -36,7 +36,7 @@ class CyberShieldLauncher:
             )
 
             print(
-                "✅ FastAPI backend started (PID: {})".format(self.backend_process.pid)
+                f"✅ FastAPI backend started (PID: {self.backend_process.pid})"
             )
             return True
 
@@ -73,9 +73,7 @@ class CyberShieldLauncher:
             )
 
             print(
-                "✅ Streamlit frontend started (PID: {})".format(
-                    self.frontend_process.pid
-                )
+                f"✅ Streamlit frontend started (PID: {self.frontend_process.pid})"
             )
             return True
 

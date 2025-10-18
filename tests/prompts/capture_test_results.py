@@ -9,12 +9,10 @@ import json
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 import requests
 from rich.console import Console
-from rich.progress import Progress, track
-
 
 BASE_URL = "http://localhost:8000"
 TIMEOUT = 60
@@ -48,7 +46,7 @@ class ResultCapture:
         # Store timestamp for metadata
         self.run_timestamp = datetime.now().isoformat()
 
-    def load_prompts(self) -> Dict[str, Any]:
+    def load_prompts(self) -> dict[str, Any]:
         """Load prompts from JSON file."""
         with open(self.prompts_file) as f:
             return json.load(f)
@@ -61,11 +59,17 @@ class ResultCapture:
         except requests.exceptions.ConnectionError:
             return False
         except requests.exceptions.ReadTimeout:
-            console.print("[yellow]Server health check timed out, but continuing...[/yellow]")
+            console.print(
+                "[yellow]Server health check timed out, but continuing...[/yellow]"
+            )
             return True  # Continue anyway
 
     def save_result(
-        self, category: str, test_name: str, result: Dict[str, Any], metadata: Dict[str, Any]
+        self,
+        category: str,
+        test_name: str,
+        result: dict[str, Any],
+        metadata: dict[str, Any],
     ):
         """Save a single test result to file."""
         # Clean test name for filename
@@ -169,7 +173,12 @@ class ResultCapture:
                 except Exception as e:
                     console.print(f"    [red]Error: {e}[/red]")
                     self.all_results.append(
-                        {"category": category_name, "test": test_name, "status": "error", "error": str(e)}
+                        {
+                            "category": category_name,
+                            "test": test_name,
+                            "status": "error",
+                            "error": str(e),
+                        }
                     )
 
     def test_image_analysis(self):
@@ -186,7 +195,9 @@ class ResultCapture:
             image_path = self.images_dir / image_filename
 
             if not image_path.exists():
-                console.print(f"  [yellow]Skipping {test_name}: image not found[/yellow]")
+                console.print(
+                    f"  [yellow]Skipping {test_name}: image not found[/yellow]"
+                )
                 continue
 
             console.print(f"  Testing: {test_name}")
@@ -249,7 +260,9 @@ class ResultCapture:
             image_path = self.images_dir / image_filename
 
             if not image_path.exists():
-                console.print(f"  [yellow]Skipping {test_name}: image not found[/yellow]")
+                console.print(
+                    f"  [yellow]Skipping {test_name}: image not found[/yellow]"
+                )
                 continue
 
             console.print(f"  Testing: {test_name}")
@@ -353,11 +366,15 @@ class ResultCapture:
 
         # Regex extraction
         console.print("  Testing: Regex IOC Extraction")
-        test_text = "Suspicious IP 203.0.113.42 with hash d41d8cd98f00b204e9800998ecf8427e"
+        test_text = (
+            "Suspicious IP 203.0.113.42 with hash d41d8cd98f00b204e9800998ecf8427e"
+        )
 
         try:
             response = requests.post(
-                f"{BASE_URL}/tools/regex/extract", params={"text": test_text}, timeout=10
+                f"{BASE_URL}/tools/regex/extract",
+                params={"text": test_text},
+                timeout=10,
             )
 
             if response.status_code == 200:
@@ -426,7 +443,9 @@ class ResultCapture:
                 "successful": success,
                 "failed": failed,
                 "errors": errors,
-                "success_rate": f"{(success/total*100):.1f}%" if total > 0 else "0%",
+                "success_rate": f"{(success / total * 100):.1f}%"
+                if total > 0
+                else "0%",
                 "average_response_time": f"{avg_time:.3f}s",
             },
             "by_category": {},
@@ -439,7 +458,7 @@ class ResultCapture:
             summary["by_category"][cat] = {
                 "total": len(results),
                 "successful": cat_success,
-                "success_rate": f"{(cat_success/len(results)*100):.1f}%",
+                "success_rate": f"{(cat_success / len(results) * 100):.1f}%",
             }
 
         # Save summary
@@ -456,23 +475,23 @@ class ResultCapture:
         console.print(f"[green]✓ Summary saved to {summary_file}[/green]")
         console.print(f"[green]✓ Markdown report saved to {md_file}[/green]")
 
-    def create_markdown_report(self, summary: Dict[str, Any]) -> str:
+    def create_markdown_report(self, summary: dict[str, Any]) -> str:
         """Create a markdown formatted report."""
         md = f"""# CyberShield Test Results Report
 
-**Run Date:** {summary['timestamp']}
+**Run Date:** {summary["timestamp"]}
 **Results Directory:** `tests/prompts/results/`
 
 ## Summary
 
 | Metric | Value |
 |--------|-------|
-| Total Tests | {summary['summary']['total_tests']} |
-| Successful | {summary['summary']['successful']} ✅ |
-| Failed | {summary['summary']['failed']} ❌ |
-| Errors | {summary['summary']['errors']} ⚠️ |
-| Success Rate | {summary['summary']['success_rate']} |
-| Avg Response Time | {summary['summary']['average_response_time']} |
+| Total Tests | {summary["summary"]["total_tests"]} |
+| Successful | {summary["summary"]["successful"]} ✅ |
+| Failed | {summary["summary"]["failed"]} ❌ |
+| Errors | {summary["summary"]["errors"]} ⚠️ |
+| Success Rate | {summary["summary"]["success_rate"]} |
+| Avg Response Time | {summary["summary"]["average_response_time"]} |
 
 ## Results by Category
 
@@ -480,9 +499,9 @@ class ResultCapture:
 
         for cat, stats in summary["by_category"].items():
             md += f"""### {cat}
-- Total: {stats['total']}
-- Successful: {stats['successful']}
-- Success Rate: {stats['success_rate']}
+- Total: {stats["total"]}
+- Successful: {stats["successful"]}
+- Success Rate: {stats["success_rate"]}
 
 """
 
@@ -504,23 +523,23 @@ class ResultCapture:
 
 Each test result is saved in a separate JSON file for detailed review:
 
-1. **Text Analysis**: `{summary['run_directory']}/text_analysis/`
-2. **Image Analysis**: `{summary['run_directory']}/image_analysis/`
-3. **Multimodal**: `{summary['run_directory']}/multimodal/`
-4. **Batch**: `{summary['run_directory']}/batch/`
-5. **Tools**: `{summary['run_directory']}/tools/`
+1. **Text Analysis**: `{summary["run_directory"]}/text_analysis/`
+2. **Image Analysis**: `{summary["run_directory"]}/image_analysis/`
+3. **Multimodal**: `{summary["run_directory"]}/multimodal/`
+4. **Batch**: `{summary["run_directory"]}/batch/`
+5. **Tools**: `{summary["run_directory"]}/tools/`
 
 ### Example: View Image Test Results
 
 ```bash
 # View what the security logs screenshot test returned
-cat {summary['run_directory']}/image_analysis/security_logs_screenshot.json | jq .
+cat {summary["run_directory"]}/image_analysis/security_logs_screenshot.json | jq .
 
 # View what the email PII test returned
-cat {summary['run_directory']}/image_analysis/email_with_pii.json | jq .
+cat {summary["run_directory"]}/image_analysis/email_with_pii.json | jq .
 
 # View multimodal analysis results
-cat {summary['run_directory']}/multimodal/security_logs_+_text.json | jq .
+cat {summary["run_directory"]}/multimodal/security_logs_+_text.json | jq .
 ```
 
 ### Result File Structure
@@ -550,7 +569,7 @@ Each result file contains:
             console.print("[yellow]Start server with: cybershield[/yellow]")
             return
 
-        console.print(f"[green]✓ Server is running[/green]")
+        console.print("[green]✓ Server is running[/green]")
         console.print(f"[cyan]Results will be saved to: {self.run_dir}[/cyan]\n")
 
         # Run all test categories
@@ -563,7 +582,7 @@ Each result file contains:
         # Generate summary
         self.generate_summary_report()
 
-        console.print(f"\n[bold green]✓ All tests complete![/bold green]")
+        console.print("\n[bold green]✓ All tests complete![/bold green]")
         console.print(f"[cyan]Review results at: {self.run_dir}[/cyan]")
 
 

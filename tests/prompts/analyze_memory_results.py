@@ -4,9 +4,9 @@ Analyze memory test results to understand context preservation behavior.
 
 import json
 from pathlib import Path
+
 from rich.console import Console
 from rich.table import Table
-from rich.panel import Panel
 from rich.tree import Tree
 
 console = Console()
@@ -17,9 +17,9 @@ RESULTS_DIR = Path(__file__).parent / "results" / "memory_tests"
 def analyze_incremental_threat():
     """Analyze the incremental threat investigation results."""
 
-    console.print("\n" + "="*80, style="bold cyan")
+    console.print("\n" + "=" * 80, style="bold cyan")
     console.print("INCREMENTAL THREAT INVESTIGATION ANALYSIS", style="bold cyan")
-    console.print("="*80 + "\n", style="bold cyan")
+    console.print("=" * 80 + "\n", style="bold cyan")
 
     file_path = RESULTS_DIR / "incremental_threat_investigation.json"
     with open(file_path) as f:
@@ -35,31 +35,33 @@ def analyze_incremental_threat():
     table.add_column("IOCs Extracted", style="green", width=15)
     table.add_column("Context Maintained?", style="magenta", width=20)
 
-    for i, req in enumerate(data['requests_chain'], 1):
-        user_text = req['request']['text']
-        iocs = req['response']['result']['ioc_analysis']['extracted_iocs']
+    for i, req in enumerate(data["requests_chain"], 1):
+        user_text = req["request"]["text"]
+        iocs = req["response"]["result"]["ioc_analysis"]["extracted_iocs"]
 
         # Check what IOCs were found
         ioc_summary = []
-        if iocs.get('ips'):
+        if iocs.get("ips"):
             ioc_summary.append(f"IPs: {len(iocs['ips'])}")
-        if iocs.get('domains'):
+        if iocs.get("domains"):
             ioc_summary.append(f"Domains: {len(iocs['domains'])}")
-        if iocs.get('hashes'):
+        if iocs.get("hashes"):
             ioc_summary.append(f"Hashes: {len(iocs['hashes'])}")
 
         ioc_str = ", ".join(ioc_summary) if ioc_summary else "❌ None"
 
         # Check if context was maintained
-        response_text = str(req['response']['result'])
-        has_context_refs = any(word in user_text.lower()
-                              for word in ['same', 'that', 'this', 'the', 'entire', 'we'])
+        response_text = str(req["response"]["result"])
+        has_context_refs = any(
+            word in user_text.lower()
+            for word in ["same", "that", "this", "the", "entire", "we"]
+        )
 
         if i == 1:
             context_status = "N/A (first request)"
-        elif has_context_refs and not iocs.get('ips'):
+        elif has_context_refs and not iocs.get("ips"):
             context_status = "❌ FAILED - No reference"
-        elif has_context_refs and iocs.get('ips'):
+        elif has_context_refs and iocs.get("ips"):
             context_status = "✅ SUCCESS"
         else:
             context_status = "⚠️  UNCLEAR"
@@ -68,7 +70,7 @@ def analyze_incremental_threat():
             str(i),
             user_text[:32] + "..." if len(user_text) > 32 else user_text,
             ioc_str,
-            context_status
+            context_status,
         )
 
     console.print(table)
@@ -85,7 +87,9 @@ def analyze_incremental_threat():
 
     # Show what should happen
     tree = Tree("[bold green]Expected Behavior[/bold green]")
-    step1 = tree.add("[cyan]Step 1:[/cyan] Analyze '198.51.100.25' → Store in Redis with session_id")
+    step1 = tree.add(
+        "[cyan]Step 1:[/cyan] Analyze '198.51.100.25' → Store in Redis with session_id"
+    )
     step1.add("✅ Extract IP: 198.51.100.25")
     step1.add("✅ Store in Redis: session:00da04ef:iocs = {ips: ['198.51.100.25']}")
 
@@ -138,17 +142,17 @@ def analyze_incremental_threat():
 def analyze_session_comparison():
     """Analyze the session ID comparison test."""
 
-    console.print("\n" + "="*80, style="bold cyan")
+    console.print("\n" + "=" * 80, style="bold cyan")
     console.print("SESSION ID COMPARISON ANALYSIS", style="bold cyan")
-    console.print("="*80 + "\n", style="bold cyan")
+    console.print("=" * 80 + "\n", style="bold cyan")
 
     file_path = RESULTS_DIR / "session_id_comparison.json"
     with open(file_path) as f:
         data = json.load(f)
 
     # Show both scenarios
-    with_session = data['requests_chain']['with_session']
-    without_session = data['requests_chain']['without_session']
+    with_session = data["requests_chain"]["with_session"]
+    without_session = data["requests_chain"]["without_session"]
 
     console.print("[bold green]Scenario A: WITH Consistent Session ID[/bold green]")
     table1 = Table()
@@ -157,42 +161,52 @@ def analyze_session_comparison():
     table1.add_column("Response", style="green")
 
     for req in with_session:
-        session_id = req['request']['session_id'][:20] + "..."
-        response_preview = str(req['response']['result'])[:50]
-        table1.add_row(req['description'], session_id, response_preview + "...")
+        session_id = req["request"]["session_id"][:20] + "..."
+        response_preview = str(req["response"]["result"])[:50]
+        table1.add_row(req["description"], session_id, response_preview + "...")
 
     console.print(table1)
 
-    console.print("\n[bold yellow]Scenario B: WITHOUT Consistent Session ID[/bold yellow]")
+    console.print(
+        "\n[bold yellow]Scenario B: WITHOUT Consistent Session ID[/bold yellow]"
+    )
     table2 = Table()
     table2.add_column("Request", style="cyan")
     table2.add_column("Session ID", style="yellow", width=20)
     table2.add_column("Response", style="green")
 
     for req in without_session:
-        session_id = req['request']['session_id'][:20] + "..."
-        response_preview = str(req['response']['result'])[:50]
-        table2.add_row(req['description'], session_id, response_preview + "...")
+        session_id = req["request"]["session_id"][:20] + "..."
+        response_preview = str(req["response"]["result"])[:50]
+        table2.add_row(req["description"], session_id, response_preview + "...")
 
     console.print(table2)
 
     # Show comparison
-    analysis = data['analysis']
-    console.print(f"\n[bold]Comparison Results:[/bold]")
-    console.print(f"  With Session Context Score: {analysis['comparison']['with_session_context_score']}")
-    console.print(f"  Without Session Context Score: {analysis['comparison']['without_session_context_score']}")
+    analysis = data["analysis"]
+    console.print("\n[bold]Comparison Results:[/bold]")
+    console.print(
+        f"  With Session Context Score: {analysis['comparison']['with_session_context_score']}"
+    )
+    console.print(
+        f"  Without Session Context Score: {analysis['comparison']['without_session_context_score']}"
+    )
     console.print(f"  Session ID Helps: {analysis['comparison']['session_id_helps']}")
 
     console.print("\n[bold red]Observation:[/bold red]")
-    console.print("Both scenarios have context score of 0.0 - meaning session IDs are NOT being utilized!")
+    console.print(
+        "Both scenarios have context score of 0.0 - meaning session IDs are NOT being utilized!"
+    )
 
 
 def show_recommendations():
     """Show recommendations for implementing context preservation."""
 
-    console.print("\n" + "="*80, style="bold green")
-    console.print("RECOMMENDATIONS TO IMPLEMENT CONTEXT PRESERVATION", style="bold green")
-    console.print("="*80 + "\n", style="bold green")
+    console.print("\n" + "=" * 80, style="bold green")
+    console.print(
+        "RECOMMENDATIONS TO IMPLEMENT CONTEXT PRESERVATION", style="bold green"
+    )
+    console.print("=" * 80 + "\n", style="bold green")
 
     recommendations = [
         {
@@ -201,8 +215,8 @@ def show_recommendations():
                 "When IOCs are extracted, store them with session_id as key",
                 "Key format: cybershield:session:{session_id}:iocs",
                 "TTL: 30 minutes (1800 seconds)",
-                "Value: JSON with {ips: [], domains: [], hashes: [], emails: []}"
-            ]
+                "Value: JSON with {ips: [], domains: [], hashes: [], emails: []}",
+            ],
         },
         {
             "title": "2. Implement Pronoun Resolution in LogParser",
@@ -210,8 +224,8 @@ def show_recommendations():
                 "Detect references: 'same IP', 'that IP', 'this domain', 'the hash'",
                 "Query Redis for previous IOCs when pronouns detected",
                 "Replace pronouns with actual values from context",
-                "Example: 'same IP' → '198.51.100.25'"
-            ]
+                "Example: 'same IP' → '198.51.100.25'",
+            ],
         },
         {
             "title": "3. Store Analysis History in Redis",
@@ -219,8 +233,8 @@ def show_recommendations():
                 "Store each analysis result with timestamp",
                 "Key format: cybershield:session:{session_id}:history",
                 "Use Redis LIST data structure for ordered history",
-                "Enable 'summarize attack chain' queries"
-            ]
+                "Enable 'summarize attack chain' queries",
+            ],
         },
         {
             "title": "4. Implement Context-Aware Routing in Supervisor",
@@ -228,8 +242,8 @@ def show_recommendations():
                 "Check Redis for session history before routing",
                 "If pronouns detected, fetch previous context",
                 "Enrich current request with historical data",
-                "Pass enriched context to agents"
-            ]
+                "Pass enriched context to agents",
+            ],
         },
         {
             "title": "5. Add LLM-Based Context Resolution",
@@ -237,14 +251,14 @@ def show_recommendations():
                 "Use OpenAI to understand context references",
                 "Prompt: 'Given previous: [history], resolve: [current]'",
                 "LLM can intelligently map pronouns to entities",
-                "Fallback to regex patterns if LLM unavailable"
-            ]
-        }
+                "Fallback to regex patterns if LLM unavailable",
+            ],
+        },
     ]
 
     for rec in recommendations:
         console.print(f"\n[bold cyan]{rec['title']}[/bold cyan]")
-        for detail in rec['details']:
+        for detail in rec["details"]:
             console.print(f"  • {detail}")
 
     # Show code example

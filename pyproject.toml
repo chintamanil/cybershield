@@ -90,7 +90,8 @@ dependencies = [
     "pytesseract>=0.3.10",
     "spacy>=3.7.0",
     "Pillow>=10.0.0",
-    "transformers>=4.35.0"
+    "transformers>=4.35.0",
+    "torch>=2.0.0,<2.3.0"  # Pin to version with Intel Mac x86_64 support
 ]
 
 [project.optional-dependencies]
@@ -163,7 +164,7 @@ regex_checker = "tools.regex_checker:RegexChecker"
 
 # Tool Configuration
 [tool.setuptools]
-packages = ["agents", "tools", "memory", "workflows", "vectorstore", "data", "server", "tests"]
+packages = ["agents", "tools", "memory", "workflows", "vectorstore", "data", "server", "tests", "utils"]
 
 [tool.setuptools.package-data]
 "*" = ["*.yaml", "*.yml", "*.json", "*.sql", "*.md", "*.txt"]

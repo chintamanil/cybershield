@@ -3,10 +3,11 @@ Regex Checker Tool
 Provides comprehensive pattern matching for cybersecurity IOCs and data validation
 """
 
-import re
-from typing import Dict, Any, List
 import ipaddress
+import re
+from typing import Any
 from urllib.parse import urlparse
+
 from utils.logging_config import get_security_logger
 
 logger = get_security_logger("regex_checker")
@@ -25,7 +26,9 @@ class IOCPatterns:
         r"\b(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}\b"
     )
     URL_PATTERN = r"https?://(?:[-\w.])+(?:[:\d]+)?(?:/(?:[\w/_.])*)?(?:\?(?:[\w&=%.])*)?(?:#(?:[\w.])*)?"
-    SUSPICIOUS_TLD_PATTERN = r"\b[a-zA-Z0-9\-]+\.(?:tk|ml|ga|cf|bit|onion|i2p|biz|cc|pw)\b"
+    SUSPICIOUS_TLD_PATTERN = (
+        r"\b[a-zA-Z0-9\-]+\.(?:tk|ml|ga|cf|bit|onion|i2p|biz|cc|pw)\b"
+    )
 
     # Hash patterns
     MD5_PATTERN = r"\b[a-fA-F0-9]{32}\b"
@@ -80,7 +83,7 @@ class RegexChecker:
         self.patterns = IOCPatterns()
         self.compiled_patterns = self._compile_patterns()
 
-    def _compile_patterns(self) -> Dict[str, re.Pattern]:
+    def _compile_patterns(self) -> dict[str, re.Pattern]:
         """Compile all regex patterns for better performance"""
         return {
             "ipv4": re.compile(self.patterns.IPV4_PATTERN, re.IGNORECASE),
@@ -115,7 +118,7 @@ class RegexChecker:
             "mutex": re.compile(self.patterns.MUTEX_PATTERN, re.IGNORECASE),
         }
 
-    def extract_all_iocs(self, text: str) -> Dict[str, List[str]]:
+    def extract_all_iocs(self, text: str) -> dict[str, list[str]]:
         """
         Extract all IOCs from text
 
@@ -127,7 +130,7 @@ class RegexChecker:
         """
         if text is None:
             raise TypeError("Text input cannot be None")
-        
+
         logger.info("Extracting all IOCs from text")
 
         results = {}
@@ -160,7 +163,7 @@ class RegexChecker:
 
         return results
 
-    def check_pattern(self, text: str, pattern_name: str) -> List[str]:
+    def check_pattern(self, text: str, pattern_name: str) -> list[str]:
         """
         Check text against a specific pattern
 
@@ -180,7 +183,7 @@ class RegexChecker:
         # Remove duplicates while preserving order
         return list(dict.fromkeys(matches))
 
-    def validate_ip(self, ip_address: str) -> Dict[str, Any]:
+    def validate_ip(self, ip_address: str) -> dict[str, Any]:
         """
         Validate and categorize IP address
 
@@ -212,7 +215,7 @@ class RegexChecker:
                 "error": "Invalid IP address format",
             }
 
-    def validate_domain(self, domain: str) -> Dict[str, Any]:
+    def validate_domain(self, domain: str) -> dict[str, Any]:
         """
         Validate domain name
 
@@ -264,7 +267,7 @@ class RegexChecker:
             "has_hyphens": "-" in domain,
         }
 
-    def validate_hash(self, hash_value: str) -> Dict[str, Any]:
+    def validate_hash(self, hash_value: str) -> dict[str, Any]:
         """
         Validate and identify hash type
 
@@ -301,7 +304,7 @@ class RegexChecker:
             "uppercase": hash_value.upper(),
         }
 
-    def analyze_url(self, url: str) -> Dict[str, Any]:
+    def analyze_url(self, url: str) -> dict[str, Any]:
         """
         Analyze URL for suspicious characteristics
 
@@ -348,7 +351,7 @@ class RegexChecker:
             # Determine if URL is valid (has scheme and netloc, regardless of scheme type)
             # Unusual schemes are flagged as suspicious but still considered valid URLs
             is_valid = bool(scheme and netloc)
-            
+
             return {
                 "url": url,
                 "is_valid": is_valid,
@@ -365,7 +368,7 @@ class RegexChecker:
         except Exception as e:
             return {"url": url, "is_valid": False, "error": str(e)}
 
-    def _validate_ipv4_addresses(self, ips: List[str]) -> List[str]:
+    def _validate_ipv4_addresses(self, ips: list[str]) -> list[str]:
         """Validate IPv4 addresses and remove invalid ones"""
         valid_ips = []
         for ip in ips:
@@ -386,37 +389,37 @@ class RegexChecker:
 
 
 # Convenience functions
-def extract_iocs(text: str) -> Dict[str, List[str]]:
+def extract_iocs(text: str) -> dict[str, list[str]]:
     """Extract all IOCs from text"""
     checker = RegexChecker()
     return checker.extract_all_iocs(text)
 
 
-def check_pattern(text: str, pattern_name: str) -> List[str]:
+def check_pattern(text: str, pattern_name: str) -> list[str]:
     """Check text against specific pattern"""
     checker = RegexChecker()
     return checker.check_pattern(text, pattern_name)
 
 
-def validate_ip(ip_address: str) -> Dict[str, Any]:
+def validate_ip(ip_address: str) -> dict[str, Any]:
     """Validate IP address"""
     checker = RegexChecker()
     return checker.validate_ip(ip_address)
 
 
-def validate_domain(domain: str) -> Dict[str, Any]:
+def validate_domain(domain: str) -> dict[str, Any]:
     """Validate domain"""
     checker = RegexChecker()
     return checker.validate_domain(domain)
 
 
-def validate_hash(hash_value: str) -> Dict[str, Any]:
+def validate_hash(hash_value: str) -> dict[str, Any]:
     """Validate hash"""
     checker = RegexChecker()
     return checker.validate_hash(hash_value)
 
 
-def analyze_url(url: str) -> Dict[str, Any]:
+def analyze_url(url: str) -> dict[str, Any]:
     """Analyze URL"""
     checker = RegexChecker()
     return checker.analyze_url(url)

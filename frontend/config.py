@@ -3,7 +3,7 @@ Configuration settings for CyberShield Streamlit Frontend
 """
 
 import os
-from typing import Dict, Any
+from typing import Any
 
 # FastAPI Backend Configuration
 FASTAPI_HOST = os.getenv("FASTAPI_HOST", "localhost")
@@ -107,7 +107,7 @@ API_CONFIG = {"timeout": 30, "max_retries": 3, "retry_delay": 1}
 CACHE_CONFIG = {"ttl": 300, "max_entries": 100}  # 5 minutes
 
 
-def get_config() -> Dict[str, Any]:
+def get_config() -> dict[str, Any]:
     """Get complete configuration dictionary"""
     return {
         "fastapi": {"host": FASTAPI_HOST, "port": FASTAPI_PORT, "url": FASTAPI_URL},

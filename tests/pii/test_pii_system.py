@@ -3,9 +3,9 @@
 Tests for the PII agent system
 """
 
-import unittest
-import sys
 import os
+import sys
+import unittest
 
 # Add parent directory to path for imports
 sys.path.append(

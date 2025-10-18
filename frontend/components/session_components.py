@@ -1,16 +1,13 @@
 """Session management and context memory UI components."""
 
-from typing import Optional
-import uuid
 
-import streamlit as st
 import pandas as pd
+import streamlit as st
 
 
 def render_session_management(
-    session_key: str = "session_id_main",
-    default_prefix: str = "session"
-) -> Optional[str]:
+    session_key: str = "session_id_main", default_prefix: str = "session"
+) -> str | None:
     """Render simplified session management UI for context continuation.
 
     Args:
@@ -33,7 +30,11 @@ def render_session_management(
 
     # Get previous session info
     prev_session_id = st.session_state.auto_session_id
-    prev_history = st.session_state.request_history.get(prev_session_id, []) if prev_session_id else []
+    prev_history = (
+        st.session_state.request_history.get(prev_session_id, [])
+        if prev_session_id
+        else []
+    )
 
     # Show context continuation option only if previous session exists AND has history
     if has_previous_session and prev_history:
@@ -47,20 +48,27 @@ def render_session_management(
             "📎 Continue from previous query",
             value=False,  # Default to unchecked
             help="Enable this to reference IOCs from your previous analysis (e.g., 'that IP', 'previous domain')",
-            key=f"use_prev_context_{session_key}"
+            key=f"use_prev_context_{session_key}",
         )
 
         # Explanatory text
         if use_previous_context:
-            st.info("✅ **Context Memory Enabled** - You can now use phrases like 'that IP', 'previous domain', 'same hash' to reference items from your last query.")
+            st.info(
+                "✅ **Context Memory Enabled** - You can now use phrases like 'that IP', 'previous domain', 'same hash' to reference items from your last query."
+            )
         else:
-            st.caption("💡 Check the box above to reference IOCs from your previous analysis in this query.")
+            st.caption(
+                "💡 Check the box above to reference IOCs from your previous analysis in this query."
+            )
 
         # Show previous query details if checkbox is selected
         if use_previous_context:
             with st.expander("📋 Previous Query Context", expanded=False):
                 st.markdown("**Last Query:**")
-                st.text(last_query.get("text", "")[:200] + ("..." if len(last_query.get("text", "")) > 200 else ""))
+                st.text(
+                    last_query.get("text", "")[:200]
+                    + ("..." if len(last_query.get("text", "")) > 200 else "")
+                )
 
                 if last_query.get("iocs_found"):
                     st.markdown("**IOCs Found:**")
@@ -109,7 +117,9 @@ def track_session_id(session_id: str):
         st.session_state.previous_session_ids.append(session_id)
         # Keep only last 10 session IDs
         if len(st.session_state.previous_session_ids) > 10:
-            st.session_state.previous_session_ids = st.session_state.previous_session_ids[-10:]
+            st.session_state.previous_session_ids = (
+                st.session_state.previous_session_ids[-10:]
+            )
 
 
 def save_request_to_history(session_id: str, text: str, iocs_found: list):
@@ -125,11 +135,13 @@ def save_request_to_history(session_id: str, text: str, iocs_found: list):
     if session_id not in st.session_state.request_history:
         st.session_state.request_history[session_id] = []
 
-    st.session_state.request_history[session_id].append({
-        "text": text,
-        "iocs_found": iocs_found,
-        "timestamp": pd.Timestamp.now().isoformat()
-    })
+    st.session_state.request_history[session_id].append(
+        {
+            "text": text,
+            "iocs_found": iocs_found,
+            "timestamp": pd.Timestamp.now().isoformat(),
+        }
+    )
 
 
 def display_context_enrichment(result_data: dict):
@@ -146,21 +158,12 @@ def display_context_enrichment(result_data: dict):
 
             col1, col2, col3 = st.columns(3)
             with col1:
-                st.metric(
-                    "Session Age",
-                    context_info.get("session_age", "N/A")
-                )
+                st.metric("Session Age", context_info.get("session_age", "N/A"))
             with col2:
-                st.metric(
-                    "Session Events",
-                    context_info.get("session_events", 0)
-                )
+                st.metric("Session Events", context_info.get("session_events", 0))
             with col3:
                 context_used = context_info.get("context_used", {})
-                st.metric(
-                    "IOCs Resolved",
-                    len(context_used)
-                )
+                st.metric("IOCs Resolved", len(context_used))
 
             # Show resolved context
             if context_used:

@@ -1,7 +1,8 @@
 # API key validation and health check utilities
-import os
 import asyncio
-from typing import Dict, Any, Optional
+import os
+from typing import Any
+
 from utils.logging_config import get_security_logger
 
 logger = get_security_logger("api_validation")
@@ -18,7 +19,7 @@ class APIKeyValidator:
             "openai": os.getenv("OPENAI_API_KEY"),
         }
 
-    def check_api_keys(self) -> Dict[str, Any]:
+    def check_api_keys(self) -> dict[str, Any]:
         """Check which API keys are configured"""
         status = {}
 
@@ -37,7 +38,7 @@ class APIKeyValidator:
 
         return status
 
-    async def test_api_connections(self) -> Dict[str, Any]:
+    async def test_api_connections(self) -> dict[str, Any]:
         """Test actual API connections"""
         results = {}
 
@@ -67,7 +68,7 @@ class APIKeyValidator:
 
         return results
 
-    async def _test_virustotal(self) -> Dict[str, Any]:
+    async def _test_virustotal(self) -> dict[str, Any]:
         """Test VirusTotal API connection"""
         try:
             from tools.virustotal import VirusTotalClient
@@ -96,7 +97,7 @@ class APIKeyValidator:
                 "recommendation": "Check API key and network connectivity",
             }
 
-    async def _test_shodan(self) -> Dict[str, Any]:
+    async def _test_shodan(self) -> dict[str, Any]:
         """Test Shodan API connection"""
         try:
             from tools.shodan import ShodanClient
@@ -125,7 +126,7 @@ class APIKeyValidator:
                 "recommendation": "Check API key and network connectivity",
             }
 
-    async def _test_abuseipdb(self) -> Dict[str, Any]:
+    async def _test_abuseipdb(self) -> dict[str, Any]:
         """Test AbuseIPDB API connection"""
         try:
             from tools.abuseipdb import AbuseIPDBClient
@@ -154,7 +155,7 @@ class APIKeyValidator:
                 "recommendation": "Check API key and network connectivity",
             }
 
-    async def _test_openai(self) -> Dict[str, Any]:
+    async def _test_openai(self) -> dict[str, Any]:
         """Test OpenAI API connection"""
         try:
             from utils.service_factory import LLMFactory
@@ -184,7 +185,7 @@ class APIKeyValidator:
                 "recommendation": "Check API key and model access",
             }
 
-    def get_setup_recommendations(self, test_results: Dict[str, Any]) -> Dict[str, str]:
+    def get_setup_recommendations(self, test_results: dict[str, Any]) -> dict[str, str]:
         """Get setup recommendations based on test results"""
         recommendations = {}
 

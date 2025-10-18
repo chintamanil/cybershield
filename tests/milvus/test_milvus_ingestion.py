@@ -3,12 +3,12 @@
 Tests for Milvus data ingestion functionality
 """
 
-import unittest
-import sys
 import os
+import sys
+import unittest
+from unittest.mock import Mock
+
 import pandas as pd
-from unittest.mock import Mock, patch
-import tempfile
 
 # Add parent directory to path for imports
 sys.path.append(
@@ -78,7 +78,7 @@ class TestMilvusIngestion(unittest.TestCase):
     def test_create_embeddings_success(self):
         """Test successful embedding creation"""
         texts = ["text1", "text2", "text3"]
-        
+
         # Test with processor (will use fallback if sentence-transformers not available)
         embeddings = self.processor.create_embeddings(texts)
 
@@ -91,7 +91,7 @@ class TestMilvusIngestion(unittest.TestCase):
         # Create processor without embedding model
         processor_no_model = CyberSecurityDataProcessor()
         processor_no_model.embedding_model = None  # Force fallback
-        
+
         texts = ["text1", "text2", "text3"]
         embeddings = processor_no_model.create_embeddings(texts)
 
@@ -112,18 +112,18 @@ class TestMilvusIngestion(unittest.TestCase):
         """Test preparing data for Milvus insertion"""
         # Test data preparation
         milvus_data = self.processor.prepare_milvus_data(self.sample_data)
-        
+
         # Verify data structure
         self.assertIsInstance(milvus_data, dict)
-        self.assertIn('id', milvus_data)
-        self.assertIn('embeddings', milvus_data)
+        self.assertIn("id", milvus_data)
+        self.assertIn("embeddings", milvus_data)
 
     def test_generate_record_id(self):
         """Test record ID generation"""
         # Test ID generation
         sample_row = self.sample_data.iloc[0]
         record_id = self.processor.generate_record_id(sample_row)
-        
+
         # Verify ID is generated
         self.assertIsInstance(record_id, str)
         self.assertGreater(len(record_id), 0)
@@ -148,10 +148,10 @@ class TestMilvusIngestion(unittest.TestCase):
         """Test data insertion with empty data"""
         empty_data = pd.DataFrame()
         milvus_data = self.processor.prepare_milvus_data(empty_data)
-        
+
         # Should handle empty data gracefully
         self.assertIsInstance(milvus_data, dict)
-        self.assertEqual(len(milvus_data.get('id', [])), 0)
+        self.assertEqual(len(milvus_data.get("id", [])), 0)
 
 
 class TestMilvusIngestionIntegration(unittest.TestCase):
@@ -191,21 +191,21 @@ class TestMilvusIngestionIntegration(unittest.TestCase):
         processed_data = self.processor.preprocess_data(self.sample_data.copy())
         self.assertIsInstance(processed_data, pd.DataFrame)
         self.assertEqual(len(processed_data), 2)
-        
+
         # Test context creation
         if "full_context" in processed_data.columns:
             contexts = processed_data["full_context"].tolist()
         else:
             contexts = ["test context 1", "test context 2"]
-        
+
         # Test embedding creation
         embeddings = self.processor.create_embeddings(contexts)
         self.assertEqual(len(embeddings), 2)
-        
+
         # Test data preparation for Milvus
         milvus_data = self.processor.prepare_milvus_data(processed_data)
         self.assertIsInstance(milvus_data, dict)
-        self.assertIn('embeddings', milvus_data)
+        self.assertIn("embeddings", milvus_data)
 
     def test_data_validation_workflow(self):
         """Test data validation during the ingestion workflow"""
@@ -216,7 +216,7 @@ class TestMilvusIngestionIntegration(unittest.TestCase):
 
         # Test preprocessing with incomplete data
         processed_data = self.processor.preprocess_data(invalid_data)
-        
+
         # Should handle missing columns gracefully
         self.assertIsInstance(processed_data, pd.DataFrame)
         self.assertEqual(len(processed_data), 2)
@@ -225,11 +225,11 @@ class TestMilvusIngestionIntegration(unittest.TestCase):
         """Test error handling throughout the ingestion workflow"""
         # Test error handling with empty data
         empty_data = pd.DataFrame()
-        
+
         # Should handle empty data gracefully
         result = self.processor.preprocess_data(empty_data)
         self.assertIsInstance(result, pd.DataFrame)
-        
+
         # Test error handling with invalid embeddings
         try:
             self.processor.create_embeddings([])
@@ -240,7 +240,7 @@ class TestMilvusIngestionIntegration(unittest.TestCase):
 
 class TestMilvusDataPreprocessing(unittest.TestCase):
     """Test cases for data preprocessing functionality"""
-    
+
     def setUp(self):
         """Set up test fixtures"""
         self.processor = CyberSecurityDataProcessor()

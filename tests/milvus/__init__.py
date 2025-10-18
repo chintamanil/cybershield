@@ -32,9 +32,9 @@ __version__ = "1.0.0"
 __author__ = "CyberShield Team"
 
 # Import main test classes for easier access
-from .test_milvus_viewer import TestMilvusDataViewer, TestInteractiveMilvusViewer
 from .test_milvus_client import TestMilvusClient, TestMilvusDataTypes
 from .test_milvus_ingestion import TestMilvusIngestion, TestMilvusIngestionIntegration
+from .test_milvus_viewer import TestInteractiveMilvusViewer, TestMilvusDataViewer
 
 __all__ = [
     "TestMilvusDataViewer",

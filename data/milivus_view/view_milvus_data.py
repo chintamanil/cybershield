@@ -3,19 +3,22 @@
 Script to view and query data from Milvus collection
 """
 
-import sys
 import os
+import sys
+
 import pandas as pd
 
 # Add the project root to the path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 try:
-    from pymilvus import connections, Collection, utility
+    from pymilvus import Collection, connections, utility
+
     PYMILVUS_AVAILABLE = True
 except ImportError:
     PYMILVUS_AVAILABLE = False
     print("pymilvus not available. Install with: pip install pymilvus")
+
 
 class MilvusDataViewer:
     def __init__(self, collection_name: str = "cybersecurity_attacks"):
@@ -59,13 +62,13 @@ class MilvusDataViewer:
 
         try:
             stats = self.collection.get_statistics()
-            print(f"\n📊 Collection Statistics:")
+            print("\n📊 Collection Statistics:")
             print(f"   Total records: {stats['row_count']}")
             print(f"   Collection name: {self.collection_name}")
 
             # Get schema info
             schema = self.collection.schema
-            print(f"\n📋 Schema Fields:")
+            print("\n📋 Schema Fields:")
             for field in schema.fields:
                 print(f"   - {field.name}: {field.dtype} (primary: {field.is_primary})")
 
@@ -85,13 +88,25 @@ class MilvusDataViewer:
             results = self.collection.query(
                 expr="",
                 output_fields=[
-                    "id", "timestamp", "source_ip", "dest_ip", "source_port",
-                    "dest_port", "protocol", "attack_type", "attack_signature",
-                    "severity_level", "action_taken", "anomaly_score",
-                    "malware_indicators", "geo_location", "user_info",
-                    "log_source", "full_context"
+                    "id",
+                    "timestamp",
+                    "source_ip",
+                    "dest_ip",
+                    "source_port",
+                    "dest_port",
+                    "protocol",
+                    "attack_type",
+                    "attack_signature",
+                    "severity_level",
+                    "action_taken",
+                    "anomaly_score",
+                    "malware_indicators",
+                    "geo_location",
+                    "user_info",
+                    "log_source",
+                    "full_context",
                 ],
-                limit=limit
+                limit=limit,
             )
 
             if not results:
@@ -104,19 +119,27 @@ class MilvusDataViewer:
             df = pd.DataFrame(results)
 
             # Display summary
-            print(f"\n📋 Sample Data Summary:")
-            print(f"   Attack types: {df['attack_type'].value_counts().head(3).to_dict()}")
-            print(f"   Severity levels: {df['severity_level'].value_counts().to_dict()}")
+            print("\n📋 Sample Data Summary:")
+            print(
+                f"   Attack types: {df['attack_type'].value_counts().head(3).to_dict()}"
+            )
+            print(
+                f"   Severity levels: {df['severity_level'].value_counts().to_dict()}"
+            )
             print(f"   Protocols: {df['protocol'].value_counts().head(3).to_dict()}")
 
             # Display detailed records
-            print(f"\n📄 Detailed Records:")
+            print("\n📄 Detailed Records:")
             for i, record in enumerate(results[:5]):  # Show first 5 records
-                print(f"\n--- Record {i+1} ---")
+                print(f"\n--- Record {i + 1} ---")
                 print(f"ID: {record['id']}")
                 print(f"Timestamp: {record['timestamp']}")
-                print(f"Source IP: {record['source_ip']} -> Dest IP: {record['dest_ip']}")
-                print(f"Protocol: {record['protocol']} ({record['source_port']} -> {record['dest_port']})")
+                print(
+                    f"Source IP: {record['source_ip']} -> Dest IP: {record['dest_ip']}"
+                )
+                print(
+                    f"Protocol: {record['protocol']} ({record['source_port']} -> {record['dest_port']})"
+                )
                 print(f"Attack Type: {record['attack_type']}")
                 print(f"Severity: {record['severity_level']}")
                 print(f"Signature: {record['attack_signature'][:100]}...")
@@ -139,10 +162,15 @@ class MilvusDataViewer:
             results = self.collection.query(
                 expr=f"full_context like '%{query_text[:20]}%'",
                 output_fields=[
-                    "id", "timestamp", "attack_type", "severity_level",
-                    "source_ip", "dest_ip", "full_context"
+                    "id",
+                    "timestamp",
+                    "attack_type",
+                    "severity_level",
+                    "source_ip",
+                    "dest_ip",
+                    "full_context",
                 ],
-                limit=limit
+                limit=limit,
             )
 
             if not results:
@@ -152,7 +180,7 @@ class MilvusDataViewer:
             print(f"✅ Found {len(results)} similar records")
 
             for i, record in enumerate(results):
-                print(f"\n--- Similar Record {i+1} ---")
+                print(f"\n--- Similar Record {i + 1} ---")
                 print(f"ID: {record['id']}")
                 print(f"Attack Type: {record['attack_type']}")
                 print(f"Severity: {record['severity_level']}")
@@ -162,7 +190,9 @@ class MilvusDataViewer:
         except Exception as e:
             print(f"❌ Failed to search: {e}")
 
-    def export_to_csv(self, filename: str = "milvus_data_export.csv", limit: int = 1000):
+    def export_to_csv(
+        self, filename: str = "milvus_data_export.csv", limit: int = 1000
+    ):
         """Export data to CSV file"""
         if not self.collection:
             print("❌ Collection not loaded")
@@ -174,13 +204,25 @@ class MilvusDataViewer:
             results = self.collection.query(
                 expr="",
                 output_fields=[
-                    "id", "timestamp", "source_ip", "dest_ip", "source_port",
-                    "dest_port", "protocol", "attack_type", "attack_signature",
-                    "severity_level", "action_taken", "anomaly_score",
-                    "malware_indicators", "geo_location", "user_info",
-                    "log_source", "full_context"
+                    "id",
+                    "timestamp",
+                    "source_ip",
+                    "dest_ip",
+                    "source_port",
+                    "dest_port",
+                    "protocol",
+                    "attack_type",
+                    "attack_signature",
+                    "severity_level",
+                    "action_taken",
+                    "anomaly_score",
+                    "malware_indicators",
+                    "geo_location",
+                    "user_info",
+                    "log_source",
+                    "full_context",
                 ],
-                limit=limit
+                limit=limit,
             )
 
             if not results:
@@ -193,6 +235,7 @@ class MilvusDataViewer:
 
         except Exception as e:
             print(f"❌ Failed to export: {e}")
+
 
 def main():
     """Main function to demonstrate Milvus data viewing"""
@@ -221,8 +264,9 @@ def main():
     # Export data
     viewer.export_to_csv(limit=1000)
 
-    print(f"\n🎉 Data viewing complete!")
-    print(f"💡 You can also use the Milvus web interface at: http://localhost:9091")
+    print("\n🎉 Data viewing complete!")
+    print("💡 You can also use the Milvus web interface at: http://localhost:9091")
+
 
 if __name__ == "__main__":
     main()

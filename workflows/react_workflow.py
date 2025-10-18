@@ -7,11 +7,11 @@
 # For JSON format debug output, also set:
 #   REACT_LOG_FORMAT=json
 #
-from typing import Dict, List, Optional, Any, TypedDict, Annotated
-import os
 import asyncio
-from utils.logging_config import get_security_logger
+from typing import Annotated, Any, TypedDict
+
 from utils.device_config import create_performance_config
+from utils.logging_config import get_security_logger
 
 # Lazy imports - loaded only when needed
 _langgraph_imported = False
@@ -23,7 +23,7 @@ def _ensure_langgraph():
     """Lazy import LangGraph components"""
     global _langgraph_imported, StateGraph, END
     if not _langgraph_imported:
-        from langgraph.graph import StateGraph, END
+        from langgraph.graph import END, StateGraph
 
         _langgraph_imported = True
     return StateGraph, END
@@ -60,14 +60,14 @@ logger = get_security_logger("react_workflow")
 
 
 # State reducers for LangGraph
-def threat_results_reducer(existing: List[Dict], new: List[Dict]) -> List[Dict]:
+def threat_results_reducer(existing: list[dict], new: list[dict]) -> list[dict]:
     """Reducer to aggregate threat intelligence results"""
     if not existing:
         return new
     return existing + new
 
 
-def messages_reducer(existing: List[Any], new: List[Any]) -> List[Any]:
+def messages_reducer(existing: list[Any], new: list[Any]) -> list[Any]:
     """Reducer to handle message updates"""
     if not existing:
         return new
@@ -80,74 +80,74 @@ def input_text_reducer(existing: str, new: str) -> str:
 
 
 def routing_decision_reducer(
-    existing: Optional[str], new: Optional[str]
-) -> Optional[str]:
+    existing: str | None, new: str | None
+) -> str | None:
     """Reducer to handle routing_decision updates"""
     return new if new is not None else existing
 
 
 def selected_tools_reducer(
-    existing: Optional[List[str]], new: Optional[List[str]]
-) -> Optional[List[str]]:
+    existing: list[str] | None, new: list[str] | None
+) -> list[str] | None:
     """Reducer to handle selected_threat_tools updates"""
     return new if new is not None else existing
 
 
 def input_image_reducer(
-    existing: Optional[bytes], new: Optional[bytes]
-) -> Optional[bytes]:
+    existing: bytes | None, new: bytes | None
+) -> bytes | None:
     """Reducer to handle input_image updates"""
     return new if new is not None else existing
 
 
 def extracted_iocs_reducer(
-    existing: Optional[Dict], new: Optional[Dict]
-) -> Optional[Dict]:
+    existing: dict | None, new: dict | None
+) -> dict | None:
     """Reducer to handle extracted_iocs updates"""
     return new if new is not None else existing
 
 
 def pii_masked_text_reducer(
-    existing: Optional[str], new: Optional[str]
-) -> Optional[str]:
+    existing: str | None, new: str | None
+) -> str | None:
     """Reducer to handle pii_masked_text updates"""
     return new if new is not None else existing
 
 
 def pii_mapping_reducer(
-    existing: Optional[Dict], new: Optional[Dict]
-) -> Optional[Dict]:
+    existing: dict | None, new: dict | None
+) -> dict | None:
     """Reducer to handle pii_mapping updates"""
     return new if new is not None else existing
 
 
 def threat_analysis_reducer(
-    existing: Optional[Dict], new: Optional[Dict]
-) -> Optional[Dict]:
+    existing: dict | None, new: dict | None
+) -> dict | None:
     """Reducer to handle threat_analysis updates"""
     return new if new is not None else existing
 
 
 def vision_analysis_reducer(
-    existing: Optional[Dict], new: Optional[Dict]
-) -> Optional[Dict]:
+    existing: dict | None, new: dict | None
+) -> dict | None:
     """Reducer to handle vision_analysis updates"""
     return new if new is not None else existing
 
 
 def final_report_reducer(
-    existing: Optional[Dict], new: Optional[Dict]
-) -> Optional[Dict]:
+    existing: dict | None, new: dict | None
+) -> dict | None:
     """Reducer to handle final_report updates"""
     return new if new is not None else existing
 
 
-def next_action_reducer(existing: Optional[str], new: Optional[str]) -> Optional[str]:
+def next_action_reducer(existing: str | None, new: str | None) -> str | None:
     """Reducer to handle next_action updates"""
     return new if new is not None else existing
 
 
-def tool_calls_reducer(existing: List[Dict], new: List[Dict]) -> List[Dict]:
+def tool_calls_reducer(existing: list[dict], new: list[dict]) -> list[dict]:
     """Reducer to handle tool_calls updates"""
     if not existing:
         return new
@@ -165,42 +165,42 @@ def iteration_count_reducer(existing: int, new: int) -> int:
 
 
 def dynamic_tool_results_reducer(
-    existing: Optional[Dict], new: Optional[Dict]
-) -> Optional[Dict]:
+    existing: dict | None, new: dict | None
+) -> dict | None:
     """Reducer to handle dynamic_tool_results updates"""
     return new if new is not None else existing
 
 
 # NEW: Context preservation reducers
-def session_id_reducer(existing: Optional[str], new: Optional[str]) -> Optional[str]:
+def session_id_reducer(existing: str | None, new: str | None) -> str | None:
     """Reducer to handle session_id - keep first one"""
     return existing if existing else new
 
 
 def original_input_text_reducer(
-    existing: Optional[str], new: Optional[str]
-) -> Optional[str]:
+    existing: str | None, new: str | None
+) -> str | None:
     """Reducer to preserve original user input before enrichment"""
     return existing if existing else new
 
 
 def context_enrichment_reducer(
-    existing: Optional[Dict], new: Optional[Dict]
-) -> Optional[Dict]:
+    existing: dict | None, new: dict | None
+) -> dict | None:
     """Reducer to handle context enrichment metadata"""
     return new if new is not None else existing
 
 
 def previous_iocs_reducer(
-    existing: Optional[Dict], new: Optional[Dict]
-) -> Optional[Dict]:
+    existing: dict | None, new: dict | None
+) -> dict | None:
     """Reducer to handle previous IOCs from session"""
     return new if new is not None else existing
 
 
 def session_history_reducer(
-    existing: Optional[List[Dict]], new: Optional[List[Dict]]
-) -> Optional[List[Dict]]:
+    existing: list[dict] | None, new: list[dict] | None
+) -> list[dict] | None:
     """Reducer to handle session history - append mode"""
     if not existing:
         return new
@@ -212,30 +212,30 @@ def session_history_reducer(
 class CyberShieldState(TypedDict):
     """State schema for CyberShield ReAct workflow"""
 
-    messages: Annotated[List[Any], messages_reducer]
+    messages: Annotated[list[Any], messages_reducer]
     input_text: Annotated[str, input_text_reducer]
-    input_image: Annotated[Optional[bytes], input_image_reducer]
+    input_image: Annotated[bytes | None, input_image_reducer]
     # NEW: Session management fields for context preservation
-    session_id: Annotated[Optional[str], session_id_reducer]
-    original_input_text: Annotated[Optional[str], original_input_text_reducer]
-    context_enrichment: Annotated[Optional[Dict], context_enrichment_reducer]
-    previous_iocs: Annotated[Optional[Dict], previous_iocs_reducer]
-    session_history: Annotated[Optional[List[Dict]], session_history_reducer]
-    pii_masked_text: Annotated[Optional[str], pii_masked_text_reducer]
-    pii_mapping: Annotated[Optional[Dict], pii_mapping_reducer]
-    extracted_iocs: Annotated[Optional[Dict], extracted_iocs_reducer]
-    threat_analysis: Annotated[Optional[Dict], threat_analysis_reducer]
-    vision_analysis: Annotated[Optional[Dict], vision_analysis_reducer]
-    final_report: Annotated[Optional[Dict], final_report_reducer]
-    next_action: Annotated[Optional[str], next_action_reducer]
-    tool_calls: Annotated[List[Dict], tool_calls_reducer]
+    session_id: Annotated[str | None, session_id_reducer]
+    original_input_text: Annotated[str | None, original_input_text_reducer]
+    context_enrichment: Annotated[dict | None, context_enrichment_reducer]
+    previous_iocs: Annotated[dict | None, previous_iocs_reducer]
+    session_history: Annotated[list[dict] | None, session_history_reducer]
+    pii_masked_text: Annotated[str | None, pii_masked_text_reducer]
+    pii_mapping: Annotated[dict | None, pii_mapping_reducer]
+    extracted_iocs: Annotated[dict | None, extracted_iocs_reducer]
+    threat_analysis: Annotated[dict | None, threat_analysis_reducer]
+    vision_analysis: Annotated[dict | None, vision_analysis_reducer]
+    final_report: Annotated[dict | None, final_report_reducer]
+    next_action: Annotated[str | None, next_action_reducer]
+    tool_calls: Annotated[list[dict], tool_calls_reducer]
     agent_scratchpad: Annotated[str, agent_scratchpad_reducer]
     iteration_count: Annotated[int, iteration_count_reducer]
     # Parallel tool results with reducer for fan-in
-    threat_results: Annotated[List[Dict], threat_results_reducer]
-    dynamic_tool_results: Annotated[Optional[Dict], dynamic_tool_results_reducer]
-    routing_decision: Annotated[Optional[str], routing_decision_reducer]
-    selected_threat_tools: Annotated[Optional[List[str]], selected_tools_reducer]
+    threat_results: Annotated[list[dict], threat_results_reducer]
+    dynamic_tool_results: Annotated[dict | None, dynamic_tool_results_reducer]
+    routing_decision: Annotated[str | None, routing_decision_reducer]
+    selected_threat_tools: Annotated[list[str] | None, selected_tools_reducer]
 
 
 class CyberShieldReActAgent:
@@ -268,8 +268,8 @@ class CyberShieldReActAgent:
         )
 
         # Import agents here to avoid circular imports
-        from agents.pii_agent import PIIAgent
         from agents.log_parser import LogParserAgent
+        from agents.pii_agent import PIIAgent
         from agents.threat_agent import ThreatAgent
         from agents.vision_agent import VisionAgent
         from tools.regex_checker import RegexChecker
@@ -360,9 +360,10 @@ class CyberShieldReActAgent:
                 return state
 
             # Resolve context references and enrich input
-            enriched_text, context_metadata = (
-                await self.context_resolver.resolve_and_enrich(input_text, session_id)
-            )
+            (
+                enriched_text,
+                context_metadata,
+            ) = await self.context_resolver.resolve_and_enrich(input_text, session_id)
 
             # Update state with enriched text if it changed
             if enriched_text != input_text:
@@ -575,7 +576,7 @@ Respond with only one word: ThreatIntel, ToolExecutorNode, or synthesize"""
             logger.error(f"LLM routing failed: {e}, defaulting to ToolExecutorNode")
             return "ToolExecutorNode"
 
-    def _get_input_analysis(self, state: CyberShieldState) -> Dict:
+    def _get_input_analysis(self, state: CyberShieldState) -> dict:
         """Get analysis of input for logging"""
         input_text = state.get("input_text", "")
         return {
@@ -823,7 +824,7 @@ If no threat intelligence tools are needed, respond with: []"""
                 )
 
         logger.info(
-            f"Parallel execution completed",
+            "Parallel execution completed",
             total_results=len(aggregated_results),
             successful_tools=len([r for r in aggregated_results if "error" not in r]),
         )
@@ -940,7 +941,7 @@ If no threat intelligence tools are needed, respond with: []"""
             # Continue without failing the workflow
             return state
 
-    async def _generate_final_report(self, state: CyberShieldState) -> Dict[str, Any]:
+    async def _generate_final_report(self, state: CyberShieldState) -> dict[str, Any]:
         """Generate comprehensive final analysis report compatible with frontend"""
         try:
             # Collect all analysis components with null safety
@@ -1056,7 +1057,7 @@ If no threat intelligence tools are needed, respond with: []"""
                 "recommendations": ["Report generation failed - check logs"],
             }
 
-    def _process_threat_results(self, threat_results: List[Dict]) -> Dict[str, Any]:
+    def _process_threat_results(self, threat_results: list[dict]) -> dict[str, Any]:
         """Process threat intelligence results into frontend-compatible format"""
         detailed_results = {}
         execution_metrics = {
@@ -1093,8 +1094,8 @@ If no threat intelligence tools are needed, respond with: []"""
         }
 
     def _extract_ioc_analysis(
-        self, threat_results: List[Dict], extracted_iocs: Dict
-    ) -> Dict[str, Any]:
+        self, threat_results: list[dict], extracted_iocs: dict
+    ) -> dict[str, Any]:
         """Extract IOC analysis from RegexChecker and other tool results"""
         threat_results = threat_results or []
         extracted_iocs = extracted_iocs or {}
@@ -1123,7 +1124,7 @@ If no threat intelligence tools are needed, respond with: []"""
             "extracted_iocs": extracted_iocs_data,
         }
 
-    def _extract_threat_analysis(self, threat_results: List[Dict]) -> Dict[str, Any]:
+    def _extract_threat_analysis(self, threat_results: list[dict]) -> dict[str, Any]:
         """Extract threat analysis from security tool results"""
         threat_results = threat_results or []
         threats = []
@@ -1178,7 +1179,7 @@ If no threat intelligence tools are needed, respond with: []"""
             "total_analyzed": total_analyzed,
         }
 
-    def _assess_risk_level(self, tool_name: str, result: Dict) -> str:
+    def _assess_risk_level(self, tool_name: str, result: dict) -> str:
         """Assess risk level based on tool results"""
         if tool_name == "AbuseIPDB":
             confidence = result.get("abuse_confidence", 0)
@@ -1211,7 +1212,7 @@ If no threat intelligence tools are needed, respond with: []"""
 
         return "low"
 
-    def _extract_vector_analysis(self, threat_results: List[Dict]) -> Dict[str, Any]:
+    def _extract_vector_analysis(self, threat_results: list[dict]) -> dict[str, Any]:
         """Extract vector search analysis from MilvusSearch results"""
         threat_results = threat_results or []
         vector_result = None
@@ -1258,8 +1259,8 @@ If no threat intelligence tools are needed, respond with: []"""
         }
 
     def _generate_recommendations(
-        self, threat_results: List[Dict], ioc_analysis: Dict, threat_analysis: Dict
-    ) -> List[str]:
+        self, threat_results: list[dict], ioc_analysis: dict, threat_analysis: dict
+    ) -> list[str]:
         """Generate security recommendations based on analysis results"""
         threat_results = threat_results or []
         ioc_analysis = ioc_analysis or {}
@@ -1324,9 +1325,9 @@ If no threat intelligence tools are needed, respond with: []"""
     async def process(
         self,
         user_input: str,
-        image_data: Optional[bytes] = None,
-        session_id: Optional[str] = None,
-    ) -> Dict[str, Any]:
+        image_data: bytes | None = None,
+        session_id: str | None = None,
+    ) -> dict[str, Any]:
         """Main processing method with caching and context preservation"""
         try:
             logger.info(
@@ -1398,7 +1399,7 @@ If no threat intelligence tools are needed, respond with: []"""
             logger.error(f"ReAct workflow failed: {e}")
             return {"error": str(e)}
 
-    async def ainvoke(self, state: Dict[str, Any]) -> Dict[str, Any]:
+    async def ainvoke(self, state: dict[str, Any]) -> dict[str, Any]:
         """LangGraph-compatible async invoke method"""
         try:
             logger.info(

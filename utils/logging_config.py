@@ -5,17 +5,18 @@ This module provides centralized logging configuration using structlog
 for consistent, structured logging across all components.
 """
 
+import logging
 import os
 import sys
-import logging
-from typing import Any, Dict, Optional
-import structlog
 from datetime import datetime
+from typing import Any
+
+import structlog
 
 
 def configure_logging(
     log_level: str = "INFO",
-    log_file: Optional[str] = None,
+    log_file: str | None = None,
     json_format: bool = False,
     include_stdlib: bool = True,
 ) -> None:
@@ -119,8 +120,8 @@ def configure_logging(
 
 
 def add_security_context(
-    logger: Any, method_name: str, event_dict: Dict[str, Any]
-) -> Dict[str, Any]:
+    logger: Any, method_name: str, event_dict: dict[str, Any]
+) -> dict[str, Any]:
     """
     Add security-specific context to log events.
 
@@ -144,8 +145,8 @@ def add_security_context(
 
 
 def add_request_id(
-    logger: Any, method_name: str, event_dict: Dict[str, Any]
-) -> Dict[str, Any]:
+    logger: Any, method_name: str, event_dict: dict[str, Any]
+) -> dict[str, Any]:
     """
     Add request ID to log events for tracing.
 
@@ -265,7 +266,8 @@ def log_json_report(
         **details: Additional context details
     """
     import json
-    from pygments import highlight, lexers, formatters
+
+    from pygments import formatters, highlight, lexers
 
     # Log the title with context
     logger.info(title, **details)

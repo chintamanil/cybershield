@@ -9,9 +9,9 @@ from .logging_config import (
     configure_logging,
     get_logger,
     get_security_logger,
-    log_security_event,
-    log_api_request,
     log_agent_action,
+    log_api_request,
+    log_security_event,
     setup_from_env,
 )
 

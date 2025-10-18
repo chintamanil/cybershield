@@ -1,10 +1,10 @@
 # PIIAgent detects and masks PII using regex and stores mapping securely
 import re
 import uuid
-from typing import Tuple, Dict
+
 from memory.pii_store import PIISecureStore
-from utils.logging_config import get_security_logger
 from utils.device_config import create_performance_config
+from utils.logging_config import get_security_logger
 
 logger = get_security_logger("pii_agent")
 
@@ -38,7 +38,7 @@ class PIIAgent:
             logger.error("Failed to start PII session")
             return None
 
-    async def mask_pii(self, text: str, session_id: str = None) -> Tuple[str, Dict]:
+    async def mask_pii(self, text: str, session_id: str = None) -> tuple[str, dict]:
         """
         Detect and mask PII in text
 

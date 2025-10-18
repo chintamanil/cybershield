@@ -1,21 +1,21 @@
 """Main result display orchestrator for analysis results."""
 
-from typing import Dict, Any
+from typing import Any
 
 import streamlit as st
 
 from .display_components import (
-    display_pii_analysis,
     display_ioc_analysis,
+    display_pii_analysis,
+    display_recommendations,
     display_threat_analysis,
     display_vision_analysis,
-    display_recommendations,
 )
 from .tool_displays import display_tool_analysis
 from .vector_displays import display_vector_analysis
 
 
-def display_analysis_results(results: Dict[str, Any]):
+def display_analysis_results(results: dict[str, Any]):
     """Display analysis results in a formatted way.
 
     Args:

@@ -2,10 +2,10 @@
 Async tests for Shodan tool
 """
 
-import unittest
-import sys
-import os
 import asyncio
+import os
+import sys
+import unittest
 from unittest.mock import AsyncMock, patch
 
 # Add parent directory to path for imports
@@ -13,7 +13,7 @@ sys.path.append(
     os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 )
 
-from tools.shodan import ShodanClient, lookup_ip, search_shodan, get_host_count
+from tools.shodan import ShodanClient, get_host_count, lookup_ip, search_shodan
 
 
 class TestShodanClientAsync(unittest.IsolatedAsyncioTestCase):

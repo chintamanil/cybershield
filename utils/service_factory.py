@@ -1,7 +1,8 @@
 # Service factory for creating environment-specific service instances
-import redis
+
 import psycopg2
-from typing import Optional, Dict, Any
+import redis
+
 from utils.environment_config import config
 from utils.logging_config import get_security_logger
 
@@ -39,11 +40,12 @@ class DatabaseFactory:
             )
 
     @staticmethod
-    def _get_rds_credentials() -> Dict[str, str]:
+    def _get_rds_credentials() -> dict[str, str]:
         """Get RDS credentials from AWS Secrets Manager"""
         try:
-            import boto3
             import json
+
+            import boto3
 
             secrets_client = boto3.client("secretsmanager")
             secret_response = secrets_client.get_secret_value(
@@ -98,8 +100,8 @@ class LLMFactory:
             )
 
         elif llm_config.provider == "bedrock":
-            from langchain_aws import ChatBedrock
             import boto3
+            from langchain_aws import ChatBedrock
 
             logger.info("Creating Bedrock LLM client")
             bedrock_client = boto3.client(
@@ -129,8 +131,8 @@ class LLMFactory:
             )
 
         elif llm_config.provider == "bedrock":
-            from langchain_aws import BedrockEmbeddings
             import boto3
+            from langchain_aws import BedrockEmbeddings
 
             logger.info("Creating Bedrock embeddings")
             bedrock_client = boto3.client(
@@ -229,7 +231,7 @@ class ServiceManager:
             self._vector_store = VectorStoreFactory.create_vector_store()
         return self._vector_store
 
-    def health_check(self) -> Dict[str, bool]:
+    def health_check(self) -> dict[str, bool]:
         """Check health of all services"""
         health = {}
 

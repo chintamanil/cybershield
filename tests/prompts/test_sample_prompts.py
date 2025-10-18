@@ -6,7 +6,6 @@ Tests individual components without requiring the FastAPI server.
 
 import json
 from pathlib import Path
-from typing import Any
 
 import pytest
 
@@ -36,9 +35,7 @@ class TestBasicSecurityAnalysis:
         with open(data_file) as f:
             return json.load(f)
 
-    def test_failed_login_with_hash_and_domain(
-        self, regex_checker, prompts_data
-    ):
+    def test_failed_login_with_hash_and_domain(self, regex_checker, prompts_data):
         """Test detection of failed login with hash and domain."""
         prompt = prompts_data["basic_security_analysis"][0]
         result = regex_checker.extract_all_iocs(prompt["prompt"])
@@ -48,8 +45,17 @@ class TestBasicSecurityAnalysis:
         assert "198.51.100.5" in result.get("ipv4", [])
 
         # Verify hash extraction
-        assert len(result.get("md5", []) + result.get("sha1", []) + result.get("sha256", [])) > 0, "Should detect hash"
-        assert "d41d8cd98f00b204e9800998ecf8427e" in result.get("md5", []) + result.get("sha1", []) + result.get("sha256", [])
+        assert (
+            len(
+                result.get("md5", [])
+                + result.get("sha1", [])
+                + result.get("sha256", [])
+            )
+            > 0
+        ), "Should detect hash"
+        assert "d41d8cd98f00b204e9800998ecf8427e" in result.get("md5", []) + result.get(
+            "sha1", []
+        ) + result.get("sha256", [])
 
         # Verify domain extraction
         assert len(result.get("domain", [])) > 0, "Should detect domain"
@@ -87,9 +93,7 @@ class TestPIIDetection:
             return json.load(f)
 
     @pytest.mark.asyncio
-    async def test_user_with_ssn_and_credit_card(
-        self, pii_agent, prompts_data
-    ):
+    async def test_user_with_ssn_and_credit_card(self, pii_agent, prompts_data):
         """Test detection of SSN and credit card in text."""
         prompt = prompts_data["pii_detection"][0]
         masked_text, pii_map = await pii_agent.mask_pii(prompt["prompt"])
@@ -141,9 +145,9 @@ class TestNetworkSecurityEvents:
         # Verify IOC extraction
         assert "185.220.101.42" in result.get("ipv4", []), "Should detect IP"
         assert "bitcoin-miner.ru" in result.get("domain", []), "Should detect domain"
-        assert (
-            "5d41402abc4b2a76b9719d911017c592" in result.get("md5", []) + result.get("sha1", []) + result.get("sha256", [])
-        ), "Should detect hash"
+        assert "5d41402abc4b2a76b9719d911017c592" in result.get("md5", []) + result.get(
+            "sha1", []
+        ) + result.get("sha256", []), "Should detect hash"
 
     def test_malware_c2_server_detection(self, regex_checker, prompts_data):
         """Test detection of malware C2 server."""
@@ -154,11 +158,20 @@ class TestNetworkSecurityEvents:
         assert len(result.get("domain", [])) > 0, "Should detect domain"
 
         # Verify Bitcoin address
-        assert len(result.get("bitcoin_address", [])) > 0, "Should detect Bitcoin address"
+        assert len(result.get("bitcoin_address", [])) > 0, (
+            "Should detect Bitcoin address"
+        )
         assert "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa" in result.get("bitcoin_address", [])
 
         # Verify SHA256 hash
-        assert len(result.get("md5", []) + result.get("sha1", []) + result.get("sha256", [])) > 0, "Should detect hash"
+        assert (
+            len(
+                result.get("md5", [])
+                + result.get("sha1", [])
+                + result.get("sha256", [])
+            )
+            > 0
+        ), "Should detect hash"
 
 
 class TestAdvancedPersistentThreats:
@@ -176,9 +189,7 @@ class TestAdvancedPersistentThreats:
         with open(data_file) as f:
             return json.load(f)
 
-    def test_lateral_movement_with_cobalt_strike(
-        self, regex_checker, prompts_data
-    ):
+    def test_lateral_movement_with_cobalt_strike(self, regex_checker, prompts_data):
         """Test detection of lateral movement with Cobalt Strike."""
         prompt = prompts_data["advanced_persistent_threats"][0]
         result = regex_checker.extract_all_iocs(prompt["prompt"])
@@ -191,7 +202,14 @@ class TestAdvancedPersistentThreats:
         assert len(result.get("email", [])) > 0, "Should detect email"
 
         # Verify hash
-        assert len(result.get("md5", []) + result.get("sha1", []) + result.get("sha256", [])) > 0, "Should detect payload hash"
+        assert (
+            len(
+                result.get("md5", [])
+                + result.get("sha1", [])
+                + result.get("sha256", [])
+            )
+            > 0
+        ), "Should detect payload hash"
 
     def test_phishing_email_with_bitcoin(self, regex_checker, prompts_data):
         """Test detection of phishing email with Bitcoin."""
@@ -203,10 +221,19 @@ class TestAdvancedPersistentThreats:
         assert "suspicious.sender@temp-mail.org" in result.get("email", [])
 
         # Verify Bitcoin address (P2SH format starting with 3)
-        assert len(result.get("bitcoin_address", [])) > 0, "Should detect Bitcoin address"
+        assert len(result.get("bitcoin_address", [])) > 0, (
+            "Should detect Bitcoin address"
+        )
 
         # Verify attachment hash
-        assert len(result.get("md5", []) + result.get("sha1", []) + result.get("sha256", [])) > 0, "Should detect attachment hash"
+        assert (
+            len(
+                result.get("md5", [])
+                + result.get("sha1", [])
+                + result.get("sha256", [])
+            )
+            > 0
+        ), "Should detect attachment hash"
 
 
 class TestErrorHandling:
@@ -237,10 +264,14 @@ class TestErrorHandling:
         assert isinstance(result.get("ipv4", []), list), "Should have ipv4 results"
 
         # Invalid IOCs should not be extracted
-        assert "300.400.500.600" not in result.get("ipv4", []), "Should not detect invalid IP"
-        assert (
-            "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ" not in result.get("md5", []) + result.get("sha1", []) + result.get("sha256", [])
-        ), "Should not detect invalid hash"
+        assert "300.400.500.600" not in result.get("ipv4", []), (
+            "Should not detect invalid IP"
+        )
+        assert "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ" not in result.get(
+            "md5", []
+        ) + result.get("sha1", []) + result.get("sha256", []), (
+            "Should not detect invalid hash"
+        )
 
     def test_mixed_valid_invalid_data(self, regex_checker, prompts_data):
         """Test extraction of valid IOCs from mixed data."""
@@ -249,15 +280,17 @@ class TestErrorHandling:
 
         # Should extract valid data
         assert "8.8.8.8" in result.get("ipv4", []), "Should detect valid IP"
-        assert (
-            "d41d8cd98f00b204e9800998ecf8427e" in result.get("md5", []) + result.get("sha1", []) + result.get("sha256", [])
-        ), "Should detect valid hash"
+        assert "d41d8cd98f00b204e9800998ecf8427e" in result.get("md5", []) + result.get(
+            "sha1", []
+        ) + result.get("sha256", []), "Should detect valid hash"
 
         # Should not extract invalid data
-        assert "999.999.999.999" not in result.get("ipv4", []), "Should not detect invalid IP"
-        assert (
-            "INVALID_HASH_FORMAT" not in result.get("md5", []) + result.get("sha1", []) + result.get("sha256", [])
-        ), "Should not detect invalid hash"
+        assert "999.999.999.999" not in result.get("ipv4", []), (
+            "Should not detect invalid IP"
+        )
+        assert "INVALID_HASH_FORMAT" not in result.get("md5", []) + result.get(
+            "sha1", []
+        ) + result.get("sha256", []), "Should not detect invalid hash"
 
     def test_rate_limiting_multiple_ips(self, regex_checker, prompts_data):
         """Test extraction of multiple IPs (stress test)."""
@@ -269,7 +302,9 @@ class TestErrorHandling:
 
         # Verify specific IPs
         for i in range(1, 11):
-            assert f"192.168.1.{i}" in result.get("ipv4", []), f"Should detect 192.168.1.{i}"
+            assert f"192.168.1.{i}" in result.get("ipv4", []), (
+                f"Should detect 192.168.1.{i}"
+            )
 
 
 class TestImageAnalysis:

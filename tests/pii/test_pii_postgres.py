@@ -3,10 +3,11 @@
 Test PII system with PostgreSQL integration
 """
 
-import logging
 import asyncio
-from agents.pii_agent import PIIAgent
+import logging
 import os
+
+from agents.pii_agent import PIIAgent
 
 # Configure logging
 logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO"))
@@ -38,7 +39,7 @@ async def test_pii_with_postgres():
         print(f"  {token} -> {data['original']} ({data['type']})")
 
     # Test retrieval from PostgreSQL
-    print(f"\n🔍 Testing PostgreSQL retrieval:")
+    print("\n🔍 Testing PostgreSQL retrieval:")
     for token in mapping.keys():
         original = pii_agent.get_mapping(token, session_id)
         print(f"  {token} -> {original}")
@@ -53,7 +54,7 @@ async def test_pii_with_postgres():
     else:
         pii_agent.end_session(session_id)
 
-    print(f"\n✅ Test completed successfully!")
+    print("\n✅ Test completed successfully!")
     print(f"📊 Session ID: {session_id}")
     print("=" * 60)
 

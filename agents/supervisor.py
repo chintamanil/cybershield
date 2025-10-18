@@ -1,11 +1,11 @@
 # SupervisorAgent with Vision AI and LangGraph ReAct workflow
-from typing import Dict, List, Optional, Union
-from agents.pii_agent import PIIAgent
+
 from agents.log_parser import LogParserAgent
+from agents.pii_agent import PIIAgent
 from agents.threat_agent import ThreatAgent
 from agents.vision_agent import VisionAgent
-from utils.logging_config import get_security_logger
 from utils.device_config import create_performance_config
+from utils.logging_config import get_security_logger
 
 logger = get_security_logger("supervisor")
 
@@ -99,8 +99,11 @@ class SupervisorAgent:
         await self.threat_agent._get_clients()
 
     async def analyze(
-        self, user_input: Union[str, Dict], image_data: Optional[bytes] = None, session_id: Optional[str] = None
-    ) -> Dict:
+        self,
+        user_input: str | dict,
+        image_data: bytes | None = None,
+        session_id: str | None = None,
+    ) -> dict:
         """
         Main analysis method that processes text and/or image input with optional session context.
 
@@ -128,7 +131,9 @@ class SupervisorAgent:
                 f"use_react_workflow: {self.use_react_workflow}, react_agent exists: {self.react_agent is not None}"
             )
             if self.use_react_workflow and self.react_agent:
-                return await self._process_with_react(text_input, image_data, session_id)
+                return await self._process_with_react(
+                    text_input, image_data, session_id
+                )
             else:
                 logger.info("Using sequential processing (ReAct not available)")
                 return await self._process_sequential(text_input, image_data)
@@ -142,8 +147,11 @@ class SupervisorAgent:
             }
 
     async def _process_with_react(
-        self, text_input: str, image_data: Optional[bytes] = None, session_id: Optional[str] = None
-    ) -> Dict:
+        self,
+        text_input: str,
+        image_data: bytes | None = None,
+        session_id: str | None = None,
+    ) -> dict:
         """Process input using the ReAct workflow with optional session context"""
         try:
             logger.info("Processing with ReAct workflow", has_session=bool(session_id))
@@ -185,8 +193,8 @@ class SupervisorAgent:
             return await self._process_sequential(text_input, image_data)
 
     async def _process_sequential(
-        self, text_input: str, image_data: Optional[bytes] = None
-    ) -> Dict:
+        self, text_input: str, image_data: bytes | None = None
+    ) -> dict:
         """Process input using sequential agent coordination (fallback method)"""
         try:
             logger.info("Processing with sequential workflow")
@@ -308,7 +316,7 @@ class SupervisorAgent:
                 "processing_method": "sequential",
             }
 
-    def _generate_recommendations(self, analysis_results: Dict) -> List[str]:
+    def _generate_recommendations(self, analysis_results: dict) -> list[str]:
         """Generate comprehensive security recommendations"""
         recommendations = []
 
@@ -355,7 +363,7 @@ class SupervisorAgent:
 
         return recommendations
 
-    async def _store_analysis_results(self, results: Dict) -> None:
+    async def _store_analysis_results(self, results: dict) -> None:
         """Store analysis results in memory and vectorstore"""
         try:
             if self.memory:
@@ -377,7 +385,7 @@ class SupervisorAgent:
         except Exception as e:
             logger.warning(f"Failed to store analysis results: {e}")
 
-    def get_agent_status(self) -> Dict:
+    def get_agent_status(self) -> dict:
         """Get status of all agents and components"""
         return {
             "supervisor": {
@@ -395,7 +403,9 @@ class SupervisorAgent:
             "react_agent": "active" if self.react_agent else "inactive",
         }
 
-    async def analyze_batch(self, inputs: List[str], session_id: Optional[str] = None) -> List[Dict]:
+    async def analyze_batch(
+        self, inputs: list[str], session_id: str | None = None
+    ) -> list[dict]:
         """
         Analyze multiple text inputs in batch with optional session context
 
@@ -410,11 +420,14 @@ class SupervisorAgent:
 
         for i, text_input in enumerate(inputs):
             try:
-                logger.info(f"Processing batch item {i+1}/{len(inputs)}", has_session=bool(session_id))
+                logger.info(
+                    f"Processing batch item {i + 1}/{len(inputs)}",
+                    has_session=bool(session_id),
+                )
                 result = await self.analyze(text_input, session_id=session_id)
                 results.append(result)
             except Exception as e:
-                logger.error(f"Batch analysis failed for item {i+1}: {e}")
+                logger.error(f"Batch analysis failed for item {i + 1}: {e}")
                 results.append({"status": "error", "error": str(e), "input_index": i})
 
         return results

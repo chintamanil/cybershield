@@ -10,8 +10,10 @@
 
 import asyncio
 import time
-from typing import Dict, List, Any, Optional
+from typing import Any
+
 from langchain_core.messages import HumanMessage
+
 from utils.logging_config import get_security_logger
 
 logger = get_security_logger("workflow_steps")
@@ -46,7 +48,7 @@ class WorkflowSteps:
         text_hash = hashlib.md5(input_text.encode()).hexdigest()[:16]
         return f"cybershield:{operation}:{text_hash}"
 
-    async def virustotal_step(self, state) -> Dict:
+    async def virustotal_step(self, state) -> dict:
         """VirusTotal analysis step with caching"""
         logger.info("VirusTotal analysis step")
 
@@ -116,7 +118,7 @@ class WorkflowSteps:
                 "threat_results": [{"tool": "VirusTotal", "error": str(e)}],
             }
 
-    async def abuseipdb_step(self, state) -> Dict:
+    async def abuseipdb_step(self, state) -> dict:
         """AbuseIPDB analysis step with caching"""
         logger.info("AbuseIPDB analysis step")
 
@@ -174,7 +176,7 @@ class WorkflowSteps:
             logger.error(f"AbuseIPDB step failed: {e}")
             return {**state, "threat_results": [{"tool": "AbuseIPDB", "error": str(e)}]}
 
-    async def shodan_step(self, state) -> Dict:
+    async def shodan_step(self, state) -> dict:
         """Shodan analysis step with caching and graceful rate limit handling"""
         logger.info("Shodan analysis step")
 
@@ -269,7 +271,7 @@ class WorkflowSteps:
             logger.error(f"Shodan step failed: {e}")
             return {**state, "threat_results": []}
 
-    async def milvus_search_step(self, state) -> Dict:
+    async def milvus_search_step(self, state) -> dict:
         """Milvus vector search step for historical attack data"""
         logger.info("Milvus vector search step")
 
@@ -360,7 +362,7 @@ class WorkflowSteps:
                 "threat_results": [{"tool": "VectorSearch", "error": str(e)}],
             }
 
-    async def regex_checker_step(self, state) -> Dict:
+    async def regex_checker_step(self, state) -> dict:
         """RegexChecker IOC extraction and validation step"""
         logger.info("RegexChecker IOC extraction step")
 
@@ -462,7 +464,7 @@ class WorkflowSteps:
                 "threat_results": [{"tool": "RegexChecker", "error": str(e)}],
             }
 
-    async def dynamic_tool_executor(self, state) -> Dict:
+    async def dynamic_tool_executor(self, state) -> dict:
         """Dynamic tool executor using asyncio.gather for LLM-chosen tools"""
         logger.info(
             "Dynamic tool executor step", iteration=state.get("iteration_count", 0)
@@ -545,7 +547,7 @@ class WorkflowSteps:
             state["dynamic_tool_results"] = {"error": str(e)}
             return state
 
-    async def _select_dynamic_tools(self, state) -> List[Dict]:
+    async def _select_dynamic_tools(self, state) -> list[dict]:
         """Use LLM to dynamically select tools based on input analysis"""
         input_text = state.get("input_text", "")
         has_image = state.get("input_image") is not None
@@ -605,8 +607,8 @@ If no special tools are needed, respond with: []"""
             return basic_tools
 
     async def _execute_tool(
-        self, tool_name: str, tool_input: Dict[str, Any], state: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, tool_name: str, tool_input: dict[str, Any], state: dict[str, Any]
+    ) -> dict[str, Any]:
         """Execute a specific tool with given input"""
         try:
             # Route to the appropriate tool method based on tool_name

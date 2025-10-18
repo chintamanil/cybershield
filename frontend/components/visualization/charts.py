@@ -1,10 +1,9 @@
 """Data visualization utilities for creating charts and graphs."""
 
-from typing import Dict, List
+
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-
 from config import CHART_COLORS
 
 
@@ -12,7 +11,7 @@ class DataVisualizer:
     """Utility class for creating data visualizations."""
 
     @staticmethod
-    def create_ioc_chart(ioc_data: Dict[str, List]) -> go.Figure:
+    def create_ioc_chart(ioc_data: dict[str, list]) -> go.Figure:
         """Create IOC distribution chart.
 
         Args:
@@ -39,7 +38,7 @@ class DataVisualizer:
         return fig
 
     @staticmethod
-    def create_threat_level_chart(threat_data: Dict) -> go.Figure:
+    def create_threat_level_chart(threat_data: dict) -> go.Figure:
         """Create threat level distribution chart.
 
         Args:
@@ -67,7 +66,7 @@ class DataVisualizer:
 
     @staticmethod
     def create_timeline_chart(
-        data: List[Dict], date_field: str, value_field: str
+        data: list[dict], date_field: str, value_field: str
     ) -> go.Figure:
         """Create timeline chart.
 

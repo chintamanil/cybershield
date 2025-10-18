@@ -1,13 +1,14 @@
 # VisionAgent handles image processing, OCR, and risk detection
 import base64
 import io
-from typing import Dict, List, Union
-from PIL import Image
-import pytesseract
+
 import cv2
 import numpy as np
-from transformers import pipeline
+import pytesseract
 import torch
+from PIL import Image
+from transformers import pipeline
+
 from utils.device_config import create_performance_config
 from utils.logging_config import get_security_logger
 
@@ -76,8 +77,8 @@ class VisionAgent:
             self.safety_classifier = None
 
     async def extract_text_from_image(
-        self, image_data: Union[str, bytes, Image.Image]
-    ) -> Dict:
+        self, image_data: str | bytes | Image.Image
+    ) -> dict:
         """
         Extract text from image using OCR.
 
@@ -125,6 +126,7 @@ class VisionAgent:
                 try:
                     # Store OCR result with 5 minute TTL
                     import hashlib
+
                     result_hash = hashlib.md5(full_text.encode()).hexdigest()[:8]
                     await self.memory.set(f"ocr:{result_hash}", result, ttl=300)
                 except Exception as e:
@@ -137,8 +139,8 @@ class VisionAgent:
             return {"text": "", "confidence": 0, "error": str(e)}
 
     async def classify_image_content(
-        self, image_data: Union[str, bytes, Image.Image]
-    ) -> Dict:
+        self, image_data: str | bytes | Image.Image
+    ) -> dict:
         """
         Classify image content for security risks.
 
@@ -173,10 +175,15 @@ class VisionAgent:
                     # Store classification result with 5 minute TTL
                     import hashlib
                     import time
+
                     result_hash = hashlib.md5(str(time.time()).encode()).hexdigest()[:8]
-                    await self.memory.set(f"classification:{result_hash}", classification_result, ttl=300)
+                    await self.memory.set(
+                        f"classification:{result_hash}", classification_result, ttl=300
+                    )
                 except Exception as e:
-                    logger.debug(f"Failed to store classification result in memory: {e}")
+                    logger.debug(
+                        f"Failed to store classification result in memory: {e}"
+                    )
 
             return classification_result
 
@@ -185,8 +192,8 @@ class VisionAgent:
             return {"error": str(e), "risk_level": "unknown"}
 
     async def detect_sensitive_content(
-        self, image_data: Union[str, bytes, Image.Image]
-    ) -> Dict:
+        self, image_data: str | bytes | Image.Image
+    ) -> dict:
         """
         Detect potentially sensitive content in images.
 
@@ -229,7 +236,7 @@ class VisionAgent:
             logger.error(f"Sensitive content detection failed: {e}")
             return {"error": str(e)}
 
-    def _prepare_image(self, image_data: Union[str, bytes, Image.Image]) -> Image.Image:
+    def _prepare_image(self, image_data: str | bytes | Image.Image) -> Image.Image:
         """Convert various image formats to PIL Image."""
         if isinstance(image_data, Image.Image):
             return image_data
@@ -267,8 +274,8 @@ class VisionAgent:
         return thresh
 
     def _analyze_security_risks(
-        self, classifications: List[Dict], image: Image.Image
-    ) -> Dict:
+        self, classifications: list[dict], image: Image.Image
+    ) -> dict:
         """Analyze classification results for security risks."""
         high_risk_categories = [
             "weapon",
@@ -317,7 +324,7 @@ class VisionAgent:
             "max_risk_score": max_risk_score,
         }
 
-    def _detect_pii_in_text(self, text: str) -> List[Dict]:
+    def _detect_pii_in_text(self, text: str) -> list[dict]:
         """Detect PII patterns in extracted text."""
         import re
 
@@ -340,7 +347,7 @@ class VisionAgent:
 
         return detected_pii
 
-    def _analyze_image_properties(self, image: Image.Image) -> Dict:
+    def _analyze_image_properties(self, image: Image.Image) -> dict:
         """Analyze image properties for additional context."""
         return {
             "dimensions": image.size,
@@ -352,7 +359,7 @@ class VisionAgent:
         }
 
     def _calculate_overall_risk(
-        self, pii_indicators: List[Dict], content_risk: str, image_properties: Dict
+        self, pii_indicators: list[dict], content_risk: str, image_properties: dict
     ) -> str:
         """Calculate overall risk score based on all factors."""
         risk_scores = {"none": 0, "low": 1, "medium": 2, "high": 3}
@@ -375,7 +382,7 @@ class VisionAgent:
         else:
             return "none"
 
-    async def process_image(self, image_data: Union[str, bytes, Image.Image]) -> Dict:
+    async def process_image(self, image_data: str | bytes | Image.Image) -> dict:
         """
         Complete image processing pipeline.
 
@@ -404,7 +411,7 @@ class VisionAgent:
             logger.error(f"Image processing failed: {e}")
             return {"status": "error", "error": str(e)}
 
-    def _generate_recommendations(self, analysis: Dict) -> List[str]:
+    def _generate_recommendations(self, analysis: dict) -> list[str]:
         """Generate security recommendations based on analysis."""
         recommendations = []
 
