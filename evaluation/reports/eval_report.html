@@ -1,0 +1,284 @@
+
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>CyberShield Retrieval Evaluation Report</title>
+            <style>
+                body {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    margin: 40px;
+                    background-color: #f5f5f5;
+                }
+                h1 {
+                    color: #2c3e50;
+                    border-bottom: 3px solid #3498db;
+                    padding-bottom: 10px;
+                }
+                h2 {
+                    color: #34495e;
+                    margin-top: 30px;
+                }
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin: 20px 0;
+                    background-color: white;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                }
+                th, td {
+                    padding: 12px;
+                    text-align: left;
+                    border-bottom: 1px solid #ddd;
+                }
+                th {
+                    background-color: #3498db;
+                    color: white;
+                    font-weight: bold;
+                }
+                tr:hover {
+                    background-color: #f1f1f1;
+                }
+                .metric-value {
+                    font-weight: bold;
+                    color: #27ae60;
+                }
+                .pass {
+                    color: #27ae60;
+                    font-weight: bold;
+                }
+                .fail {
+                    color: #e74c3c;
+                    font-weight: bold;
+                }
+                .summary-box {
+                    background-color: white;
+                    padding: 20px;
+                    margin: 20px 0;
+                    border-radius: 5px;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                }
+                .timestamp {
+                    color: #7f8c8d;
+                    font-size: 0.9em;
+                }
+            </style>
+        </head>
+        <body>
+            <h1>CyberShield Retrieval Evaluation Report</h1>
+            <p class="timestamp">Generated: 2025-10-20T15:51:17.875242</p>
+
+            <div class="summary-box">
+                <h2>Summary</h2>
+                <p><strong>Total Queries Evaluated:</strong> 113</p>
+                <p><strong>K Values:</strong> 1, 3, 5, 10</p>
+            </div>
+
+            <h2>Aggregate Metrics</h2>
+            <table>
+                <tr>
+                    <th>Metric</th>
+                    <th>Value</th>
+                    <th>Std Dev</th>
+                </tr>
+        
+                <tr>
+                    <td>f1@1</td>
+                    <td class="metric-value">0.000</td>
+                    <td>0.000</td>
+                </tr>
+                
+                <tr>
+                    <td>f1@10</td>
+                    <td class="metric-value">0.000</td>
+                    <td>0.000</td>
+                </tr>
+                
+                <tr>
+                    <td>f1@3</td>
+                    <td class="metric-value">0.000</td>
+                    <td>0.000</td>
+                </tr>
+                
+                <tr>
+                    <td>f1@5</td>
+                    <td class="metric-value">0.000</td>
+                    <td>0.000</td>
+                </tr>
+                
+                <tr>
+                    <td>mrr</td>
+                    <td class="metric-value">0.000</td>
+                    <td>0.000</td>
+                </tr>
+                
+                <tr>
+                    <td>ndcg@1</td>
+                    <td class="metric-value">0.000</td>
+                    <td>0.000</td>
+                </tr>
+                
+                <tr>
+                    <td>ndcg@10</td>
+                    <td class="metric-value">0.000</td>
+                    <td>0.000</td>
+                </tr>
+                
+                <tr>
+                    <td>ndcg@3</td>
+                    <td class="metric-value">0.000</td>
+                    <td>0.000</td>
+                </tr>
+                
+                <tr>
+                    <td>ndcg@5</td>
+                    <td class="metric-value">0.000</td>
+                    <td>0.000</td>
+                </tr>
+                
+                <tr>
+                    <td>precision@1</td>
+                    <td class="metric-value">0.000</td>
+                    <td>0.000</td>
+                </tr>
+                
+                <tr>
+                    <td>precision@10</td>
+                    <td class="metric-value">0.000</td>
+                    <td>0.000</td>
+                </tr>
+                
+                <tr>
+                    <td>precision@3</td>
+                    <td class="metric-value">0.000</td>
+                    <td>0.000</td>
+                </tr>
+                
+                <tr>
+                    <td>precision@5</td>
+                    <td class="metric-value">0.000</td>
+                    <td>0.000</td>
+                </tr>
+                
+                <tr>
+                    <td>recall@1</td>
+                    <td class="metric-value">0.000</td>
+                    <td>0.000</td>
+                </tr>
+                
+                <tr>
+                    <td>recall@10</td>
+                    <td class="metric-value">0.000</td>
+                    <td>0.000</td>
+                </tr>
+                
+                <tr>
+                    <td>recall@3</td>
+                    <td class="metric-value">0.000</td>
+                    <td>0.000</td>
+                </tr>
+                
+                <tr>
+                    <td>recall@5</td>
+                    <td class="metric-value">0.000</td>
+                    <td>0.000</td>
+                </tr>
+                
+            </table>
+
+            <h2>Per-Category Metrics</h2>
+            <table>
+                <tr>
+                    <th>Category</th>
+                    <th>Queries</th>
+                    <th>Recall@5</th>
+                    <th>Precision@5</th>
+                    <th>MRR</th>
+                    <th>F1@5</th>
+                </tr>
+        
+                <tr>
+                    <td>attack_signature</td>
+                    <td>10</td>
+                    <td class="metric-value">0.000</td>
+                    <td class="metric-value">0.000</td>
+                    <td class="metric-value">0.000</td>
+                    <td class="metric-value">0.000</td>
+                </tr>
+            
+                <tr>
+                    <td>attack_type</td>
+                    <td>9</td>
+                    <td class="metric-value">0.000</td>
+                    <td class="metric-value">0.000</td>
+                    <td class="metric-value">0.000</td>
+                    <td class="metric-value">0.000</td>
+                </tr>
+            
+                <tr>
+                    <td>combined</td>
+                    <td>19</td>
+                    <td class="metric-value">0.000</td>
+                    <td class="metric-value">0.000</td>
+                    <td class="metric-value">0.000</td>
+                    <td class="metric-value">0.000</td>
+                </tr>
+            
+                <tr>
+                    <td>geo_location</td>
+                    <td>10</td>
+                    <td class="metric-value">0.000</td>
+                    <td class="metric-value">0.000</td>
+                    <td class="metric-value">0.000</td>
+                    <td class="metric-value">0.000</td>
+                </tr>
+            
+                <tr>
+                    <td>ip_reputation</td>
+                    <td>30</td>
+                    <td class="metric-value">0.000</td>
+                    <td class="metric-value">0.000</td>
+                    <td class="metric-value">0.000</td>
+                    <td class="metric-value">0.000</td>
+                </tr>
+            
+                <tr>
+                    <td>malware_ioc</td>
+                    <td>10</td>
+                    <td class="metric-value">0.000</td>
+                    <td class="metric-value">0.000</td>
+                    <td class="metric-value">0.000</td>
+                    <td class="metric-value">0.000</td>
+                </tr>
+            
+                <tr>
+                    <td>port_scan</td>
+                    <td>10</td>
+                    <td class="metric-value">0.000</td>
+                    <td class="metric-value">0.000</td>
+                    <td class="metric-value">0.000</td>
+                    <td class="metric-value">0.000</td>
+                </tr>
+            
+                <tr>
+                    <td>protocol</td>
+                    <td>3</td>
+                    <td class="metric-value">0.000</td>
+                    <td class="metric-value">0.000</td>
+                    <td class="metric-value">0.000</td>
+                    <td class="metric-value">0.000</td>
+                </tr>
+            
+                <tr>
+                    <td>severity</td>
+                    <td>12</td>
+                    <td class="metric-value">0.000</td>
+                    <td class="metric-value">0.000</td>
+                    <td class="metric-value">0.000</td>
+                    <td class="metric-value">0.000</td>
+                </tr>
+            
+            </table>
+
+        </body>
+        </html>
+        

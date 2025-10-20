@@ -164,7 +164,7 @@ regex_checker = "tools.regex_checker:RegexChecker"
 
 # Tool Configuration
 [tool.setuptools]
-packages = ["agents", "tools", "memory", "workflows", "vectorstore", "data", "server", "tests", "utils"]
+packages = ["agents", "tools", "memory", "workflows", "vectorstore", "data", "server", "server.monitoring", "server.middleware", "server.endpoints", "tests", "utils", "evaluation", "frontend.components"]
 
 [tool.setuptools.package-data]
 "*" = ["*.yaml", "*.yml", "*.json", "*.sql", "*.md", "*.txt"]
