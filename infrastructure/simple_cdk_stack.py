@@ -201,7 +201,7 @@ class CyberShieldStack(Stack):
             desired_count=1,  # Start with 1 for cost optimization
             task_image_options=ecs_patterns.ApplicationLoadBalancedTaskImageOptions(
                 image=ecs.ContainerImage.from_asset(
-                    "..", file="deployment/Dockerfile.aws"
+                    ".", file="deployment/Dockerfile.aws"
                 ),
                 container_port=8000,
                 environment={
@@ -297,11 +297,16 @@ class CyberShieldStack(Stack):
         )
 
 
-# CDK App
-app = App()
+def main() -> None:
+    """Main entry point for CDK app"""
+    app = App()
+    CyberShieldStack(
+        app,
+        "CyberShieldStack",
+        env=Environment(account="840656856721", region="us-east-1"),
+    )
+    app.synth()
 
-CyberShieldStack(
-    app, "CyberShieldStack", env=Environment(account="840656856721", region="us-east-1")
-)
 
-app.synth()
+if __name__ == "__main__":
+    main()

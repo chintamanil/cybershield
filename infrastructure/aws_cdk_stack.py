@@ -512,16 +512,19 @@ class CyberShieldStack(Stack):
         )
 
 
-# CDK App
-app = App()
+def main() -> None:
+    """Main entry point for CDK app"""
+    app = App()
+    CyberShieldStack(
+        app,
+        "CyberShieldStack",
+        env=Environment(
+            account="840656856721",  # Replace with your AWS account ID
+            region="us-east-1",  # Replace with your preferred region
+        ),
+    )
+    app.synth()
 
-CyberShieldStack(
-    app,
-    "CyberShieldStack",
-    env=Environment(
-        account="840656856721",  # Replace with your AWS account ID
-        region="us-east-1",  # Replace with your preferred region
-    ),
-)
 
-app.synth()
+if __name__ == "__main__":
+    main()
