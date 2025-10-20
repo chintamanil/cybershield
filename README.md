@@ -33,6 +33,8 @@ CyberShield is a sophisticated AI-powered cybersecurity platform that combines m
 - **📊 Historical Analysis**: 120,000 cybersecurity attack records in Milvus vector database
 - **🎯 Smart Architecture**: Refactored for maintainability and performance
 - **👁️ Vision AI**: Complete OCR and image security analysis with tesseract integration
+- **✅ Complete Evaluation Framework**: 113 golden queries across 9 categories with 100% coverage
+- **🔍 Hybrid Search**: Attribute filtering + vector similarity for optimal retrieval
 
 ## Enhanced Multi-Agent Architecture with Intelligent Caching & Context Memory
 

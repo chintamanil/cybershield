@@ -104,14 +104,18 @@ class CyberShieldVectorStore:
             return []
 
     async def search_similar_attacks(
-        self, query_embedding: list[float], limit: int = 10
+        self,
+        query_embedding: list[float],
+        limit: int = 10,
+        filter_expr: str | None = None,
     ) -> list[dict[str, Any]]:
         """
-        Search for similar attacks using vector similarity
+        Search for similar attacks using vector similarity with optional filtering
 
         Args:
             query_embedding: Vector embedding of the query text
             limit: Maximum number of results to return
+            filter_expr: Optional Milvus filter expression for hybrid search
 
         Returns:
             List of similar attack records with similarity scores
@@ -124,12 +128,13 @@ class CyberShieldVectorStore:
             # Define search parameters
             search_params = {'metric_type': 'IP', 'params': {'nprobe': 10}}
 
-            # Execute vector similarity search
+            # Execute vector similarity search with optional filtering
             results = self.collection.search(
                 data=[query_embedding],
                 anns_field='embedding',
                 param=search_params,
                 limit=limit,
+                expr=filter_expr,  # Milvus will filter BEFORE vector search
                 output_fields=[
                     'id',
                     'timestamp',
