@@ -1,0 +1,68 @@
+# Git and version control
+.git
+.gitignore
+.github
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Python
+__pycache__
+*.py[cod]
+*$py.class
+*.so
+.Python
+.pytest_cache
+.mypy_cache
+.ruff_cache
+venv/
+.venv/
+env/
+
+# CDK
+cdk.out/
+cdk.context.json
+infrastructure/
+
+# Tests
+tests/
+*.test.py
+test_*.py
+
+# Documentation
+docs/
+*.md
+README.md
+LICENSE
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Node modules (if any)
+node_modules/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Logs
+logs/
+*.log
+
+# Data files (not needed in container)
+data/cybersecurity_attacks.csv
+data/*.csv
+
+# Deployment scripts
+scripts/
+deployment/*.sh
+
+# macOS
+.DS_Store
