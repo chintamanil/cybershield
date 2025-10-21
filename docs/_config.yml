@@ -14,7 +14,7 @@ navigation:
     url: "/"
   - title: "Architecture"
     url: "/architecture"
-  - title: "AWS Infrastructure" 
+  - title: "AWS Infrastructure"
     url: "/aws-infrastructure"
   - title: "API Documentation"
     url: "/api-docs"
@@ -22,6 +22,8 @@ navigation:
     url: "/deployment"
   - title: "Testing"
     url: "/testing"
+  - title: "RAG Evaluation"
+    url: "/evaluation"
 
 # Plugin Configuration
 plugins:
