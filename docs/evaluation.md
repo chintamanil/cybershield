@@ -59,7 +59,7 @@ graph TD
     end
 
     subgraph "Search Strategy Selection"
-        HYB{Hybrid Router}
+        HYB[Hybrid Router]
         ATT[Attribute Filtering<br/>Exact match queries]
         VEC[Vector Similarity<br/>Semantic queries]
     end
@@ -95,8 +95,8 @@ graph TD
     QP --> CE
     CE --> HYB
 
-    HYB -- Has metadata --> ATT
-    HYB -- Semantic query --> VEC
+    HYB -->|Has metadata| ATT
+    HYB -->|Semantic query| VEC
 
     ATT --> OPT1
     VEC --> OPT1
