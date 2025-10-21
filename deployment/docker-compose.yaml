@@ -41,6 +41,7 @@ services:
       - pulsar
   etcd:
     image: quay.io/coreos/etcd:v3.5.5
+    platform: linux/amd64  # Explicitly use amd64 for Apple Silicon compatibility
     environment:
       - ETCD_AUTO_COMPACTION_MODE=revision
       - ETCD_AUTO_COMPACTION_RETENTION=1000
@@ -63,6 +64,7 @@ services:
       - minio_data:/data
   pulsar:
     image: apachepulsar/pulsar:2.10.2
+    platform: linux/amd64  # Explicitly use amd64 for compatibility with Apple Silicon via Rosetta
     command: bin/pulsar standalone
     ports:
       - "6650:6650"
