@@ -95,8 +95,8 @@ graph TD
     QP --> CE
     CE --> HYB
 
-    HYB -->|Has metadata| ATT
-    HYB -->|Semantic query| VEC
+    HYB -- Has metadata --> ATT
+    HYB -- Semantic query --> VEC
 
     ATT --> OPT1
     VEC --> OPT1
