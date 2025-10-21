@@ -188,6 +188,16 @@ curl https://cybershield-ai.com/status
 | **Vector Database** | 120K records | Historical attack analysis |
 | **Frontend Tests** | 36 tests | Session management coverage |
 
+### **RAG Evaluation Metrics**
+
+| Metric | Value | Status | Interpretation |
+|--------|-------|--------|----------------|
+| **MRR** | 1.000 | ✅ Perfect | First relevant result always at position 1 |
+| **Precision@5** | 0.720 | ✅ Good | 72% of returned results are relevant |
+| **Recall@5** | 0.565 | ⚠️ Moderate | Finding 56.5% of relevant documents |
+| **NDCG@5** | 1.000 | ✅ Excellent | Perfect ranking quality |
+| **Category Coverage** | 9/9 | ✅ Complete | 100% categories with meaningful metrics |
+
 ---
 
 ## 🔗 **Navigation**
@@ -216,6 +226,11 @@ curl https://cybershield-ai.com/status
   <a href="/testing" class="nav-card">
     <h3>🧪 Testing</h3>
     <p>Test coverage and validation strategies</p>
+  </a>
+
+  <a href="/evaluation" class="nav-card">
+    <h3>📊 RAG Evaluation</h3>
+    <p>Complete RAG evaluation with 113 golden queries and hybrid search</p>
   </a>
 </div>
 

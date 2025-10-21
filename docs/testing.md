@@ -392,6 +392,325 @@ async def test_analyze_batch(self):
 
 ---
 
+## 📊 **RAG Evaluation Testing**
+
+### **Evaluation Framework Tests**
+
+CyberShield includes a comprehensive evaluation harness for testing retrieval-augmented generation (RAG) performance with 113 golden queries across 9 categories.
+
+**Test Coverage:**
+```
+✅ 113 Golden Queries
+✅ 9 Query Categories (100% coverage)
+✅ 5 RAG Metrics (Recall, Precision, F1, MRR, NDCG)
+✅ Hybrid Search Testing (Attribute + Vector)
+✅ Natural Language Query Parsing
+✅ Milvus Optimization Validation
+```
+
+### **Evaluation Architecture**
+
+```mermaid
+graph TD
+    subgraph "Evaluation Test Framework"
+        subgraph "Golden Dataset"
+            GD1[113 Test Queries]
+            GD2[9 Categories]
+            GD3[Ground Truth Docs]
+        end
+
+        subgraph "Test Scenarios"
+            TS1[IP Reputation<br/>30 queries]
+            TS2[Geo Location<br/>10 queries]
+            TS3[Port Scan<br/>10 queries]
+            TS4[Combined Queries<br/>19 queries]
+            TS5[Severity/Attack Type<br/>44 queries total]
+        end
+
+        subgraph "Validation"
+            V1[Hybrid Search<br/>Attribute + Vector]
+            V2[NLP Parser<br/>Metadata extraction]
+            V3[Optimizations<br/>Over-fetch, adaptive, threshold]
+        end
+
+        subgraph "Metrics"
+            M1[Per-Query Metrics<br/>Individual results]
+            M2[Per-Category Metrics<br/>Category breakdown]
+            M3[Aggregate Metrics<br/>Overall performance]
+        end
+    end
+
+    GD1 --> TS1
+    GD1 --> TS2
+    GD1 --> TS3
+    GD1 --> TS4
+    GD1 --> TS5
+
+    TS1 --> V1
+    TS2 --> V1
+    TS3 --> V1
+    TS4 --> V2
+    TS5 --> V2
+
+    V1 --> V3
+    V2 --> V3
+
+    V3 --> M1
+    M1 --> M2
+    M2 --> M3
+
+    %% Darker Arrow Styling
+    linkStyle default stroke:#111,stroke-width:1px
+```
+
+### **Evaluation Test Examples**
+
+**1. Hybrid Search Testing:**
+```python
+# evaluation/harness/eval_harness.py
+
+async def test_attribute_filtering_query(self):
+    """Test exact match attribute filtering"""
+    query = {
+        "query_text": "Show attacks from IP 203.0.113.1",
+        "metadata": {"ip": "203.0.113.1"},
+        "category": "ip_reputation"
+    }
+
+    # Execute search with attribute filter
+    results = await self.search_engine.search(
+        query_text=query["query_text"],
+        metadata=query["metadata"],
+        limit=5
+    )
+
+    # Validate results
+    assert len(results) > 0
+    assert all(
+        r["source_ip"] == "203.0.113.1" or r["dest_ip"] == "203.0.113.1"
+        for r in results
+    )
+
+async def test_semantic_vector_search(self):
+    """Test semantic similarity search"""
+    query = {
+        "query_text": "Show me similar DDoS patterns",
+        "category": "attack_type"
+    }
+
+    # Execute vector search
+    results = await self.search_engine.semantic_search(
+        query_text=query["query_text"],
+        limit=10
+    )
+
+    # Validate semantic understanding
+    assert len(results) == 10
+    assert all(r["attack_type"] == "DDoS" for r in results)
+    assert all(r["similarity_score"] >= 0.3 for r in results)
+
+async def test_combined_query_parsing(self):
+    """Test NLP parsing for combined queries"""
+    query_text = "Show High Intrusion incidents from TCP protocol"
+
+    # Parse metadata from natural language
+    metadata = parse_combined_query_metadata(query_text)
+
+    # Validate extraction
+    assert metadata["severity"] == "High"
+    assert metadata["attack_type"] == "Intrusion"
+    assert metadata["protocol"] == "TCP"
+
+    # Execute hybrid search
+    results = await self.search_engine.search(
+        query_text=query_text,
+        metadata=metadata,
+        limit=5
+    )
+
+    # Validate filtering
+    assert all(r["severity_level"] == "High" for r in results)
+    assert all(r["attack_type"] == "Intrusion" for r in results)
+    assert all(r["protocol"] == "TCP" for r in results)
+```
+
+**2. Metrics Calculation Testing:**
+```python
+# evaluation/harness/test_metrics.py
+
+def test_recall_calculation(self):
+    """Test Recall@k metric calculation"""
+    retrieved = ["doc1", "doc2", "doc3", "doc4", "doc5"]
+    relevant = ["doc1", "doc2", "doc6", "doc7", "doc8", "doc9", "doc10"]
+
+    recall_at_5 = len(set(retrieved) & set(relevant)) / len(relevant)
+
+    # 2 relevant docs found out of 7 total
+    assert recall_at_5 == 2/7  # 0.286
+
+def test_precision_calculation(self):
+    """Test Precision@k metric calculation"""
+    retrieved = ["doc1", "doc2", "doc3", "doc4", "doc5"]
+    relevant = ["doc1", "doc2", "doc6", "doc7", "doc8", "doc9", "doc10"]
+
+    precision_at_5 = len(set(retrieved) & set(relevant)) / len(retrieved)
+
+    # 2 relevant docs out of 5 retrieved
+    assert precision_at_5 == 2/5  # 0.4
+
+def test_mrr_calculation(self):
+    """Test Mean Reciprocal Rank calculation"""
+    # First relevant result at position 1
+    rank_first_relevant = 1
+    mrr = 1 / rank_first_relevant
+
+    assert mrr == 1.0  # Perfect ranking
+
+    # First relevant result at position 3
+    rank_first_relevant = 3
+    mrr = 1 / rank_first_relevant
+
+    assert mrr == 0.333  # Lower ranking quality
+
+def test_ndcg_calculation(self):
+    """Test NDCG@k calculation"""
+    # Retrieved results with relevance scores
+    results = [
+        {"doc_id": "doc1", "relevance": 1, "position": 1},  # Relevant
+        {"doc_id": "doc2", "relevance": 1, "position": 2},  # Relevant
+        {"doc_id": "doc3", "relevance": 0, "position": 3},  # Not relevant
+        {"doc_id": "doc4", "relevance": 1, "position": 4},  # Relevant
+        {"doc_id": "doc5", "relevance": 0, "position": 5},  # Not relevant
+    ]
+
+    # Calculate DCG@5
+    dcg = sum(
+        r["relevance"] / math.log2(r["position"] + 1)
+        for r in results
+    )
+
+    # Calculate IDCG@5 (ideal ranking)
+    ideal_results = sorted(results, key=lambda x: x["relevance"], reverse=True)
+    idcg = sum(
+        r["relevance"] / math.log2(i + 2)
+        for i, r in enumerate(ideal_results[:5])
+    )
+
+    # NDCG@5
+    ndcg = dcg / idcg if idcg > 0 else 0
+
+    assert 0 <= ndcg <= 1.0
+```
+
+**3. Optimization Validation Testing:**
+```python
+# tests/vectorstore/test_milvus_optimizations.py
+
+@pytest.mark.asyncio
+async def test_over_fetching_optimization(self):
+    """Test over-fetching returns better results"""
+    query_embedding = generate_test_embedding()
+
+    # Without over-fetching
+    results_normal = await milvus_client.search_similar_attacks(
+        query_embedding=query_embedding,
+        limit=10,
+        initial_limit=10  # Fetch only 10
+    )
+
+    # With over-fetching
+    results_optimized = await milvus_client.search_similar_attacks(
+        query_embedding=query_embedding,
+        limit=10,
+        initial_limit=30  # Fetch 30, return best 10
+    )
+
+    # Over-fetching should provide higher quality results
+    avg_similarity_normal = sum(r["similarity_score"] for r in results_normal) / len(results_normal)
+    avg_similarity_optimized = sum(r["similarity_score"] for r in results_optimized) / len(results_optimized)
+
+    assert avg_similarity_optimized >= avg_similarity_normal
+
+@pytest.mark.asyncio
+async def test_adaptive_nprobe_scaling(self):
+    """Test adaptive nprobe based on collection size"""
+    # Small collection
+    search_params_small = milvus_client._get_search_params(collection_size=30000)
+    assert search_params_small["params"]["nprobe"] == 10
+
+    # Medium collection
+    search_params_medium = milvus_client._get_search_params(collection_size=60000)
+    assert search_params_medium["params"]["nprobe"] == 15
+
+    # Large collection
+    search_params_large = milvus_client._get_search_params(collection_size=120000)
+    assert search_params_large["params"]["nprobe"] == 20
+
+@pytest.mark.asyncio
+async def test_similarity_threshold_filtering(self):
+    """Test similarity threshold removes low-quality results"""
+    query_embedding = generate_test_embedding()
+
+    # Without threshold
+    results_unfiltered = await milvus_client.search_similar_attacks(
+        query_embedding=query_embedding,
+        limit=10,
+        min_similarity=0.0  # No filtering
+    )
+
+    # With threshold
+    results_filtered = await milvus_client.search_similar_attacks(
+        query_embedding=query_embedding,
+        limit=10,
+        min_similarity=0.3  # Quality threshold
+    )
+
+    # All filtered results should meet threshold
+    assert all(r["similarity_score"] >= 0.3 for r in results_filtered)
+```
+
+### **Evaluation Reports**
+
+**HTML Report Generation:**
+```bash
+# Run evaluation harness
+uv run python evaluation/harness/eval_harness.py
+
+# Generated reports:
+# - evaluation/reports/eval_report.html (interactive visualization)
+# - evaluation/reports/eval_report.json (machine-readable metrics)
+```
+
+**Metrics Validation:**
+```python
+# Automated quality gate checking
+def validate_evaluation_results(metrics: dict) -> bool:
+    """Validate evaluation metrics against quality gates"""
+    quality_gates = {
+        "recall@5": 0.55,          # ✅ Current: 0.565
+        "precision@5": 0.70,       # ✅ Current: 0.720
+        "mrr": 0.90,               # ✅ Current: 1.000
+        "min_category_recall@5": 0.15  # ✅ Current: 0.152 (minimum)
+    }
+
+    return all(
+        metrics[metric] >= threshold
+        for metric, threshold in quality_gates.items()
+    )
+```
+
+**Current Evaluation Status:**
+```
+✅ MRR: 1.000 (Perfect ranking)
+✅ Precision@5: 0.720 (Good accuracy)
+⚠️ Recall@5: 0.565 (Moderate coverage)
+⚠️ F1@5: 0.397 (Moderate balance)
+✅ NDCG@5: 1.000 (Excellent ranking quality)
+✅ Category Coverage: 9/9 (100%)
+```
+
+---
+
 ## 🔧 **Security Tools Testing**
 
 ### **Tool Test Coverage (89 tests)**
@@ -404,14 +723,14 @@ graph LR
         SHODAN[Shodan Tests<br/>20 test cases]
         REGEX[Regex Checker<br/>14 test cases]
     end
-    
+
     subgraph "Test Scenarios"
         SUCCESS[Success Cases<br/>Valid responses]
         ERRORS[Error Handling<br/>API failures]
         LIMITS[Rate Limiting<br/>Quota management]
         EDGE[Edge Cases<br/>Invalid inputs]
     end
-    
+
     VT --> SUCCESS
     ABUSE --> ERRORS
     SHODAN --> LIMITS

@@ -448,6 +448,98 @@ graph TD
     linkStyle default stroke:#111,stroke-width:1px
 ```
 
+### **6. RAG Evaluation Framework**
+
+```mermaid
+graph TD
+    subgraph "Evaluation Pipeline"
+        GD[Golden Dataset<br/>113 queries<br/>9 categories]
+
+        subgraph "Query Processing"
+            QP[Query Parser<br/>NLP metadata extraction]
+            HYB[Hybrid Search<br/>Attribute + Vector]
+        end
+
+        subgraph "Search Strategies"
+            ATT[Attribute Filtering<br/>Exact match queries]
+            VEC[Vector Similarity<br/>Semantic queries]
+        end
+
+        subgraph "Optimizations"
+            OPT1[Over-fetching<br/>Fetch 3x, return top-k]
+            OPT2[Adaptive nprobe<br/>Dynamic based on size]
+            OPT3[Similarity Threshold<br/>Min 0.3 quality gate]
+        end
+    end
+
+    subgraph "Metrics Calculation"
+        MET1[Recall@k<br/>Coverage metric]
+        MET2[Precision@k<br/>Accuracy metric]
+        MET3[MRR<br/>First hit ranking]
+        MET4[NDCG@k<br/>Ranking quality]
+        MET5[F1@k<br/>Balance metric]
+    end
+
+    subgraph "Results & Reporting"
+        AGG[Aggregate Metrics<br/>Overall performance]
+        CAT[Per-Category Metrics<br/>9 category breakdown]
+        REP[HTML/JSON Reports<br/>Interactive visualization]
+        QG[Quality Gates<br/>Deployment thresholds]
+    end
+
+    GD --> QP
+    QP --> HYB
+    HYB --> ATT
+    HYB --> VEC
+
+    ATT --> OPT1
+    VEC --> OPT1
+    OPT1 --> OPT2
+    OPT2 --> OPT3
+
+    OPT3 --> MET1
+    OPT3 --> MET2
+    OPT3 --> MET3
+    OPT3 --> MET4
+    OPT3 --> MET5
+
+    MET1 --> AGG
+    MET2 --> AGG
+    MET3 --> AGG
+    MET4 --> AGG
+    MET5 --> AGG
+
+    AGG --> CAT
+    CAT --> REP
+    REP --> QG
+
+    %% Darker Arrow Styling
+    linkStyle default stroke:#111,stroke-width:1px
+```
+
+**Evaluation Results (October 2025):**
+
+| Metric | Value | Interpretation |
+|--------|-------|----------------|
+| **MRR** | 1.000 | ✅ Perfect ranking (first result always relevant) |
+| **Recall@5** | 0.565 | ⚠️ Moderate (56.5% of relevant docs retrieved) |
+| **Precision@5** | 0.720 | ✅ Good (72% of results are relevant) |
+| **F1@5** | 0.397 | ⚠️ Moderate (balance could improve) |
+| **NDCG@5** | 1.000 | ✅ Excellent ranking quality |
+| **Category Coverage** | 9/9 | ✅ 100% categories with meaningful metrics |
+
+**Key Features:**
+- **Hybrid Search**: Combines attribute filtering for exact matches with vector similarity for semantic queries
+- **Natural Language Parsing**: Extracts metadata from queries like "Show High Intrusion incidents"
+- **3 Optimizations**: Over-fetching (3x candidates), adaptive nprobe (dynamic based on collection size), similarity threshold (min 0.3)
+- **Complete Coverage**: All 9 categories (ip_reputation, geo_location, port_scan, combined, severity, malware_ioc, attack_type, protocol, attack_signature) show non-zero metrics
+
+**Implementation Files:**
+- `evaluation/harness/eval_harness.py` - Main evaluation harness with hybrid search
+- `vectorstore/milvus_client.py` - Optimized vector search with 3 enhancements
+- `evaluation/BASELINE_NOTES.md` - Comprehensive metric explanations
+- `evaluation/SEMANTIC_QUERY_ANALYSIS.md` - Real-world semantic query analysis
+
 ---
 
 ## ⚡ **Performance Architecture**
