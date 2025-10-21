@@ -24,6 +24,34 @@ class CyberShieldVectorStore:
         self.collection = None
         self.perf_config = create_performance_config()
 
+    def _get_search_params(self, collection_size: int) -> dict:
+        """
+        Get optimized search parameters based on collection size.
+
+        Dynamically adjusts nprobe parameter for optimal balance between
+        search accuracy and performance based on the collection size.
+
+        Args:
+            collection_size: Number of documents in collection
+
+        Returns:
+            Optimized search parameters for Milvus
+        """
+        # Increase nprobe for larger collections (balance speed vs accuracy)
+        if collection_size > 100000:
+            nprobe = 20  # High accuracy for large collections
+        elif collection_size > 50000:
+            nprobe = 15  # Balanced for medium collections
+        else:
+            nprobe = 10  # Fast for small collections
+
+        return {
+            'metric_type': 'IP',  # Inner Product (good for normalized embeddings)
+            'params': {
+                'nprobe': nprobe,  # Number of clusters to search
+            },
+        }
+
     async def connect(self):
         """Connect to Milvus and initialize collection"""
         try:
@@ -108,32 +136,57 @@ class CyberShieldVectorStore:
         query_embedding: list[float],
         limit: int = 10,
         filter_expr: str | None = None,
+        initial_limit: int | None = None,
+        min_similarity: float = 0.3,
     ) -> list[dict[str, Any]]:
         """
         Search for similar attacks using vector similarity with optional filtering
 
+        Implements three key optimizations:
+        1. Over-fetching: Retrieves more candidates than needed for better recall
+        2. Adaptive search params: Tunes nprobe based on collection size
+        3. Similarity filtering: Removes low-relevance results for better precision
+
         Args:
             query_embedding: Vector embedding of the query text
-            limit: Maximum number of results to return
+            limit: Maximum number of results to return to user
             filter_expr: Optional Milvus filter expression for hybrid search
+            initial_limit: Number of candidates to retrieve before filtering
+                           (default: limit * 3 for better recall)
+            min_similarity: Minimum similarity score threshold (0.0-1.0)
+                           for Inner Product metric (default: 0.3)
 
         Returns:
-            List of similar attack records with similarity scores
+            List of similar attack records with similarity scores above threshold
         """
         if not self.collection:
             logger.warning('No collection available for similarity search')
             return []
 
         try:
-            # Define search parameters
-            search_params = {'metric_type': 'IP', 'params': {'nprobe': 10}}
+            # Optimization 1: Over-fetch candidates for better recall
+            # Fetch 3x more results, then filter and return top-k
+            fetch_limit = initial_limit or (limit * 3)
+
+            # Optimization 2: Adaptive search parameters based on collection size
+            collection_size = self.collection.num_entities
+            search_params = self._get_search_params(collection_size)
+
+            logger.debug(
+                'Starting vector search',
+                limit=limit,
+                fetch_limit=fetch_limit,
+                collection_size=collection_size,
+                nprobe=search_params['params']['nprobe'],
+                min_similarity=min_similarity,
+            )
 
             # Execute vector similarity search with optional filtering
             results = self.collection.search(
                 data=[query_embedding],
                 anns_field='embedding',
                 param=search_params,
-                limit=limit,
+                limit=fetch_limit,  # Fetch more for re-ranking
                 expr=filter_expr,  # Milvus will filter BEFORE vector search
                 output_fields=[
                     'id',
@@ -155,40 +208,48 @@ class CyberShieldVectorStore:
                 ],
             )
 
-            # Convert results to list of dictionaries
+            # Optimization 3: Filter by similarity score and return top-k
             similar_attacks = []
             if results and len(results) > 0:
                 for hit in results[0]:
-                    attack_record = {
-                        'id': hit.entity.get('id'),
-                        'timestamp': hit.entity.get('timestamp'),
-                        'source_ip': hit.entity.get('source_ip'),
-                        'dest_ip': hit.entity.get('dest_ip'),
-                        'source_port': hit.entity.get('source_port'),
-                        'dest_port': hit.entity.get('dest_port'),
-                        'protocol': hit.entity.get('protocol'),
-                        'attack_type': hit.entity.get('attack_type'),
-                        'attack_signature': hit.entity.get('attack_signature'),
-                        'severity_level': hit.entity.get('severity_level'),
-                        'action_taken': hit.entity.get('action_taken'),
-                        'anomaly_score': hit.entity.get('anomaly_score'),
-                        'malware_indicators': hit.entity.get('malware_indicators'),
-                        'geo_location': hit.entity.get('geo_location'),
-                        'log_source': hit.entity.get('log_source'),
-                        'full_context': hit.entity.get('full_context'),
-                        'similarity_score': float(
-                            hit.score
-                        ),  # Inner product similarity score
-                    }
-                    similar_attacks.append(attack_record)
+                    similarity = float(hit.score)
+
+                    # Only include results above similarity threshold
+                    if similarity >= min_similarity:
+                        attack_record = {
+                            'id': hit.entity.get('id'),
+                            'timestamp': hit.entity.get('timestamp'),
+                            'source_ip': hit.entity.get('source_ip'),
+                            'dest_ip': hit.entity.get('dest_ip'),
+                            'source_port': hit.entity.get('source_port'),
+                            'dest_port': hit.entity.get('dest_port'),
+                            'protocol': hit.entity.get('protocol'),
+                            'attack_type': hit.entity.get('attack_type'),
+                            'attack_signature': hit.entity.get('attack_signature'),
+                            'severity_level': hit.entity.get('severity_level'),
+                            'action_taken': hit.entity.get('action_taken'),
+                            'anomaly_score': hit.entity.get('anomaly_score'),
+                            'malware_indicators': hit.entity.get('malware_indicators'),
+                            'geo_location': hit.entity.get('geo_location'),
+                            'log_source': hit.entity.get('log_source'),
+                            'full_context': hit.entity.get('full_context'),
+                            'similarity_score': similarity,
+                        }
+                        similar_attacks.append(attack_record)
+
+                        # Stop if we have enough high-quality results
+                        if len(similar_attacks) >= limit:
+                            break
 
             logger.debug(
                 'Vector similarity search completed',
-                results_count=len(similar_attacks),
+                fetched_count=len(results[0]) if results and len(results) > 0 else 0,
+                filtered_count=len(similar_attacks),
+                returned_count=min(len(similar_attacks), limit),
                 limit=limit,
             )
 
-            return similar_attacks
+            return similar_attacks[:limit]  # Return exactly limit results
 
         except Exception as e:
             logger.error('Similarity search failed', error=str(e))
