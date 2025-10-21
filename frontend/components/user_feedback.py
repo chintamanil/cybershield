@@ -12,7 +12,7 @@ import asyncio
 import json
 import uuid
 from datetime import datetime
-from typing import Any, Dict, Optional
+from typing import Any, Coroutine, Dict, Optional
 
 import redis.asyncio as redis
 import streamlit as st
@@ -20,6 +20,40 @@ import streamlit as st
 from utils.logging_config import get_security_logger
 
 logger = get_security_logger('user_feedback')
+
+
+def run_async(coro: Coroutine) -> Any:
+    """
+    Safely run async coroutine in Streamlit context.
+
+    Handles event loop issues by creating a new loop if needed.
+
+    Args:
+        coro: Async coroutine to execute
+
+    Returns:
+        Result of coroutine execution
+    """
+    try:
+        # Try to get existing event loop
+        loop = asyncio.get_event_loop()
+        if loop.is_closed():
+            # Create new loop if closed
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            return loop.run_until_complete(coro)
+        else:
+            # Use existing loop
+            return loop.run_until_complete(coro)
+    except RuntimeError:
+        # No event loop in current thread, create new one
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        try:
+            return loop.run_until_complete(coro)
+        finally:
+            # Don't close the loop as it might be reused
+            pass
 
 
 class FeedbackCollector:
@@ -215,7 +249,7 @@ def render_feedback_widget(
         if st.button('👍 Yes', key=f'thumbs_up_{feedback_id}'):
             # Store positive feedback
             if feedback_collector:
-                asyncio.run(
+                run_async(
                     feedback_collector.store_feedback(
                         feedback_id=feedback_id,
                         user_id=user_id,
@@ -249,7 +283,7 @@ def render_feedback_widget(
             if submitted:
                 # Store negative feedback with text
                 if feedback_collector:
-                    asyncio.run(
+                    run_async(
                         feedback_collector.store_feedback(
                             feedback_id=feedback_id,
                             user_id=user_id,
@@ -282,7 +316,7 @@ def render_feedback_stats_sidebar(
         feedback_collector = FeedbackCollector()
 
     try:
-        stats = asyncio.run(feedback_collector.get_feedback_stats())
+        stats = run_async(feedback_collector.get_feedback_stats())
 
         st.sidebar.divider()
         st.sidebar.subheader('📊 User Feedback')

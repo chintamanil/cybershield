@@ -10,7 +10,7 @@ Provides comprehensive SLA monitoring visualization:
 
 import asyncio
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Any, Coroutine
 
 import plotly.graph_objects as go
 import streamlit as st
@@ -20,6 +20,40 @@ from server.monitoring.sla_tracker import SLATracker
 from utils.logging_config import get_security_logger
 
 logger = get_security_logger('sla_dashboard')
+
+
+def run_async(coro: Coroutine) -> Any:
+    """
+    Safely run async coroutine in Streamlit context.
+
+    Handles event loop issues by creating a new loop if needed.
+
+    Args:
+        coro: Async coroutine to execute
+
+    Returns:
+        Result of coroutine execution
+    """
+    try:
+        # Try to get existing event loop
+        loop = asyncio.get_event_loop()
+        if loop.is_closed():
+            # Create new loop if closed
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            return loop.run_until_complete(coro)
+        else:
+            # Use existing loop
+            return loop.run_until_complete(coro)
+    except RuntimeError:
+        # No event loop in current thread, create new one
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        try:
+            return loop.run_until_complete(coro)
+        finally:
+            # Don't close the loop as it might be reused
+            pass
 
 
 def render_sla_dashboard(
@@ -43,7 +77,7 @@ def render_sla_dashboard(
 
     try:
         # Get all endpoint metrics
-        all_metrics = asyncio.run(
+        all_metrics = run_async(
             sla_tracker.get_all_endpoints_metrics(time_window_hours)
         )
 
@@ -293,7 +327,7 @@ def _render_alert_status(sla_tracker: SLATracker, endpoint: str) -> None:
     """Render alert status section"""
     st.subheader('🚨 Alert Status')
 
-    alerts = asyncio.run(sla_tracker.check_alerts(endpoint))
+    alerts = run_async(sla_tracker.check_alerts(endpoint))
 
     if not alerts:
         st.success('✅ All SLA thresholds met - No alerts')
@@ -339,7 +373,7 @@ def _render_historical_trends(sla_tracker: SLATracker, endpoint: str) -> None:
     st.subheader('📈 Historical Trends (7 days)')
 
     try:
-        trends = asyncio.run(sla_tracker.get_historical_trends(endpoint, days=7))
+        trends = run_async(sla_tracker.get_historical_trends(endpoint, days=7))
 
         if not trends or not trends.get('dates'):
             st.info('Not enough historical data yet. Check back after more API usage.')
@@ -403,7 +437,7 @@ def render_sla_stats_sidebar(sla_tracker: Optional[SLATracker] = None) -> None:
         sla_tracker = SLATracker()
 
     try:
-        all_metrics = asyncio.run(sla_tracker.get_all_endpoints_metrics())
+        all_metrics = run_async(sla_tracker.get_all_endpoints_metrics())
 
         if not all_metrics:
             return
