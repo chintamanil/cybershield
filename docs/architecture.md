@@ -473,11 +473,11 @@ graph TD
     end
 
     subgraph "Metrics Calculation"
-        MET1[Recall@k<br/>Coverage metric]
-        MET2[Precision@k<br/>Accuracy metric]
+        MET1[Recall-at-k<br/>Coverage metric]
+        MET2[Precision-at-k<br/>Accuracy metric]
         MET3[MRR<br/>First hit ranking]
-        MET4[NDCG@k<br/>Ranking quality]
-        MET5[F1@k<br/>Balance metric]
+        MET4[NDCG-at-k<br/>Ranking quality]
+        MET5[F1-at-k<br/>Balance metric]
     end
 
     subgraph "Results & Reporting"

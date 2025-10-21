@@ -76,11 +76,11 @@ graph TD
     end
 
     subgraph "Metrics Calculation"
-        MET1[Recall@k<br/>Coverage]
-        MET2[Precision@k<br/>Accuracy]
+        MET1[Recall-at-k<br/>Coverage]
+        MET2[Precision-at-k<br/>Accuracy]
         MET3[MRR<br/>Ranking speed]
-        MET4[NDCG@k<br/>Quality]
-        MET5[F1@k<br/>Balance]
+        MET4[NDCG-at-k<br/>Quality]
+        MET5[F1-at-k<br/>Balance]
     end
 
     subgraph "Reporting"
