@@ -28,7 +28,7 @@ class RedisSTM:
         self._connection_url = f"redis://{self.host}:{self.port}/{self.db}"
 
     async def _get_redis(self) -> aioredis.Redis:
-        """Get or create async Redis connection"""
+        """Get or create async Redis connection with connection pooling"""
         if (
             self._redis is None
             or self._redis.connection_pool.connection_kwargs.get("db") != self.db
@@ -39,10 +39,16 @@ class RedisSTM:
                     decode_responses=True,
                     retry_on_timeout=True,
                     socket_keepalive=True,
+                    socket_connect_timeout=5,
+                    max_connections=50,  # Connection pool size
+                    health_check_interval=30,  # Health check every 30s
                 )
                 # Test connection
                 await self._redis.ping()
-                logger.info(f"Connected to Redis at {self.host}:{self.port}")
+                logger.info(
+                    f"Connected to Redis at {self.host}:{self.port} "
+                    f"(pool size: 50, health check: 30s)"
+                )
             except Exception as e:
                 logger.error(f"Failed to connect to Redis: {e}")
                 self._redis = None

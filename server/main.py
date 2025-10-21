@@ -909,11 +909,39 @@ async def internal_error_handler(request: Request, exc):
 
 if __name__ == '__main__':
     import uvicorn
+    import multiprocessing
 
-    uvicorn.run(
-        'main:app',
-        host='0.0.0.0',
-        port=8000,
-        reload=True,
-        log_level=os.getenv('LOG_LEVEL', 'info').lower(),
-    )
+    # Determine optimal worker count
+    cpu_count = multiprocessing.cpu_count()
+    workers = int(os.getenv('UVICORN_WORKERS', min(cpu_count * 2 + 1, 8)))
+
+    # Check if we're in development mode
+    is_dev = os.getenv('ENVIRONMENT', 'development') == 'development'
+
+    if is_dev:
+        # Development: Single worker with reload for easier debugging
+        logger.info('Starting in DEVELOPMENT mode (single worker with reload)')
+        uvicorn.run(
+            'main:app',
+            host='0.0.0.0',
+            port=8000,
+            reload=True,
+            log_level=os.getenv('LOG_LEVEL', 'info').lower(),
+        )
+    else:
+        # Production: Multiple workers for better performance
+        logger.info(
+            f'Starting in PRODUCTION mode ({workers} workers, '
+            f'CPU count: {cpu_count})'
+        )
+        uvicorn.run(
+            'main:app',
+            host='0.0.0.0',
+            port=8000,
+            workers=workers,
+            log_level=os.getenv('LOG_LEVEL', 'info').lower(),
+            access_log=False,  # Disable access logs for better performance
+            limit_concurrency=1000,  # Max concurrent connections
+            limit_max_requests=10000,  # Restart workers after N requests (prevent memory leaks)
+            timeout_keep_alive=30,  # Keep-alive timeout
+        )
