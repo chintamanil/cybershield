@@ -296,9 +296,8 @@ def process_text_analysis(text_input: str, session_id: str, include_previous: bo
 
             display_analysis_results(result)
 
-            # Force a rerun after first query to show checkbox immediately
-            # This ensures the checkbox appears right away for the next query
-            st.rerun()
+            # NOTE: Removed st.rerun() here as it was causing results to disappear
+            # The session checkbox will appear on the next page load/interaction
 
 
 def extract_iocs_from_result(result: dict) -> list:
