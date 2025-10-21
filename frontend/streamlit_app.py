@@ -245,9 +245,17 @@ def render_single_analysis_tab():
     if analyze_btn and text_input:
         process_text_analysis(text_input, session_id, include_previous)
 
+    # Show last result after rerun (to keep results visible when checkbox enables)
+    elif 'last_result' in st.session_state and st.session_state.last_result:
+        display_analysis_results(st.session_state.last_result)
+
 
 def process_text_analysis(text_input: str, session_id: str, include_previous: bool):
     """Process single text analysis request"""
+    # Clear last result when starting new analysis
+    if 'last_result' in st.session_state:
+        st.session_state.last_result = None
+
     with st.spinner('Analyzing text...'):
         # If no session_id, create a new one
         if not session_id:
@@ -282,7 +290,7 @@ def process_text_analysis(text_input: str, session_id: str, include_previous: bo
         result = make_api_request('/analyze', 'POST', request_data)
 
         if result:
-            # Track session and save history
+            # Track session and save history BEFORE displaying results
             if session_id:
                 track_session_id(session_id)
 
@@ -294,10 +302,16 @@ def process_text_analysis(text_input: str, session_id: str, include_previous: bo
                 if 'result' in result and isinstance(result['result'], dict):
                     display_context_enrichment(result['result'])
 
+            # Display results - they will persist in session state
             display_analysis_results(result)
 
-            # NOTE: Removed st.rerun() here as it was causing results to disappear
-            # The session checkbox will appear on the next page load/interaction
+            # Store result in session state to show after rerun
+            st.session_state.last_result = result
+
+            # Trigger ONE rerun to enable checkbox (won't rerun again because last_result is set)
+            if 'first_query_done' not in st.session_state:
+                st.session_state.first_query_done = True
+                st.rerun()
 
 
 def extract_iocs_from_result(result: dict) -> list:

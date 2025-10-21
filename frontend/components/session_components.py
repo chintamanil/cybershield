@@ -36,20 +36,39 @@ def render_session_management(
         else []
     )
 
-    # Show context continuation option only if previous session exists AND has history
-    if has_previous_session and prev_history:
-        st.markdown("### 🧠 Context Memory")
+    # Always show the Context Memory section
+    st.markdown("### 🧠 Context Memory")
 
-        # Show last query info
+    # Determine if checkbox should be enabled
+    can_continue = has_previous_session and prev_history
+
+    if can_continue:
+        # Get last query info
         last_query = prev_history[-1]
 
-        # Checkbox for continuing previous context
-        use_previous_context = st.checkbox(
-            "📎 Continue from previous query",
-            value=False,  # Default to unchecked
-            help="Enable this to reference IOCs from your previous analysis (e.g., 'that IP', 'previous domain')",
-            key=f"use_prev_context_{session_key}",
-        )
+        # Create two columns for checkbox and clear button
+        col1, col2 = st.columns([3, 1])
+
+        with col1:
+            # Checkbox for continuing previous context (ENABLED)
+            use_previous_context = st.checkbox(
+                "📎 Continue from previous query",
+                value=False,  # Default to unchecked
+                help="Enable this to reference IOCs from your previous analysis (e.g., 'that IP', 'previous domain')",
+                key=f"use_prev_context_{session_key}",
+            )
+
+        with col2:
+            # Clear session button
+            if st.button("🔄 Reset", help="Clear session history and start fresh", key=f"clear_session_{session_key}"):
+                # Clear the session and all related state
+                st.session_state.auto_session_id = None
+                st.session_state.request_history = {}
+                if 'first_query_done' in st.session_state:
+                    del st.session_state.first_query_done
+                if 'last_result' in st.session_state:
+                    del st.session_state.last_result
+                st.rerun()
 
         # Explanatory text
         if use_previous_context:
@@ -86,7 +105,18 @@ def render_session_management(
             # Return None - will create new session only when analysis is submitted
             return None
     else:
-        # First query - no previous session exists yet
+        # First query - show disabled checkbox
+        st.checkbox(
+            "📎 Continue from previous query",
+            value=False,
+            disabled=True,  # DISABLED until first query
+            help="This will be enabled after your first analysis to reference previous IOCs",
+            key=f"use_prev_context_disabled_{session_key}",
+        )
+        st.caption(
+            "💡 Submit your first query to enable context memory. You'll then be able to reference IOCs using natural language like 'that IP' or 'previous domain'."
+        )
+        st.markdown("---")
         # Return None - new session will be created when analysis is submitted
         return None
 
