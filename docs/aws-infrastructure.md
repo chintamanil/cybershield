@@ -19,7 +19,7 @@ CyberShield is deployed on AWS using a comprehensive, scalable infrastructure th
 
 ---
 
-## 🌐 **Domain & SSL Configuration**
+<!-- ## 🌐 **Domain & SSL Configuration**
 
 ### **Custom Domain Setup**
 
@@ -30,29 +30,9 @@ CyberShield is deployed on AWS using a comprehensive, scalable infrastructure th
 | **SSL Certificate** | AWS Certificate Manager | ✅ Auto-renewal enabled |
 | **DNS Validation** | Route53 integration | ✅ Automated |
 
-### **SSL Certificate Details**
 
-```mermaid
-graph LR
-    subgraph "SSL Setup"
-        Domain[cybershield-ai.com] --> ACM[AWS Certificate Manager]
-        ACM --> Validation[DNS Validation<br/>Route53 Records]
-        Validation --> Certificate[SSL Certificate<br/>Auto-renewal]
-        Certificate --> ALB[Load Balancer<br/>HTTPS Listener]
-    end
 
-    %% Darker Arrow Styling
-    linkStyle default stroke:#111,stroke-width:1px
-```
-
-**Certificate Configuration:**
-- **Type**: AWS Certificate Manager (ACM)
-- **Validation**: DNS validation via Route53
-- **Auto-renewal**: Enabled (automatic)
-- **Domains**: cybershield-ai.com, *.cybershield-ai.com
-- **Security**: TLS 1.2+ enforced
-
----
+--- -->
 
 ## 🐳 **Container Infrastructure**
 

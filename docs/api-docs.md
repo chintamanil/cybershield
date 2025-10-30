@@ -12,14 +12,14 @@ Complete API documentation for the CyberShield AI platform, including all endpoi
 
 ---
 
-## 🌐 **Base URL & Authentication**
+## 🌐 **Authentication**
 
-### **Production API**
+<!-- ### **Production API**
 ```
 Base URL: https://cybershield-ai.com
 Health Check: https://cybershield-ai.com/health
-API Documentation: https://cybershield-ai.com/docs
-```
+API Documentation: https://cybershield-ai.com/docs -->
+<!-- ``` -->
 
 ### **Authentication**
 Currently, CyberShield operates without authentication for public demonstration. In production deployments, implement:
@@ -41,7 +41,7 @@ Primary endpoint for comprehensive security analysis combining multiple AI agent
 ```json
 {
   "text": "string",           // Required: Text to analyze
-  "processing_mode": "string",  // Optional: "basic" | "comprehensive" 
+  "processing_mode": "string",  // Optional: "basic" | "comprehensive"
   "session_id": "string"    // Optional: Session identifier
 }
 ```
@@ -100,7 +100,7 @@ Primary endpoint for comprehensive security analysis combining multiple AI agent
             }
           },
           "virustotal": {
-            "source": "virustotal", 
+            "source": "virustotal",
             "data": {
               "attributes": {
                 "reputation": -15,
@@ -124,7 +124,7 @@ Primary endpoint for comprehensive security analysis combining multiple AI agent
   },
   "recommendations": [
     "Immediately isolate affected systems from network",
-    "Block IP address 203.0.113.1 at firewall level", 
+    "Block IP address 203.0.113.1 at firewall level",
     "Scan systems for malware using updated signatures",
     "Review logs for additional compromise indicators"
   ]
@@ -181,7 +181,7 @@ Advanced analysis combining text input with image processing for comprehensive s
           "score": 0.94
         },
         {
-          "label": "financial_information", 
+          "label": "financial_information",
           "score": 0.87
         }
       ],
@@ -199,7 +199,7 @@ Advanced analysis combining text input with image processing for comprehensive s
           },
           {
             "type": "ssn",
-            "matches": ["123-45-6789"], 
+            "matches": ["123-45-6789"],
             "count": 1
           }
         ]
@@ -251,7 +251,7 @@ Process multiple inputs concurrently for bulk security analysis.
       "processing_mode": "basic"
     },
     {
-      "id": "log_entry_2", 
+      "id": "log_entry_2",
       "text": "Malware detected: hash d41d8cd98f00b204e9800998ecf8427e",
       "processing_mode": "comprehensive"
     }
@@ -274,7 +274,7 @@ Process multiple inputs concurrently for bulk security analysis.
     },
     {
       "id": "log_entry_2",
-      "status": "success", 
+      "status": "success",
       // ... standard analysis response
     }
   ]
@@ -539,7 +539,7 @@ Advanced IOC pattern extraction using 25+ cybersecurity patterns.
     "email": [
       {
         "value": "admin@company.com",
-        "type": "email", 
+        "type": "email",
         "position": [78, 94],
         "context": "account admin@company.com compromised",
         "validation": {
@@ -690,7 +690,7 @@ Comprehensive system status including component health and performance metrics.
     "supervisor": "available",
     "pii_agent": "available",
     "threat_agent": "available",
-    "log_parser": "available", 
+    "log_parser": "available",
     "vision_agent": "available"
   },
   "external_apis": {
@@ -705,7 +705,7 @@ Comprehensive system status including component health and performance metrics.
       "last_check": "2024-08-18T15:29:15.123456Z"
     },
     "shodan": {
-      "status": "available", 
+      "status": "available",
       "quota_remaining": 100,
       "last_check": "2024-08-18T15:29:18.123456Z"
     },

@@ -229,7 +229,7 @@ curl https://cybershield-ai.com/status
 
 ## 🚀 **Current Status**
 
-CyberShield is a **production-ready AI cybersecurity platform** live at [cybershield-ai.com](https://cybershield-ai.com) with the following capabilities:
+CyberShield is a **production-ready AI cybersecurity platform** with the following capabilities:
 
 ### **🌐 Production Infrastructure**
 - **Custom Domain**: cybershield-ai.com with AWS Certificate Manager SSL (auto-renewal)
