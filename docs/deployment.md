@@ -127,16 +127,19 @@ cd frontend && python run_streamlit.py
 
 ---
 
-## ☁️ **AWS Production Deployment**
+## ☁️ **AWS Production Deployment with CDK**
 
 ### **AWS Prerequisites**
 
-| Requirement | Purpose |
-|-------------|---------|
-| **AWS Account** | Cloud infrastructure |
-| **AWS CLI v2** | Command line management |
-| **Docker** | Container building |
-| **Domain Name** | Custom domain (optional) |
+| Requirement | Version | Purpose |
+|-------------|---------|---------|
+| **AWS Account** | - | Cloud infrastructure |
+| **AWS CLI** | v2+ | Command line management |
+| **Node.js** | 18+ | AWS CDK CLI runtime |
+| **AWS CDK CLI** | Latest | Infrastructure deployment |
+| **Python** | 3.11+ | CDK application |
+| **Docker** | 20.0+ | Container building |
+| **Domain Name** | - | Custom domain (optional) |
 
 ### **1. AWS Credentials Setup**
 
@@ -145,54 +148,194 @@ cd frontend && python run_streamlit.py
 aws configure
 
 # Required permissions:
-# - EC2 Full Access
-# - ECS Full Access  
-# - RDS Access
-# - ElastiCache Full Access
-# - ECR Access
+# - EC2, ECS, ECR Full Access
+# - RDS, ElastiCache Access
+# - IAM, Route53 Access
 # - Certificate Manager
-# - Route53 (for custom domain)
+# - CloudFormation Access
 ```
 
-### **2. Infrastructure Deployment**
+### **2. CDK Environment Setup**
 
 ```bash
-# Make scripts executable
-chmod +x scripts/*.sh
+# Install AWS CDK CLI globally
+npm install -g aws-cdk
 
-# Deploy complete AWS infrastructure
-./scripts/aws_setup.sh
+# Navigate to CDK directory
+cd cdk
+
+# Create Python virtual environment
+python3 -m venv .venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+
+# Install CDK dependencies
+pip install -r requirements.txt
+```
+
+### **3. Configure Environment Variables**
+
+```bash
+# Copy environment template
+cp .env.example .env
+
+# Edit with your AWS configuration
+vim .env  # or your preferred editor
+```
+
+**Required CDK Environment Variables:**
+```bash
+# AWS Configuration
+AWS_ACCOUNT_ID=123456789012        # Your AWS account ID
+AWS_REGION=us-east-1               # Deployment region
+ENVIRONMENT=dev                     # dev, staging, or prod
+
+# Project Configuration
+PROJECT_NAME=cybershield
+DOMAIN_NAME=cybershield-ai.com     # Optional, for custom domain
+
+# Application Configuration
+ENABLE_AUTO_SCALING=false          # Enable for production
+ENABLE_DELETION_PROTECTION=false   # Enable for production
+ENABLE_BACKUP=true                 # Database backups
+ENABLE_OPENSEARCH=false            # Optional logging service
+```
+
+### **4. Bootstrap CDK (First Time Only)**
+
+```bash
+# Set AWS credentials
+export AWS_ACCOUNT_ID=123456789012
+export AWS_REGION=us-east-1
+
+# Bootstrap CDK for your AWS account
+cdk bootstrap aws://$AWS_ACCOUNT_ID/$AWS_REGION
 
 # Expected output:
-# ✅ VPC and networking created
-# ✅ Security groups configured
-# ✅ RDS PostgreSQL database created
-# ✅ ElastiCache Redis cluster created
-# ✅ ECS cluster and load balancer ready
-# ✅ ECR repository created
+# ✅ CDKToolkit stack created
+# ✅ S3 bucket for CDK assets created
+# ✅ ECR repository for Docker images created
 ```
 
-### **3. Application Deployment**
+### **5. Preview Infrastructure Changes**
 
 ```bash
-# Build and deploy application
-python scripts/deploy_aws.py
+# Synthesize CloudFormation templates
+cdk synth
 
-# Monitor deployment progress
-aws ecs describe-services --cluster cybershield-cluster --services cybershield-service
+# View differences from deployed stacks
+cdk diff
+
+# List all stacks
+cdk list
+
+# Expected stacks:
+# - CyberShield-IAM-dev
+# - CyberShield-Network-dev
+# - CyberShield-DNS-dev
+# - CyberShield-Storage-dev
+# - CyberShield-Data-dev
+# - CyberShield-LoadBalancer-dev
+# - CyberShield-Compute-dev
+# - CyberShield-Monitoring-dev
 ```
 
-### **4. Custom Domain Setup (Optional)**
+### **6. Deploy Infrastructure**
 
 ```bash
-# Setup SSL certificate and domain
-./scripts/setup_ssl_only.sh
+# Deploy all stacks
+export ENVIRONMENT=dev
+cdk deploy --all
 
-# Configure load balancer routing
-./scripts/fix_api_routing.sh
+# Deploy specific stack
+cdk deploy CyberShield-Network-dev
 
-# Update certificate
-./scripts/update_alb_certificate.sh
+# Deploy with auto-approval (CI/CD)
+cdk deploy --all --require-approval never
+
+# Expected output:
+# ✅ CyberShield-IAM-dev (2-3 min)
+# ✅ CyberShield-Network-dev (5-7 min)
+# ✅ CyberShield-DNS-dev (1-2 min)
+# ✅ CyberShield-Storage-dev (2-3 min)
+# ✅ CyberShield-Data-dev (8-10 min) - RDS takes longest
+# ✅ CyberShield-LoadBalancer-dev (3-5 min)
+# ✅ CyberShield-Compute-dev (4-6 min)
+# ✅ CyberShield-Monitoring-dev (2-3 min)
+```
+
+### **7. Application Deployment**
+
+```bash
+# Build and push Docker image to ECR
+# (ECR repository created by CDK)
+aws ecr get-login-password --region $AWS_REGION | \
+  docker login --username AWS --password-stdin \
+  $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+
+# Build multi-architecture image
+docker buildx build \
+  --platform linux/amd64,linux/arm64 \
+  -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/cybershield:latest \
+  --push \
+  -f deployment/Dockerfile.aws .
+
+# Force ECS service to use new image
+aws ecs update-service \
+  --cluster cybershield-dev \
+  --service cybershield-backend-service \
+  --force-new-deployment
+```
+
+### **8. Verify Deployment**
+
+```bash
+# Get load balancer DNS
+aws cloudformation describe-stacks \
+  --stack-name CyberShield-LoadBalancer-dev \
+  --query 'Stacks[0].Outputs[?OutputKey==`LoadBalancerDNS`].OutputValue' \
+  --output text
+
+# Test health endpoint
+curl https://YOUR_ALB_DNS/health
+
+# Monitor ECS service
+aws ecs describe-services \
+  --cluster cybershield-dev \
+  --services cybershield-backend-service
+```
+
+### **9. Custom Domain Setup (Optional)**
+
+If deploying with a custom domain:
+
+```bash
+# Set domain in .env
+echo "DOMAIN_NAME=cybershield-ai.com" >> .env
+
+# Deploy DNS stack (creates Route53 hosted zone and SSL certificate)
+cdk deploy CyberShield-DNS-dev
+
+# Get name servers from Route53
+aws route53 list-hosted-zones-by-name \
+  --dns-name cybershield-ai.com \
+  --query 'HostedZones[0].Id' \
+  --output text
+
+# Update domain registrar with Route53 name servers
+# (This step is done in your domain registrar's console)
+```
+
+### **10. Destroy Infrastructure (When Needed)**
+
+```bash
+# Destroy all stacks
+cdk destroy --all
+
+# Destroy specific stack
+cdk destroy CyberShield-Compute-dev
+
+# Note: Some resources may have deletion protection enabled
+# Remove protection first if needed
 ```
 
 ---
@@ -407,12 +550,12 @@ export OPENAI_API_KEY="your_key_here"
 
 ---
 
-## 🔄 **CI/CD Pipeline**
+## 🔄 **CI/CD Pipeline with CDK**
 
 ### **GitHub Actions Workflow**
 
 ```yaml
-name: Deploy CyberShield
+name: Deploy CyberShield with CDK
 
 on:
   push:
@@ -422,73 +565,144 @@ on:
 
 env:
   AWS_REGION: us-east-1
-  ECR_REPOSITORY: cybershield
+  ENVIRONMENT: dev
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.12'
-          
+
       - name: Install dependencies
         run: |
           pip install uv
           uv add -e ".[dev,testing]"
-          
-      - name: Run tests
+
+      - name: Run application tests
         run: |
           python -m pytest tests/ -v --tb=short
-          
+
+      - name: Run CDK tests
+        run: |
+          cd cdk
+          pip install -r requirements.txt
+          python -m pytest tests/ -v
+
       - name: Run linting
         run: |
           uv run ruff check .
           uv run ruff format --check .
-          
+
       - name: Type checking
         run: |
           uv run pyright
 
-  build-and-deploy:
+  cdk-diff:
     needs: test
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    
+    if: github.event_name == 'pull_request'
+
     steps:
       - uses: actions/checkout@v3
-      
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install AWS CDK
+        run: npm install -g aws-cdk
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
-          
+
+      - name: Install CDK dependencies
+        run: |
+          cd cdk
+          pip install -r requirements.txt
+
+      - name: CDK Diff
+        run: |
+          cd cdk
+          cdk diff --all
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install AWS CDK
+        run: npm install -g aws-cdk
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Install CDK dependencies
+        run: |
+          cd cdk
+          pip install -r requirements.txt
+
+      - name: CDK Deploy
+        run: |
+          cd cdk
+          cdk deploy --all --require-approval never
+        env:
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          ENVIRONMENT: ${{ env.ENVIRONMENT }}
+
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
-        
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
-        
+
       - name: Build and push Docker image
         run: |
           docker buildx build \
             --platform linux/amd64,linux/arm64 \
-            --tag $ECR_REGISTRY/$ECR_REPOSITORY:$GITHUB_SHA \
-            --tag $ECR_REGISTRY/$ECR_REPOSITORY:latest \
-            --push .
+            --tag $ECR_REGISTRY/cybershield:$GITHUB_SHA \
+            --tag $ECR_REGISTRY/cybershield:latest \
+            --push \
+            -f deployment/Dockerfile.aws .
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          
-      - name: Deploy to ECS
+
+      - name: Force ECS deployment
         run: |
           aws ecs update-service \
-            --cluster cybershield-cluster \
-            --service cybershield-service \
+            --cluster cybershield-${{ env.ENVIRONMENT }} \
+            --service cybershield-backend-service \
             --force-new-deployment
 ```
 
