@@ -147,13 +147,35 @@ class ComputeStack(Stack):
         Returns:
             logs.LogGroup: CloudWatch log group
         """
+        # Map retention days to valid RetentionDays enum values
+        retention_days_map = {
+            1: logs.RetentionDays.ONE_DAY,
+            3: logs.RetentionDays.THREE_DAYS,
+            5: logs.RetentionDays.FIVE_DAYS,
+            7: logs.RetentionDays.ONE_WEEK,
+            14: logs.RetentionDays.TWO_WEEKS,
+            30: logs.RetentionDays.ONE_MONTH,
+            60: logs.RetentionDays.TWO_MONTHS,
+            90: logs.RetentionDays.THREE_MONTHS,
+            120: logs.RetentionDays.FOUR_MONTHS,
+            150: logs.RetentionDays.FIVE_MONTHS,
+            180: logs.RetentionDays.SIX_MONTHS,
+            365: logs.RetentionDays.ONE_YEAR,
+            400: logs.RetentionDays.THIRTEEN_MONTHS,
+            545: logs.RetentionDays.EIGHTEEN_MONTHS,
+            731: logs.RetentionDays.TWO_YEARS,
+            1827: logs.RetentionDays.FIVE_YEARS,
+            3653: logs.RetentionDays.TEN_YEARS,
+        }
+        retention = retention_days_map.get(
+            self.config.cloudwatch_log_retention_days, logs.RetentionDays.ONE_WEEK
+        )
+
         log_group = logs.LogGroup(
             self,
             "EcsLogGroup",
             log_group_name=f"/ecs/{self.config.project_name}-{self.config.environment}",
-            retention=logs.RetentionDays(self.config.cloudwatch_log_retention_days)
-            if self.config.cloudwatch_log_retention_days <= 30
-            else logs.RetentionDays.ONE_MONTH,
+            retention=retention,
             removal_policy=RemovalPolicy.DESTROY,
         )
 

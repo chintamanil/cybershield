@@ -13,6 +13,7 @@ from aws_cdk import (
     RemovalPolicy,
     SecretValue,
     Stack,
+    aws_ec2 as ec2,
     aws_elasticache as elasticache,
     aws_opensearchservice as opensearch,
     aws_rds as rds,
@@ -129,13 +130,7 @@ class DataStack(Stack):
                     self.config.db_engine_version, self.config.db_engine_version
                 )
             ),
-            instance_type=rds.InstanceType.of(
-                rds.InstanceClass.BURSTABLE3, rds.InstanceSize.MICRO
-            )
-            if self.config.db_instance_class == "db.t3.micro"
-            else rds.InstanceType.of(
-                rds.InstanceClass.BURSTABLE3, rds.InstanceSize.SMALL
-            ),
+            instance_type=ec2.InstanceType(self.config.db_instance_class),
             vpc=self.network_stack.vpc,
             vpc_subnets={"subnets": self.network_stack.database_subnets},
             security_groups=[self.network_stack.rds_security_group],
@@ -157,12 +152,12 @@ class DataStack(Stack):
             removal_policy=RemovalPolicy.SNAPSHOT
             if self.config.enable_backup
             else RemovalPolicy.DESTROY,
-            enabled_cloudwatch_logs_exports=["postgresql"]
+            cloudwatch_logs_exports=["postgresql"]
             if self.config.enable_logging
-            else None,
+            else [],
             monitoring_interval=Duration.seconds(self.config.monitoring_interval)
             if self.config.enable_monitoring
-            else None,
+            else Duration.seconds(0),
             enable_performance_insights=self.config.enable_performance_insights,
         )
 
@@ -199,7 +194,7 @@ class DataStack(Stack):
         cluster = elasticache.CfnCacheCluster(
             self,
             "RedisCluster",
-            cache_cluster_id=f"{self.config.project_name}-{self.config.environment}-redis",
+            cluster_name=f"{self.config.project_name}-{self.config.environment}-redis",
             engine="redis",
             engine_version=self.config.redis_engine_version,
             cache_node_type=self.config.redis_node_type,

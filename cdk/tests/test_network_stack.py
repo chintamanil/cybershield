@@ -87,25 +87,30 @@ def test_alb_security_group_rules() -> None:
 
     template = assertions.Template.from_stack(stack)
 
-    # Check for HTTP ingress rule
+    # Check for ALB security group with HTTP and HTTPS ingress rules
     template.has_resource_properties(
-        "AWS::EC2::SecurityGroupIngress",
+        "AWS::EC2::SecurityGroup",
         {
-            "IpProtocol": "tcp",
-            "FromPort": 80,
-            "ToPort": 80,
-            "CidrIp": "0.0.0.0/0",
-        },
-    )
-
-    # Check for HTTPS ingress rule
-    template.has_resource_properties(
-        "AWS::EC2::SecurityGroupIngress",
-        {
-            "IpProtocol": "tcp",
-            "FromPort": 443,
-            "ToPort": 443,
-            "CidrIp": "0.0.0.0/0",
+            "SecurityGroupIngress": assertions.Match.array_with(
+                [
+                    assertions.Match.object_like(
+                        {
+                            "IpProtocol": "tcp",
+                            "FromPort": 80,
+                            "ToPort": 80,
+                            "CidrIp": "0.0.0.0/0",
+                        }
+                    ),
+                    assertions.Match.object_like(
+                        {
+                            "IpProtocol": "tcp",
+                            "FromPort": 443,
+                            "ToPort": 443,
+                            "CidrIp": "0.0.0.0/0",
+                        }
+                    ),
+                ]
+            ),
         },
     )
 
@@ -160,14 +165,16 @@ def test_stack_has_tags() -> None:
 
     template = assertions.Template.from_stack(stack)
 
-    # VPC should have project and environment tags
+    # VPC should have Name tag with project and environment
     template.has_resource_properties(
         "AWS::EC2::VPC",
         {
             "Tags": assertions.Match.array_with(
                 [
-                    {"Key": "Project", "Value": "cybershield"},
-                    {"Key": "Environment", "Value": "dev"},
+                    {
+                        "Key": "Name",
+                        "Value": f"{config.project_name}-{config.environment}-vpc",
+                    }
                 ]
             ),
         },
