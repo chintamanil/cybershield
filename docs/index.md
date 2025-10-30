@@ -10,15 +10,6 @@ description: "Multimodal Multi-Agent Cybersecurity AI Platform with Vision Proce
 
 **CyberShield** is a cutting-edge multimodal AI cybersecurity platform that orchestrates five specialized agents through a sophisticated supervisor system. The platform processes both text and visual inputs, leveraging LLM-driven intelligence (OpenAI GPT-4), computer vision (OCR with Tesseract), and multiple threat intelligence APIs (VirusTotal, Shodan, AbuseIPDB). With comprehensive Redis caching, vector similarity search on 120K+ historical attacks, and ReAct workflow orchestration via LangGraph, CyberShield delivers sub-second threat analysis, PII detection, advanced log parsing, and vision-based security assessment across diverse data modalities.
 
----
-
-## 🌐 **Production Platform Status**
-
-### **✅ Live at https://cybershield-ai.com**
-- **🔒 SSL Secured**: AWS Certificate Manager with auto-renewal
-- **⚡ Sub-second Response**: Intelligent caching for instant results
-- **🌍 Global Accessibility**: Production-grade infrastructure on AWS
-- **🐳 Multi-Architecture**: ARM64/AMD64 Docker support
 
 ---
 
@@ -169,10 +160,10 @@ curl https://cybershield-ai.com/health
 # System Status
 curl https://cybershield-ai.com/status
 ```
-
+<!--
 ### **Web Interface**
 - **Frontend**: [https://cybershield-ai.com](https://cybershield-ai.com) (Streamlit UI)
-- **API Docs**: [https://cybershield-ai.com/docs](https://cybershield-ai.com/docs)
+- **API Docs**: [https://cybershield-ai.com/docs](https://cybershield-ai.com/docs) -->
 
 
 ---
@@ -236,22 +227,32 @@ curl https://cybershield-ai.com/status
 
 ---
 
-## 📈 **Latest Updates**
+## 🚀 **Current Status**
 
-### **Version 1.2.0 - Session Management & Test Suite (January 2025)**
-- **🧠 Context Memory**: Intelligent session management with automatic IOC tracking
-- **⚡ Instant UI Updates**: Fixed checkbox visibility with immediate refresh
-- **✅ Test Suite**: 98.5% passing (388/394 tests) with comprehensive coverage
-- **🔧 Bug Fixes**: Session management, async tests, URL validation improvements
-- **📝 Documentation**: Enhanced README with troubleshooting and version history
+CyberShield is a **production-ready AI cybersecurity platform** live at [cybershield-ai.com](https://cybershield-ai.com) with the following capabilities:
 
-### **Version 1.1.0 - Production Deployment (August 2025)**
-- **🌐 Custom Domain**: cybershield-ai.com with SSL certificate
-- **🔒 Production SSL**: AWS Certificate Manager with auto-renewal
-- **⚖️ Load Balancer**: Optimized ALB routing for frontend/backend separation
-- **🐳 Multi-Architecture**: ARM64/AMD64 Docker support
-- **📁 Clean Architecture**: 57% scripts reduction, essential components only
-- **⚡ Apple Silicon**: Mac M4 optimized performance enhancements
+### **🌐 Production Infrastructure**
+- **Custom Domain**: cybershield-ai.com with AWS Certificate Manager SSL (auto-renewal)
+- **Load Balancer**: Optimized ALB routing for frontend/backend separation
+- **Multi-Architecture**: ARM64/AMD64 Docker support for cross-platform deployment
+- **Apple Silicon**: Mac M4 optimized performance enhancements
+
+### **🧠 Intelligence & Memory**
+- **Context Memory**: Intelligent session management with automatic IOC tracking across multi-turn investigations
+- **Request-Level Caching**: 60-80% API cost reduction through RedisSTM integration
+- **5-Tool Parallel Pipeline**: VirusTotal, AbuseIPDB, Shodan, MilvusSearch, RegexChecker
+
+### **📊 Quality & Testing**
+- **RAG Evaluation**: 113 golden queries across 9 categories with 100% coverage
+- **Retrieval Metrics**: MRR 1.0 (perfect ranking), Precision@5 0.72, Recall@5 0.565
+- **Test Suite**: 98.5% passing (388/394 tests) with comprehensive coverage
+- **Production Monitoring**: Quality gates, structured logging, and performance tracking
+
+### **🔧 Architecture**
+- **Multi-Agent System**: PIIAgent, ThreatAgent, LogParserAgent, VisionAgent, Supervisor
+- **ReAct Workflow**: LangGraph orchestration with LLM-driven routing and tool selection
+- **Vector Database**: Milvus with 120K+ cybersecurity attack records for similarity search
+- **Memory Layer**: Redis STM for session management and PostgreSQL for persistent storage
 
 ---
 
