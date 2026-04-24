@@ -473,7 +473,56 @@ Different thresholds can be applied per category to address variance in F1 score
 
 Based on evaluation metrics analysis, the following optimizations are planned:
 
-**A. Cross-Encoder Reranking**
+**A. True Hybrid Search Implementation (PRIMARY FIX for 15% Recall Categories)**
+
+**Problem:** Severity, protocol, attack_type, malware_ioc, and attack_signature queries achieve only 15% recall because they use pure vector search with POST-filtering, while IP/geo/port queries achieve 90-100% recall using attribute PRE-filtering.
+
+**Root Cause:**
+```python
+# What IP queries do (100% recall) ✅:
+results = milvus.query(
+    expr='source_ip == "192.168.1.100"',  # PRE-filter BEFORE search
+    limit=5
+)
+
+# What severity queries currently do (15% recall) ❌:
+results = milvus.search(
+    data=embedding, 
+    limit=30  # Pure vector search
+)
+filtered = [r for r in results if r.severity == "High"]  # POST-filter TOO LATE
+```
+
+**Solution - Implement Hybrid Search with PRE-filtering:**
+```python
+# Parse query for metadata
+metadata = parse_query("Show High severity DDoS attacks")
+# → {severity: "High", attack_type: "DDoS"}
+
+# Build Milvus filter expression (PRE-filter)
+expr = 'severity_level == "High" && attack_type == "DDoS"'
+
+# Hybrid search: Filter FIRST, then vector search within filtered set
+results = milvus.search(
+    data=query_embedding,
+    expr=expr,  # Apply filters BEFORE vector search
+    anns_field="embedding",
+    param=search_params,
+    limit=5
+)
+```
+
+**Benefits:**
+- **PRIMARY IMPACT**: Fixes 15% → 90% recall for severity, protocol, attack_type, malware_ioc, attack_signature
+- **Combined queries**: Improves 47% → 85% recall for multi-attribute queries
+- **Consistency**: All query types use same hybrid approach as top-performing categories
+- **Proven approach**: Same technique that gives IP/geo/port queries 90-100% recall
+
+**Implementation Priority:** **HIGH** - Addresses 5 of 6 low-performing categories
+
+---
+
+**B. Cross-Encoder Reranking**
 ```python
 # Rerank top-20 results using cross-encoder model
 # Improves positions 2-5 quality while maintaining MRR=1.0
@@ -485,7 +534,7 @@ reranked = cross_encoder.rerank(query, top_k_results)
 - Reduces F1 standard deviation across categories
 - Maintains perfect MRR while improving lower-ranked positions
 
-**B. Metadata-Based Filtering**
+**C. Advanced Metadata Filtering (Precision Enhancement)**
 ```python
 # Apply domain-specific filters to reduce noise
 filters = {
@@ -498,9 +547,9 @@ filters = {
 **Benefits:**
 - Improves precision in noisy categories (IP: 0.20 → 0.70+)
 - Reduces irrelevant document inclusion
-- Maintains high recall through targeted filtering
+- Works in combination with hybrid search (Enhancement A)
 
-**C. Adaptive Chunking & Domain-Specific Embeddings**
+**D. Adaptive Chunking & Domain-Specific Embeddings**
 ```python
 # Use specialized embeddings per data domain
 embedding_models = {
@@ -515,12 +564,39 @@ embedding_models = {
 - Improves category-specific retrieval quality
 - Optimizes embedding space for domain characteristics
 
-**D. Production RAG Metrics**
+**E. Production RAG Metrics**
 Beyond retrieval metrics, track:
 - **Faithfulness**: Does LLM cite retrieved docs correctly?
 - **Latency**: End-to-end query response time (target: <500ms)
 - **Cost**: API calls per query (with caching: $0.01-0.05/query)
 - **Hallucination Rate**: Measure responses not grounded in retrieved docs
+
+---
+
+### **Expected Impact of Optimizations**
+
+**After implementing Enhancement A (True Hybrid Search):**
+
+| Category | Current Recall@5 | Target Recall@5 | Improvement |
+|----------|------------------|-----------------|-------------|
+| **severity** | 0.153 (15%) | 0.90 (90%) | +487% |
+| **protocol** | 0.152 (15%) | 0.90 (90%) | +492% |
+| **attack_type** | 0.152 (15%) | 0.90 (90%) | +492% |
+| **malware_ioc** | 0.156 (16%) | 0.90 (90%) | +477% |
+| **attack_signature** | 0.156 (16%) | 0.90 (90%) | +477% |
+| **combined** | 0.466 (47%) | 0.85 (85%) | +82% |
+
+**Aggregate Metrics After All Enhancements:**
+- **Recall@5**: 0.565 → 0.90 (target: +59% improvement)
+- **Precision@5**: 0.720 → 0.85 (target: +18% improvement)
+- **F1@5**: 0.397 → 0.875 (target: +120% improvement)
+- **Min Category Recall**: 0.152 → 0.85 (target: +459% improvement)
+
+**Implementation Roadmap:**
+1. **Phase 1 (Weeks 1-2)**: Hybrid search implementation (addresses 5 categories)
+2. **Phase 2 (Weeks 3-4)**: Cross-encoder reranking (improves precision)
+3. **Phase 3 (Weeks 5-6)**: Domain-specific embeddings (reduces variance)
+4. **Phase 4 (Weeks 7-8)**: Production metrics and monitoring
 
 ---
 
