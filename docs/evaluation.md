@@ -30,15 +30,15 @@ CyberShield implements a comprehensive **Retrieval-Augmented Generation (RAG) ev
 
 | Category | Queries | Recall@5 | Precision@5 | MRR | F1@5 | Status |
 |----------|---------|----------|-------------|-----|------|--------|
-| **ip_reputation** | 30 | 1.000 | 0.200 | 1.000 | 0.333 | ✅ Excellent |
-| **geo_location** | 10 | 0.910 | 0.800 | 1.000 | 0.810 | ✅ Excellent |
-| **port_scan** | 10 | 0.905 | 1.000 | 1.000 | 0.947 | ✅ Excellent |
-| **combined** | 19 | 0.466 | 0.705 | 1.000 | 0.292 | ✅ Fixed |
-| **severity** | 12 | 0.153 | 1.000 | 1.000 | 0.266 | ✅ Fixed |
-| **malware_ioc** | 10 | 0.156 | 1.000 | 1.000 | 0.270 | ✅ Fixed |
-| **attack_type** | 9 | 0.152 | 1.000 | 1.000 | 0.264 | ✅ Fixed |
-| **protocol** | 3 | 0.152 | 1.000 | 1.000 | 0.264 | ✅ Fixed |
-| **attack_signature** | 10 | 0.156 | 1.000 | 1.000 | 0.270 | ✅ Fixed |
+| **ip_reputation** | 30 | 1.000 | 0.200 | 1.000 | 0.333 | ✅ Excellent (100% recall) |
+| **geo_location** | 10 | 0.910 | 0.800 | 1.000 | 0.810 | ✅ Excellent (91% recall) |
+| **port_scan** | 10 | 0.905 | 1.000 | 1.000 | 0.947 | ✅ Excellent (90% recall) |
+| **combined** | 19 | 0.466 | 0.705 | 1.000 | 0.292 | ⚠️ Moderate (47% recall) |
+| **severity** | 12 | 0.153 | 1.000 | 1.000 | 0.266 | ⚠️ Needs Improvement (15% recall) |
+| **malware_ioc** | 10 | 0.156 | 1.000 | 1.000 | 0.270 | ⚠️ Needs Improvement (16% recall) |
+| **attack_type** | 9 | 0.152 | 1.000 | 1.000 | 0.264 | ⚠️ Needs Improvement (15% recall) |
+| **protocol** | 3 | 0.152 | 1.000 | 1.000 | 0.264 | ⚠️ Needs Improvement (15% recall) |
+| **attack_signature** | 10 | 0.156 | 1.000 | 1.000 | 0.270 | ⚠️ Needs Improvement (16% recall) |
 
 ---
 

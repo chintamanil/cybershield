@@ -16,6 +16,7 @@ CyberShield is a sophisticated AI-powered cybersecurity platform that combines m
 - **🔒 SSL Secured**: AWS Certificate Manager with auto-renewal
 - **⚡ Sub-second Response**: Intelligent caching for instant results
 - **🌍 Global Accessibility**: Production-grade infrastructure on AWS
+- **📊 Comprehensive Evaluation**: 113 golden queries with 100% category coverage
 
 ### **API Endpoints:**
 - **Frontend**: `https://localhost:8000/` (Streamlit UI)
@@ -30,8 +31,9 @@ CyberShield is a sophisticated AI-powered cybersecurity platform that combines m
 - **📊 Historical Analysis**: 120,000 cybersecurity attack records in Milvus vector database
 - **🎯 Smart Architecture**: Refactored for maintainability and performance
 - **👁️ Vision AI**: Complete OCR and image security analysis with tesseract integration
-- **✅ Complete Evaluation Framework**: 113 golden queries across 9 categories with 100% coverage
+- **✅ RAG Evaluation Framework**: 113 golden queries, hybrid search, quality gates (MRR=1.0, Recall@5=56.5%)
 - **🔍 Hybrid Search**: Attribute filtering + vector similarity for optimal retrieval
+- **📈 Category Performance**: Excellent (90-100%) for IP/geo/port queries, improving semantic search
 
 ## Enhanced Multi-Agent Architecture with Intelligent Caching & Context Memory
 
@@ -481,6 +483,46 @@ All components include structured logging:
 - **✅ Enhanced async performance testing specifically tuned for Apple Silicon architecture**
 - **✅ Streamlined frontend integration with improved error handling and user experience**
 - **✅ Updated system architecture documentation with comprehensive component diagrams**
+
+## 📊 RAG Evaluation Framework
+
+**Current Performance Baseline (October 2025):**
+
+### Aggregate Metrics
+- **MRR (Mean Reciprocal Rank)**: 1.000 ✅ Perfect - First relevant result always at position 1
+- **NDCG@5**: 1.000 ✅ Excellent - Perfect ranking quality across all positions
+- **Recall@5**: 0.565 ⚠️ Moderate - Finding 56.5% of relevant documents in top-5
+- **Precision@5**: 0.720 ✅ Good - 72% of returned results are relevant
+- **F1@5**: 0.397 ⚠️ Moderate - Balance between precision and recall
+
+### Category Performance Variance
+
+**Excellent Performance (90-100% recall):**
+- **IP Reputation**: 100% recall - Perfect attribute filtering for IP-based queries
+- **Geo-location**: 91% recall - Excellent geographic filtering
+- **Port Scan**: 90% recall - Strong network port analysis
+
+**Moderate Performance (40-50% recall):**
+- **Combined Queries**: 47% recall - Multi-attribute queries showing promise
+
+**Needs Improvement (15-16% recall):**
+- **Severity**, **Protocol**, **Attack Type**, **Malware IoC**, **Attack Signature**
+- Root cause: Pure vector search with post-hoc filtering vs hybrid pre-filtering
+- Optimization planned: True hybrid search implementation with cross-encoder reranking
+
+### Quality Gates Status
+All 4/4 quality gates passing ✅:
+- Recall@5 ≥ 0.55 (actual: 0.565) ✅
+- Precision@5 ≥ 0.70 (actual: 0.720) ✅
+- MRR ≥ 0.90 (actual: 1.000) ✅
+- Min Category Recall@5 ≥ 0.15 (actual: 0.152) ✅
+
+### Future Optimization Targets
+- Recall@5: 0.565 → 0.90 (target: +59% improvement)
+- Min Category Recall: 0.15 → 0.85 (target: +459% improvement)
+- Implementation: Hybrid search, cross-encoder reranking, domain-specific embeddings
+
+**Full Evaluation Details**: See [docs/evaluation.md](https://chintamanil.github.io/cybershield/evaluation) for comprehensive metrics, architecture diagrams, and optimization analysis.
 
 ✅ **Completed Core Features**
 - **✅ Comprehensive structured logging system with structlog across all components**
