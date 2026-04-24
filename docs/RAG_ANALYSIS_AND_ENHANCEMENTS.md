@@ -598,11 +598,23 @@ With Prompt Registry:
 - ✅ Automated eval harness
 - ✅ Baseline performance report
 
-**Success Criteria**:
-- [ ] Recall@1 ≥ 0.70
-- [ ] Recall@5 ≥ 0.90
-- [ ] MRR ≥ 0.80
-- [ ] Coverage ≥ 0.85 for all attack types
+**Current Production Performance (October 2025)**:
+- [x] Recall@1: 0.385 (Target: 0.70 - Gap: +82%)
+- [x] Recall@5: 0.565 (Target: 0.90 - Gap: +59%)
+- [x] MRR: 1.000 ✅ (Target: 0.80 - Exceeds!)
+- [x] NDCG@5: 1.000 ✅ (Perfect ranking quality)
+- [x] Precision@5: 0.720 (Target: 0.85 - Gap: +18%)
+
+**Per-Category Performance**:
+- ✅ **Excellent (90-100% recall)**: ip_reputation (100%), geo_location (91%), port_scan (90%)
+- ⚠️ **Moderate (40-50% recall)**: combined (47%)
+- ❌ **Needs Optimization (15-16% recall)**: severity (15%), protocol (15%), attack_type (15%), malware_ioc (16%), attack_signature (16%)
+
+**Future Success Criteria** (Post-Hybrid Search Optimization):
+- [ ] Recall@1 ≥ 0.70 (Current: 0.385)
+- [ ] Recall@5 ≥ 0.90 (Current: 0.565)
+- [ ] MRR ≥ 0.80 (Current: 1.000 ✅)
+- [ ] Min Category Recall@5 ≥ 0.85 (Current: 0.152)
 
 ---
 
@@ -1159,18 +1171,20 @@ cybershield/
 
 ## 9. Success Metrics
 
-### Pre-Enhancement Baseline (Current State)
-| Metric | Current | Target (12 weeks) | Measurement |
-|--------|---------|-------------------|-------------|
+### Current Production Baseline (October 2025)
+| Metric | Current | Target (12 weeks) | Status | Measurement |
+|--------|---------|-------------------|--------|-------------|
 | **Retrieval Quality** |
-| Recall@1 | Unknown | ≥ 0.70 | Golden set eval |
-| Recall@5 | Unknown | ≥ 0.90 | Golden set eval |
-| Precision@5 | Unknown | ≥ 0.85 | Golden set eval |
-| MRR | Unknown | ≥ 0.80 | Golden set eval |
+| Recall@1 | 0.385 | ≥ 0.70 | ⚠️ Gap: +82% | Golden set eval (113 queries) |
+| Recall@5 | 0.565 | ≥ 0.90 | ⚠️ Gap: +59% | Golden set eval (113 queries) |
+| Precision@5 | 0.720 | ≥ 0.85 | ⚠️ Gap: +18% | Golden set eval (113 queries) |
+| MRR | 1.000 | ≥ 0.80 | ✅ Exceeds target | Golden set eval (113 queries) |
+| NDCG@5 | 1.000 | ≥ 0.90 | ✅ Perfect ranking | Golden set eval (113 queries) |
+| Min Category Recall@5 | 0.152 | ≥ 0.85 | ❌ Gap: +459% | Per-category analysis |
 | **Answer Quality** |
-| Citation compliance | 0% | ≥ 95% | Citation validator |
-| Faithfulness score | Unknown | ≥ 0.90 | Semantic similarity |
-| Hallucination rate | Unknown | < 5% | Manual review + detector |
+| Citation compliance | 0% | ≥ 95% | ❌ Not implemented | Citation validator |
+| Faithfulness score | Not measured | ≥ 0.90 | ❌ Not implemented | Semantic similarity |
+| Hallucination rate | Not measured | < 5% | ❌ Not implemented | Manual review + detector |
 | **Performance** |
 | P50 latency | ~1-2s | ≤ 1s | Latency tracker |
 | P95 latency | ~3-5s | ≤ 3s | Latency tracker |

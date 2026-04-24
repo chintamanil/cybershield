@@ -107,11 +107,23 @@ The platform uses specialized AI agents coordinated by a supervisor:
 - ✅ **Comprehensive reporting**: HTML and JSON evaluation reports
 
 **Evaluation Results (October 2025):**
-- **MRR**: 1.000 (perfect ranking of first relevant result)
-- **Recall@5**: 0.565 (56.5% of relevant documents retrieved)
+- **MRR**: 1.000 (perfect ranking - first relevant result always at position 1)
+- **Recall@5**: 0.565 (56.5% of relevant documents retrieved in top-5)
 - **Precision@5**: 0.720 (72% of retrieved documents are relevant)
 - **F1@5**: 0.397 (harmonic mean of precision and recall)
-- **Per-Category Success**: 9/9 categories (100%) with non-zero metrics
+- **NDCG@5**: 1.000 (perfect ranking quality)
+
+**Per-Category Performance:**
+- **Excellent (90-100% recall)**: ip_reputation (100%), geo_location (91%), port_scan (90%)
+- **Moderate (40-50% recall)**: combined (47%)
+- **Needs Improvement (15-16% recall)**: severity (15%), protocol (15%), attack_type (15%), malware_ioc (16%), attack_signature (16%)
+- **Min Category Recall@5**: 0.152 (15.2%)
+
+**Quality Gate Status:**
+- ✅ **recall@5** ≥ 0.55: PASS (actual: 0.565)
+- ✅ **precision@5** ≥ 0.70: PASS (actual: 0.720)
+- ✅ **mrr** ≥ 0.90: PASS (actual: 1.000)
+- ✅ **min_category_recall@5** ≥ 0.15: PASS (actual: 0.152)
 
 ### Memory Management
 
